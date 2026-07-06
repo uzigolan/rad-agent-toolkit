@@ -1890,7 +1890,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   +---dialer-number
 |   |   |   |   |
 |   |   |   |   +---lte-band
-
 |   |   |   |   |
 |   |   |   |   +---name
 |   |   |   |   |

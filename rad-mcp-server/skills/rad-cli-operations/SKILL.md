@@ -1,9 +1,14 @@
 ---
 name: rad-cli-operations
-description: RAD context-based CLI operations (ETX-2, SecFlow families — device families "etx2" and "secflow") — CLI model, verified command paths, health interpretation. Load when running commands on RAD devices.
+description: RAD device CLI expertise — ETX-2 and SecFlow families (device families "etx2", "secflow"; units like SF-1p / lab-sf1p). ALWAYS use when the user addresses "Abayev" / "abayev" (the RAD CLI expert persona — e.g. "abayev, how do I ...") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
 ---
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
+
+**Abayev persona:** when the user addresses you as "Abayev", you ARE Abayev —
+the team's veteran RAD CLI expert. Answer as that person would: direct,
+hands-on, quoting exact verified command paths. No behavior changes otherwise;
+all safety rules below still apply.
 
 Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) lab unit. The ETX-2
 family shares this dialect (per-family differences: ETX-2 adds flows/EVC
@@ -15,7 +20,7 @@ their own skills. SecFlow-1p manual: https://www.rad.com/docs/965
 | File | Contents | Use it to |
 |---|---|---|
 | `command-tree-<family>.md` | Full `tree` hierarchy | Locate which context holds a feature |
-| `cli-reference-<family>.md` | Complete harvested `?` help: every context's level listing + per-command argument constraints | Answer syntax questions WITHOUT touching the device — grep the context path header, e.g. `## configure system` |
+| `cli-reference-<family>.md` | Complete harvested `?` help: every context's level listing + per-command argument constraints. Parameterized (named/indexed) contexts are harvested too, under a `NAME` placeholder — e.g. `## configure system mqtt server NAME` — captured via an existing instance or a temp object rolled back immediately | Answer syntax questions WITHOUT touching the device — grep the context path header, e.g. `## configure system` |
 | `cli-help-<family>.jsonl` | Same data, machine-readable (source for the MCP resources) | — |
 
 Also exposed as MCP resources (for Desktop, which has no filesystem):
@@ -24,15 +29,18 @@ Also exposed as MCP resources (for Desktop, which has no filesystem):
 (e.g. `rad://cli-reference/secflow/configure+system`).
 
 **Lookup order for syntax questions:** 1) `cli-reference-<family>.md` (or the
-keyed resource) — instant, no device session; 2) live `cli_help` only for what
-the harvest can't hold: contexts marked *(not entered — parameterized)*, a
-device on different firmware, or verification before a risky change.
+keyed resource) — instant, no device session; for parameterized contexts look
+for the `... NAME` section (e.g. `## configure crypto ca NAME`); 2) live
+`cli_help` only for what the harvest can't hold: the few contexts still marked
+*(not entered — parameterized context)* (numeric-indexed with no instance to
+enter), a device on different firmware, or verification before a risky change.
 
 **Keeping it current:** after a firmware upgrade, re-run
 `python scripts/harvest_cli.py harvest <device>` (safe to repeat; ~11 min) —
 it re-captures the tree live, re-crawls, prints an ADDED/REMOVED/CHANGED diff,
 and rewrites the references in place; git history tracks CLI evolution.
-`--branch configure` refreshes one subtree only.
+`--branch configure` (or a nested path, `--branch "configure crypto"`)
+refreshes one subtree only.
 
 ## CLI model (critical to understand)
 

@@ -3,10 +3,12 @@
 Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) on 2026-07-06 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
-descriptions), then per-command argument help (`<command> ?`). Entries
-marked *(not entered)* are parameterized contexts — their inner structure
-is in command-tree-secflow.md; use cli_help with a real index for
-inner argument syntax.
+descriptions), then per-command argument help (`<command> ?`). Sections
+ending in NAME are parameterized contexts harvested through one instance
+(an existing one, or a temp object created and rolled back) — NAME stands
+for any instance. Entries marked *(not entered)* could not be harvested
+safely — their inner structure is in command-tree-secflow.md; use
+cli_help with a real index for inner argument syntax.
 
 ## <root>
 
@@ -541,12 +543,35 @@ SF-1p-187>config>access-control>firewall# ip-sweep-defend
 SF-1p-187>config>access-control>firewall# show blacklist-summary
 ```
 
-### zone *(not entered — parameterized context)*
+### zone *(parameterized — inner help harvested under "configure access-control firewall zone NAME")*
 ```text
 <zone-name>          : Zone name [1..79 chars]
 
 
 SF-1p-187>config>access-control>firewall# zone
+```
+
+## configure access-control firewall zone NAME
+
+Level help (`?`):
+```text
+[no] member                         - Bind entity to zone
+
+
+SF-1p-187>config>access-control>firewall>zone(zzz-hrvst)$
+```
+
+### member
+```text
+<cellular>           : 
+ <ethernet>           : 
+ <ppp>                : 
+ <tunnel-interface>   : 
+ <wifi-client>        : 
+ <wlan>               : 
+
+
+SF-1p-187>config>access-control>firewall>zone(zzz-hrvst)$ member
 ```
 
 ## configure crypto
@@ -562,7 +587,7 @@ Level help (`?`):
       pki                            + PKI (public key infrastructure) level
 ```
 
-### ca *(not entered — parameterized context)*
+### ca *(parameterized — inner help harvested under "configure crypto ca NAME")*
 ```text
 <ca-name>            : CA name [1..20 chars]
 
@@ -570,7 +595,7 @@ Level help (`?`):
 SF-1p-187>config>crypto# ca
 ```
 
-### crypto-map *(not entered — parameterized context)*
+### crypto-map *(parameterized — inner help harvested under "configure crypto crypto-map NAME")*
 ```text
 <name>               : [1..80 chars]
 
@@ -578,7 +603,7 @@ SF-1p-187>config>crypto# ca
 SF-1p-187>config>crypto# crypto-map
 ```
 
-### ipsec-transform-set *(not entered — parameterized context)*
+### ipsec-transform-set *(parameterized — inner help harvested under "configure crypto ipsec-transform-set NAME")*
 ```text
 <name>               : [1..80 chars]
 
@@ -600,6 +625,243 @@ SF-1p-187>config>crypto# isakmp-key
 
 
 SF-1p-187>config>crypto# isakmp-policy
+```
+
+## configure crypto ca NAME
+
+Level help (`?`):
+```text
+[no] address                        - Configure CA address
+ [no] certificate-auto-renew         - Enable certificate auto renewal
+ [no] crl-auto-renew                 - Enable CRL auto renewal
+ [no] protocol                       - Configure protocol to communicate with 
+                                       the CA
+```
+
+### address
+```text
+<ip>                 : 
+ <url>                : 
+
+
+SF-1p-187>config>crypto>ca(CA-cert)# address
+```
+
+### certificate-auto-renew
+```text
+<CR>
+
+SF-1p-187>config>crypto>ca(CA-cert)# certificate-auto-renew
+```
+
+### crl-auto-renew
+```text
+<CR>
+
+SF-1p-187>config>crypto>ca(CA-cert)# crl-auto-renew
+```
+
+### protocol
+```text
+<scep>               : SCEP protocol
+ <est>                : EST protocol
+
+
+SF-1p-187>config>crypto>ca(CA-cert)# protocol
+```
+
+## configure crypto crypto-map NAME
+
+Level help (`?`):
+```text
+ike-authentication             - Configure authentication method
+      ike-identity-local             - Local IKE identity
+      ike-identity-local-x509        - Configure local IKE identity with X.509 
+                                       certificate
+      ike-identity-remote            - Remote IKE identity
+      ike-identity-remote-x509       - Configure remote IKE identity with X.509 
+                                       certificate
+      ike-sa-lifetime                - Configure SA lifetime
+      ike-sa-negotiation             - Configure SA negotiation mode
+      ike-version                    - IKE version
+ [no] match-address                  - Assign ACL
+ [no] peer-address                   - Configure IPsec peer IP address
+ [no] pfs-group                      - Configure PFS group
+ [no] responder-only                 - Whether or not to initiate connection
+ [no] sa-lifetime                    - Configure SA lifetime
+ [no] sequence-number                - Configure crypto map priority
+ [no] transform-set                  - Assign IPsec phase 2 policy
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$
+```
+
+### ike-authentication
+```text
+<pre-share>          : 
+ <rsa-signature>      : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-authentication
+```
+
+### ike-identity-local
+```text
+<default-address>    : 
+ <address>            : 
+ <default-hostname>   : 
+ <hostname>           : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-identity-local
+```
+
+### ike-identity-local-x509
+```text
+<distinguished-name> : 
+ <string>             : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-identity-local-x509
+```
+
+### ike-identity-remote
+```text
+<default-address>    : 
+ <address>            : 
+ <hostname>           : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-identity-remote
+```
+
+### ike-identity-remote-x509
+```text
+<any>                : 
+ <string>             : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-identity-remote-x509
+```
+
+### ike-sa-lifetime
+```text
+<seconds>            : [60..86400, default 86400]
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-sa-lifetime
+```
+
+### ike-sa-negotiation
+```text
+<main>               : 
+ <aggressive>         : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-sa-negotiation
+```
+
+### ike-version
+```text
+<1>                  : 
+ <2>                  : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ ike-version
+```
+
+### match-address
+```text
+<name>               : [1..80 chars]
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ match-address
+```
+
+### peer-address
+```text
+<ip-address>         : [0.0.0.0|0:0:0:0::0, default 0.0.0.0]
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ peer-address
+```
+
+### pfs-group
+```text
+<1>                  : 
+ <2>                  : 
+ <5>                  : 
+ <14>                 : 
+ <19>                 : 
+ <20>                 : 
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ pfs-group
+```
+
+### responder-only
+```text
+<CR>
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ responder-only
+```
+
+### sa-lifetime
+```text
+seconds
+ kilobytes
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ sa-lifetime
+```
+
+### sequence-number
+```text
+<number>             : [1..1000, default 10]
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ sequence-number
+```
+
+### transform-set
+```text
+<name-1>             : [1..80 chars]
+
+
+SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ transform-set
+```
+
+## configure crypto ipsec-transform-set NAME
+
+Level help (`?`):
+```text
+algorithms                     - Configure IPsec phase 2 algorithms
+      mode                           - Tunnel or transport mode
+
+
+SF-1p-187>config>crypto>ipsec-transform-set(zzz-hrvst)$
+```
+
+### algorithms
+```text
+<esp-aes-cbc-128>    : 
+ <esp-aes-cbc-256>    : 
+ <esp-aes-gcm-128>    : 
+ <esp-aes-gcm-256>    : 
+ <esp-null>           : 
+ <esp-aes-gmac-128>   : 
+ <esp-aes-gmac-256>   : 
+
+
+SF-1p-187>config>crypto>ipsec-transform-set(zzz-hrvst)$ algorithms
+```
+
+### mode
+```text
+<tunnel>             : 
+ <transport>          : 
+
+
+SF-1p-187>config>crypto>ipsec-transform-set(zzz-hrvst)$ mode
 ```
 
 ## configure crypto key
@@ -705,7 +967,7 @@ SF-1p-187>config>crypto>pki# delete-crl
 SF-1p-187>config>crypto>pki# enroll
 ```
 
-### enroll-attributes *(not entered — parameterized context)*
+### enroll-attributes *(parameterized — inner help harvested under "configure crypto pki enroll-attributes NAME")*
 ```text
 <name>               : Enroll attributes name [1..32 chars]
 
@@ -771,6 +1033,137 @@ SF-1p-187>config>crypto>pki# show certificate-summary
 <CR>
 
 SF-1p-187>config>crypto>pki# show crl-summary
+```
+
+## configure crypto pki enroll-attributes NAME
+
+Level help (`?`):
+```text
+[no] ca-url                         - Configure CA URL to send the CSR to
+ [no] challenge-password             - Configure challenge password to present 
+                                       to the CA
+ [no] common-name                    - Configure certificate subject common name
+ [no] country                        - Configure certificate subject country
+ [no] locality                       - Configure certificate subject locality
+ [no] organization                   - Configure certificate subject 
+                                       organization
+ [no] organizational-unit            - Configure certificate subject 
+                                       organizational unit
+ [no] san-dns-name                   - Configure certificate SAN DNS name
+ [no] san-email                      - Configure certificate SAN email
+ [no] san-ip-address                 - Configure certificate SAN IP address
+ [no] san-uri                        - Configure certificate SAN URI
+ [no] serial-number                  - Configure certificate subject 
+                                       serial-number
+ [no] state                          - Configure certificate subject state
+```
+
+### ca-url
+```text
+<string>             : [1..255 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# ca-url
+```
+
+### challenge-password
+```text
+<string>             : Challenge password to present to the CA [1..80 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# challenge-password
+```
+
+### common-name
+```text
+<string>             : Certificate subject common name [1..64 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# common-name
+```
+
+### country
+```text
+<string>             : Certificate subject country (ISO 3166 two-letter code) 
+                        [2..2 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# country
+```
+
+### locality
+```text
+<string>             : Certificate subject locality [1..128 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# locality
+```
+
+### organization
+```text
+<string>             : Certificate subject organization [1..64 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# organization
+```
+
+### organizational-unit
+```text
+<string>             : Certificate subject organizational unit [1..32 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# organizational-unit
+```
+
+### san-dns-name
+```text
+<dns-name>           : [1..255 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# san-dns-name
+```
+
+### san-email
+```text
+<email>              : Certificate SAN email (rfc822Name) [3..255 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# san-email
+```
+
+### san-ip-address
+```text
+<ip-address>         : Certificate SAN IP address (iPAddress) [0.0.0.0|
+                        0:0:0:0::0]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# san-ip-address
+```
+
+### san-uri
+```text
+<uri>                : Certificate SAN URI (uniformResourceIdentifier) [1..255 
+                        chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# san-uri
+```
+
+### serial-number
+```text
+<dmi>                : 
+ <value>              : 
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# serial-number
+```
+
+### state
+```text
+<string>             : Certificate subject state [1..128 chars]
+
+
+SF-1p-187>config>crypto>pki>enroll-attributes(AAA)# state
 ```
 
 ## configure fault
@@ -1309,7 +1702,7 @@ SF-1p-187>config>mngmnt>snmp# community
 SF-1p-187>config>mngmnt>snmp# config-change-notification
 ```
 
-### notify *(not entered — parameterized context)*
+### notify *(parameterized — inner help harvested under "configure management snmp notify NAME")*
 ```text
 <notify-name>        : Notification group name [string]
 
@@ -1325,7 +1718,7 @@ SF-1p-187>config>mngmnt>snmp# notify
 SF-1p-187>config>mngmnt>snmp# notify-filter
 ```
 
-### notify-filter-profile *(not entered — parameterized context)*
+### notify-filter-profile *(parameterized — inner help harvested under "configure management snmp notify-filter-profile NAME")*
 ```text
 <params-name>        : Parameter name [string]
 
@@ -1368,7 +1761,7 @@ SF-1p-187>config>mngmnt>snmp# show trap-sync
 SF-1p-187>config>mngmnt>snmp# snmp-engine-id
 ```
 
-### target *(not entered — parameterized context)*
+### target *(parameterized — inner help harvested under "configure management snmp target NAME")*
 ```text
 <name>               : Target name [1..32 chars]
 
@@ -1376,7 +1769,7 @@ SF-1p-187>config>mngmnt>snmp# snmp-engine-id
 SF-1p-187>config>mngmnt>snmp# target
 ```
 
-### target-params *(not entered — parameterized context)*
+### target-params *(parameterized — inner help harvested under "configure management snmp target-params NAME")*
 ```text
 <name>               : Target parameters name [1..32 chars]
 
@@ -1408,6 +1801,168 @@ SF-1p-187>config>mngmnt>snmp# user
 SF-1p-187>config>mngmnt>snmp# view
 ```
 
+## configure management snmp notify NAME
+
+Level help (`?`):
+```text
+[no] bind                           - Bind trap
+ [no] shutdown                       - Disable notification group
+      tag                            - Tag
+
+
+SF-1p-187>config>mngmnt>snmp>notify(zzz-hrvst)$
+```
+
+### bind
+```text
+<systemTraceMsgProtoM: 
+
+
+SF-1p-187>config>mngmnt>snmp>notify(zzz-hrvst)$ bind
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>snmp>notify(zzz-hrvst)$ shutdown
+```
+
+### tag
+```text
+<argument>           : Tag [string]
+
+
+SF-1p-187>config>mngmnt>snmp>notify(zzz-hrvst)$ tag
+```
+
+## configure management snmp notify-filter-profile NAME
+
+Level help (`?`):
+```text
+profile-name                   - Profile name
+ [no] shutdown                       - Disable notification group
+
+
+SF-1p-187>config>mngmnt>snmp>filter-profile$
+```
+
+### profile-name
+```text
+<argument>           : Profile name [string]
+
+
+SF-1p-187>config>mngmnt>snmp>filter-profile$ profile-name
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>snmp>filter-profile$ shutdown
+```
+
+## configure management snmp target NAME
+
+Level help (`?`):
+```text
+address                        - Target address
+ [no] tag-list                       - Configure tag list
+      target-params                  - Target parameters
+ [no] trap-sync-group                - Configure trap synchronization group
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$
+```
+
+### address
+```text
+<udp-domain>         : UDP
+ <oam-domain>         : OAM
+ <udp-ipv4-domain>    : UDP over IPv4
+ <udp-ipv6-domain>    : UDP over IPv6
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ address
+```
+
+### shutdown
+```text
+# cli error: Invalid Command
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ shutdown
+```
+
+### tag-list
+```text
+<list>               : Tag list [string]
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ tag-list
+```
+
+### target-params
+```text
+<params-name>        : Parameter [string]
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ target-params
+```
+
+### trap-sync-group
+```text
+<group-id>           : Group ID [number] [1..10]
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ trap-sync-group
+```
+
+## configure management snmp target-params NAME
+
+Level help (`?`):
+```text
+message-processing-model       - Configure message processing model
+      security                       - Configure security
+      version                        - Configure SNMP version
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$
+```
+
+### message-processing-model
+```text
+<snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <snmpv3>             : SNMPv3
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ message-processing-model
+```
+
+### security
+```text
+<CR>
+ name
+ level
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ security
+```
+
+### shutdown
+```text
+# cli error: Invalid Command
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ shutdown
+```
+
+### version
+```text
+<snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+
+
+SF-1p-187>config>mngmnt>snmp>target(zzz-hrvst)$ version
+```
+
 ## configure management tacacsplus
 
 Level help (`?`):
@@ -1418,7 +1973,7 @@ Level help (`?`):
  [no] server                         + Add TACACS+ server
 ```
 
-### group *(not entered — parameterized context)*
+### group *(parameterized — inner help harvested under "configure management tacacsplus group NAME")*
 ```text
 <group-name>         : TACACS+ server group name [1..80 chars]
 
@@ -1440,6 +1995,26 @@ SF-1p-187>config>mngmnt>tacacsplus# privilege-level
 
 
 SF-1p-187>config>mngmnt>tacacsplus# server
+```
+
+## configure management tacacsplus group NAME
+
+Level help (`?`):
+```text
+[no] accounting                     - Enable TACACS+ accounting
+
+
+SF-1p-187>config>mngmnt>tacacsplus>group(zzz-hrvst)$
+```
+
+### accounting
+```text
+<shell>              : Shell accounting
+ <system>             : System accounting
+ <commands>           : Commands accounting
+
+
+SF-1p-187>config>mngmnt>tacacsplus>group(zzz-hrvst)$ accounting
 ```
 
 ## configure monitor
@@ -1464,12 +2039,82 @@ Level help (`?`):
 [no] ip-monitoring                  + Define ip-monitoring entity
 ```
 
-### ip-monitoring *(not entered — parameterized context)*
+### ip-monitoring *(parameterized — inner help harvested under "configure oam ip-monitoring NAME")*
 ```text
 <name>               : Define ip-monitoring entity name [1..32 chars]
 
 
 SF-1p-187>config>oam# ip-monitoring
+```
+
+## configure oam ip-monitoring NAME
+
+Level help (`?`):
+```text
+fail-criteria                  - Configure fail criteria
+      icmp-timeout                   - Configure monitoring icmp timeout (in 
+                                       seconds)
+      target                         - Configure monitoring target IP address
+      transmit-interval              - Configure monitoring transmit interval 
+                                       (in seconds)
+      window-size                    - Configure monitoring sliding window-size 
+                                       (in seconds)
+
+ show status                         - Display ip-monitoring entity status
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$
+```
+
+### fail-criteria
+```text
+<fail-thr-percents>  : The threshold, in percents, over which a monitoring 
+                        failure is declared [1..100, default 60]
+
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$ fail-criteria
+```
+
+### icmp-timeout
+```text
+<seconds>            : The timeout to decide on failure after icmp transmission
+                         [1..30, default 1]
+
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$ icmp-timeout
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$ show status
+```
+
+### target
+```text
+<ip-address>         : The IP Address of the ICMP-echo target [0.0.0.0|
+                        0:0:0:0::0]
+
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$ target
+```
+
+### transmit-interval
+```text
+<seconds>            : The interval period between monitoring transmissions 
+                        [1..30, default 1]
+
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$ transmit-interval
+```
+
+### window-size
+```text
+<seconds>            : The size, in seconds, of the monitor sliding window 
+                        [1..30, default 5]
+
+
+SF-1p-187>config>oam>ip-monitoring(zzz-hrvst)$ window-size
 ```
 
 ## configure port
@@ -1859,7 +2504,7 @@ SF-1p-187>config>port>wifi-client# show status
 SF-1p-187>config>port>wifi-client# shutdown
 ```
 
-### ssid *(not entered — parameterized context)*
+### ssid *(parameterized — inner help harvested under "configure port wifi-client ssid NAME")*
 ```text
 <name>               : SSID [1..32 chars]
 
@@ -1960,6 +2605,53 @@ SF-1p-187>config>port>wifi-client>dot1x>supplicant# shutdown
 SF-1p-187>config>port>wifi-client>dot1x>supplicant# tx-period
 ```
 
+## configure port wifi-client ssid NAME
+
+Level help (`?`):
+```text
+[no] password                       - Configure password
+      priority                       - Configure priority, to determine 
+                                       connecting order
+      security                       - Configure security method
+ [no] shutdown                       - Disable SSID
+
+
+SF-1p-187>config>port>wifi-client>ssid(zzz-hrvst)$
+```
+
+### password
+```text
+<key-string>         : [1..32 chars]
+
+
+SF-1p-187>config>port>wifi-client>ssid(zzz-hrvst)$ password
+```
+
+### priority
+```text
+<number>             : [1..254, default 100]
+
+
+SF-1p-187>config>port>wifi-client>ssid(zzz-hrvst)$ priority
+```
+
+### security
+```text
+<none>               : 
+ <wpa2-psk>           : 
+ <wpa2-dot1x>         : 
+
+
+SF-1p-187>config>port>wifi-client>ssid(zzz-hrvst)$ security
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>wifi-client>ssid(zzz-hrvst)$ shutdown
+```
+
 ## configure protection
 
 Level help (`?`):
@@ -1967,12 +2659,118 @@ Level help (`?`):
 [no] erp                            + ERP level
 ```
 
-### erp *(not entered — parameterized context)*
+### erp *(parameterized — inner help harvested under "configure protection erp NAME")*
 ```text
 <number>             : Ring ID [1..239, default Index, no default]
 
 
 SF-1p-187>config>protection# erp
+```
+
+## configure protection erp NAME
+
+Level help (`?`):
+```text
+[no] bridge                         - Associate ring with bridge
+ [no] data-vlan                      - Configure data VLANs
+ [no] description                    - Configure ring description
+ [no] east-port                      - Configure east bridge port
+ [no] port-description               - Configure port description
+      port-type                      - Configure east or west port role
+ [no] r-aps                          - Configure R-APS properties
+ [no] sf-trigger                     - Configure SF trigger on east or west port
+ [no] shutdown                       - Disable ring
+ [no] west-port                      - Configure west bridge port
+
+ show status                         - Display ring status
+```
+
+### bridge
+```text
+<number>             : ID of the bridge the ring is on [1..1]
+
+
+SF-1p-187>config>protection>erp(1)# bridge
+```
+
+### data-vlan
+```text
+<data-vlan>          : [1..4094]
+
+
+SF-1p-187>config>protection>erp(1)# data-vlan
+```
+
+### description
+```text
+<string>             : Configure ring description [1..64 chars]
+
+
+SF-1p-187>config>protection>erp(1)# description
+```
+
+### east-port
+```text
+<bridge-port-number> : Bridge port to be the ring east port [number] [1..64]
+
+
+SF-1p-187>config>protection>erp(1)# east-port
+```
+
+### port-description
+```text
+<east>               : 
+ <west>               : 
+
+
+SF-1p-187>config>protection>erp(1)# port-description
+```
+
+### port-type
+```text
+<east>               : 
+ <west>               : 
+
+
+SF-1p-187>config>protection>erp(1)# port-type
+```
+
+### r-aps
+```text
+vlan
+
+SF-1p-187>config>protection>erp(1)# r-aps
+```
+
+### sf-trigger
+```text
+<east>               : 
+ <west>               : 
+
+
+SF-1p-187>config>protection>erp(1)# sf-trigger
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>protection>erp(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>protection>erp(1)# shutdown
+```
+
+### west-port
+```text
+<bridge-port-number> : Bridge port to be the ring west port [number] [1..64]
+
+
+SF-1p-187>config>protection>erp(1)# west-port
 ```
 
 ## configure qos
@@ -1984,7 +2782,7 @@ Level help (`?`):
  [no] shaper-profile                 + Shaper profile configuration
 ```
 
-### queue-block-profile *(not entered — parameterized context)*
+### queue-block-profile *(parameterized — inner help harvested under "configure qos queue-block-profile NAME")*
 ```text
 <profile-name>       : [1..32 chars]
 
@@ -1992,7 +2790,7 @@ Level help (`?`):
 SF-1p-187>config>qos# queue-block-profile
 ```
 
-### queue-group-profile *(not entered — parameterized context)*
+### queue-group-profile *(parameterized — inner help harvested under "configure qos queue-group-profile NAME")*
 ```text
 <profile-name>       : [1..32 chars]
 
@@ -2000,12 +2798,89 @@ SF-1p-187>config>qos# queue-block-profile
 SF-1p-187>config>qos# queue-group-profile
 ```
 
-### shaper-profile *(not entered — parameterized context)*
+### shaper-profile *(parameterized — inner help harvested under "configure qos shaper-profile NAME")*
 ```text
 <profile-name>       : [1..32 chars]
 
 
 SF-1p-187>config>qos# shaper-profile
+```
+
+## configure qos queue-block-profile NAME
+
+Level help (`?`):
+```text
+queue                          + Define queue parameters in queue block
+
+
+SF-1p-187>config>qos>queue-block-profile(zzz-hrvst)$
+```
+
+## configure qos queue-block-profile NAME queue
+
+Level help (`?`):
+```text
+queue                          + Define queue parameters in queue block
+```
+
+### bandwidth
+```text
+# cli error: Invalid Command
+SF-1p-187>config>qos>queue-block-profile(zzz-hrvst)# bandwidth
+```
+
+### scheduling
+```text
+# cli error: Invalid Command
+SF-1p-187>config>qos>queue-block-profile(zzz-hrvst)# scheduling
+```
+
+## configure qos queue-group-profile NAME
+
+Level help (`?`):
+```text
+queue-block                    + Define queue blocks in queue group 
+                                       structure
+
+
+SF-1p-187>config>qos>queue-group-profile(zzz-hrvst)$
+```
+
+## configure qos queue-group-profile NAME queue-block
+
+Level help (`?`):
+```text
+queue-block                    + Define queue blocks in queue group 
+                                       structure
+```
+
+### profile
+```text
+# cli error: Invalid Command
+SF-1p-187>config>qos>queue-group-profile(zzz-hrvst)# profile
+```
+
+### shaper
+```text
+# cli error: Invalid Command
+SF-1p-187>config>qos>queue-group-profile(zzz-hrvst)# shaper
+```
+
+## configure qos shaper-profile NAME
+
+Level help (`?`):
+```text
+bandwidth                      - Bandwidth profile configuration
+
+
+SF-1p-187>config>qos>shaper-profile(zzz-hrvst)$
+```
+
+### bandwidth
+```text
+cir
+
+SF-1p-187>config>qos>shaper-profile(zzz-hrvst)$ bandwidth
 ```
 
 ## configure reporting
@@ -2592,8 +3467,6 @@ authentication-method          - Configure sd-iot authentication-method
 
  show statistics                     - Display sd-iot entity statistics
  show status                         - Display sd-iot entity status
-
-SF-1p-187>config>sd-iot$
 ```
 
 ### authentication-method
@@ -2602,7 +3475,7 @@ SF-1p-187>config>sd-iot$
  <certificate>        : Certificate-based authentication
 
 
-SF-1p-187>config>sd-iot$ authentication-method
+SF-1p-187>config>sd-iot# authentication-method
 ```
 
 ### certificate
@@ -2610,14 +3483,14 @@ SF-1p-187>config>sd-iot$ authentication-method
 <certificate-name>   : Sd-iot certificate name [1..64 chars]
 
 
-SF-1p-187>config>sd-iot$ certificate
+SF-1p-187>config>sd-iot# certificate
 ```
 
 ### clear-statistics
 ```text
 <CR>
 
-SF-1p-187>config>sd-iot$ clear-statistics
+SF-1p-187>config>sd-iot# clear-statistics
 ```
 
 ### client-number
@@ -2625,7 +3498,7 @@ SF-1p-187>config>sd-iot$ clear-statistics
 <number>             : Sd-iot client number [1..1000]
 
 
-SF-1p-187>config>sd-iot$ client-number
+SF-1p-187>config>sd-iot# client-number
 ```
 
 ### duplication
@@ -2633,7 +3506,7 @@ SF-1p-187>config>sd-iot$ client-number
 <ethernet>           : Ethernet
 
 
-SF-1p-187>config>sd-iot$ duplication
+SF-1p-187>config>sd-iot# duplication
 ```
 
 ### ingress-port
@@ -2641,7 +3514,7 @@ SF-1p-187>config>sd-iot$ duplication
 <ethernet>           : Ethernet
 
 
-SF-1p-187>config>sd-iot$ ingress-port
+SF-1p-187>config>sd-iot# ingress-port
 ```
 
 ### keep-alive
@@ -2649,28 +3522,28 @@ SF-1p-187>config>sd-iot$ ingress-port
 interval
  retries
 
-SF-1p-187>config>sd-iot$ keep-alive
+SF-1p-187>config>sd-iot# keep-alive
 ```
 
 ### show statistics
 ```text
 <CR>
 
-SF-1p-187>config>sd-iot$ show statistics
+SF-1p-187>config>sd-iot# show statistics
 ```
 
 ### show status
 ```text
 <CR>
 
-SF-1p-187>config>sd-iot$ show status
+SF-1p-187>config>sd-iot# show status
 ```
 
 ### shutdown
 ```text
 <CR>
 
-SF-1p-187>config>sd-iot$ shutdown
+SF-1p-187>config>sd-iot# shutdown
 ```
 
 ### tunnel *(not entered — parameterized context)*
@@ -2678,7 +3551,7 @@ SF-1p-187>config>sd-iot$ shutdown
 <number>             : Sd-iot tunnel number [1..2]
 
 
-SF-1p-187>config>sd-iot$ tunnel
+SF-1p-187>config>sd-iot# tunnel
 ```
 
 ### username
@@ -2686,7 +3559,7 @@ SF-1p-187>config>sd-iot$ tunnel
 <username-string>    : Sd-iot username [1..80 chars]
 
 
-SF-1p-187>config>sd-iot$ username
+SF-1p-187>config>sd-iot# username
 ```
 
 ## configure system
@@ -2815,7 +3688,7 @@ SF-1p-187>config>system# location
 SF-1p-187>config>system# login-message
 ```
 
-### modbus-unit *(not entered — parameterized context)*
+### modbus-unit *(parameterized — inner help harvested under "configure system modbus-unit NAME")*
 ```text
 <unit-name>          : Modbus unit local name [1..32 chars]
 
@@ -2831,7 +3704,7 @@ SF-1p-187>config>system# modbus-unit
 SF-1p-187>config>system# name
 ```
 
-### opcua-server *(not entered — parameterized context)*
+### opcua-server *(parameterized — inner help harvested under "configure system opcua-server NAME")*
 ```text
 <name>               : OPC UA local server name [1..32 chars]
 
@@ -2991,7 +3864,7 @@ Level help (`?`):
  show status                         - NTP status
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure system date-and-time ntp server NAME")*
 ```text
 <server-id>          : NTP server number [1..10]
 
@@ -3014,6 +3887,45 @@ SF-1p-187>config>system>date-time>ntp# show status
 SF-1p-187>config>system>date-time>ntp# source-address
 ```
 
+## configure system date-and-time ntp server NAME
+
+Level help (`?`):
+```text
+address                        - Configure NTP server IP address
+ [no] prefer                         - Preferred server
+      query-server                   - Send server an NTP polling request
+ [no] shutdown                       - Enable SNTP server connection
+```
+
+### address
+```text
+<ip-address>         : NTP server IP address [0.0.0.0|0:0:0:0::0|host-name]
+
+
+SF-1p-187>config>system>date-time>ntp>server(1)# address
+```
+
+### prefer
+```text
+<CR>
+
+SF-1p-187>config>system>date-time>ntp>server(1)# prefer
+```
+
+### query-server
+```text
+<CR>
+
+SF-1p-187>config>system>date-time>ntp>server(1)# query-server
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>system>date-time>ntp>server(1)# shutdown
+```
+
 ## configure system dhcp-relay
 
 Level help (`?`):
@@ -3030,6 +3942,164 @@ source-port                    - Configure DHCP relay source port
 SF-1p-187>config>system>dhcp-relay# source-port
 ```
 
+## configure system modbus-unit NAME
+
+Level help (`?`):
+```text
+byte-order                     - Byte order
+ [no] description                    - Unit description
+ [no] ip-address                     - Modbus unit IP address
+ [no] poll                           + Poll local name
+ [no] retries                        - Number of retries
+ [no] shutdown                       - 
+ [no] timeout                        - 
+ [no] unit-id                        - Slave unit ID
+```
+
+### byte-order
+```text
+<big-endian>         : 
+ <little-endian>      : 
+ <big-endian-swapped> : 
+ <little-endian-swappe: 
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# byte-order
+```
+
+### description
+```text
+<string>             : [1..255 chars]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# description
+```
+
+### ip-address
+```text
+<ip-address>         : [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# ip-address
+```
+
+### poll *(parameterized — inner help harvested under "configure system modbus-unit NAME poll NAME")*
+```text
+<poll-name>          : Poll local name [1..32 chars]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# poll
+```
+
+### retries
+```text
+<number>             : [1..10, default 3]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# retries
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>system>modbus-unit(AAA)# shutdown
+```
+
+### timeout
+```text
+<milliseconds>       : [100..10000, default 3000]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# timeout
+```
+
+### unit-id
+```text
+<number>             : Slave unit ID [1..247, default 1]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)# unit-id
+```
+
+## configure system modbus-unit NAME poll NAME
+
+Level help (`?`):
+```text
+acquisition                    - Data acquisition mode (poll interval or 
+                                       interrupt)
+ [no] description                    - Poll description
+ [no] map-to-mqtt                    - 
+ [no] map-to-opcua                   - Source of the MQTT server name
+ [no] modbus-operation               - Modbus function
+ [no] scaling                        - Configure data scaling
+ [no] shutdown                       - 
+ [no] start-address                  - Holding register start address
+```
+
+### acquisition
+```text
+poll-interval
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# acquisition
+```
+
+### description
+```text
+<desc>               : [1..128 chars]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# description
+```
+
+### map-to-mqtt
+```text
+<mqtt-server-name>   : MQTT server (broker) name
+ <opcua-server-name>  : OPC UA server in which the MQTT server (broker) IP 
+                        address is stored
+
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# map-to-mqtt
+```
+
+### map-to-opcua
+```text
+<server-name>        : [1..32 chars]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# map-to-opcua
+```
+
+### modbus-operation
+```text
+function
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# modbus-operation
+```
+
+### scaling
+```text
+factor
+ offset
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# scaling
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# shutdown
+```
+
+### start-address
+```text
+<number>             : [0..65535, default 40001]
+
+
+SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# start-address
+```
+
 ## configure system mqtt
 
 Level help (`?`):
@@ -3037,12 +4107,129 @@ Level help (`?`):
 [no] server                         + MQTT server level
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure system mqtt server NAME")*
 ```text
 <name>               : Server name [1..32 chars]
 
 
 SF-1p-187>config>system>mqtt# server
+```
+
+## configure system mqtt server NAME
+
+Level help (`?`):
+```text
+[no] address                        - Configure server IP parameters
+ [no] certificate                    - Configure X.509 certificate for MQTTS 
+                                       authentication
+ [no] management-channel             - Open management channel with server
+ [no] user                           - Configure user credential for 
+                                       authentication
+
+ show status                         - Display MQTT connection status
+
+SF-1p-187>config>system>mqtt>server(zzz-hrvst)$
+```
+
+### address
+```text
+<ip>                 : 
+ <url>                : 
+
+
+SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ address
+```
+
+### certificate
+```text
+<certificate-name>   : MQTTS certificate [1..64 chars]
+
+
+SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ certificate
+```
+
+### management-channel
+```text
+<CR>
+
+SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ management-channel
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ show status
+```
+
+### user
+```text
+name
+
+SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ user
+```
+
+## configure system opcua-server NAME
+
+Level help (`?`):
+```text
+[no] application-certificate        - Assign X.509 certificate as application 
+                                       certificate
+ [no] application-name               - Configure application name
+ [no] application-uri                - Configure application URI
+ [no] endpoint                       - Configure endpoint
+ [no] shutdown                       - Disable server
+ [no] trusted-ca                     - Configure CA trusted for OPC UA
+```
+
+### application-certificate
+```text
+<certificate-name>   : OPC UA application name [1..64 chars]
+
+
+SF-1p-187>config>system>opcua-server(AAA)# application-certificate
+```
+
+### application-name
+```text
+<default>            : 
+ <custom>             : 
+
+
+SF-1p-187>config>system>opcua-server(AAA)# application-name
+```
+
+### application-uri
+```text
+<default>            : 
+ <custom>             : 
+
+
+SF-1p-187>config>system>opcua-server(AAA)# application-uri
+```
+
+### endpoint
+```text
+<default>            : 
+ <custom>             : 
+
+
+SF-1p-187>config>system>opcua-server(AAA)# endpoint
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>system>opcua-server(AAA)# shutdown
+```
+
+### trusted-ca
+```text
+<name>               : Trusted CA name [1..20 chars]
+
+
+SF-1p-187>config>system>opcua-server(AAA)# trusted-ca
 ```
 
 ## configure system serial

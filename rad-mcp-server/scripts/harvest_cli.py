@@ -20,6 +20,7 @@ Usage (run with the server venv python):
   python scripts/harvest_cli.py probe   lab-sf1p            # inspect prompt/error shapes
   python scripts/harvest_cli.py harvest lab-sf1p            # full run (safe to repeat)
   python scripts/harvest_cli.py harvest lab-sf1p --branch configure   # partial refresh
+  python scripts/harvest_cli.py harvest lab-sf1p --branch "configure crypto"  # one subtree
   python scripts/harvest_cli.py render  lab-sf1p            # re-render md from jsonl
 
 Output (both under skills/rad-cli-operations/references/ — knowledge assets,
@@ -58,6 +59,14 @@ DANGEROUS_ENTER = {
     "exec", "delete", "shutdown",
 }
 DANGEROUS_PREFIXES = ("clear-", "blacklist-clear")
+
+# Parameterized contexts we never auto-create even when the CLI allows it:
+# identity / credential / security-material objects.
+CREATE_EXCLUDE = {"login-user", "user", "community", "isakmp-key", "access-list"}
+
+# A string-named instance parameter, e.g. "[1..20 chars]" or "[string]".
+PARAM_STR_RE = re.compile(r"\[1\.\.(\d+) chars|\[string\]")
+TMP_NAME = "zzz-hrvst"
 
 MORE_RE = re.compile(r"-+\s*more\s*-+\s*$", re.IGNORECASE)
 
@@ -130,7 +139,11 @@ def write_tree_md(family: str, device_label: str, tree_text: str) -> Path:
 # ------------------------------------------------------------------ device
 
 
+BASE_PROMPT = ""  # set on connect; anchors reads on the device prompt
+
+
 def connect(device_name: str):
+    global BASE_PROMPT
     dev = get_device(device_name)
     driver = get_driver(dev.family)
     conn = ConnectHandler(
@@ -142,30 +155,42 @@ def connect(device_name: str):
         timeout=30,
         conn_timeout=15,
     )
+    BASE_PROMPT = conn.base_prompt
     return dev, conn
 
 
 def capture_help(conn, prefix: str, timeout: float = 15.0) -> str:
     """Type `<prefix>?` without Enter, read help, Ctrl-U the pending line."""
+    # After the help the CLI reprints `<prompt> <prefix>` as the pending
+    # line — that is the end-of-help signature, so reads can stop there
+    # instead of waiting out a quiet-period timer.
+    end_re = re.compile(re.escape(BASE_PROMPT) + r"[^\n]*[#\$] ?"
+                        + re.escape(prefix.rstrip()) + r" ?$") if BASE_PROMPT else None
     conn.write_channel(prefix + "?")
     output = ""
     deadline = time.monotonic() + timeout
     quiet = 0.0
     while time.monotonic() < deadline:
-        time.sleep(0.2)
+        time.sleep(0.1)
         chunk = conn.read_channel()
         if chunk:
             output += chunk
             quiet = 0.0
-            if MORE_RE.search(output.strip().splitlines()[-1] if output.strip() else ""):
+            last = output.strip().splitlines()[-1] if output.strip() else ""
+            if MORE_RE.search(last):
                 conn.write_channel(" ")  # advance pager
+            elif end_re and end_re.search(last):
+                break
         elif output:
-            quiet += 0.2
-            if quiet >= 0.8:
+            quiet += 0.1
+            if quiet >= 0.6:  # fallback when the signature never matched
                 break
     conn.write_channel("\x15")  # Ctrl-U: discard re-echoed pending input
-    time.sleep(0.15)
-    conn.read_channel()
+    drain_deadline = time.monotonic() + 2.0
+    while time.monotonic() < drain_deadline:  # drain the redraw fully so no
+        time.sleep(0.1)                       # residue leaks into the next read
+        if not conn.read_channel():
+            break
     return clean_help(output, prefix)
 
 
@@ -180,6 +205,23 @@ def clean_help(out: str, prefix: str) -> str:
 
 
 def nav(conn, line: str, timeout: int = 20) -> str:
+    if BASE_PROMPT:
+        try:
+            return conn.send_command(
+                line, expect_string=re.escape(BASE_PROMPT) + r"[^\n]*[#\$] ?$",
+                strip_prompt=False, strip_command=False, read_timeout=timeout)
+        except Exception:
+            # Prompt pattern didn't show — drain passively, NEVER re-send
+            # (the line may already have executed).
+            output = ""
+            deadline = time.monotonic() + 3.0
+            while time.monotonic() < deadline:
+                time.sleep(0.1)
+                chunk = conn.read_channel()
+                if not chunk and output:
+                    break
+                output += chunk
+            return output
     return conn.send_command_timing(line, last_read=0.8, read_timeout=timeout)
 
 
@@ -194,6 +236,9 @@ class Harvester:
         self.scratch = scratch_path.open("w", encoding="utf-8")
         self.log = log
         self.parameterized: list[str] = []
+        self.entered_existing: list[str] = []
+        self.created: list[str] = []
+        self.rolled_back: list[tuple[str, str]] = []
 
     def record(self, kind: str, context: str, prefix: str, text: str):
         entry = {"kind": kind, "context": context, "prefix": prefix, "text": text}
@@ -214,24 +259,121 @@ class Harvester:
         for step in path:
             nav(self.conn, step)
 
-    def crawl(self, node: Node, path: list[str]):
-        ctx = " ".join(path) or "<root>"
+    def level_info(self, timeout: float = 60.0) -> str:
+        """Run `info` at the current level (pager-aware) to find existing
+        instances of parameterized child contexts."""
+        end_re = re.compile(re.escape(BASE_PROMPT) + r"[^\n]*[#\$] ?$") if BASE_PROMPT else None
+        self.conn.write_channel("info\n")
+        output = ""
+        deadline = time.monotonic() + timeout
+        quiet = 0.0
+        while time.monotonic() < deadline:
+            time.sleep(0.1)
+            chunk = self.conn.read_channel()
+            if chunk:
+                output += chunk
+                quiet = 0.0
+                last = output.strip().splitlines()[-1] if output.strip() else ""
+                if MORE_RE.search(last):
+                    self.conn.write_channel(" ")
+                elif end_re and end_re.search(last):
+                    break  # prompt reprinted — dump complete
+            elif output:
+                quiet += 0.1
+                if quiet >= 0.8:
+                    break
+        return output
+
+    @staticmethod
+    def existing_instance(info_text: str, name: str) -> str | None:
+        """First existing instance of a parameterized child in `info` output.
+
+        Only single-token instance args are accepted so a mismatched info line
+        can never be assembled into an executable set-command.
+        """
+        for line in info_text.splitlines():
+            m = re.match(rf"^{re.escape(name)}\s+(\S+)\s*$", line.strip())
+            if m and m.group(1) != "?":
+                return m.group(1)
+        return None
+
+    def enter_and_crawl(self, child: Node, path: list[str], labels: list[str],
+                        nav_line: str, prompt_parent: str, rollback: str | None) -> bool:
+        """Enter a parameterized context via `nav_line`; harvest inside under a
+        stable NAME placeholder; roll back the instance if we created it."""
+        nav(self.conn, nav_line)
+        if self.conn.find_prompt() == prompt_parent:
+            return False  # entry refused (bad name, second arg required, ...)
+        where = " ".join(path)
+        if rollback:
+            self.created.append(f"{where} > {nav_line}")
+        self.crawl(child, path + [nav_line], labels + [f"{child.name} NAME"])
+        nav(self.conn, "exit")
+        if self.conn.find_prompt() != prompt_parent:
+            self.resync(path)
+        if rollback:
+            out = nav(self.conn, rollback)
+            self.rolled_back.append((f"{where} > {rollback}", out.strip()))
+        else:
+            self.entered_existing.append(f"{where} > {nav_line}")
+        return True
+
+    def try_enter_parameterized(self, child: Node, path: list[str], labels: list[str],
+                                level_help: str, arg_help: str, info_text: str,
+                                prompt_here: str) -> bool:
+        """Harvest inside a parameterized context when it is safe:
+        an existing instance (pure navigation), or a string-named [no]-removable
+        object created with a temp name and rolled back right after."""
+        inst = self.existing_instance(info_text, child.name)
+        if inst is not None and self.enter_and_crawl(
+                child, path, labels, f"{child.name} {inst}", prompt_here, rollback=None):
+            return True
+        m = PARAM_STR_RE.search(arg_help)
+        removable = re.search(rf"\[no\]\s+{re.escape(child.name)}\b", level_help)
+        if m and removable and child.name not in CREATE_EXCLUDE:
+            tmp = TMP_NAME[: max(1, int(m.group(1)))] if m.group(1) else TMP_NAME
+            return self.enter_and_crawl(
+                child, path, labels, f"{child.name} {tmp}", prompt_here,
+                rollback=f"no {child.name} {tmp}")
+        return False
+
+    def crawl(self, node: Node, path: list[str], labels: list[str] | None = None):
+        labels = path if labels is None else labels
+        ctx = " ".join(labels) or "<root>"
         prompt_here = self.conn.find_prompt()
         level = capture_help(self.conn, "")
         self.record("level", ctx, "", level)
         self.log(f"[{len(self.records):4d}] level  {ctx}", flush=True)
 
+        info_text = None  # fetched lazily, once per level, on first param child
         for child in node.children:
             if child.is_context and not self.enter_forbidden(child.name):
                 nav(self.conn, child.name)
                 if self.conn.find_prompt() == prompt_here:
-                    # Prompt didn't move: needs an argument (parameterized).
-                    self.parameterized.append(f"{ctx} > {child.name}")
+                    # Prompt didn't move — usually parameterized, but stray
+                    # buffered output can fake this on a plain context (lost
+                    # `configure crypto` once). Re-ground and retry before
+                    # classifying.
+                    self.resync(path)
+                    nav(self.conn, child.name)
+                if self.conn.find_prompt() == prompt_here:
+                    # Prompt still didn't move: needs an argument (parameterized).
                     arg = capture_help(self.conn, child.name + " ")
-                    self.record("args-noenter", ctx, child.name, arg)
-                    self.log(f"[{len(self.records):4d}] param  {ctx} > {child.name}", flush=True)
+                    entered = False
+                    if path and path[0] == "configure":  # never under quick-setup etc.
+                        if info_text is None:
+                            info_text = self.level_info()
+                        entered = self.try_enter_parameterized(
+                            child, path, labels, level, arg, info_text, prompt_here)
+                    if entered:
+                        self.record("args-param", ctx, child.name, arg)
+                        self.log(f"[{len(self.records):4d}] param+ {ctx} > {child.name} (entered)", flush=True)
+                    else:
+                        self.parameterized.append(f"{ctx} > {child.name}")
+                        self.record("args-noenter", ctx, child.name, arg)
+                        self.log(f"[{len(self.records):4d}] param  {ctx} > {child.name}", flush=True)
                     continue
-                self.crawl(child, path + [child.name])
+                self.crawl(child, path + [child.name], labels + [child.name])
                 nav(self.conn, "exit")
                 if self.conn.find_prompt() != prompt_here:
                     self.resync(path)  # lost position — renavigate from root
@@ -306,10 +448,12 @@ def render(family: str, device_label: str) -> Path:
         f"{datetime.now(timezone.utc).strftime('%Y-%m-%d')} by scripts/harvest_cli.py",
         "(re-run `harvest` after firmware upgrades — it diffs and updates in place).",
         "Every section is a CLI context: first the level `?` listing (commands +",
-        "descriptions), then per-command argument help (`<command> ?`). Entries",
-        "marked *(not entered)* are parameterized contexts — their inner structure",
-        "is in command-tree-" + family + ".md; use cli_help with a real index for",
-        "inner argument syntax.",
+        "descriptions), then per-command argument help (`<command> ?`). Sections",
+        "ending in NAME are parameterized contexts harvested through one instance",
+        "(an existing one, or a temp object created and rolled back) — NAME stands",
+        "for any instance. Entries marked *(not entered)* could not be harvested",
+        "safely — their inner structure is in command-tree-" + family + ".md; use",
+        "cli_help with a real index for inner argument syntax.",
         "",
     ]
     contexts: dict[str, list[dict]] = {}
@@ -323,6 +467,9 @@ def render(family: str, device_label: str) -> Path:
                 out.append("Level help (`?`):")
             elif e["kind"] == "args-noenter":
                 out.append(f"### {e['prefix']} *(not entered — parameterized context)*")
+            elif e["kind"] == "args-param":
+                out.append(f"### {e['prefix']} *(parameterized — inner help harvested "
+                           f"under \"{ctx} {e['prefix']} NAME\")*")
             else:
                 out.append(f"### {e['prefix']}")
             out.append("```text")
@@ -341,7 +488,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("mode", choices=["probe", "harvest", "render"])
     ap.add_argument("device")
-    ap.add_argument("--branch", default="", help="only re-crawl this top-level branch (e.g. configure)")
+    ap.add_argument("--branch", default="",
+                    help="only re-crawl this subtree, top-level or nested "
+                         "(e.g. configure, or \"configure crypto\")")
     args = ap.parse_args()
 
     dev = get_device(args.device)
@@ -381,9 +530,13 @@ def main():
         print(f"Tree: {sum(1 for _ in iter_nodes(tree))} nodes.", flush=True)
 
         if args.branch:
-            tree.children = [c for c in tree.children if c.name == args.branch]
-            if not tree.children:
-                raise SystemExit(f"Branch '{args.branch}' not found in the live tree.")
+            node = tree  # prune to the single chain leading to the branch
+            for part in args.branch.split():
+                nxt = next((c for c in node.children if c.name == part), None)
+                if nxt is None:
+                    raise SystemExit(f"Branch '{args.branch}' not found in the live tree.")
+                node.children = [nxt]
+                node = nxt
 
         h = Harvester(conn, scratch)
         h.crawl(tree, [])
@@ -413,6 +566,20 @@ def main():
     print(f"\nDone: {len(h.records)} captures in {mins:.1f} min "
           f"-> {jsonl_path_for(family)} ({len(merged)} total records)")
     print(report)
+    if h.entered_existing:
+        print(f"\nParameterized entered via EXISTING instance ({len(h.entered_existing)}):")
+        for line in h.entered_existing:
+            print(f"    {line}")
+    if h.created:
+        print(f"\nParameterized entered via TEMP object ({len(h.created)}):")
+        for line in h.created:
+            print(f"    {line}")
+        print("  Rollback results:")
+        for cmd, out in h.rolled_back:
+            print(f"    {cmd} -> {out or 'ok'}")
+        leftovers = len(h.created) - len(h.rolled_back)
+        if leftovers:
+            print(f"  WARNING: {leftovers} temp object(s) without a recorded rollback — verify on device!")
     if h.parameterized:
         print(f"\nParameterized (not entered): {len(h.parameterized)}")
     print(f"Rendered: {render(family, label)}")

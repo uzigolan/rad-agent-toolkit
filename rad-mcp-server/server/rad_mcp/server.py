@@ -297,6 +297,10 @@ def cli_reference_context(family: str, context: str) -> str:
         elif e["kind"] == "args-noenter":
             out.append(f"## {e['prefix']} (not entered — parameterized context; "
                        f"use cli_help with a real index for inner syntax)")
+        elif e["kind"] == "args-param":
+            key = f"{ctx} {e['prefix']} NAME".replace(" ", "+")
+            out.append(f"## {e['prefix']} (parameterized — inner help at "
+                       f"rad://cli-reference/{family}/{key})")
         else:
             out.append(f"## {e['prefix']}")
         out.append(e["text"] or "(no help output captured)")
@@ -339,10 +343,13 @@ if not READONLY:
             return f"Unknown stage_id '{stage_id}'. Stage the change first with stage_config."
         if not confirm:
             return "REFUSED: commit_config requires confirm=true after the user has approved the staged preview."
-        stage = _STAGES.pop(stage_id)
+        stage = _STAGES[stage_id]
         dev = get_device(stage["device"])
         backup_path = _take_backup(dev)
         transcript = get_backend().push_config(dev, stage["lines"])
+        # Only consume the stage once the push has succeeded, so a connection
+        # failure can be retried with the same stage_id.
+        _STAGES.pop(stage_id, None)
         audit("commit_config", dev.name, detail=f"{stage_id}: {stage['purpose']}\n{transcript}")
         return (
             f"Committed stage {stage_id} to {dev.name}. Pre-commit backup: {backup_path}\n"
