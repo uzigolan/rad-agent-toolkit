@@ -5,11 +5,34 @@ description: RAD context-based CLI operations (ETX-2, SecFlow families — devic
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
 
-Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) lab unit — full command
-tree captured in `server/logs/smoke-lab-sf1p.txt`. The ETX-2 family shares this
-dialect (per-family differences: ETX-2 adds flows/EVC contexts). Legacy ETX-1
-and MP-4100/Megaplex use different CLIs and will get their own skills.
-SecFlow-1p manual: https://www.rad.com/docs/965
+Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) lab unit. The ETX-2
+family shares this dialect (per-family differences: ETX-2 adds flows/EVC
+contexts). Legacy ETX-1 and MP-4100/Megaplex use different CLIs and will get
+their own skills. SecFlow-1p manual: https://www.rad.com/docs/965
+
+**Harvested knowledge in `references/` (per family):**
+
+| File | Contents | Use it to |
+|---|---|---|
+| `command-tree-<family>.md` | Full `tree` hierarchy | Locate which context holds a feature |
+| `cli-reference-<family>.md` | Complete harvested `?` help: every context's level listing + per-command argument constraints | Answer syntax questions WITHOUT touching the device — grep the context path header, e.g. `## configure system` |
+| `cli-help-<family>.jsonl` | Same data, machine-readable (source for the MCP resources) | — |
+
+Also exposed as MCP resources (for Desktop, which has no filesystem):
+`rad://command-tree/{family}`, `rad://cli-reference/{family}` (context index),
+`rad://cli-reference/{family}/{context}` — spaces become `+`, root is `root`
+(e.g. `rad://cli-reference/secflow/configure+system`).
+
+**Lookup order for syntax questions:** 1) `cli-reference-<family>.md` (or the
+keyed resource) — instant, no device session; 2) live `cli_help` only for what
+the harvest can't hold: contexts marked *(not entered — parameterized)*, a
+device on different firmware, or verification before a risky change.
+
+**Keeping it current:** after a firmware upgrade, re-run
+`python scripts/harvest_cli.py harvest <device>` (safe to repeat; ~11 min) —
+it re-captures the tree live, re-crawls, prints an ADDED/REMOVED/CHANGED diff,
+and rewrites the references in place; git history tracks CLI evolution.
+`--branch configure` refreshes one subtree only.
 
 ## CLI model (critical to understand)
 
@@ -88,9 +111,11 @@ Semantics of the listings (verified):
   to discover reads not yet in the verified map above.
 
 **Workflow for any unfamiliar config task:** find the right context in
-`references/command-tree-secflow.md` (also exposed as MCP resource
-`rad://command-tree/secflow`) → `cli_help` at that level to see the leaves →
-`cli_help` with `"<leaf> "` to get exact argument constraints → stage config.
+`references/command-tree-secflow.md` (resource `rad://command-tree/secflow`) →
+read that context's section in `references/cli-reference-secflow.md` (resource
+`rad://cli-reference/secflow/<context>`) for the level listing and argument
+constraints → only if the context is parameterized or firmware differs, use
+live `cli_help` → stage config.
 
 Useful writable leaves under `configure system`: `name "..."`, `location "..."`,
 `contact "..."` (safe, non-service-affecting — good for write-path testing).

@@ -8,6 +8,7 @@ Set RAD_MCP_READONLY=true to disable all write tools at registration time.
 """
 from __future__ import annotations
 
+import json
 import os
 import secrets
 from datetime import datetime, timezone
@@ -241,6 +242,66 @@ def command_tree_resource(family: str) -> str:
         known = ", ".join(p.stem.removeprefix("command-tree-") for p in REFERENCE_DIR.glob("command-tree-*.md"))
         return f"No captured tree for '{family}'. Available: {known or '(none yet)'}"
     return path.read_text(encoding="utf-8")
+
+
+def _load_cli_help(family: str) -> list[dict] | None:
+    """Load harvested `?`-help captures for a family (None if not harvested)."""
+    path = (REFERENCE_DIR / f"cli-help-{family}.jsonl").resolve()
+    if path.parent != REFERENCE_DIR.resolve() or not path.exists():
+        return None
+    return [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
+
+
+@mcp.resource("rad://cli-reference/{family}")
+def cli_reference_index(family: str) -> str:
+    """Index of harvested CLI `?` help: every known context for the family.
+
+    Fetch one context via rad://cli-reference/{family}/{context} — spaces in
+    the context path become '+', root level is 'root'
+    (e.g. rad://cli-reference/secflow/configure+system).
+    """
+    entries = _load_cli_help(family)
+    if entries is None:
+        known = ", ".join(p.stem.removeprefix("cli-help-") for p in REFERENCE_DIR.glob("cli-help-*.jsonl"))
+        return f"No harvested CLI help for '{family}'. Available: {known or '(none yet)'}"
+    contexts: dict[str, int] = {}
+    for e in entries:
+        contexts[e["context"]] = contexts.get(e["context"], 0) + 1
+    lines = [f"Harvested `?` help for family '{family}' — {len(contexts)} contexts.",
+             "Fetch one: rad://cli-reference/" + family + "/<context with '+' for spaces>", ""]
+    for ctx, n in contexts.items():
+        key = "root" if ctx == "<root>" else ctx.replace(" ", "+")
+        lines.append(f"{key}\t({n} captures)")
+    return "\n".join(lines)
+
+
+@mcp.resource("rad://cli-reference/{family}/{context}")
+def cli_reference_context(family: str, context: str) -> str:
+    """Harvested `?` help for ONE CLI context: the level listing plus each
+    command's argument help. context uses '+' for spaces ('root' = root level).
+    """
+    entries = _load_cli_help(family)
+    if entries is None:
+        return f"No harvested CLI help for '{family}'. See rad://cli-reference/{family}."
+    ctx = context.replace("+", " ").strip()
+    if ctx in ("root", ""):
+        ctx = "<root>"
+    hits = [e for e in entries if e["context"] == ctx]
+    if not hits:
+        return (f"Unknown context '{ctx}' for '{family}'. "
+                f"See rad://cli-reference/{family} for the index.")
+    out = [f"# {family} :: {ctx}", ""]
+    for e in hits:
+        if e["kind"] == "level":
+            out.append("Level help (`?`):")
+        elif e["kind"] == "args-noenter":
+            out.append(f"## {e['prefix']} (not entered — parameterized context; "
+                       f"use cli_help with a real index for inner syntax)")
+        else:
+            out.append(f"## {e['prefix']}")
+        out.append(e["text"] or "(no help output captured)")
+        out.append("")
+    return "\n".join(out)
 
 
 # -------------------------------------------------------------------- write

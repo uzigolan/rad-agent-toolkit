@@ -1,9 +1,10 @@
-# SecFlow command tree (family: secflow)
+# secflow command tree (family: secflow)
 
-Captured live from SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) via the root `tree`
-command, July 2026. This is the full navigable command hierarchy — use it to
-locate which context holds a feature, then use the `cli_help` tool for exact
-argument syntax at that spot (`?` help is always firmware-exact).
+Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) via the root `tree` command on 2026-07-06
+by scripts/harvest_cli.py — re-run `harvest` after firmware upgrades; the
+tree is re-captured fresh each run. Use it to locate which context holds a
+feature, then cli-reference-secflow.md / the cli_help tool for exact,
+firmware-current argument syntax.
 
 Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 `-` = command/leaf, `[no]` prefix = removable with `no <leaf>`.
@@ -1889,6 +1890,7 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   +---dialer-number
 |   |   |   |   |
 |   |   |   |   +---lte-band
+
 |   |   |   |   |
 |   |   |   |   +---name
 |   |   |   |   |
@@ -2171,6 +2173,4 @@ Global commands:
 +---trace-route
 |
 +---tree
-
-
 ```
