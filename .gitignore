@@ -1,0 +1,10 @@
+# Workspace-local Claude settings (per-machine permissions)
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+
+# OS noise
+Thumbs.db
+desktop.ini

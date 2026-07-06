@@ -1,0 +1,7 @@
+# rad-mcp device inventory — facts only, NEVER credentials (those live in server/.env)
+devices:
+  - name: lab-sf1p
+    host: 172.17.163.187
+    family: secflow
+    groups: [lab]
+    description: "SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests"

@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python --version)",
+      "PowerShell(py --version)",
+      "PowerShell(Get-Content \"c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\server\\\\backups\\\\lab-sf1p-20260706T115555Z.cfg\" -TotalCount 8; \"...\"; \\(Get-Content \"c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\server\\\\backups\\\\lab-sf1p-20260706T115555Z.cfg\" | Measure-Object -Line\\).Lines)",
+      "PowerShell($candidates = @\\(\"$env:USERPROFILE\\\\.claude\\\\local\\\\claude.exe\", \"$env:LOCALAPPDATA\\\\Programs\\\\claude\\\\claude.exe\", \"$env:USERPROFILE\\\\AppData\\\\Roaming\\\\npm\\\\claude.cmd\", \"$env:USERPROFILE\\\\.local\\\\bin\\\\claude.exe\"\\); foreach \\($c in $candidates\\) { if \\(Test-Path $c\\) { \"FOUND: $c\" } }; Get-ChildItem \"$env:USERPROFILE\\\\.claude\" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)",
+      "WebFetch(domain:json.schemastore.org)",
+      "WebFetch(domain:www.schemastore.org)",
+      "mcp__rad-mcp__run_show_in_context",
+      "Bash(cp \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/.claude/skills/rad-cli-operations/SKILL.md\" && diff \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/.claude/skills/rad-cli-operations/SKILL.md\" && echo \"IN SYNC\")",
+      "WebSearch",
+      "Bash(\"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/server/.venv/Scripts/python.exe\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/scripts/harvest_cli.py\" probe lab-sf1p)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\uzi_g\\Downloads\\ai-projects\\fusion-cli\\.claude\\skills\\rad-cli-operations"
+    ]
+  },
+  "enabledPlugins": {
+    "rad-mcp@rad-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "rad-marketplace": {
+      "source": {
+        "source": "directory",
+        "path": "C:\\Users\\uzi_g\\Downloads\\ai-projects\\fusion-cli\\rad-mcp-server"
+      }
+    }
+  }
+}
