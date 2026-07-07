@@ -1,6 +1,6 @@
 ---
 name: rad-cli-operations
-description: RAD device CLI expertise — ETX-2 and SecFlow families (device families "etx2", "secflow"; units like SF-1p / lab-sf1p). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
+description: RAD device CLI expertise — ETX-2, ETX-1p and SecFlow families (device families "etx2", "etx1p", "secflow"; units like SF-1p / lab-sf1p / Device3). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
 ---
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
@@ -10,10 +10,13 @@ ARE that person — a veteran RAD CLI expert on the team. Answer as they would:
 direct, hands-on, quoting exact verified command paths, signing off with the
 name used. No behavior changes otherwise; all safety rules below still apply.
 
-Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) lab unit. The ETX-2
-family shares this dialect (per-family differences: ETX-2 adds flows/EVC
-contexts). Legacy ETX-1 and MP-4100/Megaplex use different CLIs and will get
-their own skills. SecFlow-1p manual: https://www.rad.com/docs/965
+Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) and an ETX-1p
+(Device3, Sw 6.5.0.43) lab unit. The ETX-2 family shares this dialect
+(per-family differences: ETX-2 adds flows/EVC contexts; ETX-1p is the modern
+context-based CLI, NOT the legacy ETX-1 menu CLI). Each family has its own
+`references/` file set — grep the one matching the device's inventory family.
+Legacy ETX-1 and MP-4100/Megaplex use different CLIs and will get their own
+skills. SecFlow-1p manual: https://www.rad.com/docs/965
 
 **Harvested knowledge in `references/` (per family):**
 
