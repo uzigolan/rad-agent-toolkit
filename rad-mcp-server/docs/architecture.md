@@ -204,13 +204,18 @@ RAG adds the fuzzy one.
 
 - **Now (internal pilot):** absolute venv paths in `.mcp.json` / Desktop
   config on the pilot machine.
+- **Now also available — shared remote server (internal, read-only):**
+  `RAD_MCP_TRANSPORT=http` serves one authenticated read-only endpoint that
+  many clients connect to by URL (no per-user local install). Read-only and
+  bearer-auth are enforced in code; internal-network hosting only. See
+  `docs/remote-server.md`.
 - **Next:** publish the `rad-mcp` Python package internally → configs become
   `uvx rad-mcp` (self-contained installs); package an `.mcpb` Desktop
   Extension for one-click NOC installs; plugin marketplace moves from local
   directory to a git URL.
-- **Later:** RADview backend for fleet-scale operations; remote MCP endpoint
-  for Cowork/claude.ai; manuals-RAG (`search_docs`) as the vendor-exclusive
-  differentiator.
+- **Later:** RADview backend for fleet-scale operations; remote *write* access
+  with per-token scopes; external/cloud reach via a hardened gateway;
+  manuals-RAG (`search_docs`) as the vendor-exclusive differentiator.
 
 ## Roadmap snapshot (July 2026)
 

@@ -1,10 +1,24 @@
-"""rad-mcp MCP server (stdio).
+"""rad-mcp MCP server.
 
 Tools are product-agnostic verbs; the device's `family` field selects a
 driver (CLI dialect), and the backend handles transport. Write tools follow
 the staged-commit flow: stage_config -> (human reviews diff) -> commit_config.
 
-Set RAD_MCP_READONLY=true to disable all write tools at registration time.
+Transports (RAD_MCP_TRANSPORT):
+  stdio (default)  local — each client launches its own server process.
+  http             remote — one server, many clients connect by URL. For
+                   sharing on an INTERNAL network only. Two hard interlocks in
+                   code (not just config): http REQUIRES bearer tokens
+                   (RAD_MCP_TOKENS) or it refuses to start, and http FORCES
+                   read-only (write tools are never registered remotely).
+
+Env:
+  RAD_MCP_READONLY=true   disable write tools at registration (implied by http)
+  RAD_MCP_TRANSPORT       stdio | http
+  RAD_MCP_HOST            http bind address (default 127.0.0.1 — set to the
+                          internal-network interface to share; never a public one)
+  RAD_MCP_PORT            http port (default 8080)
+  RAD_MCP_TOKENS          http bearer tokens, comma-separated (required for http)
 """
 from __future__ import annotations
 
@@ -22,8 +36,31 @@ from .backends import get_backend
 from .drivers import get_driver
 from .inventory import get_device, load_inventory
 
-READONLY = os.environ.get("RAD_MCP_READONLY", "").lower() in ("1", "true", "yes")
+_TRANSPORT = os.environ.get("RAD_MCP_TRANSPORT", "stdio").lower()
+_HTTP = _TRANSPORT in ("http", "streamable-http")
+
+# Interlock 1: HTTP (remote/shared) is read-only, period — write tools are
+# never registered when serving over the network, regardless of RAD_MCP_READONLY.
+READONLY = _HTTP or os.environ.get("RAD_MCP_READONLY", "").lower() in ("1", "true", "yes")
 BACKUP_DIR = Path(__file__).resolve().parent.parent / "backups"
+
+
+def _build_auth():
+    """Interlock 2: HTTP requires bearer tokens — refuse to serve unauthenticated.
+    Tokens come from RAD_MCP_TOKENS (comma-separated). stdio needs no auth."""
+    if not _HTTP:
+        return None
+    tokens = [t.strip() for t in os.environ.get("RAD_MCP_TOKENS", "").split(",") if t.strip()]
+    if not tokens:
+        raise SystemExit(
+            "RAD_MCP_TRANSPORT=http requires RAD_MCP_TOKENS (comma-separated bearer "
+            "tokens). Refusing to start an unauthenticated network server."
+        )
+    from fastmcp.server.auth.providers.jwt import StaticTokenVerifier
+    return StaticTokenVerifier(
+        {tok: {"client_id": f"rad-client-{i+1}"} for i, tok in enumerate(tokens)}
+    )
+
 
 mcp = FastMCP(
     "rad-mcp",
@@ -34,6 +71,7 @@ mcp = FastMCP(
         "touches the device until commit_config is called with confirm=true. "
         "A running-config backup is taken automatically before every commit."
     ),
+    auth=_build_auth(),
 )
 
 # In-memory staging area: stage_id -> {device, lines, created}
@@ -404,8 +442,15 @@ if not READONLY:
 
 def main() -> None:
     mode = "READ-ONLY" if READONLY else "read-write (staged commits)"
-    audit("server_start", "-", detail=f"v{__version__} {mode}")
-    mcp.run()  # stdio
+    if _HTTP:
+        host = os.environ.get("RAD_MCP_HOST", "127.0.0.1")
+        port = int(os.environ.get("RAD_MCP_PORT", "8080"))
+        audit("server_start", "-",
+              detail=f"v{__version__} {mode} transport=http {host}:{port} (auth required)")
+        mcp.run(transport="http", host=host, port=port)
+    else:
+        audit("server_start", "-", detail=f"v{__version__} {mode} transport=stdio")
+        mcp.run()  # stdio
 
 
 if __name__ == "__main__":
