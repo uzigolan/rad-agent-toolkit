@@ -1,4 +1,6 @@
-"""Package the skills as Claude Desktop upload zips (dist/desktop-skills/).
+"""Package the skills as Claude Desktop upload zips (dist/claude-desktop-skills/).
+
+For non-Claude clients (ChatGPT/OpenAI, Cursor, ...) see build_portable_bundle.py.
 
 Desktop's skill upload rejects zip entries with backslash paths, which is what
 PowerShell Compress-Archive produces on Windows — hence this script.
@@ -9,7 +11,7 @@ import zipfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-OUT_DIR = REPO / "dist" / "desktop-skills"
+OUT_DIR = REPO / "dist" / "claude-desktop-skills"
 
 
 def _write_zip(out: Path, skill_dir: Path) -> None:
