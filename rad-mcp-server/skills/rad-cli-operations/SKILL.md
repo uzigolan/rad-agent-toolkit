@@ -97,8 +97,10 @@ All staged via `stage_config` (start `exit all`, end `exit all`); persist with
 
 **Static route** (`configure router <1..10>`):
 `static-route <prefix> address <next-hop-ip> [metric <n>]` — next hop can also
-be `interface <if>` or `tunnel-interface <t>`; prefix IPv4 or IPv6. Remove:
-`no static-route <prefix>`. Verify: `show routing-table` / `show rib` there.
+be `interface <if>` or `tunnel-interface <t>`; prefix IPv4 or IPv6. Remove
+with the FULL route spec — `no static-route <prefix> address <next-hop>` —
+prefix alone errors (verified live: "parameter or keyword missing").
+Verify: `show routing-table` / `show rib` there.
 
 **Route policy** (`configure router <n>`): `prefix-list "<name>" ipv4` →
 `deny|permit <prefix> sequence <n>` lines → bind with
