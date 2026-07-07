@@ -78,18 +78,26 @@ knowledge is layered from cheap/static to live/exact:
 | 1. Skill | `rad-cli-operations/SKILL.md`: CLI model, verified command map, **common config recipes**, safety rules | always loaded for RAD work; recipes answer frequent asks with zero lookups |
 | 2. References | `references/cli-help-<family>.jsonl` (canonical) → `cli-reference-<family>.md` (rendered) + `command-tree-<family>.md`: the device's **complete `?` help**, every context incl. parameterized ones under `NAME` placeholders | syntax questions answered by grepping a `## <context path>` header — zero device I/O |
 | 3. Live `?` help | `cli_help` tool: firmware-exact ground truth (~1 s warm) | firmware drift, pre-write verification, contexts the harvest can't enter |
-| 4. MCP resources | `rad://inventory`, `rad://backups`, `rad://command-tree/{family}`, `rad://cli-reference/{family}[/{context}]` | surfaces without filesystem access (Desktop) |
-| 5. Manuals RAG | `search_docs` over official RAD manuals | planned — conceptual questions the CLI can't answer |
+| 4. Manual | `references/manual-<family>/` (per-chapter markdown + index), via `scripts/ingest_manual.py`; resources `rad://manual/{family}[/{chapter}]` | **concepts, procedures, limits, alarm meanings** the `?` help can't give (e.g. "max 2 MQTT servers", enrollment workflow) — cross-linked to CLI contexts |
+| 5. MCP resources | `rad://inventory`, `rad://backups`, `rad://command-tree/{family}`, `rad://cli-reference/{family}[/{context}]`, `rad://manual/{family}[/{chapter}]` | surfaces without filesystem access (Desktop) |
+| 6. Manuals RAG | `search_docs` — semantic search / embeddings over the manual corpus | planned — layer 4 already makes the text greppable; RAG adds fuzzy recall at fleet scale |
 
 The layers reinforce each other: skills teach the *method* (recipe → reference
-grep → live verify → stage), references give the *map*, and `cli_help` gives
-ground truth that can never drift from the firmware. New verified findings are
-folded back into layers 1–2 after each session. Layer 2 is produced by
-`scripts/harvest_cli.py` (driven by the **`/rad-harvest`** skill): it crawls
-every context live, enters parameterized contexts through an existing instance
-or a `zzz-hrvst` temp object rolled back immediately, and rewrites the
-references with an ADDED/REMOVED/CHANGED diff — git history is the record of
-CLI evolution across firmware versions.
+grep → manual for concepts → live verify → stage), references give the *map*,
+the manual gives the *meaning*, and `cli_help` gives ground truth that can
+never drift from the firmware. New verified findings are folded back into
+layers 1–2 after each session.
+
+Two ingest pipelines feed the knowledge layers, independent and
+non-overwriting. **Layer 2 (syntax)** is produced by `scripts/harvest_cli.py`
+(driven by **`/rad-harvest`**): it crawls every context live, enters
+parameterized contexts through an existing instance or a `zzz-hrvst` temp
+object rolled back immediately, and rewrites the references with an
+ADDED/REMOVED/CHANGED diff — git history is the record of CLI evolution across
+firmware. **Layer 4 (concepts)** is produced by `scripts/ingest_manual.py`: it
+splits a user-manual PDF along its TOC into per-chapter markdown plus a
+CLI-topic → chapter cross-link index. The PDF is gitignored (large binary);
+the extracted markdown is committed and greppable.
 
 ## Performance model
 
@@ -148,4 +156,5 @@ and `dist/desktop-skills/*.zip` (Desktop uploads, built by
 - [ ] Packaging: `uvx rad-mcp`, `.mcpb`, marketplace via git
 - [ ] ETX-1 and MP-4100/Megaplex dialect drivers
 - [ ] RADview northbound backend
-- [ ] Manuals RAG
+- [x] Device manual layer (ETX-1p): PDF → per-chapter markdown + CLI cross-links
+- [ ] Manuals RAG (semantic search over the manual corpus)

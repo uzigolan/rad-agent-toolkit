@@ -308,6 +308,40 @@ def cli_reference_context(family: str, context: str) -> str:
     return "\n".join(out)
 
 
+@mcp.resource("rad://manual/{family}")
+def manual_index_resource(family: str) -> str:
+    """Index of the device user manual for a family: chapter list plus a
+    CLI-topic -> manual-chapter cross-link table. The manual is the COMPANION
+    to the harvested CLI reference — syntax lives in rad://cli-reference, while
+    concepts, procedures, limits and alarm meanings live in the manual.
+    Fetch one chapter via rad://manual/{family}/{chapter}.
+    """
+    path = (REFERENCE_DIR / f"manual-{family}" / "manual-index.md").resolve()
+    manual_root = (REFERENCE_DIR / f"manual-{family}").resolve()
+    if path.parent != manual_root or manual_root.parent != REFERENCE_DIR.resolve():
+        return "REFUSED: invalid family name."
+    if not path.exists():
+        known = ", ".join(p.name.removeprefix("manual-") for p in REFERENCE_DIR.glob("manual-*") if p.is_dir())
+        return f"No ingested manual for '{family}'. Available: {known or '(none yet)'}"
+    return path.read_text(encoding="utf-8")
+
+
+@mcp.resource("rad://manual/{family}/{chapter}")
+def manual_chapter_resource(family: str, chapter: str) -> str:
+    """One chapter of the device user manual as markdown. `chapter` is a file
+    stem from the index (e.g. '06-6-management-and-security'); the '.md'
+    suffix is optional.
+    """
+    stem = chapter[:-3] if chapter.endswith(".md") else chapter
+    manual_root = (REFERENCE_DIR / f"manual-{family}").resolve()
+    path = (manual_root / f"{stem}.md").resolve()
+    if path.parent != manual_root or manual_root.parent != REFERENCE_DIR.resolve():
+        return "REFUSED: invalid family or chapter name."
+    if not path.exists():
+        return f"Unknown chapter '{chapter}' for '{family}'. See rad://manual/{family} for the index."
+    return path.read_text(encoding="utf-8")
+
+
 # -------------------------------------------------------------------- write
 
 if not READONLY:

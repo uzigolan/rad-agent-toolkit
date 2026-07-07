@@ -10,7 +10,9 @@
       "mcp__rad-mcp__run_show_in_context",
       "Bash(cp \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/.claude/skills/rad-cli-operations/SKILL.md\" && diff \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/.claude/skills/rad-cli-operations/SKILL.md\" && echo \"IN SYNC\")",
       "WebSearch",
-      "Bash(\"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/server/.venv/Scripts/python.exe\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/scripts/harvest_cli.py\" probe lab-sf1p)"
+      "Bash(\"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/server/.venv/Scripts/python.exe\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/scripts/harvest_cli.py\" probe lab-sf1p)",
+      "mcp__rad-mcp__commit_config",
+      "PowerShell(& \"c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\.venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\uzi_g\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-uzi-g-Downloads-ai-projects-fusion-cli\\\\da4d4fcf-bf8a-4526-9e4d-e4f7f4d83461\\\\scratchpad\\\\cleanup_tmp_objects.py\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\uzi_g\\Downloads\\ai-projects\\fusion-cli\\.claude\\skills\\rad-cli-operations"

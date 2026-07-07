@@ -25,17 +25,23 @@ skills. SecFlow-1p manual: https://www.rad.com/docs/965
 | `command-tree-<family>.md` | Full `tree` hierarchy | Locate which context holds a feature |
 | `cli-reference-<family>.md` | Complete harvested `?` help: every context's level listing + per-command argument constraints. Parameterized (named/indexed) contexts are harvested too, under a `NAME` placeholder — e.g. `## configure system mqtt server NAME` — captured via an existing instance or a temp object rolled back immediately | Answer syntax questions WITHOUT touching the device — grep the context path header, e.g. `## configure system` |
 | `cli-help-<family>.jsonl` | Same data, machine-readable (source for the MCP resources) | — |
+| `manual-<family>/` (when present) | The device **user manual** split into per-chapter markdown + `manual-index.md` (chapter list + CLI-topic → chapter cross-links). COMPANION to the CLI reference, not a replacement | Answer *concepts / procedures / limits / alarm meanings* the `?` help can't give — e.g. "max 2 MQTT servers", "what does LOS mean", enrollment workflow. Start at `manual-index.md`, then grep the chapter |
 
 Also exposed as MCP resources (for Desktop, which has no filesystem):
 `rad://command-tree/{family}`, `rad://cli-reference/{family}` (context index),
 `rad://cli-reference/{family}/{context}` — spaces become `+`, root is `root`
-(e.g. `rad://cli-reference/secflow/configure+system`).
+(e.g. `rad://cli-reference/secflow/configure+system`); and, where a manual is
+ingested, `rad://manual/{family}` (index) + `rad://manual/{family}/{chapter}`.
 
 **Keeping it current:** use the **`/rad-harvest <device> [subtree]`** skill —
 it runs the harvester in the background (~8 min full, ~2–3 min per subtree),
 reviews the ADDED/REMOVED/CHANGED diff and temp-object rollbacks, verifies the
 device is clean, and syncs the skill copies. (Directly:
 `python scripts/harvest_cli.py harvest <device> [--branch "configure crypto"]`.)
+For the manual layer, drop the family's PDF in `manuals/` and run
+`python scripts/ingest_manual.py <pdf> <family>` (re-runnable; rewrites
+`references/manual-<family>/`). The PDF stays gitignored; the extracted
+markdown is committed.
 
 ## How this skill treats the harvested data
 
@@ -48,13 +54,26 @@ device `?` help ──harvest_cli.py──▶ cli-help-<family>.jsonl   (canonic
         └── root `tree` ──▶ command-tree-<family>.md           │
                                            └─▶ rad://cli-reference/{family}[/{context}]
                                                 (MCP resources — keyed lookup for Desktop)
+
+user manual PDF ──ingest_manual.py──▶ manual-<family>/*.md + manual-index.md
+   (concepts, not syntax)              └─▶ rad://manual/{family}[/{chapter}]
 ```
+
+The two pipelines are independent and never overwrite each other: re-harvesting
+rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
 
 - **Answer-time lookup order (fastest first):** 1) the *Common config recipes*
   below — zero lookups; 2) grep `cli-reference-<family>.md` for the context
   header (`## configure crypto ca NAME`) — zero device I/O; 3) live `cli_help`
   (~1 s) only for firmware drift, pre-write verification, or the few contexts
   the harvest can't enter.
+- **When the question is "what does this mean / how do I / what are the
+  limits", not "what's the exact command" → the manual** (`manual-<family>/`,
+  if present). Open `manual-index.md`, follow the CLI-topic cross-link to the
+  chapter, grep it. This is the layer that answers *why* `certificate` needs a
+  `trusted-ca`, *how many* MQTT servers/keys the box allows, *what* an alarm
+  string means, and multi-step enrollment procedures. Syntax still comes from
+  the CLI reference — cite the manual for concepts, the reference for commands.
 - **`NAME` placeholder:** parameterized (named/indexed) contexts are harvested
   from inside a real instance — an existing object from the running config, or
   a `zzz-hrvst` temp object created and rolled back within seconds. The section

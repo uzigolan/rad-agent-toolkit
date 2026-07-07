@@ -8,3 +8,7 @@ __pycache__/
 # OS noise
 Thumbs.db
 desktop.ini
+
+# Device manual PDFs (large binaries) — the extracted markdown under
+# skills/rad-cli-operations/references/manual-<family>/ is committed instead
+rad-mcp-server/manuals/*.pdf

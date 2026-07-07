@@ -10,6 +10,13 @@ dependencies = [
     "python-dotenv>=1.0",
 ]
 
+# Tooling-only extras (scripts/, not the server runtime). Install with:
+#   pip install -e ".[tooling]"
+[project.optional-dependencies]
+tooling = [
+    "pymupdf>=1.24",   # scripts/ingest_manual.py — PDF -> manual markdown
+]
+
 [project.scripts]
 rad-mcp = "rad_mcp.server:main"
 
