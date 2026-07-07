@@ -119,7 +119,7 @@ same backup archive and audit log as Claude Code.
 NOT enough), then relaunch.
 
 **3. Skills** — sidebar **Customize → Skills → upload** the zips from
-`dist/desktop-skills/` (`rad-core.zip`, `rad-cli-operations.zip`).
+`dist/claude-desktop-skills/` (`rad-core.zip`, `rad-cli-operations.zip`).
 
 > Building the zips yourself? Use `python scripts/build_desktop_skills.py` or
 > Python's `zipfile` — **not** PowerShell `Compress-Archive`, which writes

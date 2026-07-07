@@ -7,6 +7,10 @@ precedent set by `Juniper/junos-mcp-server` and Cisco's RADkit MCP server;
 as of July 2026 no RAD MCP server exists anywhere, so this is RAD's entry
 into the MCP ecosystem.
 
+> The `rad-mcp-server/` directory is the **full toolkit** — MCP server +
+> skills + commands + plugin — not only the server; the name is kept for path
+> stability (venv, configs, Desktop). The umbrella repo is `rad-agent-toolkit`.
+
 ## The stack
 
 ```
@@ -131,8 +135,15 @@ rollback verification, device-cleanliness check, and skill-copy sync in one step
 
 Skill copies: `skills/` in this repo is the **source of truth**; copies go to
 workspace `.claude/skills/` (Claude Code), `~/.claude/skills/` (user-level),
-and `dist/desktop-skills/*.zip` (Desktop uploads, built by
+and `dist/claude-desktop-skills/*.zip` (Desktop uploads, built by
 `scripts/build_desktop_skills.py`). Sync all four when the source changes.
+
+**Non-Claude targets:** `scripts/build_portable_bundle.py` emits
+`dist/portable-agent/` — the reusable pieces for any MCP-capable client
+(ChatGPT/OpenAI, Cursor, ...): the knowledge files plus a README on wiring the
+MCP server (open protocol, works unchanged) and adapting SKILL.md into agent
+instructions. The Claude skill/plugin format itself is not portable; the server
+and the knowledge are.
 
 ## How the manual layer contributes (and is it RAG?)
 

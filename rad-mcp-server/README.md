@@ -8,6 +8,11 @@ MP-4100/Megaplex.
 The first RAD entry in the MCP ecosystem — naming follows the vendor convention
 set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
+> **Note on the name:** `rad-mcp-server/` is the **full RAD agent toolkit** —
+> the MCP server (`server/`) *plus* the skills, commands, and the uploadable
+> plugin — not only the MCP server. (The GitHub repo is `rad-agent-toolkit`.)
+> The directory name is kept for path stability across configs and the venv.
+
 | Family | Products | Driver | Status |
 |---|---|---|---|
 | `secflow` | SF-1p and SecFlow gateways | `drivers/secflow.py` | ✅ verified live (SF-1p Sw 6.5.0.35) |
@@ -93,6 +98,9 @@ rad-mcp-server/
 │       ├── SKILL.md
 │       └── references/command-tree-secflow.md   # harvested live tree
 ├── commands/                  # /rad-health, /rad-backup
-├── scripts/build_desktop_skills.py              # Desktop skill zips
-└── dist/desktop-skills/       # built zips (upload via Desktop → Customize)
+├── scripts/build_desktop_skills.py              # Claude Desktop skill zips
+├── scripts/build_portable_bundle.py             # bundle for non-Claude MCP clients
+└── dist/
+    ├── claude-desktop-skills/  # built zips (upload via Desktop → Customize)
+    └── portable-agent/         # knowledge + MCP-wiring guide for other clients
 ```
