@@ -17,6 +17,14 @@ touches NO device — it is pure local PDF → markdown extraction.
    - If the family is missing, infer from the PDF name if obvious (e.g.
      "ETX-1p" → `etx1p`) and confirm, else ask. The family MUST match an
      inventory device family so the reference lands beside its CLI reference.
+   - **Check whether that family was harvested** — does
+     `references/cli-help-<family>.jsonl` exist? If NOT, do not block (manual
+     ingest is independent and read-only), but WARN: the manual is designed as
+     a companion to the CLI reference, its cross-link table points at CLI
+     contexts that won't resolve yet, and the skill's "syntax from the
+     reference, meaning from the manual" model is only half-built for this
+     family. Recommend `/rad-harvest <device-of-this-family>` first (or right
+     after), and proceed only on the user's OK.
    - Ensure the tooling dep is present (first run only): if the script fails
      with `ModuleNotFoundError: fitz`, run
      `rad-mcp-server\server\.venv\Scripts\python.exe -m pip install pymupdf`
