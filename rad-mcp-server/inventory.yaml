@@ -5,3 +5,8 @@ devices:
     family: secflow
     groups: [lab]
     description: "SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests"
+  - name: etx1p
+    host: 172.17.232.193
+    family: etx1p
+    groups: [lab]
+    description: "Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI"
