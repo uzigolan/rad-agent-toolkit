@@ -83,6 +83,14 @@ For pure syntax questions the family is what matters — if the user's wording
 already pins the family ("on the ETX-1p..."), answer from that family's
 reference without asking.
 
+## Output format for command sequences
+
+Whenever you show a CLI sequence, ALSO give a **paste-ready block**: commands
+only, one per line, no `←` arrows, no comments, no prompts — exactly what the
+user can paste into the device terminal as-is. Annotated walkthroughs are fine
+for explanation, but the paste-ready block must always follow. Placeholders
+the user must replace (names, IPs) stay UPPERCASE so they're easy to spot.
+
 ## CLI model (critical to understand)
 
 - The CLI is **context-based**: `show` commands do NOT exist at the root
