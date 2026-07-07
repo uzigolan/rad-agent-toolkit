@@ -134,6 +134,61 @@ workspace `.claude/skills/` (Claude Code), `~/.claude/skills/` (user-level),
 and `dist/desktop-skills/*.zip` (Desktop uploads, built by
 `scripts/build_desktop_skills.py`). Sync all four when the source changes.
 
+## How the manual layer contributes (and is it RAG?)
+
+**What gap it fills.** The harvested CLI reference is *complete* on syntax and
+*silent* on meaning. It can tell you `certificate <name> trusted-ca <ca-name>`
+is a valid line; it cannot tell you *why* `trusted-ca` is mandatory, that the
+box caps you at **two** MQTT servers, what a `los` alarm signifies, or the
+ordered steps of certificate enrollment. Those facts exist only in prose, in
+the user manual. So the manual is a **complementary layer, not an overlap**:
+
+| Question shape | Layer that answers | Source of truth |
+|---|---|---|
+| "What's the exact command / arguments?" | CLI reference (layer 2) / live `cli_help` (3) | the device |
+| "What does it mean, why, how many, what order?" | **Manual (layer 4)** | the vendor manual |
+
+**Is it RAG? Not yet — and that's deliberate.** RAG (retrieval-augmented
+generation) in the strict sense means *embed the corpus into vectors, embed the
+question, retrieve by semantic similarity*. The manual layer today is the
+simpler, more auditable cousin: **structured lexical retrieval.**
+
+- `scripts/ingest_manual.py` splits the PDF along its own table-of-contents
+  bookmarks into one markdown file per chapter, and builds `manual-index.md` —
+  a chapter list plus a **CLI-topic → chapter cross-link table** (e.g.
+  `configure system mqtt → §6.9 MQTT Server`).
+- At answer time the model does **keyword retrieval, not vector search**: open
+  the index, follow the cross-link to the right chapter, `grep` the chapter for
+  the term. Same mechanic as the CLI reference — deterministic, greppable, no
+  embedding model, no vector store, no similarity threshold to tune.
+
+**Why lexical first.** For a bounded, well-structured single manual it is the
+right tool: exact-match retrieval is *auditable* (you can see precisely which
+lines were pulled and cite the page), *free* (no embedding calls or index to
+maintain), *offline*, and *drift-proof* (re-ingest and the markdown is simply
+replaced). Vector RAG shines when the corpus is large, cross-document, and the
+user's phrasing won't lexically match the text — none of which bites yet with
+one 726-page manual whose own TOC already segments it by topic.
+
+**How it affects an answer.** Concretely, in a single turn Claude can now:
+grep the CLI reference for the command shape → grep the manual chapter for the
+constraint/procedure → compose a paste-ready sequence that is *both* syntactically
+correct *and* respects documented limits — citing the manual for the "why". None
+of that touches the device. It also makes the assistant **safer on writes**: a
+documented limit ("max 2 servers", "key store full") is caught before staging,
+not after a commit fails.
+
+**When it graduates to real RAG (layer 6, planned).** The lexical layer is the
+foundation the RAG layer builds on, not a throwaway. Promote when: (a) the
+corpus grows to *many* manuals across families/firmwares where a keyword can
+match the wrong document; (b) users ask conceptual questions whose wording
+doesn't lexically appear ("how do I make the link survive a fibre cut?" →
+"Ethernet Ring Protection"); or (c) fleet scale makes chapter-grep too coarse.
+At that point `search_docs` embeds the *already-extracted* chapter markdown
+(the ingest step is unchanged) and adds semantic recall *alongside* — not
+instead of — the exact cross-link lookups. Lexical stays the precise path;
+RAG adds the fuzzy one.
+
 ## Distribution path
 
 - **Now (internal pilot):** absolute venv paths in `.mcp.json` / Desktop
