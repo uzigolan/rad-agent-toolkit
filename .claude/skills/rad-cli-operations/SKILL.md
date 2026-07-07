@@ -160,13 +160,21 @@ neighbor <ip>`. `route-map` lives at the same level.
 `no shutdown` inside it; port itself needs `no shutdown` too. Bind L3:
 `configure router <n> interface <i>` → `bind ethernet <p> vlan <vid>`.
 
-**Device certificate → MQTTS** (details: `## configure crypto*` /
-`## configure system mqtt server NAME` reference sections): key
-`configure crypto key generate <name>`; CA object `configure crypto ca <name>`
-(address, protocol scep|est); CA cert `configure crypto pki authenticate <n>`;
-device cert `enroll-from-configuration <attrs>` + `import-certificate <n>`
-(lab: `self-sign-certificate <n>`); bind `configure system mqtt server <name>`
-→ `address <ip|url>`, `certificate <cert-name>`, `user <name>`.
+**Device certificate → MQTTS** (verified live incl. full argument forms —
+the reference's shallow `?` probes don't show them; failed-command errors do):
+key `configure crypto key` → `generate key-name <n> type rsa size
+{2048|3072|4096} [application x509]` (⚠ device has a key-count limit —
+"Maximum number of keys was exceeded" means delete one first, which can break
+certs that use it); self-signed cert `configure crypto pki` →
+`self-sign-certificate certificate-name <n> [common-name <cn>]` (uses an
+existing device key); CA-signed: `authenticate` + `enroll-from-configuration
+<attrs>` + `import-certificate <n>`; bind `configure system mqtt server <name>`
+→ `address url <url> [protocol {ssl|tcp}] [port <1..65535, default 1883>]`
+(or `address ip <ip> ...`) and `certificate <cert-name> trusted-ca <ca-name>`
+(trusted-ca is REQUIRED — point it at a `configure crypto ca <name>` object).
+On SecFlow, `show status` may report "MQTT Server Not Configured in LoRa
+Gateway" — the server object is fine; it just isn't consumed by an
+application yet.
 
 ## Interactive help: the `cli_help` tool (the CLI is self-documenting)
 
