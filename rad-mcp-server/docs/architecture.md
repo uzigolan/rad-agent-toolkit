@@ -75,16 +75,39 @@ knowledge is layered from cheap/static to live/exact:
 
 | Layer | What | When Claude uses it |
 |---|---|---|
-| 1. Skill | `rad-cli-operations/SKILL.md`: CLI model, verified command map, safety rules | always loaded for RAD work |
-| 2. References | `references/command-tree-<family>.md`: full harvested `tree` captures | to locate which context holds a feature |
-| 3. Live `?` help | `cli_help` tool: firmware-exact commands, argument types, constraints (`[2..2 chars]`), `[no]` removability | before staging any config; whenever syntax is uncertain |
-| 4. MCP resources | `rad://inventory`, `rad://backups`, `rad://command-tree/{family}` | surfaces without filesystem access (Desktop) |
+| 1. Skill | `rad-cli-operations/SKILL.md`: CLI model, verified command map, **common config recipes**, safety rules | always loaded for RAD work; recipes answer frequent asks with zero lookups |
+| 2. References | `references/cli-help-<family>.jsonl` (canonical) → `cli-reference-<family>.md` (rendered) + `command-tree-<family>.md`: the device's **complete `?` help**, every context incl. parameterized ones under `NAME` placeholders | syntax questions answered by grepping a `## <context path>` header — zero device I/O |
+| 3. Live `?` help | `cli_help` tool: firmware-exact ground truth (~1 s warm) | firmware drift, pre-write verification, contexts the harvest can't enter |
+| 4. MCP resources | `rad://inventory`, `rad://backups`, `rad://command-tree/{family}`, `rad://cli-reference/{family}[/{context}]` | surfaces without filesystem access (Desktop) |
 | 5. Manuals RAG | `search_docs` over official RAD manuals | planned — conceptual questions the CLI can't answer |
 
-The layers reinforce each other: skills teach the *method* (find context →
-`cli_help` level → `cli_help` leaf → stage), references give the *map*, and
-`cli_help` gives ground truth that can never drift from the firmware. New
-verified findings are folded back into layers 1–2 after each session.
+The layers reinforce each other: skills teach the *method* (recipe → reference
+grep → live verify → stage), references give the *map*, and `cli_help` gives
+ground truth that can never drift from the firmware. New verified findings are
+folded back into layers 1–2 after each session. Layer 2 is produced by
+`scripts/harvest_cli.py` (driven by the **`/rad-harvest`** skill): it crawls
+every context live, enters parameterized contexts through an existing instance
+or a `zzz-hrvst` temp object rolled back immediately, and rewrites the
+references with an ADDED/REMOVED/CHANGED diff — git history is the record of
+CLI evolution across firmware versions.
+
+## Performance model
+
+Two rules keep tool calls at the device-bound floor (~0.1–1 s warm):
+
+1. **One persistent CLI session per device** (`SSHBackend`): SSH connect costs
+   ~5–7 s and RAD units refuse a new session while the old one tears down, so
+   sessions are cached, re-grounded with `exit all` per call, liveness-probed
+   only after 60 s idle, and replaced transparently when dead.
+2. **Prompt-anchored reads, never quiet-timers**: every read terminates the
+   moment the device prompt reappears. Quiet-gap timeouts are last-resort
+   fallbacks only — the SF-1p deterministically pauses >3 s mid-`info` dump,
+   so any short quiet threshold silently truncates output (this once hid
+   `router 1` from the harvester and cost the whole router subtree).
+
+Measured warm (SF-1p over lab LAN): health ping 0.14 s, `cli_help` three
+contexts deep 0.7 s, root help 0.4 s. `get_config` ~7 s — the device generates
+the export that slowly; not addressable client-side.
 
 ## The maintenance loop
 
@@ -93,6 +116,10 @@ operate live → verify a new command/behavior → update SKILL.md + references
       ↑                                                        │
       └── next session (any user, any surface) inherits it ←──┘
 ```
+
+After a firmware upgrade (or whenever the reference misses a context), run
+`/rad-harvest <device> [subtree]` — background harvest, diff review, temp-object
+rollback verification, device-cleanliness check, and skill-copy sync in one step.
 
 Skill copies: `skills/` in this repo is the **source of truth**; copies go to
 workspace `.claude/skills/` (Claude Code), `~/.claude/skills/` (user-level),

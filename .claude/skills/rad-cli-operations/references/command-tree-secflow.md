@@ -1,6 +1,6 @@
 # secflow command tree (family: secflow)
 
-Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) via the root `tree` command on 2026-07-06
+Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) via the root `tree` command on 2026-07-07
 by scripts/harvest_cli.py — re-run `harvest` after firmware upgrades; the
 tree is re-captured fresh each run. Use it to locate which context holds a
 feature, then cli-reference-secflow.md / the cli_help tool for exact,
@@ -1890,7 +1890,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   +---dialer-number
 |   |   |   |   |
 |   |   |   |   +---lte-band
-
 |   |   |   |   |
 |   |   |   |   +---name
 |   |   |   |   |

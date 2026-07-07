@@ -28,19 +28,41 @@ Also exposed as MCP resources (for Desktop, which has no filesystem):
 `rad://cli-reference/{family}/{context}` — spaces become `+`, root is `root`
 (e.g. `rad://cli-reference/secflow/configure+system`).
 
-**Lookup order for syntax questions:** 1) `cli-reference-<family>.md` (or the
-keyed resource) — instant, no device session; for parameterized contexts look
-for the `... NAME` section (e.g. `## configure crypto ca NAME`); 2) live
-`cli_help` only for what the harvest can't hold: the few contexts still marked
-*(not entered — parameterized context)* (numeric-indexed with no instance to
-enter), a device on different firmware, or verification before a risky change.
+**Keeping it current:** use the **`/rad-harvest <device> [subtree]`** skill —
+it runs the harvester in the background (~8 min full, ~2–3 min per subtree),
+reviews the ADDED/REMOVED/CHANGED diff and temp-object rollbacks, verifies the
+device is clean, and syncs the skill copies. (Directly:
+`python scripts/harvest_cli.py harvest <device> [--branch "configure crypto"]`.)
 
-**Keeping it current:** after a firmware upgrade, re-run
-`python scripts/harvest_cli.py harvest <device>` (safe to repeat; ~11 min) —
-it re-captures the tree live, re-crawls, prints an ADDED/REMOVED/CHANGED diff,
-and rewrites the references in place; git history tracks CLI evolution.
-`--branch configure` (or a nested path, `--branch "configure crypto"`)
-refreshes one subtree only.
+## How this skill treats the harvested data
+
+```
+device `?` help ──harvest_cli.py──▶ cli-help-<family>.jsonl   (canonical, sorted;
+        │        (crawls every       git history = CLI evolution across firmware)
+        │         context live)            │
+        │                                  ├─▶ cli-reference-<family>.md  (rendered,
+        │                                  │    grep by `## <context path>` header)
+        └── root `tree` ──▶ command-tree-<family>.md           │
+                                           └─▶ rad://cli-reference/{family}[/{context}]
+                                                (MCP resources — keyed lookup for Desktop)
+```
+
+- **Answer-time lookup order (fastest first):** 1) the *Common config recipes*
+  below — zero lookups; 2) grep `cli-reference-<family>.md` for the context
+  header (`## configure crypto ca NAME`) — zero device I/O; 3) live `cli_help`
+  (~1 s) only for firmware drift, pre-write verification, or the few contexts
+  the harvest can't enter.
+- **`NAME` placeholder:** parameterized (named/indexed) contexts are harvested
+  from inside a real instance — an existing object from the running config, or
+  a `zzz-hrvst` temp object created and rolled back within seconds. The section
+  header uses `NAME` where the instance name was; substitute your own.
+  Prompts inside such sections show the instance used (e.g. `router(1)#`).
+- **Still *(not entered)*:** numeric-indexed contexts with no live instance to
+  borrow (e.g. `bridge` on a unit with no bridge configured) — for those, use
+  live `cli_help` with a concrete index.
+- The jsonl is the single source of truth; the .md and the MCP resources are
+  renders of it. Never hand-edit the references — re-harvest instead, so the
+  diff report stays meaningful.
 
 ## CLI model (critical to understand)
 
