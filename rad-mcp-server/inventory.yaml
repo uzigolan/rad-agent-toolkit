@@ -10,3 +10,8 @@ devices:
     family: etx1p
     groups: [lab]
     description: "Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI"
+  - name: etx1p-122
+    host: 172.17.232.122
+    family: etx1p
+    groups: [lab]
+    description: "ETX-1p (Hw 0.4, Sw 6.4.0.165 - OLDER firmware than etx1p/Device3) - lab unit; reference harvested from 6.5, use live cli_help for drift"
