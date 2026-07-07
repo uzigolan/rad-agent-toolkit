@@ -182,9 +182,14 @@ neighbor <ip>`. `route-map` lives at the same level.
 **Device certificate → MQTTS** (verified live incl. full argument forms —
 the reference's shallow `?` probes don't show them; failed-command errors do):
 key `configure crypto key` → `generate key-name <n> type rsa size
-{2048|3072|4096} [application x509]` (⚠ device has a key-count limit —
-"Maximum number of keys was exceeded" means delete one first, which can break
-certs that use it); self-signed cert `configure crypto pki` →
+{2048|3072|4096} [application x509]`. ⚠ **KEY LIMIT — state this BEFORE
+generating:** the ETX-1p holds a **maximum of ONE key pair** (manual §6.15
+error table: "You tried to generate more than one key pair"). A second
+`generate` fails with "Maximum number of keys was exceeded" and creates
+nothing. So "make a new key" on a box that already has one means **replace**:
+`delete key-name <existing>` first — which breaks any cert built on it. Say
+the limit up front; do not stage a second-key generate as if it will succeed.
+Self-signed cert `configure crypto pki` →
 `self-sign-certificate certificate-name <n> [common-name <cn>]` (uses an
 existing device key); CA-signed: `authenticate` + `enroll-from-configuration
 <attrs>` + `import-certificate <n>`; bind `configure system mqtt server <name>`
@@ -269,3 +274,14 @@ Always end with `exit all`. Changes affect the **running** config only until
 Verify after commit by re-running the relevant context `info` or `show`.
 Rollback: stage the inverse commands or restore from the pre-commit backup
 (path is in the commit_config output).
+
+**Check documented limits BEFORE staging a bounded/additive write.** When a
+write *creates one more of something* — a key, certificate, MQTT/OPC-UA server,
+zone, neighbor, SNMP target — the device caps the count, and the cap lives in
+the **manual**, not the `?` help. Before staging, grep `manual-<family>/` for
+the scaling/limit statement (or the error-reference table) and **state the
+limit to the user up front**; if they're already at it, say so and offer the
+replace path rather than staging a doomed "add" that only fails at commit.
+Known caps: ETX-1p = **1 key pair**, **2 MQTT servers** (manual §6.9/§6.15).
+This is a hard lesson — the "add a second key" case was discovered at commit
+instead of warned in advance; don't repeat it.
