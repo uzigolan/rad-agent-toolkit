@@ -67,6 +67,22 @@ device `?` help ──harvest_cli.py──▶ cli-help-<family>.jsonl   (canonic
   renders of it. Never hand-edit the references — re-harvest instead, so the
   diff report stays meaningful.
 
+## Device targeting (inventory has multiple devices)
+
+Resolve the target BEFORE any device I/O or family-specific syntax answer:
+
+1. Named explicitly (device name, model, or IP) → use it.
+2. Clear from conversation continuity (the device currently being worked on) →
+   keep using it and SAY which one you're on.
+3. Otherwise → `list_devices` and ASK which device before acting. Never
+   silently default: the families differ (e.g. SF-1p ports are numeric
+   `ethernet 3`; ETX-1p ports are named `ethernet lan1`), so a guessed device
+   can produce syntax that fails — or worse, a write lands on the wrong box.
+
+For pure syntax questions the family is what matters — if the user's wording
+already pins the family ("on the ETX-1p..."), answer from that family's
+reference without asking.
+
 ## CLI model (critical to understand)
 
 - The CLI is **context-based**: `show` commands do NOT exist at the root
