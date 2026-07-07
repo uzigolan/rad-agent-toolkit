@@ -8,6 +8,29 @@ portfolio by design.
 > **Status: internal RAD pilot.** Private repository. Do not point at
 > production equipment.
 
+## What this repo demonstrates
+
+Beyond operating RAD gear, this repo is a **working showcase of the ways AI
+capability can be "plugged into" AI applications** — the same device-operations
+use case implemented across every integration surface, so each technology can
+be evaluated in a real context rather than a toy demo. It is built to plug into
+**any AI application, not just one**:
+
+| AI integration technology | What it demonstrates | Plugs into |
+|---|---|---|
+| **MCP server** (tools + `rad://` resources) | The open Model Context Protocol as the portable core — device verbs + knowledge exposed to any MCP client | Claude Desktop, Claude Code, ChatGPT, Cursor, Zed, Gemini CLI, … |
+| **Skills** (`SKILL.md` + personas) | Packaging domain expertise, safety rules, and expert personas (Abayev/Noam) as loadable context | Claude Code / Desktop |
+| **Plugin bundle** | One uploadable unit combining MCP + skills + commands | Claude Desktop "Upload local plugin" |
+| **Remote MCP** (HTTP + bearer auth, read-only) | One shared server many clients reach by URL — no per-user install; auth + read-only enforced in code | any MCP client on the network |
+| **Portable bundle** | The knowledge + wiring guide re-packaged for non-Claude clients (Custom GPT, Cursor rules, RAG corpus) | ChatGPT/OpenAI, others |
+| **Knowledge layers** | Live-harvested CLI reference + ingested device manuals as lexical retrieval (RAG-adjacent), served as files and resources | client-agnostic |
+| **Automation hooks** | Duration/token metrics per skill run via lifecycle hooks + statusline | Claude Code |
+
+The through-line: **write the capability once (the MCP server + knowledge),
+then surface it through whichever integration a given AI app supports.** The
+server and knowledge are portable; only the thin wrappers (skill, plugin,
+connector config) differ per app.
+
 ## What's in the box
 
 | Component | What it is |

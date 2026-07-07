@@ -137,8 +137,31 @@ commands** — plain language only.
   `claude_desktop_config.json` are bridged in by Desktop in current builds,
   but this is not yet officially documented — test before relying on it. If
   tools don't appear in Cowork, run device operations from Desktop chat or
-  Claude Code instead. (A future remote-MCP/`.mcpb` packaging of rad-mcp will
-  make this first-class.)
+  Claude Code instead, or connect to a shared remote server (below).
+
+## Connect to a shared remote server (someone else is hosting rad-mcp)
+
+If a colleague runs rad-mcp in HTTP mode (see `docs/remote-server.md`), you
+connect by URL — no local venv, no repo, no device credentials on your side.
+
+**They give you** (and you must be able to reach it):
+1. Be on **RAD's internal network / VPN** — the server is internal-only; an
+   off-network client cannot reach it.
+2. The **URL**, e.g. `http://<host>:8080/mcp`.
+3. A **bearer token** (your own, so it can be revoked independently).
+
+**Add it in your client:**
+- **Claude Desktop:** Customize → Connectors → add a custom/remote MCP server →
+  URL + header `Authorization: Bearer <token>`.
+- **Claude Code:**
+  `claude mcp add --transport http rad-mcp <url> --header "Authorization: Bearer <token>"`
+  (or a `.mcp.json` entry with `"type": "http"`, `"url": ...`, and the header).
+
+**What you get:** the read-only tools + `rad://` resources (`cli_help`,
+`run_show`, `get_config`, `health_check`, …). Config-change tools are NOT
+exposed remotely by design. The Abayev/Noam **skills** are a separate
+client-side install (upload the plugin or skill zip) — the URL provides the
+device tools, not the personas/recipes.
 
 ---
 
