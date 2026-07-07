@@ -2,8 +2,8 @@
 
 MCP server + Claude Code plugin for operating RAD Data Communications devices
 through their CLI in natural language — the **full RAD portfolio** by design:
-SecFlow (SF-1p — first verified device), ETX-2, and planned ETX-1 and
-MP-4100/Megaplex.
+SecFlow (SF-1p) and ETX-1p verified live, ETX-2 next (shared dialect), and
+planned legacy ETX-1 and MP-4100/Megaplex.
 
 The first RAD entry in the MCP ecosystem — naming follows the vendor convention
 set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
@@ -16,6 +16,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 | Family | Products | Driver | Status |
 |---|---|---|---|
 | `secflow` | SF-1p and SecFlow gateways | `drivers/secflow.py` | ✅ verified live (SF-1p Sw 6.5.0.35) |
+| `etx1p` | ETX-1p demarcation units | `drivers/etx1p.py` | ✅ verified live (Device3 Sw 6.5.0.43 + a 6.4.0.165 unit) — modern context CLI, harvested references + manual; NOT legacy `etx1` |
 | `etx2` | ETX-203AX / 205A / 220A | `drivers/etx2.py` | shared dialect, pending live ETX-2 verification |
 | `etx1` | legacy ETX-1 line | planned | different CLI — own driver base |
 | `mp4100` | Megaplex-4100 | planned | different CLI — own driver base |

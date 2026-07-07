@@ -2,8 +2,8 @@
 
 Toolkit for AI agents operating **RAD Data Communications** devices: MCP
 servers per product line, Claude skills, a staged-commit safety model, and
-live-harvested CLI knowledge — SecFlow and ETX-2 first, the full RAD
-portfolio by design.
+live-harvested CLI knowledge — SecFlow and ETX-1p verified live, ETX-2 next,
+the full RAD portfolio by design.
 
 > **Status: internal RAD pilot.** Private repository. Do not point at
 > production equipment.
@@ -69,6 +69,7 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
 | Family | Products | Status |
 |---|---|---|
 | `secflow` | SF-1p / SecFlow gateways | ✅ verified live (SF-1p, Sw 6.5.0.35) |
+| `etx1p` | ETX-1p demarcation units | ✅ verified live (Sw 6.5.0.43 and 6.4.0.165) — modern context-based CLI + manual layer; **not** the legacy `etx1` |
 | `etx2` | ETX-203AX / 205A / 220A | shared CLI dialect, pending live verification |
 | `etx1`, `mp4100` | legacy ETX-1, Megaplex-4100 | planned — separate CLI dialects, own drivers |
 
