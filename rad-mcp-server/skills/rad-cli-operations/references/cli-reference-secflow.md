@@ -1,6 +1,6 @@
 # secflow CLI reference (harvested `?` help)
 
-Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) on 2026-07-06 by scripts/harvest_cli.py
+Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) on 2026-07-07 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -443,7 +443,7 @@ access-control                 + Configure access control
 SF-1p-187>config# bridge
 ```
 
-### router *(not entered — parameterized context)*
+### router *(parameterized — inner help harvested under "configure router NAME")*
 ```text
 <number>             : Router number [number] [1..10]
 
@@ -1218,7 +1218,7 @@ access                         + Access commands
 SF-1p-187>config>mngmnt# dscp
 ```
 
-### login-user *(not entered — parameterized context)*
+### login-user *(parameterized — inner help harvested under "configure management login-user NAME")*
 ```text
 <name>               : User name [1..20 chars]
 
@@ -1589,6 +1589,76 @@ SF-1p-187>config>mngmnt>access>sms# authentication
 
 
 SF-1p-187>config>mngmnt>access>sms# caller-id
+```
+
+## configure management login-user NAME
+
+Level help (`?`):
+```text
+authentication-method          - Login user authentication method
+      level                          - Login user level
+ [no] otp-authentication             - Enable OTP authentication
+      password                       - Password: hashed password [40 chars]; 
+                                       non-hashed
+ [no] public-key                     - User public key
+ [no] shutdown                       - Disable user
+```
+
+### authentication-method
+```text
+<password>           : Password
+ <public-key>         : Public key
+
+
+SF-1p-187>config>mngmnt>login-user(su)# authentication-method
+```
+
+### level
+```text
+<su>                 : Super user
+ <oper>               : Operator
+ <tech>               : Technician
+ <user>               : Read-Only
+ <linux-user>         : Linux User
+ <virt>               : Virt
+ <netconf-su>         : Netconf Super User
+ <linux-net-admin>    : Linux Network and Virtualization
+ <linux-tech>         : Linux Network, Virtualization and Processes
+
+
+SF-1p-187>config>mngmnt>login-user(su)# level
+```
+
+### otp-authentication
+```text
+phone
+
+SF-1p-187>config>mngmnt>login-user(su)# otp-authentication
+```
+
+### password
+```text
+<password>           : Password: non-hashed password [20 chars]; hashed [40 | 
+                        144 | 344] [string]
+
+
+SF-1p-187>config>mngmnt>login-user(su)# password
+```
+
+### public-key
+```text
+<public-key>         : Public key format: <inv comma> ssh-rsa <space> public 
+                        key string <space> comment <inv comma> [1..512 chars]
+
+
+SF-1p-187>config>mngmnt>login-user(su)# public-key
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>login-user(su)# shutdown
 ```
 
 ## configure management netconf
@@ -2142,7 +2212,7 @@ cellular                       + Cellular interface configuration
 SF-1p-187>config>port# cellular
 ```
 
-### ethernet *(not entered — parameterized context)*
+### ethernet *(parameterized — inner help harvested under "configure port ethernet NAME")*
 ```text
 <1>                  : 
  <2>                  : 
@@ -2164,7 +2234,7 @@ SF-1p-187>config>port# ethernet
 SF-1p-187>config>port# ppp
 ```
 
-### serial *(not entered — parameterized context)*
+### serial *(parameterized — inner help harvested under "configure port serial NAME")*
 ```text
 <2>                  : 
  <1>                  : 
@@ -2187,7 +2257,7 @@ SF-1p-187>config>port# show summary
 SF-1p-187>config>port# show wifi
 ```
 
-### virtual *(not entered — parameterized context)*
+### virtual *(parameterized — inner help harvested under "configure port virtual NAME")*
 ```text
 <port-number>        : Virtual port level [1..10]
 
@@ -2458,6 +2528,656 @@ SF-1p-187>config>port# wifi-country-code
 
 
 SF-1p-187>config>port# wlan
+```
+
+## configure port ethernet NAME
+
+Level help (`?`):
+```text
+[no] access-group                   - Bind ACL to Port Ethernet
+ [no] classifier                     + Enables/disables classifier at the port 
+                                       level
+      clear-access-list-statistics   - Clear ACL statistics
+      clear-statistics               - Clears all statistics
+      dot1x                          + 802.1X level
+      egress-mtu                     - Defines the max frame size to transmit
+ [no] force-next-hop                 - Map traffic originated by a router 
+                                       interface to its egress port
+      mac-access-control             + MAC access control
+ [no] name                           - Assigns/removes a port name
+ [no] pm-collection                  - Enable Performance Management (PM) 
+ [no] policy-based-route             - Bind PBR rule to this entity
+ [no] queue-group                    - 
+ [no] shutdown                       - Administratively disables/enables the 
+                                       port
+ [no] traffic-class                  + Define a traffic-class entity
+ [no] vlan                           + Configure vlan port
+
+ show access-list-statistics         - Show ACL statistics
+ show access-list-summary            - ACL Information
+ show statistics                     - Displays the Ethernet port statistics
+ show status                         - Displays the Ethernet port status
+```
+
+### access-group
+```text
+<acl-name>           : ACL name [1..80 chars]
+
+
+SF-1p-187>config>port>eth(3)# access-group
+```
+
+### classifier *(not entered — parameterized context)*
+```text
+<ingress>            : 
+
+
+SF-1p-187>config>port>eth(3)# classifier
+```
+
+### clear-access-list-statistics
+```text
+<CR>
+ <in>                 : In
+ <ipv4>               : IPv4
+ <ipv6>               : IPv6
+
+
+SF-1p-187>config>port>eth(3)# clear-access-list-statistics
+```
+
+### clear-statistics
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)# clear-statistics
+```
+
+### egress-mtu
+```text
+<size>               : Specifies the Max Transition Unit size (bytes) [number, 
+                        default 1500] [68..12288]
+
+
+SF-1p-187>config>port>eth(3)# egress-mtu
+```
+
+### force-next-hop
+```text
+<CR>
+ next-hop
+
+SF-1p-187>config>port>eth(3)# force-next-hop
+```
+
+### name
+```text
+<string>             : Adds free text to assign a name to the port [1..64 
+                        chars]
+
+
+SF-1p-187>config>port>eth(3)# name
+```
+
+### pm-collection
+```text
+<interval>           : PM collection interval
+
+
+SF-1p-187>config>port>eth(3)# pm-collection
+```
+
+### policy-based-route
+```text
+priority
+
+SF-1p-187>config>port>eth(3)# policy-based-route
+```
+
+### queue-group
+```text
+profile
+
+SF-1p-187>config>port>eth(3)# queue-group
+```
+
+### show access-list-statistics
+```text
+<CR>
+ <in>                 : In
+ <ipv4>               : IPv4
+ <ipv6>               : IPv6
+
+
+SF-1p-187>config>port>eth(3)# show access-list-statistics
+```
+
+### show access-list-summary
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)# show access-list-summary
+```
+
+### show statistics
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)# show statistics
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)# shutdown
+```
+
+### traffic-class *(parameterized — inner help harvested under "configure port ethernet NAME traffic-class NAME")*
+```text
+<tc-name>            : Traffic class name [1..32 chars]
+
+
+SF-1p-187>config>port>eth(3)# traffic-class
+```
+
+### vlan *(not entered — parameterized context)*
+```text
+<vlan-id>            : Vlan id [1..4094]
+
+
+SF-1p-187>config>port>eth(3)# vlan
+```
+
+## configure port ethernet NAME dot1x
+
+Level help (`?`):
+```text
+authenticator                  + Authenticator level
+      clear-statistics               - Clear 802.1X statistics
+      initialize                     - Initialize 802.1X
+      supplicant                     + Supplicant level
+
+ show statistics                     - Display 802.1X statistics
+ show status                         - Display 802.1X statistics
+```
+
+### clear-statistics
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>dot1x# clear-statistics
+```
+
+### initialize
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>dot1x# initialize
+```
+
+### show statistics
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>dot1x# show statistics
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>dot1x# show status
+```
+
+## configure port ethernet NAME dot1x authenticator
+
+Level help (`?`):
+```text
+authentication                 - Configure authentication mode
+ [no] reauthentication               - Enable periodic reauthentication
+ [no] shutdown                       - Disable authenticator functionality
+```
+
+### authentication
+```text
+mode
+
+SF-1p-187>config>port>eth(3)>dot1x>authenticator# authentication
+```
+
+### reauthentication
+```text
+<CR>
+ period
+
+SF-1p-187>config>port>eth(3)>dot1x>authenticator# reauthentication
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>dot1x>authenticator# shutdown
+```
+
+## configure port ethernet NAME dot1x supplicant
+
+Level help (`?`):
+```text
+[no] authentication                 - Configure authentication parameters
+      held-period                    - Configure held period after 
+                                       authentication failure
+      max-authentication             - Configure max number of authentication 
+                                       attempts
+ [no] shutdown                       - Disable supplicant functionality
+      tx-period                      - Configure time before retransmitting EAP 
+                                       frame
+```
+
+### authentication
+```text
+identity
+
+SF-1p-187>config>port>eth(3)>dot1x>supplicant# authentication
+```
+
+### held-period
+```text
+<seconds>            : [0..65535, default 60]
+
+
+SF-1p-187>config>port>eth(3)>dot1x>supplicant# held-period
+```
+
+### max-authentication
+```text
+<number>             : Max number of authentication attempts [1..65535, default
+                         2]
+
+
+SF-1p-187>config>port>eth(3)>dot1x>supplicant# max-authentication
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>dot1x>supplicant# shutdown
+```
+
+### tx-period
+```text
+<seconds>            : [1..65535, default 30]
+
+
+SF-1p-187>config>port>eth(3)>dot1x>supplicant# tx-period
+```
+
+## configure port ethernet NAME mac-access-control
+
+Level help (`?`):
+```text
+[no] mac                            - Add static MAC address
+ [no] shutdown                       -
+```
+
+### mac
+```text
+<mac-address>        : [00-00-00-00-00-00]
+
+
+SF-1p-187>config>port>eth(3)>mac-access-control# mac
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>mac-access-control# shutdown
+```
+
+## configure port ethernet NAME traffic-class NAME
+
+Level help (`?`):
+```text
+cos                            - Define traffic-class CoS by fixed value 
+                                       or by attaching CoS profile
+ [no] mark                           - Define traffic-class mark action by fixed
+                                        value or by attaching marking profile
+ [no] shutdown                       - Enable / disable the traffic-class 
+                                       activity
+
+
+SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$
+```
+
+### cos
+```text
+<fixed>              : 
+
+
+SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ cos
+```
+
+### mark
+```text
+<dscp-fixed>         : 
+
+
+SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ mark
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ shutdown
+```
+
+## configure port serial NAME
+
+Level help (`?`):
+```text
+allowed-latency                - Configure allowed latency
+      baud-rate                      - Configure BAUD rate
+      bus-idle                       - Configure idle time in bits
+      clear-statistics               - Clear statistics
+      data-bits                      - Configure number of data bits
+      parity                         - Configure parity type
+ [no] shutdown                       - Disable port
+      stop-bits                      - Configure number of stop bits
+ [no] terminal-server                + Terminal server level
+ [no] tunnel                         + Tunnel level
+      tx-delay                       - Configure Tx delay
+
+ show status                         - Displays the port's status
+```
+
+### allowed-latency
+```text
+milliseconds
+
+SF-1p-187>config>port>serial(1)# allowed-latency
+```
+
+### baud-rate
+```text
+<300>                : 
+ <600>                : 
+ <1200>               : 
+ <2400>               : 
+ <4800>               : 
+ <9600>               : 
+ <19200>              : 
+ <38400>              : 
+ <57600>              : 
+ <115200>             : 
+
+
+SF-1p-187>config>port>serial(1)# baud-rate
+```
+
+### bus-idle
+```text
+<auto>               : 
+ <bits>               : 
+
+
+SF-1p-187>config>port>serial(1)# bus-idle
+```
+
+### clear-statistics
+```text
+<CR>
+
+SF-1p-187>config>port>serial(1)# clear-statistics
+```
+
+### data-bits
+```text
+<number-of-bits>     : Number of data bits [5..8, default 8]
+
+
+SF-1p-187>config>port>serial(1)# data-bits
+```
+
+### parity
+```text
+<none>               : 
+ <odd>                : 
+ <even>               : 
+
+
+SF-1p-187>config>port>serial(1)# parity
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>serial(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>serial(1)# shutdown
+```
+
+### stop-bits
+```text
+<number-of-bits>     : Number of stop bits [1..2, default 1]
+
+
+SF-1p-187>config>port>serial(1)# stop-bits
+```
+
+### terminal-server *(parameterized — inner help harvested under "configure port serial NAME terminal-server NAME")*
+```text
+<number>             : Terminal server number [number]
+
+
+SF-1p-187>config>port>serial(1)# terminal-server
+```
+
+### tunnel *(parameterized — inner help harvested under "configure port serial NAME tunnel NAME")*
+```text
+<service-id>         : Service ID [1..10]
+
+
+SF-1p-187>config>port>serial(1)# tunnel
+```
+
+### tx-delay
+```text
+<milliseconds>       : Tx delay, in milliseconds [1..10000]
+
+
+SF-1p-187>config>port>serial(1)# tx-delay
+```
+
+## configure port serial NAME terminal-server NAME
+
+Level help (`?`):
+```text
+disconnect                     - Disconnect session
+ [no] local-address                  - Configure device IP address to listen on
+ [no] telnet-client-tcp              - Configure telnet client on TCP ports
+ [no] telnet-server-tcp              - Configure telnet server on TCP ports
+ [no] telnet-server-udp              - Configure telnet server on UDP ports
+
+ show status                         - Display status
+```
+
+### disconnect
+```text
+port
+
+SF-1p-187>config>port>serial(1)>terminal-server(10)# disconnect
+```
+
+### local-address
+```text
+<ipv4-or-ipv6-address: Device IP address to listen on [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>port>serial(1)>terminal-server(10)# local-address
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>serial(1)>terminal-server(10)# show status
+```
+
+### telnet-client-tcp
+```text
+server-address
+
+SF-1p-187>config>port>serial(1)>terminal-server(10)# telnet-client-tcp
+```
+
+### telnet-server-tcp
+```text
+port
+
+SF-1p-187>config>port>serial(1)>terminal-server(10)# telnet-server-tcp
+```
+
+### telnet-server-udp
+```text
+port
+
+SF-1p-187>config>port>serial(1)>terminal-server(10)# telnet-server-udp
+```
+
+## configure port serial NAME tunnel NAME
+
+Level help (`?`):
+```text
+[no] address                        - Configure tunnel addresses
+ [no] shutdown                       - Disable serial tunnel
+      transport-layer                - Configure transport layer
+```
+
+### address
+```text
+local
+
+SF-1p-187>config>port>serial(1)>tunnel(10)# address
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>serial(1)>tunnel(10)# shutdown
+```
+
+### transport-layer
+```text
+<tcp>                : TCP
+ <udp>                : UDP
+
+
+SF-1p-187>config>port>serial(1)>tunnel(10)# transport-layer
+```
+
+## configure port virtual NAME
+
+Level help (`?`):
+```text
+clear-statistics               - Clear port statistics
+      egress-mtu                     - Defines the max frame size to transmit
+ [no] force-next-hop                 - Map traffic originated by a router 
+                                       interface to its egress port
+ [no] name                           - Assigns/removes a port name
+ [no] policy-based-route             - Bind PBR rule to this entity
+ [no] shutdown                       - Administratively disables/enables the 
+                                       port
+ [no] vlan                           + Configure vlan port
+
+ show statistics                     - Displays the Virtual port statistics
+ show status                         - Displays the Virtual port status
+```
+
+### clear-statistics
+```text
+<CR>
+
+SF-1p-187>config>port>virtual(1)# clear-statistics
+```
+
+### egress-mtu
+```text
+<size>               : Specifies the Max Transition Unit size (bytes) [number, 
+                        default 1500] [68..12288]
+
+
+SF-1p-187>config>port>virtual(1)# egress-mtu
+```
+
+### force-next-hop
+```text
+<CR>
+ next-hop
+
+SF-1p-187>config>port>virtual(1)# force-next-hop
+```
+
+### name
+```text
+<string>             : Adds free text to assign a name to the port [0..64 
+                        chars]
+
+
+SF-1p-187>config>port>virtual(1)# name
+```
+
+### policy-based-route
+```text
+priority
+
+SF-1p-187>config>port>virtual(1)# policy-based-route
+```
+
+### show statistics
+```text
+<CR>
+
+SF-1p-187>config>port>virtual(1)# show statistics
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>virtual(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>port>virtual(1)# shutdown
+```
+
+### vlan *(not entered — parameterized context)*
+```text
+<vlan-id>            : Vlan id [1..4094]
+
+
+SF-1p-187>config>port>virtual(1)# vlan
 ```
 
 ## configure port wifi-client
@@ -3447,6 +4167,1130 @@ interval
  clear
 
 SF-1p-187>config>reporting# soaking-time
+```
+
+## configure router NAME
+
+Level help (`?`):
+```text
+[no] bfd-neighbor                   + Configure BFD neighbor
+ [no] bgp                            + Configure BGP
+      clear-arp-table                - Clear ARP table
+      clear-bfd-statistics           - Clear BFD statistics
+      clear-neighbor-table           - Clear neighbor table
+      dhcp-client                    + Configure DHCP client
+ [no] dhcp-relay-server              - DHCP relay server address
+ [no] dns-name-server                - 
+ [no] interface                      + Configure router interface
+ [no] name                           - Configure router name
+ [no] nat                            + Enable/disable-delete NAT configuration
+ [no] ospf                           + Configure OSPF
+ [no] prefix-list                    + create and delete prefix-list policy 
+                                       profile entity per router entity
+      resequence                     - Resequence policy profile
+ [no] route-map                      + Command to create and delete route-map 
+                                       policy profile entity per router entity.
+ [no] static-route                   - Configure static route
+ [no] tunnel-interface               + Configure tunnel interface
+
+ show arp-table                      - Show ARP table
+ show bfd-neighbors                  - Display BFD neighbors
+ show bfd-neighbors-details          - Display BFD neighbors
+ show dns-resolver
+ show ip-monitoring-summary          - Display ip-monitoring entities status
+ show neighbor-table                 - Show IPv6 neighbor table
+ show rib
+ show routing-table                  - Show routing table
+ show summary-interface              - Show interface table
+ show vrrp-summary
+```
+
+### bfd-neighbor *(not entered — parameterized context)*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)# bfd-neighbor
+```
+
+### bgp *(parameterized — inner help harvested under "configure router NAME bgp NAME")*
+```text
+<as-number>          : Set local AS [1..4294967295, default 0]
+
+
+SF-1p-187>config>router(1)# bgp
+```
+
+### clear-arp-table
+```text
+<CR>
+
+SF-1p-187>config>router(1)# clear-arp-table
+```
+
+### clear-bfd-statistics
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)# clear-bfd-statistics
+```
+
+### clear-neighbor-table
+```text
+<CR>
+
+SF-1p-187>config>router(1)# clear-neighbor-table
+```
+
+### dhcp-relay-server
+```text
+<address>            : DHCP relay server address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)# dhcp-relay-server
+```
+
+### interface *(parameterized — inner help harvested under "configure router NAME interface NAME")*
+```text
+<number>             : Router interface number [number] [1..32]
+
+
+SF-1p-187>config>router(1)# interface
+```
+
+### name
+```text
+<string>             : Router name [1..32 chars]
+
+
+SF-1p-187>config>router(1)# name
+```
+
+### prefix-list *(not entered — parameterized context)*
+```text
+<name>               : Set prefix-list policy profile name. Profile name shall 
+                        be unique in the system [1..252 chars]
+
+
+SF-1p-187>config>router(1)# prefix-list
+```
+
+### resequence
+```text
+<name>               : Policy profile to resequence [1..252 chars]
+
+
+SF-1p-187>config>router(1)# resequence
+```
+
+### route-map *(parameterized — inner help harvested under "configure router NAME route-map NAME")*
+```text
+<name>               : Set route-map policy profile name. Profile name shall be
+                         unique in the system. [1..252 chars]
+
+
+SF-1p-187>config>router(1)# route-map
+```
+
+### show arp-table
+```text
+<CR>
+ address
+
+SF-1p-187>config>router(1)# show arp-table
+```
+
+### show bfd-neighbors
+```text
+<CR>
+
+SF-1p-187>config>router(1)# show bfd-neighbors
+```
+
+### show bfd-neighbors-details
+```text
+<CR>
+
+SF-1p-187>config>router(1)# show bfd-neighbors-details
+```
+
+### show dns-resolver
+```text
+<CR>
+
+SF-1p-187>config>router(1)# show dns-resolver
+```
+
+### show ip-monitoring-summary
+```text
+<CR>
+
+SF-1p-187>config>router(1)# show ip-monitoring-summary
+```
+
+### show neighbor-table
+```text
+<CR>
+ address
+
+SF-1p-187>config>router(1)# show neighbor-table
+```
+
+### show rib
+```text
+<ipv4>               : 
+ <ipv6>               : 
+
+
+SF-1p-187>config>router(1)# show rib
+```
+
+### show routing-table
+```text
+<CR>
+ address
+ protocol
+
+SF-1p-187>config>router(1)# show routing-table
+```
+
+### show summary-interface
+```text
+<CR>
+
+SF-1p-187>config>router(1)# show summary-interface
+```
+
+### show vrrp-summary
+```text
+<CR>
+
+SF-1p-187>config>router(1)# show vrrp-summary
+```
+
+### static-route
+```text
+<address-mask>       : IP and mask [0.0.0.0/32|0:0:0:0::0/128]
+
+
+SF-1p-187>config>router(1)# static-route
+```
+
+### tunnel-interface *(not entered — parameterized context)*
+```text
+<number>             : Tunnel number [number] [1..30]
+
+
+SF-1p-187>config>router(1)# tunnel-interface
+```
+
+## configure router NAME bgp NAME
+
+Level help (`?`):
+```text
+clear-neighbor                 - Restart BGP session
+      ipv4-unicast-af                + Configure IPv4 unicast AF
+      ipv6-unicast-af                + Configure IPv6 unicast AF
+ [no] neighbor                       + Configure BGP neighbor
+      router-id                      - Configure router identifier
+ [no] shutdown                       - Disable BGP
+
+ show community
+ show rib
+ show summary
+```
+
+### clear-neighbor
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)# clear-neighbor
+```
+
+### neighbor *(parameterized — inner help harvested under "configure router NAME bgp NAME neighbor NAME")*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)# neighbor
+```
+
+### router-id
+```text
+<ip-address>         : Router ID (IP address format) [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)# router-id
+```
+
+### show community
+```text
+<ipv4>               : 
+ <ipv6>               : 
+
+
+SF-1p-187>config>router(1)>bgp(65002)# show community
+```
+
+### show rib
+```text
+<ipv4>               : 
+ <ipv6>               : 
+
+
+SF-1p-187>config>router(1)>bgp(65002)# show rib
+```
+
+### show summary
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)# show summary
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)# shutdown
+```
+
+## configure router NAME bgp NAME ipv4-unicast-af
+
+Level help (`?`):
+```text
+external-preference            - Configure external BGP route priority
+      internal-preference            - Configure internal BGP route priority
+      neighbor                       + Configure BGP neighbor
+ [no] network                        - Configure BGP network
+ [no] redistribute                   - Redistribute routes
+```
+
+### external-preference
+```text
+<priority>           : BGP route priority [1..255, default 20]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af# external-preference
+```
+
+### internal-preference
+```text
+<priority>           : BGP route priority [1..255, default 200]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af# internal-preference
+```
+
+### neighbor *(parameterized — inner help harvested under "configure router NAME bgp NAME ipv4-unicast-af neighbor NAME")*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af# neighbor
+```
+
+### network
+```text
+<prefix>             : Network prefix length [0.0.0.0/32]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af# network
+```
+
+### redistribute
+```text
+<connected>          : Connected
+ <static>             : Static
+ <ospf>               : OSPF
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af# redistribute
+```
+
+## configure router NAME bgp NAME ipv4-unicast-af neighbor NAME
+
+Level help (`?`):
+```text
+[no] active                         - Activate neighbor
+ [no] prefix-list-bind               - 
+ [no] route-map-bind                 - 
+
+ show advertised-route               - Show advertised routes
+ show prefix-list
+ show received-route                 - Show received routes
+ show route-map
+```
+
+### active
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# active
+```
+
+### prefix-list-bind
+```text
+<name>               : [1..252 chars]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# prefix-list-bind
+```
+
+### route-map-bind
+```text
+<name>               : [1..252 chars]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# route-map-bind
+```
+
+### show advertised-route
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# show advertised-route
+```
+
+### show prefix-list
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# show prefix-list
+```
+
+### show received-route
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# show received-route
+```
+
+### show route-map
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(10.10.10.188)# show route-map
+```
+
+## configure router NAME bgp NAME ipv6-unicast-af
+
+Level help (`?`):
+```text
+external-preference            - Configure external BGP route priority
+      internal-preference            - Configure internal BGP route priority
+      neighbor                       + Configure BGP neighbor
+ [no] network                        - Configure BGP network
+ [no] redistribute                   - Redistribute routes
+```
+
+### external-preference
+```text
+<priority>           : BGP route priority [1..255, default 20]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af# external-preference
+```
+
+### internal-preference
+```text
+<priority>           : BGP route priority [1..255, default 200]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af# internal-preference
+```
+
+### neighbor *(parameterized — inner help harvested under "configure router NAME bgp NAME ipv6-unicast-af neighbor NAME")*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af# neighbor
+```
+
+### network
+```text
+<prefix>             : Network prefix length [0.0.0.0/32|0:0:0:0::0/128]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af# network
+```
+
+### redistribute
+```text
+<connected>          : Connected
+ <static>             : Static
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af# redistribute
+```
+
+## configure router NAME bgp NAME ipv6-unicast-af neighbor NAME
+
+Level help (`?`):
+```text
+[no] active                         - Activate neighbor
+ [no] prefix-list-bind               - 
+ [no] route-map-bind                 - 
+
+ show advertised-route               - Show advertised routes
+ show prefix-list
+ show received-route                 - Show received routes
+ show route-map
+```
+
+### active
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# active
+```
+
+### prefix-list-bind
+```text
+<name>               : [1..252 chars]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# prefix-list-bind
+```
+
+### route-map-bind
+```text
+<name>               : [1..252 chars]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# route-map-bind
+```
+
+### show advertised-route
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# show advertised-route
+```
+
+### show prefix-list
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# show prefix-list
+```
+
+### show received-route
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# show received-route
+```
+
+### show route-map
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(10.10.10.188)# show route-map
+```
+
+## configure router NAME bgp NAME neighbor NAME
+
+Level help (`?`):
+```text
+[no] allowas-in                     - Accept as-path with my AS present in it
+ [no] as-override                    - Override ASNs in outbound updates if 
+                                       aspath equals remote-as
+ [no] bfd                            - Enable IP-BFD
+      connect-timer                  - Configure BGP connect timer
+ [no] ebgp-multihop                  - Allow EBGP neighbors not on directly 
+                                       connected networks
+ [no] local-address                  - Configure local address
+      max-prefixes                   - Configure maximum prefixes
+ [no] next-hop-self                  - Disable the next hop calculation for this
+                                        neighbor
+ [no] password                       - Configure password
+      remote-as                      - Configure remote AS
+ [no] shutdown                       - Disable neighbor
+      timers                         - Configure BGP timers
+
+ show neighbor-connection            - Show neighbor connection
+```
+
+### allowas-in
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# allowas-in
+```
+
+### as-override
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# as-override
+```
+
+### bfd
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# bfd
+```
+
+### connect-timer
+```text
+<connect-time>       : BGP connect timer [1..65535, default 120]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# connect-timer
+```
+
+### ebgp-multihop
+```text
+<CR>
+ <hop-number>         : Hop number [1..255, default 255]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# ebgp-multihop
+```
+
+### local-address
+```text
+<ip-address>         : Neighbor local IP address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# local-address
+```
+
+### max-prefixes
+```text
+<number>             : Maximum prefixes [0..2147483647 , default 0]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# max-prefixes
+```
+
+### next-hop-self
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# next-hop-self
+```
+
+### password
+```text
+<string>             : Password [0..80 chars]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# password
+```
+
+### remote-as
+```text
+<as-number>          : Remote AS number [1..4294967295]
+
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# remote-as
+```
+
+### show neighbor-connection
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# show neighbor-connection
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# shutdown
+```
+
+### timers
+```text
+<CR>
+ keepalive
+ holdtime
+
+SF-1p-187>config>router(1)>bgp(65002)>neighbor(10.10.10.188)# timers
+```
+
+## configure router NAME dhcp-client
+
+Level help (`?`):
+```text
+[no] dhcpv6-option-request          - Configure DHCPv6 option request option
+      duid-type                      - 
+ [no] host-name                      - Configure DHCP option 12 (host name)
+      vendor-class-id                - Configure DHCP option 60 (vendor class 
+                                       identifier)
+```
+
+### dhcpv6-option-request
+```text
+<CR>
+ <vendor-specific-info: Vendor Specific Information (option 17)
+
+
+SF-1p-187>config>router(1)>dhcp-client# dhcpv6-option-request
+```
+
+### duid-type
+```text
+<en>                 : 
+ <ll>                 : 
+
+
+SF-1p-187>config>router(1)>dhcp-client# duid-type
+```
+
+### host-name
+```text
+<name>               : User specified name
+ <sys-name>           : System defined name
+
+
+SF-1p-187>config>router(1)>dhcp-client# host-name
+```
+
+### vendor-class-id
+```text
+<name>               : User specified name
+ <ent-physical-name>  : System defined name
+
+
+SF-1p-187>config>router(1)>dhcp-client# vendor-class-id
+```
+
+## configure router NAME interface NAME
+
+Level help (`?`):
+```text
+[no] address                        - Configure router interface IP
+ [no] bind                           - Bind router interface
+ [no] crypto-map                     - 
+ [no] dhcp                           - Enable DHCP client
+      dhcp-client                    + Configure DHCP client
+ [no] dhcp-relay                     - Enable DHCP relay
+ [no] dhcpv6-client                  - Enable DHCPv6 client
+ [no] dhcpv6-relay                   - Enable DHCPv6 layer 3 relay
+ [no] dhcpv6-server                  - 
+ [no] ip-forwarding                  - Enable/disable IP forwarding
+ [no] ipv6-address-prefix            - 
+ [no] ipv6-autoconfig                - Enable IPv6 autoconfiguration
+ [no] management-access              - Configure managment access
+ [no] name                           - Configure router interface name
+ [no] ospf                           + Configure OSPF
+ [no] router-advertisement           - Enables/disables IPv6 Router 
+                                       Advertisements
+ [no] shutdown                       - Disable router interface
+ [no] unreachables                   - Enable ICMP unreachables
+ [no] vrrp                           + Define VRRP group
+
+ show crypto-map-status
+ show status                         - Show router interface status
+ show summary-vrrp
+```
+
+### address
+```text
+<address-mask>       : Router interface IP and mask [0.0.0.0/32|0:0:0:0::0/128]
+
+
+SF-1p-187>config>router(1)>interface(1)# address
+```
+
+### bind
+```text
+<ppp>                : PPP
+ <ethernet>           : Ethernet
+ <virtual>            : Virtual
+ <cellular>           : Cellular
+ <wlan>               : Wlan
+ <wifi-client>        : Wifi client
+
+
+SF-1p-187>config>router(1)>interface(1)# bind
+```
+
+### crypto-map
+```text
+<name>               : [1..80 chars]
+
+
+SF-1p-187>config>router(1)>interface(1)# crypto-map
+```
+
+### dhcp
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# dhcp
+```
+
+### dhcp-relay
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# dhcp-relay
+```
+
+### dhcpv6-client
+```text
+<CR>
+ pd-name
+ <rapid-commit>       : 
+
+
+SF-1p-187>config>router(1)>interface(1)# dhcpv6-client
+```
+
+### dhcpv6-relay
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# dhcpv6-relay
+```
+
+### dhcpv6-server
+```text
+<pool>               : 
+
+
+SF-1p-187>config>router(1)>interface(1)# dhcpv6-server
+```
+
+### ip-forwarding
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# ip-forwarding
+```
+
+### ipv6-address-prefix
+```text
+<prefix-name>        : [1..80 chars]
+
+
+SF-1p-187>config>router(1)>interface(1)# ipv6-address-prefix
+```
+
+### ipv6-autoconfig
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# ipv6-autoconfig
+```
+
+### management-access
+```text
+<allow-all>          : Allow all
+ <allow-ping>         : Ping only
+
+
+SF-1p-187>config>router(1)>interface(1)# management-access
+```
+
+### name
+```text
+<string>             : Router interface name [1..32 chars]
+
+
+SF-1p-187>config>router(1)>interface(1)# name
+```
+
+### ospf *(not entered — parameterized context)*
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# ospf
+```
+
+### router-advertisement
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# router-advertisement
+```
+
+### show crypto-map-status
+```text
+<CR>
+ <name>               : [1..80 chars]
+
+
+SF-1p-187>config>router(1)>interface(1)# show crypto-map-status
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# show status
+```
+
+### show summary-vrrp
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# show summary-vrrp
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# shutdown
+```
+
+### unreachables
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)# unreachables
+```
+
+### vrrp *(not entered — parameterized context)*
+```text
+<vrid>               : [1..255]
+
+
+SF-1p-187>config>router(1)>interface(1)# vrrp
+```
+
+## configure router NAME interface NAME dhcp-client
+
+Level help (`?`):
+```text
+client-id                      - Configure DHCP option 61 (client 
+                                       identifier)
+```
+
+### client-id
+```text
+<id>                 : User defined string
+ <mac>                : Device MAC address
+
+
+SF-1p-187>config>router(1)>interface(1)>dhcp-client# client-id
+```
+
+## configure router NAME nat
+
+Level help (`?`):
+```text
+clear-nat-statistics           - Clears NAT statistics counters
+      clear-nat-translations         - Clears NAT translation table
+ [no] nat-exclude-source-ip          - Configure NAT exclude expression
+ [no] nat-inside-overload            - Configure a NAPT rule inside to outside
+ [no] nat-inside-source-static       - Configure NAT rule inside to outside
+ [no] nat-inside-source-static-port  - Configure/modify/delete NAT rule from the
+                                        inside to outside
+      nat-timeout                    - Configure translation table entries 
+                                       timeout
+
+ show nat-translations               - Display NAT translation table
+```
+
+### clear-nat-statistics
+```text
+<CR>
+
+SF-1p-187>config>router(1)>nat# clear-nat-statistics
+```
+
+### clear-nat-translations
+```text
+<CR>
+
+SF-1p-187>config>router(1)>nat# clear-nat-translations
+```
+
+### nat-exclude-source-ip
+```text
+<source-ip>          : IP Address of source IP station [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>nat# nat-exclude-source-ip
+```
+
+### nat-inside-overload
+```text
+source
+
+SF-1p-187>config>router(1)>nat# nat-inside-overload
+```
+
+### nat-inside-source-static
+```text
+<inside-ip>          : IP Address of Inside IP station [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>nat# nat-inside-source-static
+```
+
+### nat-inside-source-static-port
+```text
+<tcp>                : Indicate that the configured port number is associated 
+                        with TCP
+ <udp>                : Indicate that the configured port number is associated 
+                        with UDP
+
+
+SF-1p-187>config>router(1)>nat# nat-inside-source-static-port
+```
+
+### nat-timeout
+```text
+<CR>
+ tcp
+ udp
+ others
+
+SF-1p-187>config>router(1)>nat# nat-timeout
+```
+
+### show nat-translations
+```text
+<CR>
+
+SF-1p-187>config>router(1)>nat# show nat-translations
+```
+
+## configure router NAME ospf
+
+Level help (`?`):
+```text
+[no] area                           + Configure OSPF area 
+      external-preference            - Set OSPF external route priority 
+      internal-preference            - Set OSPF internal route priority 
+ [no] redistribute                   - Redistribute external routes
+      router-id                      - Configure router ID
+ [no] shutdown                       - Disable OSPF 
+
+ show database                       - Show database
+ show interface-table                - Show interface table
+ show neighbor-table                 - Show neighbor table
+```
+
+### area *(not entered — parameterized context)*
+```text
+<area-id>            : Area ID [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>ospf# area
+```
+
+### external-preference
+```text
+<priority>           : Priority [1..255, default 110]
+
+
+SF-1p-187>config>router(1)>ospf# external-preference
+```
+
+### internal-preference
+```text
+<priority>           : Priority [1..255, default 30]
+
+
+SF-1p-187>config>router(1)>ospf# internal-preference
+```
+
+### redistribute
+```text
+<connected>          : Connected
+ <static>             : Static
+ <bgp>                : BGP
+
+
+SF-1p-187>config>router(1)>ospf# redistribute
+```
+
+### router-id
+```text
+<ip>                 : Router ID (IP address format) [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>ospf# router-id
+```
+
+### show database
+```text
+<CR>
+
+SF-1p-187>config>router(1)>ospf# show database
+```
+
+### show interface-table
+```text
+<CR>
+
+SF-1p-187>config>router(1)>ospf# show interface-table
+```
+
+### show neighbor-table
+```text
+<CR>
+
+SF-1p-187>config>router(1)>ospf# show neighbor-table
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>ospf# shutdown
+```
+
+## configure router NAME route-map NAME
+
+Level help (`?`):
+```text
+delete                         - Remove statement from policy profile
+      deny                           - Add deny statement to policy profile
+      permit                         - Add permit statement to policy profile
+      remark                         - Add remark statement to policy profile
+
+
+SF-1p-187>config>router(1)>route-map(zzz-hrvst)$
+```
+
+### delete
+```text
+<sequence>           : [number] [1..65535]
+
+
+SF-1p-187>config>router(1)>route-map(zzz-hrvst)$ delete
+```
+
+### deny
+```text
+<CR>
+ <match>              : 
+ <sequence>           : 
+
+
+SF-1p-187>config>router(1)>route-map(zzz-hrvst)$ deny
+```
+
+### permit
+```text
+<CR>
+ <match>              : 
+ <set>                : 
+ <sequence>           : 
+
+
+SF-1p-187>config>router(1)>route-map(zzz-hrvst)$ permit
+```
+
+### remark
+```text
+<description>        : [1..252 chars]
+
+
+SF-1p-187>config>router(1)>route-map(zzz-hrvst)$ remark
 ```
 
 ## configure sd-iot

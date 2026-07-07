@@ -28,6 +28,7 @@ class SSHBackend(Backend):
     def __init__(self) -> None:
         self._conns: dict[str, object] = {}
         self._locks: dict[str, threading.Lock] = {}
+        self._last_used: dict[str, float] = {}
         self._guard = threading.Lock()
 
     def _lock(self, device: Device) -> threading.Lock:
@@ -103,7 +104,8 @@ class SSHBackend(Backend):
             if conn is not None:
                 try:
                     conn.read_channel()  # drop residue from a previous call
-                    conn.find_prompt()   # liveness probe — raises if it died
+                    if time.monotonic() - self._last_used.get(device.name, 0.0) > 60:
+                        conn.find_prompt()  # liveness probe — raises if it died
                     self._run(conn, "exit all", 10)
                 except Exception:
                     try:
@@ -125,6 +127,7 @@ class SSHBackend(Backend):
                 raise
             else:
                 self._conns[device.name] = conn
+                self._last_used[device.name] = time.monotonic()
 
     def execute(self, device: Device, command: str, timeout: int = 30) -> str:
         with self._session(device, timeout) as conn:

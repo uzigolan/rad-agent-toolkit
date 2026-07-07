@@ -90,6 +90,33 @@ self-describing: a failed navigation returns the expected parameters
 `run_show_in_context` usually tells you the missing piece. `tree` on a parent
 context is the reliable way to discover what an unfamiliar subtree contains.
 
+## Common config recipes (verified live — answer directly, no lookup needed)
+
+All staged via `stage_config` (start `exit all`, end `exit all`); persist with
+`save_startup`. Rollback = the `no ...` inverse.
+
+**Static route** (`configure router <1..10>`):
+`static-route <prefix> address <next-hop-ip> [metric <n>]` — next hop can also
+be `interface <if>` or `tunnel-interface <t>`; prefix IPv4 or IPv6. Remove:
+`no static-route <prefix>`. Verify: `show routing-table` / `show rib` there.
+
+**Route policy** (`configure router <n>`): `prefix-list "<name>" ipv4` →
+`deny|permit <prefix> sequence <n>` lines → bind with
+`prefix-list-bind "<name>" in|out` under `bgp <as> > ipv4-unicast-af >
+neighbor <ip>`. `route-map` lives at the same level.
+
+**VLAN on a port** (`configure port ethernet <n>`): `vlan <vid>` sub-context →
+`no shutdown` inside it; port itself needs `no shutdown` too. Bind L3:
+`configure router <n> interface <i>` → `bind ethernet <p> vlan <vid>`.
+
+**Device certificate → MQTTS** (details: `## configure crypto*` /
+`## configure system mqtt server NAME` reference sections): key
+`configure crypto key generate <name>`; CA object `configure crypto ca <name>`
+(address, protocol scep|est); CA cert `configure crypto pki authenticate <n>`;
+device cert `enroll-from-configuration <attrs>` + `import-certificate <n>`
+(lab: `self-sign-certificate <n>`); bind `configure system mqtt server <name>`
+→ `address <ip|url>`, `certificate <cert-name>`, `user <name>`.
+
 ## Interactive help: the `cli_help` tool (the CLI is self-documenting)
 
 The CLI answers `?` at any point, and the **`cli_help(device, context,

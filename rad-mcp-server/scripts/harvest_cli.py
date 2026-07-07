@@ -280,7 +280,13 @@ class Harvester:
                     break  # prompt reprinted — dump complete
             elif output:
                 quiet += 0.1
-                if quiet >= 0.8:
+                # Last-resort fallback only — the prompt anchor above is the
+                # real terminator. The SF-1p deterministically pauses >3s
+                # mid-dump at an internal buffer boundary, so any short quiet
+                # gap truncates the dump and hides existing instances (this
+                # kept `router 1` invisible and the router subtree
+                # unharvestable through two full runs).
+                if quiet >= 10.0:
                     break
         return output
 
