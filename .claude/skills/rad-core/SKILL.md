@@ -28,7 +28,7 @@ Devices live in `inventory.yaml` (name, host, family, groups). Credentials are
 NEVER in the inventory — they come from `server/.env`. Do not read, print, or
 log credential values. To list, add, update, or remove a device (e.g. the
 user wants to point this at their own equipment, not just the pre-configured
-lab units), load the **`rad-device-management`** skill — it covers the
+lab units), load the **`rad-device-mng`** skill — it covers the
 `list_devices`/`add_device`/`update_device`/`remove_device` tools and the
 credentials-live-in-`.env`-not-inventory workflow in full.
 

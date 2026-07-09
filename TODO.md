@@ -6,7 +6,7 @@ for the full design.
 
 ## Done (2026-07-09 session)
 
-- **Device inventory CRUD + `rad-device-management` skill.** ⚠️ **Built, not
+- **Device inventory CRUD + `rad-device-mng` skill.** ⚠️ **Built, not
   yet tested end-to-end via real conversation or a live device — only
   verified at the code level (direct `mcp.call_tool()` calls in isolation:
   add → update → list → remove round-trip on a scratch inventory file).
@@ -21,7 +21,7 @@ for the full design.
   `add_device_entry`/`update_device_entry`/`remove_device_entry` — text-based
   append/edit (not a YAML round-trip) so the file's own safety header
   comment and formatting survive untouched. New skill
-  `skills/rad-device-management/SKILL.md` documents the full workflow,
+  `skills/rad-device-mng/SKILL.md` documents the full workflow,
   especially the credentials split (inventory.yaml = facts only; `.env` =
   credentials, and the running server must be **restarted** to pick up new
   `.env` values — it loads once at process start). `rad-core/SKILL.md`
@@ -72,7 +72,7 @@ for the full design.
 ## Open
 
 ### Device management (untested)
-- [ ] Test `rad-device-management` for real: does the skill actually load on
+- [ ] Test `rad-device-mng` for real: does the skill actually load on
   its trigger phrases in a fresh conversation? Full `add_device` → edit
   `server/.env` → restart server → `test_connectivity` → `health_check`
   pass against a real device. `update_device`/`remove_device` similarly
