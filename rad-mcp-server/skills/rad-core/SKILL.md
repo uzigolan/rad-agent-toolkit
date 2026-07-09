@@ -26,7 +26,11 @@ description: Core workflow for operating RAD devices through the rad-mcp tools �
 
 Devices live in `inventory.yaml` (name, host, family, groups). Credentials are
 NEVER in the inventory — they come from `server/.env`. Do not read, print, or
-log credential values.
+log credential values. To list, add, update, or remove a device (e.g. the
+user wants to point this at their own equipment, not just the pre-configured
+lab units), load the **`rad-device-management`** skill — it covers the
+`list_devices`/`add_device`/`update_device`/`remove_device` tools and the
+credentials-live-in-`.env`-not-inventory workflow in full.
 
 ## Product families
 
@@ -35,7 +39,10 @@ The plugin targets the full RAD portfolio; each family maps to a driver under
 
 - `secflow` — SecFlow secure industrial gateways (SF-1p verified live). Shared
   RAD CLI dialect — see the `rad-cli-operations` skill.
-- `etx2` — ETX-2 carrier-Ethernet demarcation family (ETX-203AX/205A/220A).
-  Same dialect; pending live verification on ETX-2 hardware.
+- `etx1p` — ETX-1p demarcation units, verified live. Same shared dialect,
+  its own driver (`drivers/etx1p.py`); NOT the legacy `etx1`.
+- `etx2` — ETX-2 carrier-Ethernet demarcation family (ETX-203AX/205A/220A/
+  ETX-2I), verified live on an ETX-2I unit. Same dialect, with family-specific
+  quirks (no `show resources`, slot/port naming) — see `drivers/etx2.py`.
 - Planned: `etx1` (legacy ETX-1), `mp4100` (Megaplex-4100) — different CLI
   dialects, own drivers and skills to come.

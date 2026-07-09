@@ -75,13 +75,22 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
 
 ## Roadmap
 
-- ETX-2 live verification; harvest its CLI reference.
-- Phase-2 harvest: enter parameterized contexts using existing entity indexes
-  from the running config.
+- ~~ETX-2 live verification; harvest its CLI reference.~~ ✅ done (ETX-2I).
+- ~~Phase-2 harvest: enter parameterized contexts using existing entity
+  indexes from the running config.~~ ✅ done, and extended further: numeric
+  contexts with no existing instance now get a manual-vetted temp-object
+  create/rollback too (`scripts/harvest_cli.py`).
 - `rad://cli-reference/{family}/{context}` keyed-lookup resource for Desktop.
 - RADview northbound API backend alongside SSH.
-- Manuals knowledge layer (RAG over official RAD documentation).
+- Manuals knowledge layer: lexical retrieval ✅ done (all 3 families);
+  semantic RAG over the corpus — not started.
 - Distribution: `.mcpb` Desktop Extension + Claude Code plugin marketplace.
+- **New integration targets: GitHub Copilot CLI and the VS Code Copilot
+  extension** — adapt the portable-bundle output (knowledge + MCP wiring)
+  to Copilot's instruction-file convention (`.github/copilot-instructions.md`)
+  and its MCP config format.
+
+Full task list: [TODO.md](TODO.md).
 
 ## Repository layout
 

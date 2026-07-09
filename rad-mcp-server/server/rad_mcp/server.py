@@ -34,7 +34,7 @@ from . import __version__
 from .audit import audit, redact
 from .backends import get_backend
 from .drivers import get_driver
-from .inventory import get_device, load_inventory
+from .inventory import add_device_entry, get_device, load_inventory, remove_device_entry, update_device_entry
 
 _TRANSPORT = os.environ.get("RAD_MCP_TRANSPORT", "stdio").lower()
 _HTTP = _TRANSPORT in ("http", "streamable-http")
@@ -66,6 +66,8 @@ mcp = FastMCP(
     "rad-mcp",
     instructions=(
         "Operate RAD Data Communications devices (ETX-2 family and beyond). "
+        "New device not in list_devices yet? Use add_device to register it "
+        "(facts only — credentials still go in server/.env, never the tool call). "
         "Always run health_check or test_connectivity before configuration work. "
         "Writes are staged: stage_config returns a stage_id and preview; nothing "
         "touches the device until commit_config is called with confirm=true. "
@@ -383,6 +385,94 @@ def manual_chapter_resource(family: str, chapter: str) -> str:
 # -------------------------------------------------------------------- write
 
 if not READONLY:
+
+    @mcp.tool()
+    def add_device(
+        name: str,
+        host: str,
+        family: str,
+        port: int = 22,
+        groups: list[str] | None = None,
+        description: str = "",
+        overwrite: bool = False,
+    ) -> dict:
+        """Register a new device in the local inventory (facts only — never
+        credentials, never registered over shared/remote transport since this
+        is a write tool). `family` must be a driver rad-mcp already ships
+        (see list_devices/drivers — e.g. 'secflow', 'etx1p', 'etx2'); this
+        does not add support for a new CLI dialect, only a new unit of an
+        existing one.
+
+        After this call: set credentials in server/.env as
+        RAD_MCP_<NAME>_USERNAME / RAD_MCP_<NAME>_PASSWORD (name upper-cased,
+        dashes -> underscores) — or rely on the global RAD_MCP_USERNAME /
+        RAD_MCP_PASSWORD if this device shares them — then restart the MCP
+        server so it picks up the new .env values (it loads .env once at
+        process start). Then run test_connectivity, then health_check.
+        """
+        get_driver(family)  # raises with the valid-family list if unknown
+        inv_path = add_device_entry(
+            name, host, family, port=port, groups=groups or [],
+            description=description, overwrite=overwrite,
+        )
+        audit("add_device", name, detail=f"host={host} family={family} overwrite={overwrite}")
+        env_prefix = "RAD_MCP_" + name.upper().replace("-", "_")
+        return {
+            "status": f"Added '{name}' to {inv_path.name}.",
+            "device": {
+                "name": name, "host": host, "family": family, "port": port,
+                "groups": groups or [], "description": description,
+            },
+            "next_steps": [
+                f"Set credentials in server/.env: {env_prefix}_USERNAME=... and "
+                f"{env_prefix}_PASSWORD=... (or rely on the global "
+                "RAD_MCP_USERNAME/RAD_MCP_PASSWORD if this device shares them).",
+                "Restart the MCP server to pick up the new .env values.",
+                f"Run test_connectivity('{name}') then health_check('{name}').",
+                f"If '{family}'s CLI reference is missing this unit's context "
+                f"or firmware differs from what was harvested, run "
+                f"/rad-harvest {name} to build/refresh it.",
+            ],
+        }
+
+    @mcp.tool()
+    def update_device(
+        name: str,
+        host: str | None = None,
+        family: str | None = None,
+        port: int | None = None,
+        groups: list[str] | None = None,
+        description: str | None = None,
+    ) -> dict:
+        """Update a subset of an existing inventory device's fields (host,
+        family, port, groups, description). Omitted parameters keep their
+        current value. Does not touch credentials — those still live only in
+        server/.env, update them there directly if they changed. Changing
+        `family` mid-life is unusual (normally means the entry was
+        misconfigured, not that the hardware changed) — confirm with the user
+        before doing that specifically.
+        """
+        if family is not None:
+            get_driver(family)  # raises with the valid-family list if unknown
+        updated = update_device_entry(
+            name, host=host, family=family, port=port, groups=groups,
+            description=description,
+        )
+        audit("update_device", name, detail=f"host={host} family={family} groups={groups}")
+        return {"status": f"Updated '{name}'.", "device": updated.summary()}
+
+    @mcp.tool()
+    def remove_device(name: str, confirm: bool = False) -> str:
+        """Remove a device from the local inventory. Does not touch the
+        device itself or delete any backups/audit history — this only stops
+        rad-mcp from knowing about it. Requires confirm=true after the user
+        has approved removing this specific device."""
+        if not confirm:
+            return "REFUSED: remove_device requires confirm=true after the user has approved removing this device."
+        get_device(name)  # raises with the known-devices list if unknown
+        remove_device_entry(name)
+        audit("remove_device", name)
+        return f"Removed '{name}' from the inventory. (Credentials in server/.env, if any, were left in place — remove those manually if no longer needed.)"
 
     @mcp.tool()
     def stage_config(device: str, lines: list[str], purpose: str) -> dict:
