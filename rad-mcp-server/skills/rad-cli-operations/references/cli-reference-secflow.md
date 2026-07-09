@@ -1,6 +1,6 @@
 # secflow CLI reference (harvested `?` help)
 
-Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) on 2026-07-07 by scripts/harvest_cli.py
+Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) on 2026-07-09 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -435,7 +435,7 @@ access-control                 + Configure access control
       terminal                       + Configure terminal
 ```
 
-### bridge *(not entered — parameterized context)*
+### bridge *(parameterized — inner help harvested under "configure bridge NAME")*
 ```text
 <number>             : Bridge number [number]
 
@@ -574,6 +574,165 @@ SF-1p-187>config>access-control>firewall>zone(zzz-hrvst)$
 SF-1p-187>config>access-control>firewall>zone(zzz-hrvst)$ member
 ```
 
+## configure bridge NAME
+
+Level help (`?`):
+```text
+aging-time                     - Configure MAC aging time
+      clear-mac-table                - Clear MAC address table
+ [no] filtering                      - Enable filtering forwarding mode
+ [no] name                           - Configure bridge name
+ [no] port                           + Configure bridge port
+ [no] vlan-aware                     - Enable VLAN aware mode
+
+ show mac-address-table              - Display MAC address table
+ show summary                        - Display bridge ports list
+
+SF-1p-187>config>bridge(1)$
+```
+
+### aging-time
+```text
+<seconds>            : MAC aging time (seconds) [number, default 300] [60..956]
+
+
+SF-1p-187>config>bridge(1)$ aging-time
+```
+
+### clear-mac-table
+```text
+<CR>
+
+SF-1p-187>config>bridge(1)$ clear-mac-table
+```
+
+### filtering
+```text
+<CR>
+
+SF-1p-187>config>bridge(1)$ filtering
+```
+
+### name
+```text
+<bridge-name>        : Bridge name [1..32 chars]
+
+
+SF-1p-187>config>bridge(1)$ name
+```
+
+### show mac-address-table
+```text
+<CR>
+
+SF-1p-187>config>bridge(1)# show mac-address-table
+```
+
+### show summary
+```text
+<CR>
+
+SF-1p-187>config>bridge(1)# show summary
+```
+
+### show vlans
+```text
+<CR>
+ vlan
+
+SF-1p-187>config>bridge(1)# show vlans
+```
+
+### static-mac
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# static-mac
+```
+
+### vlan-aware
+```text
+<CR>
+
+SF-1p-187>config>bridge(1)# vlan-aware
+```
+
+## configure bridge NAME port
+
+Level help (`?`):
+```text
+aging-time                     - Configure MAC aging time
+      clear-mac-table                - Clear MAC address table
+ [no] filtering                      - Enable filtering forwarding mode
+ [no] name                           - Configure bridge name
+ [no] port                           + Configure bridge port
+ [no] vlan-aware                     - Enable VLAN aware mode
+
+ show mac-address-table              - Display MAC address table
+ show summary                        - Display bridge ports list
+```
+
+### accept-frame-type
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# accept-frame-type
+```
+
+### bind
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# bind
+```
+
+### name
+```text
+<bridge-name>        : Bridge name [1..32 chars]
+
+
+SF-1p-187>config>bridge(1)# name
+```
+
+### pvid
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# pvid
+```
+
+### shutdown
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# shutdown
+```
+
+## configure bridge NAME vlan
+
+Level help (`?`):
+```text
+aging-time                     - Configure MAC aging time
+      clear-mac-table                - Clear MAC address table
+ [no] filtering                      - Enable filtering forwarding mode
+ [no] name                           - Configure bridge name
+ [no] port                           + Configure bridge port
+ [no] static-mac                     - Configure static MAC
+ [no] vlan                           + Configure bridge VLAN
+ [no] vlan-aware                     - Enable VLAN aware mode
+
+ show mac-address-table              - Display MAC address table
+ show summary                        - Display bridge ports list
+ show vlans                          - Display VLAN membership
+```
+
+### tagged-port
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# tagged-port
+```
+
+### untagged-port
+```text
+# cli error: Invalid Command
+SF-1p-187>config>bridge(1)# untagged-port
+```
+
 ## configure crypto
 
 Level help (`?`):
@@ -619,7 +778,7 @@ SF-1p-187>config>crypto# ipsec-transform-set
 SF-1p-187>config>crypto# isakmp-key
 ```
 
-### isakmp-policy *(not entered — parameterized context)*
+### isakmp-policy *(parameterized — inner help harvested under "configure crypto isakmp-policy NAME")*
 ```text
 <sequence>           : [number]
 
@@ -808,7 +967,8 @@ SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ responder-only
 
 ### sa-lifetime
 ```text
-seconds
+<CR>
+ seconds
  kilobytes
 
 SF-1p-187>config>crypto>crypto-map(zzz-hrvst)$ sa-lifetime
@@ -862,6 +1022,56 @@ SF-1p-187>config>crypto>ipsec-transform-set(zzz-hrvst)$ algorithms
 
 
 SF-1p-187>config>crypto>ipsec-transform-set(zzz-hrvst)$ mode
+```
+
+## configure crypto isakmp-policy NAME
+
+Level help (`?`):
+```text
+encryption                     - Configure encryption algorithm
+      group                          - Configure Diffie Hellman group
+      hash                           - Configure hashing algorithm
+
+
+SF-1p-187>config>crypto>isakmp-policy(1)$
+```
+
+### encryption
+```text
+<aes-cbc-128>        : 
+ <aes-cbc-256>        : 
+ <aes-128-gcm-64>     : 
+ <aes-128-gcm-96>     : 
+ <aes-128-gcm-128>    : 
+ <aes-256-gcm-64>     : 
+ <aes-256-gcm-96>     : 
+ <aes-256-gcm-128>    : 
+
+
+SF-1p-187>config>crypto>isakmp-policy(1)$ encryption
+```
+
+### group
+```text
+<1>                  : 
+ <2>                  : 
+ <5>                  : 
+ <14>                 : 
+ <19>                 : 
+ <20>                 : 
+
+
+SF-1p-187>config>crypto>isakmp-policy(1)$ group
+```
+
+### hash
+```text
+<sha1>               : 
+ <sha2-256>           : 
+ <sha2-512>           : 
+
+
+SF-1p-187>config>crypto>isakmp-policy(1)$ hash
 ```
 
 ## configure crypto key
@@ -1748,6 +1958,24 @@ Level help (`?`):
 
 
 SF-1p-187>config>mngmnt>snmp# access-group
+
+auto-create probe 'access-group zzz-hrvst' refused.
+device response: access-group zzz-hrvst
+#                                                    ^
+# cli error: parameter or keyword missing or wrong
+ - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
+   auth-no-priv|auth-priv}
+ - no access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
+   auth-no-priv|auth-priv}
+ <group-name>         : Group name [string]
+ <snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+ <no-auth-no-priv>    : No Authentication/No Privacy
+ <auth-no-priv>       : Authentication/No Privacy
+ <auth-priv>          : Authentication/Privacy
+
+SF-1p-187>config>mngmnt>snmp#
 ```
 
 ### bootstrap-notification
@@ -1786,6 +2014,17 @@ SF-1p-187>config>mngmnt>snmp# notify
 
 
 SF-1p-187>config>mngmnt>snmp# notify-filter
+
+auto-create probe 'notify-filter zzz-hrvst' refused.
+device response: notify-filter zzz-hrvst
+#                                                     ^
+# cli error: parameter or keyword missing or wrong
+ - notify-filter <name> <sub-tree-oid>
+ - no notify-filter <name> <sub-tree-oid>
+ <name>               : Notification group name [string]
+ <sub-tree-oid>       : Sub-tree OID [1.3.6.1...]
+
+SF-1p-187>config>mngmnt>snmp#
 ```
 
 ### notify-filter-profile *(parameterized — inner help harvested under "configure management snmp notify-filter-profile NAME")*
@@ -1869,6 +2108,17 @@ SF-1p-187>config>mngmnt>snmp# user
 
 
 SF-1p-187>config>mngmnt>snmp# view
+
+auto-create probe 'view zzz-hrvst' refused.
+device response: view zzz-hrvst
+#                                            ^
+# cli error: parameter or keyword missing or wrong
+ - view <view-name> <sub-tree-oid>
+ - no view <view-name> <sub-tree-oid>
+ <view-name>          : View name [string]
+ <sub-tree-oid>       : Subtree OID [1.3.6.1...]
+
+SF-1p-187>config>mngmnt>snmp#
 ```
 
 ## configure management snmp notify NAME
@@ -2079,7 +2329,8 @@ SF-1p-187>config>mngmnt>tacacsplus>group(zzz-hrvst)$
 
 ### accounting
 ```text
-<shell>              : Shell accounting
+<CR>
+ <shell>              : Shell accounting
  <system>             : System accounting
  <commands>           : Commands accounting
 
@@ -2094,12 +2345,50 @@ Level help (`?`):
 [no] mirroring-session              + Configure mirroring session
 ```
 
-### mirroring-session *(not entered — parameterized context)*
+### mirroring-session *(parameterized — inner help harvested under "configure monitor mirroring-session NAME")*
 ```text
 <number>             : Mirroring session number [number]
 
 
 SF-1p-187>config>monitor# mirroring-session
+```
+
+## configure monitor mirroring-session NAME
+
+Level help (`?`):
+```text
+[no] destination                    - Configure mirroring destination. Can not 
+                                       be used in more then one mirroring 
+                                       session
+ [no] shutdown                       - Disable session
+ [no] source                         - Configure mirroring source
+
+
+SF-1p-187>config>monitor>mirroring-session(1)$
+```
+
+### destination
+```text
+<ethernet>           : 
+
+
+SF-1p-187>config>monitor>mirroring-session(1)$ destination
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>monitor>mirroring-session(1)$ shutdown
+```
+
+### source
+```text
+<port>               : 
+ <tunnel-interface>   : 
+
+
+SF-1p-187>config>monitor>mirroring-session(1)$ source
 ```
 
 ## configure oam
@@ -2226,7 +2515,7 @@ SF-1p-187>config>port# cellular
 SF-1p-187>config>port# ethernet
 ```
 
-### ppp *(not entered — parameterized context)*
+### ppp *(parameterized — inner help harvested under "configure port ppp NAME")*
 ```text
 <port-number>        : PPP Port number [number]
 
@@ -2564,7 +2853,7 @@ Level help (`?`):
 <acl-name>           : ACL name [1..80 chars]
 
 
-SF-1p-187>config>port>eth(3)# access-group
+SF-1p-187>config>port>eth(1)# access-group
 ```
 
 ### classifier *(not entered — parameterized context)*
@@ -2572,7 +2861,7 @@ SF-1p-187>config>port>eth(3)# access-group
 <ingress>            : 
 
 
-SF-1p-187>config>port>eth(3)# classifier
+SF-1p-187>config>port>eth(1)# classifier
 ```
 
 ### clear-access-list-statistics
@@ -2583,14 +2872,14 @@ SF-1p-187>config>port>eth(3)# classifier
  <ipv6>               : IPv6
 
 
-SF-1p-187>config>port>eth(3)# clear-access-list-statistics
+SF-1p-187>config>port>eth(1)# clear-access-list-statistics
 ```
 
 ### clear-statistics
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)# clear-statistics
+SF-1p-187>config>port>eth(1)# clear-statistics
 ```
 
 ### egress-mtu
@@ -2599,7 +2888,7 @@ SF-1p-187>config>port>eth(3)# clear-statistics
                         default 1500] [68..12288]
 
 
-SF-1p-187>config>port>eth(3)# egress-mtu
+SF-1p-187>config>port>eth(1)# egress-mtu
 ```
 
 ### force-next-hop
@@ -2607,7 +2896,7 @@ SF-1p-187>config>port>eth(3)# egress-mtu
 <CR>
  next-hop
 
-SF-1p-187>config>port>eth(3)# force-next-hop
+SF-1p-187>config>port>eth(1)# force-next-hop
 ```
 
 ### name
@@ -2616,7 +2905,7 @@ SF-1p-187>config>port>eth(3)# force-next-hop
                         chars]
 
 
-SF-1p-187>config>port>eth(3)# name
+SF-1p-187>config>port>eth(1)# name
 ```
 
 ### pm-collection
@@ -2624,21 +2913,21 @@ SF-1p-187>config>port>eth(3)# name
 <interval>           : PM collection interval
 
 
-SF-1p-187>config>port>eth(3)# pm-collection
+SF-1p-187>config>port>eth(1)# pm-collection
 ```
 
 ### policy-based-route
 ```text
 priority
 
-SF-1p-187>config>port>eth(3)# policy-based-route
+SF-1p-187>config>port>eth(1)# policy-based-route
 ```
 
 ### queue-group
 ```text
 profile
 
-SF-1p-187>config>port>eth(3)# queue-group
+SF-1p-187>config>port>eth(1)# queue-group
 ```
 
 ### show access-list-statistics
@@ -2649,35 +2938,35 @@ SF-1p-187>config>port>eth(3)# queue-group
  <ipv6>               : IPv6
 
 
-SF-1p-187>config>port>eth(3)# show access-list-statistics
+SF-1p-187>config>port>eth(1)# show access-list-statistics
 ```
 
 ### show access-list-summary
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)# show access-list-summary
+SF-1p-187>config>port>eth(1)# show access-list-summary
 ```
 
 ### show statistics
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)# show statistics
+SF-1p-187>config>port>eth(1)# show statistics
 ```
 
 ### show status
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)# show status
+SF-1p-187>config>port>eth(1)# show status
 ```
 
 ### shutdown
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)# shutdown
+SF-1p-187>config>port>eth(1)# shutdown
 ```
 
 ### traffic-class *(parameterized — inner help harvested under "configure port ethernet NAME traffic-class NAME")*
@@ -2685,7 +2974,7 @@ SF-1p-187>config>port>eth(3)# shutdown
 <tc-name>            : Traffic class name [1..32 chars]
 
 
-SF-1p-187>config>port>eth(3)# traffic-class
+SF-1p-187>config>port>eth(1)# traffic-class
 ```
 
 ### vlan *(not entered — parameterized context)*
@@ -2693,7 +2982,7 @@ SF-1p-187>config>port>eth(3)# traffic-class
 <vlan-id>            : Vlan id [1..4094]
 
 
-SF-1p-187>config>port>eth(3)# vlan
+SF-1p-187>config>port>eth(1)# vlan
 ```
 
 ## configure port ethernet NAME dot1x
@@ -2713,28 +3002,28 @@ authenticator                  + Authenticator level
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>dot1x# clear-statistics
+SF-1p-187>config>port>eth(1)>dot1x# clear-statistics
 ```
 
 ### initialize
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>dot1x# initialize
+SF-1p-187>config>port>eth(1)>dot1x# initialize
 ```
 
 ### show statistics
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>dot1x# show statistics
+SF-1p-187>config>port>eth(1)>dot1x# show statistics
 ```
 
 ### show status
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>dot1x# show status
+SF-1p-187>config>port>eth(1)>dot1x# show status
 ```
 
 ## configure port ethernet NAME dot1x authenticator
@@ -2750,7 +3039,7 @@ authentication                 - Configure authentication mode
 ```text
 mode
 
-SF-1p-187>config>port>eth(3)>dot1x>authenticator# authentication
+SF-1p-187>config>port>eth(1)>dot1x>authenticator# authentication
 ```
 
 ### reauthentication
@@ -2758,14 +3047,14 @@ SF-1p-187>config>port>eth(3)>dot1x>authenticator# authentication
 <CR>
  period
 
-SF-1p-187>config>port>eth(3)>dot1x>authenticator# reauthentication
+SF-1p-187>config>port>eth(1)>dot1x>authenticator# reauthentication
 ```
 
 ### shutdown
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>dot1x>authenticator# shutdown
+SF-1p-187>config>port>eth(1)>dot1x>authenticator# shutdown
 ```
 
 ## configure port ethernet NAME dot1x supplicant
@@ -2786,7 +3075,7 @@ Level help (`?`):
 ```text
 identity
 
-SF-1p-187>config>port>eth(3)>dot1x>supplicant# authentication
+SF-1p-187>config>port>eth(1)>dot1x>supplicant# authentication
 ```
 
 ### held-period
@@ -2794,7 +3083,7 @@ SF-1p-187>config>port>eth(3)>dot1x>supplicant# authentication
 <seconds>            : [0..65535, default 60]
 
 
-SF-1p-187>config>port>eth(3)>dot1x>supplicant# held-period
+SF-1p-187>config>port>eth(1)>dot1x>supplicant# held-period
 ```
 
 ### max-authentication
@@ -2803,14 +3092,14 @@ SF-1p-187>config>port>eth(3)>dot1x>supplicant# held-period
                          2]
 
 
-SF-1p-187>config>port>eth(3)>dot1x>supplicant# max-authentication
+SF-1p-187>config>port>eth(1)>dot1x>supplicant# max-authentication
 ```
 
 ### shutdown
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>dot1x>supplicant# shutdown
+SF-1p-187>config>port>eth(1)>dot1x>supplicant# shutdown
 ```
 
 ### tx-period
@@ -2818,7 +3107,7 @@ SF-1p-187>config>port>eth(3)>dot1x>supplicant# shutdown
 <seconds>            : [1..65535, default 30]
 
 
-SF-1p-187>config>port>eth(3)>dot1x>supplicant# tx-period
+SF-1p-187>config>port>eth(1)>dot1x>supplicant# tx-period
 ```
 
 ## configure port ethernet NAME mac-access-control
@@ -2834,14 +3123,14 @@ Level help (`?`):
 <mac-address>        : [00-00-00-00-00-00]
 
 
-SF-1p-187>config>port>eth(3)>mac-access-control# mac
+SF-1p-187>config>port>eth(1)>mac-access-control# mac
 ```
 
 ### shutdown
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>mac-access-control# shutdown
+SF-1p-187>config>port>eth(1)>mac-access-control# shutdown
 ```
 
 ## configure port ethernet NAME traffic-class NAME
@@ -2856,7 +3145,7 @@ cos                            - Define traffic-class CoS by fixed value
                                        activity
 
 
-SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$
+SF-1p-187>config>port>eth(1)>traffic-class(zzz-hrvst)$
 ```
 
 ### cos
@@ -2864,7 +3153,7 @@ SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$
 <fixed>              : 
 
 
-SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ cos
+SF-1p-187>config>port>eth(1)>traffic-class(zzz-hrvst)$ cos
 ```
 
 ### mark
@@ -2872,14 +3161,136 @@ SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ cos
 <dscp-fixed>         : 
 
 
-SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ mark
+SF-1p-187>config>port>eth(1)>traffic-class(zzz-hrvst)$ mark
 ```
 
 ### shutdown
 ```text
 <CR>
 
-SF-1p-187>config>port>eth(3)>traffic-class(zzz-hrvst)$ shutdown
+SF-1p-187>config>port>eth(1)>traffic-class(zzz-hrvst)$ shutdown
+```
+
+## configure port ppp NAME
+
+Level help (`?`):
+```text
+[no] bind                           - 
+ [no] chap-hostname                  - CHAP hostname
+ [no] chap-password                  - CHAP password
+ [no] ipcp-address                   - PPP ipv4 address
+ [no] name                           - Port name
+ [no] pap-username                   - Configure PAP credentials
+      pppoe                          + 
+ [no] refuse-chap                    - Refuse CHAP authentication
+ [no] refuse-no-auth                 - Refuse no authentication
+ [no] refuse-pap                     - Refuse PAP authentication
+
+ show status
+
+SF-1p-187>config>port>ppp(1)$
+```
+
+### bind
+```text
+<ethernet>           : 
+
+
+SF-1p-187>config>port>ppp(1)$ bind
+```
+
+### chap-hostname
+```text
+<name>               : [1..80 chars]
+
+
+SF-1p-187>config>port>ppp(1)$ chap-hostname
+```
+
+### chap-password
+```text
+<password>           : [1..80 chars]
+
+
+SF-1p-187>config>port>ppp(1)$ chap-password
+```
+
+### ipcp-address
+```text
+<ipv4-unicast-address: IPv4 unicast address [0.0.0.0]
+
+
+SF-1p-187>config>port>ppp(1)$ ipcp-address
+```
+
+### name
+```text
+<string>             : [1..80 chars]
+
+
+SF-1p-187>config>port>ppp(1)$ name
+```
+
+### pap-username
+```text
+<name>               : [1..80 chars]
+
+
+SF-1p-187>config>port>ppp(1)$ pap-username
+```
+
+### refuse-chap
+```text
+<CR>
+
+SF-1p-187>config>port>ppp(1)# refuse-chap
+```
+
+### refuse-no-auth
+```text
+<CR>
+
+SF-1p-187>config>port>ppp(1)# refuse-no-auth
+```
+
+### refuse-pap
+```text
+<CR>
+
+SF-1p-187>config>port>ppp(1)# refuse-pap
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>ppp(1)# show status
+```
+
+## configure port ppp NAME pppoe
+
+Level help (`?`):
+```text
+[no] service-name                   - Configure Service-Name
+
+ show status
+
+SF-1p-187>config>port>ppp(1)>pppoe$
+```
+
+### service-name
+```text
+<string>             : [1..80 chars]
+
+
+SF-1p-187>config>port>ppp(1)>pppoe$ service-name
+```
+
+### show status
+```text
+<CR>
+
+SF-1p-187>config>port>ppp(1)>pppoe$ show status
 ```
 
 ## configure port serial NAME
@@ -3598,7 +4009,8 @@ SF-1p-187>config>qos>shaper-profile(zzz-hrvst)$
 
 ### bandwidth
 ```text
-cir
+<CR>
+ cir
 
 SF-1p-187>config>qos>shaper-profile(zzz-hrvst)$ bandwidth
 ```
@@ -3819,7 +4231,8 @@ SF-1p-187>config>reporting# log-file-timestamp-type
 
 ### mask-minimum-severity
 ```text
-log
+<CR>
+ log
  snmp-trap
  led-relay
  popup
@@ -4163,7 +4576,8 @@ SF-1p-187>config>reporting# show log-summary
 
 ### soaking-time
 ```text
-interval
+<CR>
+ interval
  clear
 
 SF-1p-187>config>reporting# soaking-time
@@ -4274,6 +4688,17 @@ SF-1p-187>config>router(1)# name
 
 
 SF-1p-187>config>router(1)# prefix-list
+
+auto-create probe 'prefix-list zzz-hrvst' refused.
+device response: prefix-list zzz-hrvst
+#                                                 ^
+# cli error: parameter or keyword missing or wrong
+ - prefix-list <name> {ipv4|ipv6}
+ - no prefix-list <name>
+ <name>               : Set prefix-list policy profile name. Profile name shall 
+                        be unique in the system [1..252 chars]
+
+SF-1p-187>config>router(1)#
 ```
 
 ### resequence
@@ -4377,7 +4802,7 @@ SF-1p-187>config>router(1)# show vrrp-summary
 SF-1p-187>config>router(1)# static-route
 ```
 
-### tunnel-interface *(not entered — parameterized context)*
+### tunnel-interface *(parameterized — inner help harvested under "configure router NAME tunnel-interface NAME")*
 ```text
 <number>             : Tunnel number [number] [1..30]
 
@@ -4999,13 +5424,6 @@ SF-1p-187>config>router(1)>interface(1)# management-access
 SF-1p-187>config>router(1)>interface(1)# name
 ```
 
-### ospf *(not entered — parameterized context)*
-```text
-<CR>
-
-SF-1p-187>config>router(1)>interface(1)# ospf
-```
-
 ### router-advertisement
 ```text
 <CR>
@@ -5073,6 +5491,109 @@ client-id                      - Configure DHCP option 61 (client
 
 
 SF-1p-187>config>router(1)>interface(1)>dhcp-client# client-id
+```
+
+## configure router NAME interface NAME ospf
+
+Level help (`?`):
+```text
+area                           - Set area
+      authentication-key             - Configure authentication key
+ [no] authentication-type            - Configure authentication type
+      dead-interval                  - Configure dead interval
+      hello-interval                 - Configure hello interval
+      metric                         - Configure metric
+ [no] passive                        - Suppress hello packets
+      priority                       - Configure interface priority
+      retransmit-interval            - Configure retransmit interval
+ [no] shutdown                       - Disable OSPF
+      transit-delay                  - Configure transit delay
+```
+
+### area
+```text
+<area-id>            : Area ID [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# area
+```
+
+### authentication-key
+```text
+<key>                : Key [0..22 chars]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# authentication-key
+```
+
+### authentication-type
+```text
+<simple-password>    : Simple password
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# authentication-type
+```
+
+### dead-interval
+```text
+<seconds>            : Dead interval (seconds) [1..2147483647, default 40]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# dead-interval
+```
+
+### hello-interval
+```text
+<seconds>            : Hello interval (seconds) [1..65535, default 10]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# hello-interval
+```
+
+### metric
+```text
+<value>              : Metric [1..65535, default 1]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# metric
+```
+
+### passive
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)>ospf# passive
+```
+
+### priority
+```text
+<priority>           : Interface priority [0..255, default 1]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# priority
+```
+
+### retransmit-interval
+```text
+<seconds>            : Retransmit interval (seconds) [0..3600, default 5]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# retransmit-interval
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>interface(1)>ospf# shutdown
+```
+
+### transit-delay
+```text
+<seconds>            : Transit delay (seconds) [0..3600, default 1]
+
+
+SF-1p-187>config>router(1)>interface(1)>ospf# transit-delay
 ```
 
 ## configure router NAME nat
@@ -5293,6 +5814,330 @@ SF-1p-187>config>router(1)>route-map(zzz-hrvst)$ permit
 SF-1p-187>config>router(1)>route-map(zzz-hrvst)$ remark
 ```
 
+## configure router NAME tunnel-interface NAME
+
+Level help (`?`):
+```text
+[no] access-group                   - Bind ACL to Tunnel Interface
+      clear-access-list-statistics   - Clear ACL statistics
+      clear-statistics               - Clears Tunnel statistics counters
+ [no] crypto-map                     - 
+ [no] ip-address                     - Configure tunnel IP address
+ [no] ip-mtu                         - Configure tunnel IP MTU
+ [no] multipoint                     - Configure tunnel as multipoint
+ [no] name                           - Configure Tunnel name
+ [no] nhrp-map                       - Configure NHRP mapping
+ [no] nhrp-nhs                       - Configure NHRP server
+ [no] nhrp-registration-timeout      - Configure NHRP registration timeout
+ [no] ospf                           + Configure OSPF
+ [no] pm-collection                  - Enable Performance Management (PM)
+ [no] shutdown                       - 
+ [no] tunnel-destination             - Configure tunnel destination
+ [no] tunnel-source                  - Configure tunnel source
+ [no] tunnel-underlay-destination    - Configure GREoIPsec underlay destination 
+                                       (for tunnel mode only)
+ [no] tunnel-underlay-source         - Configure GREoIPsec underlay source (for 
+                                       tunnel mode only)
+
+ show access-list-statistics         - Show ACL statistics
+ show access-list-summary            - ACL Information
+ show crypto-map-status
+ show status                         - Show tunnel status
+```
+
+### access-group
+```text
+<acl-name>           : ACL name [1..80 chars]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# access-group
+```
+
+### bind
+```text
+# cli error: Invalid Command
+SF-1p-187>config>router(1)>tunnel-interface(1)# bind
+```
+
+### clear-access-list-statistics
+```text
+<CR>
+ <in>                 : In
+ <ipv4>               : IPv4
+ <ipv6>               : IPv6
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# clear-access-list-statistics
+```
+
+### clear-nhrp
+```text
+# cli error: Invalid Command
+SF-1p-187>config>router(1)>tunnel-interface(1)# clear-nhrp
+```
+
+### clear-statistics
+```text
+<CR>
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# clear-statistics
+```
+
+### crypto-map
+```text
+<name>               : [1..80 chars]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# crypto-map
+```
+
+### dscp
+```text
+# cli error: Invalid Command
+SF-1p-187>config>router(1)>tunnel-interface(1)# dscp
+```
+
+### ip-address
+```text
+<address-mask>       : Tunnel address [0.0.0.0/32|0:0:0:0::0/128]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# ip-address
+```
+
+### ip-mtu
+```text
+<bytes>              : MTU in bytes [number] [128..65535]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# ip-mtu
+```
+
+### key
+```text
+# cli error: Invalid Command
+SF-1p-187>config>router(1)>tunnel-interface(1)# key
+```
+
+### multipoint
+```text
+<CR>
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# multipoint
+```
+
+### name
+```text
+<string>             : [1..64 chars]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# name
+```
+
+### nhrp-map
+```text
+<logical-ip-address> : Element to map to NBMA address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# nhrp-map
+```
+
+### nhrp-nhs
+```text
+<ip-address>         : NHRP server [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# nhrp-nhs
+```
+
+### nhrp-registration-timeout
+```text
+<seconds>            : NHRP registration timeout (in seconds) [number, default 
+                        2400] [1..65535]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# nhrp-registration-timeout
+```
+
+### pm-collection
+```text
+<interval>           : PM collection interval
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# pm-collection
+```
+
+### show access-list-statistics
+```text
+<CR>
+ <in>                 : In
+ <ipv4>               : IPv4
+ <ipv6>               : IPv6
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# show access-list-statistics
+```
+
+### show access-list-summary
+```text
+<CR>
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# show access-list-summary
+```
+
+### show crypto-map-status
+```text
+<CR>
+ <name>               : [1..80 chars]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# show crypto-map-status
+```
+
+### show status
+```text
+<CR>
+ <all>                : 
+ <nhrp>               : 
+ <dmvpn>              : 
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# shutdown
+```
+
+### transport-router
+```text
+# cli error: Invalid Command
+SF-1p-187>config>router(1)>tunnel-interface(1)# transport-router
+```
+
+### tunnel-destination
+```text
+<address>            : Destination address [0.0.0.0|0:0:0:0::0]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# tunnel-destination
+```
+
+### tunnel-source
+```text
+<CR>
+ <address>            : Source address [0.0.0.0|0:0:0:0::0]
+ router-interface
+
+SF-1p-187>config>router(1)>tunnel-interface(1)# tunnel-source
+```
+
+## configure router NAME tunnel-interface NAME ospf
+
+Level help (`?`):
+```text
+area                           - Set area
+      authentication-key             - Configure authentication key
+ [no] authentication-type            - Configure authentication type
+      dead-interval                  - Configure dead interval
+      hello-interval                 - Configure hello interval
+      metric                         - Configure metric
+ [no] passive                        - Suppress hello packets
+      priority                       - Configure interface priority
+      retransmit-interval            - Configure retransmit interval
+ [no] shutdown                       - Disable OSPF
+      transit-delay                  - Configure transit delay
+```
+
+### area
+```text
+<area-id>            : Area ID [0.0.0.0]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# area
+```
+
+### authentication-key
+```text
+<key>                : Key [0..22 chars]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# authentication-key
+```
+
+### authentication-type
+```text
+<simple-password>    : Simple password
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# authentication-type
+```
+
+### dead-interval
+```text
+<seconds>            : Dead interval (seconds) [1..2147483647, default 40]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# dead-interval
+```
+
+### hello-interval
+```text
+<seconds>            : Hello interval (seconds) [1..65535, default 10]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# hello-interval
+```
+
+### metric
+```text
+<value>              : Metric [1..65535, default 1]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# metric
+```
+
+### passive
+```text
+<CR>
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# passive
+```
+
+### priority
+```text
+<priority>           : Interface priority [0..255, default 1]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# priority
+```
+
+### retransmit-interval
+```text
+<seconds>            : Retransmit interval (seconds) [0..3600, default 5]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# retransmit-interval
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# shutdown
+```
+
+### transit-delay
+```text
+<seconds>            : Transit delay (seconds) [0..3600, default 1]
+
+
+SF-1p-187>config>router(1)>tunnel-interface(1)>ospf# transit-delay
+```
+
 ## configure sd-iot
 
 Level help (`?`):
@@ -5363,7 +6208,8 @@ SF-1p-187>config>sd-iot# ingress-port
 
 ### keep-alive
 ```text
-interval
+<CR>
+ interval
  retries
 
 SF-1p-187>config>sd-iot# keep-alive
@@ -5923,7 +6769,8 @@ SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# modbus-operation
 
 ### scaling
 ```text
-factor
+<CR>
+ factor
  offset
 
 SF-1p-187>config>system>modbus-unit(AAA)>poll(PPP)# scaling
@@ -5971,8 +6818,6 @@ Level help (`?`):
                                        authentication
 
  show status                         - Display MQTT connection status
-
-SF-1p-187>config>system>mqtt>server(zzz-hrvst)$
 ```
 
 ### address
@@ -5981,7 +6826,7 @@ SF-1p-187>config>system>mqtt>server(zzz-hrvst)$
  <url>                : 
 
 
-SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ address
+SF-1p-187>config>system>mqtt>server(MY-BROKER)# address
 ```
 
 ### certificate
@@ -5989,28 +6834,28 @@ SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ address
 <certificate-name>   : MQTTS certificate [1..64 chars]
 
 
-SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ certificate
+SF-1p-187>config>system>mqtt>server(MY-BROKER)# certificate
 ```
 
 ### management-channel
 ```text
 <CR>
 
-SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ management-channel
+SF-1p-187>config>system>mqtt>server(MY-BROKER)# management-channel
 ```
 
 ### show status
 ```text
 <CR>
 
-SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ show status
+SF-1p-187>config>system>mqtt>server(MY-BROKER)# show status
 ```
 
 ### user
 ```text
 name
 
-SF-1p-187>config>system>mqtt>server(zzz-hrvst)$ user
+SF-1p-187>config>system>mqtt>server(MY-BROKER)# user
 ```
 
 ## configure system opcua-server NAME
@@ -6592,7 +7437,8 @@ SF-1p-187>quick-setup>router>nat# nat-inside-source-static-port
 
 ### nat-timeout
 ```text
-tcp
+<CR>
+ tcp
  udp
  others
 

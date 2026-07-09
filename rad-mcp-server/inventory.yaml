@@ -15,3 +15,8 @@ devices:
     family: etx1p
     groups: [lab]
     description: "ETX-1p (Hw 0.4, Sw 6.4.0.165 - OLDER firmware than etx1p/Device3) - lab unit; reference harvested from 6.5, use live cli_help for drift"
+  - name: etx2i
+    host: 172.17.163.240
+    family: etx2
+    groups: [lab]
+    description: "ETX-2I (Hw 0.2/D, Sw 6.8.5(1.116)) - FIRST live etx2 driver verification; industrial variant of the ETX-2 line"

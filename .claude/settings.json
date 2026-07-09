@@ -12,7 +12,21 @@
       "WebSearch",
       "Bash(\"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/server/.venv/Scripts/python.exe\" \"c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/scripts/harvest_cli.py\" probe lab-sf1p)",
       "mcp__rad-mcp__commit_config",
-      "PowerShell(& \"c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\.venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\uzi_g\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-uzi-g-Downloads-ai-projects-fusion-cli\\\\da4d4fcf-bf8a-4526-9e4d-e4f7f4d83461\\\\scratchpad\\\\cleanup_tmp_objects.py\")"
+      "PowerShell(& \"c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\.venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\uzi_g\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-uzi-g-Downloads-ai-projects-fusion-cli\\\\da4d4fcf-bf8a-4526-9e4d-e4f7f4d83461\\\\scratchpad\\\\cleanup_tmp_objects.py\")",
+      "Bash(\"rad-mcp-server/server/.venv/Scripts/python.exe\" rad-mcp-server/scripts/check_eval_coverage.py)",
+      "Bash(rad-mcp-server/server/.venv/Scripts/python.exe -c ' *)",
+      "Bash(\"rad-mcp-server/server/.venv/Scripts/python.exe\" \"/c/Users/uzi_g/AppData/Local/Temp/claude/c--Users-uzi-g-Downloads-ai-projects-fusion-cli/ddd95f5e-7377-477c-a777-a44618aac0a2/scratchpad/build_results_md.py\")",
+      "Bash(python -m py_compile scripts/harvest_cli.py)",
+      "Bash(diff \"rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"C:\\\\Users\\\\uzi_g\\\\.claude\\\\skills\\\\rad-cli-operations\\\\SKILL.md\")",
+      "Read(//tmp/**)",
+      "Bash(diff \"rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \".claude/skills/rad-cli-operations/SKILL.md\")",
+      "Bash(\"rad-mcp-server/server/.venv/Scripts/python.exe\" \"rad-mcp-server/scripts/harvest_cli.py\" harvest etx2i)",
+      "Bash(python -c ' *)",
+      "Bash(\"server/.venv/Scripts/python.exe\" \"C:\\\\Users\\\\uzi_g\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-uzi-g-Downloads-ai-projects-fusion-cli\\\\ddd95f5e-7377-477c-a777-a44618aac0a2\\\\scratchpad\\\\build_results_md.py\")",
+      "Bash(cp \"rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"C:\\\\Users\\\\uzi_g\\\\.claude\\\\skills\\\\rad-cli-operations\\\\SKILL.md\")",
+      "Bash(cp \"rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \".claude/skills/rad-cli-operations/SKILL.md\")",
+      "Bash('c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\server\\\\.venv\\\\Scripts\\\\python.exe' -c ' *)",
+      "Read(//tmp/fonts/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\uzi_g\\Downloads\\ai-projects\\fusion-cli\\.claude\\skills\\rad-cli-operations"

@@ -12,3 +12,8 @@ desktop.ini
 # Device manual PDFs (large binaries) — the extracted markdown under
 # skills/rad-cli-operations/references/manual-<family>/ is committed instead
 rad-mcp-server/manuals/*.pdf
+
+# Source spreadsheets dropped at the repo root for one-off eval work — not
+# project artifacts, don't commit (Excel's own lock-file too)
+/*.xlsx
+/~$*.xlsx

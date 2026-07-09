@@ -1,6 +1,6 @@
 # etx1p command tree (family: etx1p)
 
-Captured live from etx1p (Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI) via the root `tree` command on 2026-07-07
+Captured live from etx1p (Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI) via the root `tree` command on 2026-07-09
 by scripts/harvest_cli.py — re-run `harvest` after firmware upgrades; the
 tree is re-captured fresh each run. Use it to locate which context holds a
 feature, then cli-reference-etx1p.md / the cli_help tool for exact,

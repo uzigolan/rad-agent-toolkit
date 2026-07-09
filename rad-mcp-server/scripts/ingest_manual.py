@@ -31,6 +31,16 @@ SKIP_TITLES = re.compile(
     re.IGNORECASE,
 )
 
+# Some manuals (e.g. ETX-2i) are organized as a few huge "parts" (1000+ pages)
+# rather than per-topic chapters (~150-190 pages, per SecFlow/ETX-1p) — the
+# real topics sit several TOC levels deeper. EXPAND_MIN_PAGES sits safely
+# above SecFlow/ETX-1p's largest natural chapter (~184pp) so those manuals are
+# untouched; anything bigger AND with enough children gets split on the next
+# TOC level instead, recursively, until units are chapter-sized.
+EXPAND_MIN_PAGES = 220
+EXPAND_MIN_CHILDREN = 3
+MAX_TOC_LEVEL = 6
+
 # CLI topics -> keywords to find in section titles (for the cross-link index).
 TOPIC_KEYWORDS = {
     "configure system mqtt": ["mqtt"],
@@ -81,6 +91,34 @@ def clean_page_text(text: str, product: str, chapter_title: str) -> str:
     return "\n".join(out)
 
 
+def split_units(toc: list, page_count: int) -> list[tuple[str, int, int, int]]:
+    """Adaptively split the TOC into chapter-sized (title, start, end, level)
+    units. A unit expands into its next-level children when it's oversized
+    AND has enough of them; otherwise it's a leaf — its own next-level
+    children (if any) become '##' sections inside that single file."""
+    lvl1 = [(t.strip(), p) for lvl, t, p in toc if lvl == 1]
+    units: list[tuple[str, int, int, int]] = []
+
+    def children_at(level: int, start: int, end: int) -> list[tuple[str, int]]:
+        return [(t.strip(), p) for lvl, t, p in toc if lvl == level and start <= p <= end]
+
+    def process(title: str, start: int, end: int, level: int) -> None:
+        kids = children_at(level + 1, start, end) if level < MAX_TOC_LEVEL else []
+        if (end - start + 1) > EXPAND_MIN_PAGES and len(kids) >= EXPAND_MIN_CHILDREN:
+            for j, (ctitle, cpage) in enumerate(kids):
+                cend = kids[j + 1][1] - 1 if j + 1 < len(kids) else end
+                process(f"{title} – {ctitle}", cpage, cend, level + 1)
+        else:
+            units.append((title, start, end, level))
+
+    for i, (title, page) in enumerate(lvl1):
+        if SKIP_TITLES.search(title):
+            continue
+        end = lvl1[i + 1][1] - 1 if i + 1 < len(lvl1) else page_count
+        process(title, page, end, 1)
+    return units
+
+
 def ingest(pdf_path: Path, family: str) -> None:
     doc = fitz.open(pdf_path)
     toc = doc.get_toc()
@@ -92,15 +130,12 @@ def ingest(pdf_path: Path, family: str) -> None:
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
 
-    lvl1 = [(t, p) for lvl, t, p in toc if lvl == 1]
-    chapters = []  # (num, title, start_page, end_page, sections)
-    for i, (title, page) in enumerate(lvl1):
-        if SKIP_TITLES.search(title.strip()):
-            continue
-        end = lvl1[i + 1][1] - 1 if i + 1 < len(lvl1) else doc.page_count
+    units = split_units(toc, doc.page_count)
+    chapters = []  # (title, start_page, end_page, sections, sections_level)
+    for title, start, end, level in units:
         sections = [(t.strip(), p) for lvl, t, p in toc
-                    if lvl == 2 and page <= p <= end]
-        chapters.append((title.strip(), page, end, sections))
+                    if lvl == level + 1 and start <= p <= end]
+        chapters.append((title, start, end, sections, level + 1))
 
     index_lines = [
         f"# {product} user manual — chapter index (family: {family})",
@@ -116,7 +151,7 @@ def ingest(pdf_path: Path, family: str) -> None:
     ]
 
     all_sections = []  # (title, chapter_slug) for topic mapping
-    for n, (title, start, end, sections) in enumerate(chapters, 1):
+    for n, (title, start, end, sections, sec_level) in enumerate(chapters, 1):
         slug = f"{n:02d}-{slugify(title)}"
         fname = f"{slug}.md"
         parts = [f"# {title}", "",
@@ -131,6 +166,13 @@ def ingest(pdf_path: Path, family: str) -> None:
             for pno in range(spage - 1, min(send, doc.page_count)):
                 parts.append(clean_page_text(doc[pno].get_text(), product, title))
             all_sections.append((stitle, slug))
+        # Cross-link matching also needs titles BELOW this chapter's section
+        # level — some manuals nest the real topics (MQTT, PKI, ...) deeper
+        # than the level used for '##' headers, where they'd never match a
+        # topic keyword on their own. Body rendering stays at sec_level;
+        # this only enriches the cross-link source pool.
+        deep = [(t.strip(), p) for lvl, t, p in toc if lvl > sec_level and start <= p <= end]
+        all_sections.extend((t, slug) for t, p in deep)
         (out_dir / fname).write_text("\n".join(parts), encoding="utf-8")
         sec_names = "; ".join(t for t, _ in sections[:8]) + ("; ..." if len(sections) > 8 else "")
         index_lines.append(f"| `{fname}` | {start}–{end} | {sec_names} |")

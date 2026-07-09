@@ -103,6 +103,36 @@ splits a user-manual PDF along its TOC into per-chapter markdown plus a
 CLI-topic → chapter cross-link index. The PDF is gitignored (large binary);
 the extracted markdown is committed and greppable.
 
+**Numeric-indexed parameterized contexts** (`mep`, `lag`, `pw`, `test`,
+`bridge`, `isakmp-policy`, `mirroring-session`, `ppp`, `tunnel-interface` —
+`NUMERIC_CREATE_ALLOW` in `harvest_cli.py`) get the same create-then-roll-back
+treatment as string-named ones, but only after two safeguards a plain
+string-name temp object doesn't need:
+
+1. **The manual vets the addition, not just the code.** Before a name is
+   added to the allow-list, its manual chapter is checked for a stated
+   "Factory Defaults" / default-configuration section confirming the object
+   is genuinely inert on creation (no bound flow, admin-down or equivalent)
+   — the same lexical-retrieval mechanism layer 4 already provides, applied
+   to a safety decision instead of an answer. A name that can't be confirmed
+   inert this way stays off the list (e.g. `twamp` controller/responder were
+   held out pending this check).
+2. **The declared range in the CLI's own `?` help is not trusted as an upper
+   bound.** On etx2i, `lag` advertised `[1..4]` but rejected 4 ("Invalid LAG
+   ID"), and `test` (rfc2544) declared no range at all but only accepted
+   1-8 — real license/hardware limits are frequently lower than the generic
+   syntax range. The harvester tries up to 6 free indices ascending from the
+   bottom of the declared range rather than one guess from the top, and on
+   every refusal captures the device's own error text (not just detects
+   *that* it was refused) plus, for numeric attempts, one read-only
+   `<name> <idx> ?` follow-up probe — so a "not entered" reference entry
+   always carries a device-confirmed reason (a genuine `License required`
+   gate vs. a missing second argument the harvester doesn't supply yet vs.
+   no live instance existing), not a guess. See `tests/eval-report.md` for
+   the etx2i case study that drove this (`pw`/`twamp responder` need a
+   second argument; `twamp controller`/`profile` are a real license gate;
+   `mep`/`lag`/`test` closed cleanly).
+
 ## Performance model
 
 Two rules keep tool calls at the device-bound floor (~0.1–1 s warm):
@@ -120,6 +150,19 @@ Two rules keep tool calls at the device-bound floor (~0.1–1 s warm):
 Measured warm (SF-1p over lab LAN): health ping 0.14 s, `cli_help` three
 contexts deep 0.7 s, root help 0.4 s. `get_config` ~7 s — the device generates
 the export that slowly; not addressable client-side.
+
+**A third lever lives at the skill-instruction level, not the backend:**
+`rad-cli-operations/SKILL.md` defines two configurable behavior modes —
+response verbosity (`concise` default vs. `verbose`) and reference trust
+(`trust-reference` default vs. `always-verify-live`, which skips redundant
+live `cli_help` re-confirmation of answers the harvested reference already
+gives completely). Both default to the faster behavior; either reverts for
+the rest of a session via a spoken phrase (see SKILL.md's *"Response &
+verification modes"* section for the exact switch phrases). This was added
+after `docs/performance.md` §4 showed a skill run 2-3x longer than its peers,
+driven by output length and a redundant live-verification call — config
+knobs the backend rewrite above can't reach, since they're about how the
+model itself behaves, not how the transport performs.
 
 ## The maintenance loop
 
@@ -146,6 +189,9 @@ instructions. The Claude skill/plugin format itself is not portable; the server
 and the knowledge are.
 
 ## How the manual layer contributes (and is it RAG?)
+
+For a per-family breakdown of manual quality — which source PDFs worked
+out of the box vs. which needed fixes, and why — see `docs/manual-quality.md`.
 
 **What gap it fills.** The harvested CLI reference is *complete* on syntax and
 *silent* on meaning. It can tell you `certificate <name> trusted-ca <ca-name>`

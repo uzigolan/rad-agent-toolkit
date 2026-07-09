@@ -2,8 +2,8 @@
 
 MCP server + Claude Code plugin for operating RAD Data Communications devices
 through their CLI in natural language — the **full RAD portfolio** by design:
-SecFlow (SF-1p) and ETX-1p verified live, ETX-2 next (shared dialect), and
-planned legacy ETX-1 and MP-4100/Megaplex.
+SecFlow (SF-1p), ETX-1p, and ETX-2 (ETX-2I) verified live, and planned legacy
+ETX-1 and MP-4100/Megaplex.
 
 The first RAD entry in the MCP ecosystem — naming follows the vendor convention
 set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
@@ -17,7 +17,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 |---|---|---|---|
 | `secflow` | SF-1p and SecFlow gateways | `drivers/secflow.py` | ✅ verified live (SF-1p Sw 6.5.0.35) |
 | `etx1p` | ETX-1p demarcation units | `drivers/etx1p.py` | ✅ verified live (Device3 Sw 6.5.0.43 + a 6.4.0.165 unit) — modern context CLI, harvested references + manual; NOT legacy `etx1` |
-| `etx2` | ETX-203AX / 205A / 220A | `drivers/etx2.py` | shared dialect, pending live ETX-2 verification |
+| `etx2` | ETX-203AX / 205A / 220A / ETX-2I | `drivers/etx2.py` | ✅ verified live (ETX-2I Sw 6.8.5(1.116)) — `show resources` unsupported, slot/port naming; CLI reference + manual harvested |
 | `etx1` | legacy ETX-1 line | planned | different CLI — own driver base |
 | `mp4100` | Megaplex-4100 | planned | different CLI — own driver base |
 
@@ -64,6 +64,21 @@ Ask in plain language — no CLI knowledge needed:
 **Skills** (loaded by Claude on demand): `rad-core` — safety rules and the
 staged-commit workflow; `rad-cli-operations` — the context-CLI model, verified
 command map, and `references/` command trees harvested from live devices.
+`rad-cli-operations` also exposes two **configurable behavior modes** (see
+its SKILL.md, *"Response & verification modes"*): response verbosity
+(`concise` default / `verbose`) and reference trust (`trust-reference`
+default / `always-verify-live`). Both default to the faster behavior; say
+e.g. *"abayev, use verbose mode"* or *"abayev, always verify live"* to revert
+for the rest of a session, and the equivalent phrase to switch back.
+
+`/rad-harvest` (`scripts/harvest_cli.py`) now auto-creates and rolls back
+numeric-indexed parameterized contexts too (`mep`, `lag`, `pw`, `bridge`,
+`ppp`, ...), not just string-named ones — each addition is checked against
+the **user manual** (layer 4 below) for a "safe to create" confirmation
+first, and every refusal is captured with the device's own error text so a
+harvest gap always comes with a reason (missing argument, license gate, or
+genuinely no live instance), not a guess. Full method + a real case study:
+`docs/architecture.md` and `tests/eval-report.md`.
 
 **Slash commands** (Claude Code only): `/rad-health`, `/rad-backup`.
 

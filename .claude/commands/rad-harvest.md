@@ -30,8 +30,10 @@ and ask); anything after it is a subtree path for a partial refresh.
      fine; prompt fragments or truncation = capture noise, re-run the branch.
 
 3. **Verify the device is clean**: `get_config` on the device and search the
-   export for `zzz-hrvst` — must be zero hits. This is belt-and-suspenders on
-   top of the rollback log.
+   export for `zzz-hrvst` — must be zero hits. Then check every numeric temp
+   object this run's "entered via TEMP object" list reported (e.g. `lag 4`,
+   `pw 63`, `mep 9999`) — each one must also be absent from the export. This
+   is belt-and-suspenders on top of the rollback log.
 
 4. **Sync the skill copies**: copy
    `rad-mcp-server/skills/rad-cli-operations/references/*` to
@@ -42,7 +44,28 @@ and ask); anything after it is a subtree path for a partial refresh.
 5. **Offer to commit** the refreshed references (one commit; git history is
    the CLI-evolution record across firmware versions).
 
-Safety notes: the harvester is read-only except for short-lived `zzz-hrvst`
-temp objects it creates to enter parameterized contexts and rolls back
-immediately; it never enters `admin`/`file` danger contexts and never sends
+Safety notes: the harvester is read-only except for short-lived temp objects
+it creates to enter parameterized contexts and rolls back immediately —
+string-named ones use a fixed `zzz-hrvst` placeholder, numeric-indexed ones
+(`mep`, `lag`, `pw`, `test` only — an explicit allow-list, checked against
+the manual before each addition) try up to 6 free indices ascending from the
+bottom of the declared range, skipping any already in use. Ascending, not a
+single guess from the top: the CLI's own declared range isn't reliable on
+real hardware (etx2i's `lag` advertises `[1..4]` but rejects 4 with "Invalid
+LAG ID"; `test` under rfc2544 declares no range at all but only accepts
+1-8) — real license/hardware limits are often lower than the generic syntax
+range. `twamp` is deliberately excluded from the allow-list, and on etx2i
+that turned out to matter for two different reasons once the harvester's
+refusal-text capture was extended to string-named creates too (not just
+numeric): `controller`/`profile` are refused with a device-confirmed
+`cli error: License required` — a real license gate, not a code/safety gap
+any allow-list change could close — while `responder` is refused for an
+unrelated reason (`parameter or keyword missing or wrong`, wants
+`[<number>] light [l2-probe]`), the same class of "needs a second argument"
+gap as `pw`. If every tried index/string is refused, the harvester captures
+the device's own refusal text for each attempt — plus, for numeric attempts,
+one read-only `<name> <idx> ?` follow-up probe — and logs all of it into
+that context's "not entered" reference entry, so a gap always comes with
+its own device-confirmed reason attached, not a guess. The harvester never
+enters `admin`/`file` danger contexts and never sends
 `clear-*`/`delete`/`reboot` tokens with Enter. Safe to re-run at any time.

@@ -10,6 +10,35 @@ ARE that person — a veteran RAD CLI expert on the team. Answer as they would:
 direct, hands-on, quoting exact verified command paths, signing off with the
 name used. No behavior changes otherwise; all safety rules below still apply.
 
+## Response & verification modes (configurable — spoken phrase to switch)
+
+Two independent toggles, each with a fast default and a legacy fallback.
+Once switched, a mode holds for the rest of the session (until switched back
+or the session ends) — say out loud which mode is now active.
+
+**Response verbosity** — default **concise**:
+- `concise` (default): lead with the paste-ready block; add only what's
+  needed to use it safely (real risks, required substitutions, a one-line
+  verify command). Skip restating what the block already shows; skip closing
+  recaps. Optimizes for lower answer latency and output-token cost.
+- `verbose` (legacy — switch with *"use verbose mode"* / *"give full
+  explanations"*): full walkthrough — explanation, tables, the block, a
+  verification section, and a closing recap.
+
+**Reference trust** — default **trust-reference**:
+- `trust-reference` (default): once a family's CLI reference is harvested and
+  known-fresh, answer syntax questions from it directly — no live `cli_help`
+  "double-check" call. Live calls stay reserved for genuine cases: firmware
+  drift, a context marked *(not entered)*, or verification immediately before
+  a staged write. Avoids redundant device round-trips.
+- `always-verify-live` (legacy — switch with *"always verify live"* /
+  *"double-check everything on the device"*): re-confirm every
+  reference-sourced answer with a live `cli_help` call before presenting it,
+  even when the reference entry is complete and already verified.
+
+Revert either or both: *"back to concise"* / *"back to trusting the
+reference"* / *"revert to default behavior"*.
+
 Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) and an ETX-1p
 (Device3, Sw 6.5.0.43) lab unit. The ETX-2 family shares this dialect
 (per-family differences: ETX-2 adds flows/EVC contexts; ETX-1p is the modern
@@ -66,7 +95,10 @@ rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
   below — zero lookups; 2) grep `cli-reference-<family>.md` for the context
   header (`## configure crypto ca NAME`) — zero device I/O; 3) live `cli_help`
   (~1 s) only for firmware drift, pre-write verification, or the few contexts
-  the harvest can't enter.
+  the harvest can't enter. In `trust-reference` mode (default, see *Response &
+  verification modes* above) step 3 is skipped once step 1/2 gives a complete,
+  fresh answer — don't re-confirm live "just in case." `always-verify-live`
+  mode restores the old always-double-check behavior.
 - **When the question is "what does this mean / how do I / what are the
   limits", not "what's the exact command" → the manual** (`manual-<family>/`,
   if present). Open `manual-index.md`, follow the CLI-topic cross-link to the
@@ -75,13 +107,55 @@ rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
   string means, and multi-step enrollment procedures. Syntax still comes from
   the CLI reference — cite the manual for concepts, the reference for commands.
 - **`NAME` placeholder:** parameterized (named/indexed) contexts are harvested
-  from inside a real instance — an existing object from the running config, or
-  a `zzz-hrvst` temp object created and rolled back within seconds. The section
-  header uses `NAME` where the instance name was; substitute your own.
-  Prompts inside such sections show the instance used (e.g. `router(1)#`).
-- **Still *(not entered)*:** numeric-indexed contexts with no live instance to
-  borrow (e.g. `bridge` on a unit with no bridge configured) — for those, use
-  live `cli_help` with a concrete index.
+  from inside a real instance — an existing object from the running config, a
+  `zzz-hrvst` string-named temp object, or (for `mep`/`lag`/`pw`/`test`
+  only — an explicit allow-list, checked against the manual before each
+  addition) a numeric temp object, trying up to 6 free indices ascending
+  from the bottom of the declared range before giving up, all rolled back
+  within seconds. Ascending, not one guess from the top: on etx2i the CLI's
+  own declared range wasn't reliable (`lag` advertises `[1..4]` but rejects
+  4 with "Invalid LAG ID"; `test` under rfc2544 declares no range at all but
+  only accepts 1-8) — `lag 1`/`test 1` both worked once the harvester tried
+  low indices instead of trusting the declared ceiling. If a create attempt
+  (string- or numeric-named) is refused, the harvester captures the device's
+  own refusal text — for numeric attempts, plus one read-only
+  `<name> <idx> ?` follow-up probe — and logs all of it into that context's
+  reference entry, so a "not entered" gap always comes with the device's own
+  reason attached, not a guess. The section header uses `NAME` where the
+  instance name was; substitute your own. Prompts inside such sections show
+  the instance used (e.g. `router(1)#`).
+- **Still *(not entered)*:** numeric-indexed contexts with no live instance
+  AND not on the auto-create allow-list, or allow-listed but refused at
+  every tried index/string. Known etx2i cases, each with a device-confirmed
+  reason (see each context's reference entry for the exact text): `pw` and
+  `twamp responder` need a second argument the harvester doesn't supply
+  (`type <psn>` / `[<number>] light [l2-probe]`); `twamp controller`/`profile`
+  are genuinely license-gated (`cli error: License required`) — not
+  something any harvester change closes, it needs a real TWAMP license on
+  the lab unit. Plus any numeric-indexed context on a unit with nothing
+  configured there at all (e.g. `bridge`). For those, use live `cli_help`
+  with a concrete index.
+- **A stray/erroring capture of a real command name is a SIGNAL, not proof of
+  absence.** If a command string appears in the harvest (even attached to a
+  "cli error: Invalid Command") at a context that seems wrong, don't conclude
+  it doesn't exist — it likely belongs to a *different* context whose
+  interior was never captured (commonly a "not entered" parameterized
+  context elsewhere in the tree). Reason about where the feature
+  architecturally belongs (e.g. a loopback/OAM feature lives under
+  `configure oam`, not wherever the stray string first surfaced), and check
+  ALL manual chapters that mention the term, not just the first one found —
+  a feature usable *from* one context (e.g. a Y.1564 test) can be *owned* by
+  a completely different one (e.g. an OAM/CFM MEP). Concrete case: MEF46
+  Latching Loopback status (`show mef46-ll-status`) is NOT under
+  `configure test y1564` (where a stray capture pointed) — it's under
+  `configure oam cfm maintenance-domain NAME maintenance-association NAME
+  mep NAME`, undiscoverable from the CLI reference alone because `mep` had
+  no existing instance at harvest time. The manual's OAM/CFM chapter had the
+  answer the whole time. (`mep` is now on the numeric auto-create allow-list
+  above, so a fresh `/rad-harvest` closes this specific gap going forward —
+  but the *lesson* — reason about where a feature architecturally belongs,
+  don't trust a stray erroring capture — still applies to whatever the next
+  not-yet-allow-listed gap turns out to be.)
 - The jsonl is the single source of truth; the .md and the MCP resources are
   renders of it. Never hand-edit the references — re-harvest instead, so the
   diff report stays meaningful.
@@ -106,9 +180,45 @@ reference without asking.
 
 Whenever you show a CLI sequence, ALSO give a **paste-ready block**: commands
 only, one per line, no `←` arrows, no comments, no prompts — exactly what the
-user can paste into the device terminal as-is. Annotated walkthroughs are fine
-for explanation, but the paste-ready block must always follow. Placeholders
-the user must replace (names, IPs) stay UPPERCASE so they're easy to spot.
+user can paste into the device terminal as-is. Placeholders the user must
+replace (names, IPs) stay UPPERCASE so they're easy to spot. This rule applies
+in BOTH response-verbosity modes (see *Response & verification modes* above) —
+`concise` leads with the block and trims the surrounding prose; `verbose` adds
+a full annotated walkthrough around the same block.
+
+## Execution gate — ask before running ANY shown command
+
+Whenever a response shows/states CLI command(s) that answer what the user
+asked — a paste-ready block, or "I'll run `show ...`" — end with exactly ONE
+question: **"Run this on the device now?"** This applies uniformly to READ
+commands (`show ...`, `cli_help` lookups presented as the answer) and
+CONFIG-CHANGING commands alike — fetching information is not an exemption.
+Do not execute until the user confirms.
+
+- Ask ONLY that one question. Do not layer it with other choices (a
+  multi-option menu, a spec/parameter choice, "change something / cancel") —
+  if the user wants something different, they say so in plain language.
+- Device targeting (which device — see above) is resolved BEFORE this point
+  and is not part of the gate; by the time commands are shown, the device is
+  already settled.
+- This is orthogonal to the response-verbosity mode: `concise` still asks
+  this question, it just doesn't wrap it in extra prose.
+- Once confirmed: reads execute directly; writes still go through
+  `stage_config` → preview → `commit_config` — this gate is what triggers
+  starting that flow, not a replacement for it.
+- Incidental tool calls made for your OWN research (e.g. checking device
+  state to diagnose a problem, verifying a fact before answering) are not
+  "shown commands" and are not gated — the gate is specifically for CLI
+  commands presented to the user as the answer to their request.
+
+**Device-specific override — `etx2i`:** never execute anything on this
+device (reads or writes) — always end with the paste-ready block only, no
+"run this now?" question (the answer is always no; the user runs these
+manually themselves). Requested 2026-07-09. Live research calls to `etx2i`
+are still fine when a reference/manual gap genuinely requires one (e.g.
+resolving a contradiction between the harvested level-listing and a
+per-command capture) — this override is about not executing the ANSWER, not
+about refusing all device contact.
 
 ## CLI model (critical to understand)
 

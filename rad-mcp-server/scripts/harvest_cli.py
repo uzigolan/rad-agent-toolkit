@@ -68,6 +68,56 @@ CREATE_EXCLUDE = {"login-user", "user", "community", "isakmp-key", "access-list"
 PARAM_STR_RE = re.compile(r"\[1\.\.(\d+) chars|\[string\]")
 TMP_NAME = "zzz-hrvst"
 
+# A numeric instance parameter, e.g. "[number]", optionally with an explicit
+# "[1..64]"-style range alongside it (some contexts, like `mep`, give no
+# range at all — just "[number]" — so DEFAULT_NUM_RANGE is the fallback).
+PARAM_NUM_RE = re.compile(r"\[number\]")
+PARAM_NUM_RANGE_RE = re.compile(r"\[(\d+)\.\.(\d+)\]")
+DEFAULT_NUM_RANGE = (1, 9999)
+
+# Numeric-indexed contexts we DO auto-create (opt-in — unlike the
+# string-name opt-out CREATE_EXCLUDE above). Each of these is a plain config
+# object that sits inert until something else references/activates it, so
+# create-then-`no`-rollback is as safe as the string-named case.
+# `test` (rfc2544) added after checking the manual's y1564/l3sat chapters
+# (its siblings in the same test-suite family): `activate`/`no activate` is
+# always a distinct command from creation, and a freshly created
+# generator/responder/peer has no bound flow ("no default configuration"),
+# so it's structurally incapable of doing anything even if activation were
+# attempted. rfc2544 has no dedicated manual chapter to directly confirm,
+# but is architecturally the same shape as its siblings.
+# Deliberately NOT included: `twamp` controller/profile/responder — the
+# etx2i re-harvest showed these refused even as plain string-named creates
+# (which normally just work), and the only rows this affects are annotated
+# "ETX with twamp license required" in the source eval spreadsheet — this
+# looks like a license gate on the lab unit, not a code/safety gap, so no
+# allow-list change would close it anyway.
+#
+# etx1p/secflow additions, checked against their manual before adding:
+# `bridge` ("by default it does not contain [any ports]" on creation),
+# `mirroring-session` ("when one is added, it is disabled by default"),
+# `isakmp-policy` (an IKE Phase-1 policy profile, inert until attached to a
+# crypto-map — same shape as `ipsec-transform-set`, already safe elsewhere),
+# `trap-sync-group` (an SNMP trap-grouping profile, inert until traps are
+# assigned to it), `ppp` (a port container; nothing negotiates until bound
+# to a physical link, which the harvester never does). `tunnel-interface`
+# included too though expected to fail safely, same as `pw`: the manual
+# shows creation needs a second mandatory token (`tunnel-interface <n>
+# gre-ip`) the harvester doesn't supply.
+#
+# NOTE on this being a flat, family-agnostic set: `isakmp-policy` actually
+# appears twice in etx1p/secflow — once under `configure crypto` (verified
+# above) and once under the `quick-setup vpn` wizard (unverified, and wizard
+# flows may not just add inert config the way a plain `configure` object
+# does). That second occurrence is safe only because crawl()'s caller
+# already gates ALL auto-create (string- or numeric-named) to paths whose
+# first token is "configure" — quick-setup never reaches this logic at all.
+# If a future name collision isn't as lucky, this flat set will need to
+# become (family, parent_context, name)-scoped rather than a bare name.
+NUMERIC_CREATE_ALLOW = {"mep", "lag", "pw", "test",
+                        "bridge", "mirroring-session", "isakmp-policy",
+                        "trap-sync-group", "ppp", "tunnel-interface"}
+
 MORE_RE = re.compile(r"-+\s*more\s*-+\s*$", re.IGNORECASE)
 
 Key = tuple[str, str]  # (context, prefix); prefix "" = the level `?` capture
@@ -303,13 +353,50 @@ class Harvester:
                 return m.group(1)
         return None
 
+    @staticmethod
+    def existing_instances(info_text: str, name: str) -> set[str]:
+        """All existing instances of a parameterized child — used for
+        numeric-index collision avoidance (existing_instance above only
+        needs the first one, for pure-navigation reuse)."""
+        out = set()
+        for line in info_text.splitlines():
+            m = re.match(rf"^{re.escape(name)}\s+(\S+)\s*$", line.strip())
+            if m and m.group(1) != "?":
+                out.add(m.group(1))
+        return out
+
+    def pick_safe_numeric_indices(self, info_text: str, name: str, lo: int, hi: int,
+                                   max_tries: int = 6) -> list[int]:
+        """Free indices to try, ascending from the bottom of the declared
+        range, capped at max_tries. Ascending (not descending from hi) because
+        the CLI's own declared range is not reliable on real hardware: etx2i's
+        `lag` advertises [1..4] but rejects 4 (Invalid LAG ID), and `test`
+        under rfc2544 declares no range at all (just "[number]") but only
+        accepts 1-8 — real license/hardware limits are often lower than the
+        generic syntax range, so probing from the low end finds a working
+        value fastest. Skips indices already in use (never risks colliding
+        with real config)."""
+        used = self.existing_instances(info_text, name)
+        out = []
+        for candidate in range(lo, hi + 1):
+            if str(candidate) not in used:
+                out.append(candidate)
+                if len(out) >= max_tries:
+                    break
+        return out
+
     def enter_and_crawl(self, child: Node, path: list[str], labels: list[str],
-                        nav_line: str, prompt_parent: str, rollback: str | None) -> bool:
+                        nav_line: str, prompt_parent: str,
+                        rollback: str | None) -> tuple[bool, str | None]:
         """Enter a parameterized context via `nav_line`; harvest inside under a
-        stable NAME placeholder; roll back the instance if we created it."""
-        nav(self.conn, nav_line)
+        stable NAME placeholder; roll back the instance if we created it.
+
+        Returns (entered, refusal_text). refusal_text is the device's own
+        response to nav_line, set only when entry was refused — callers that
+        want to know *why* (not just *that*) use this instead of guessing."""
+        out = nav(self.conn, nav_line)
         if self.conn.find_prompt() == prompt_parent:
-            return False  # entry refused (bad name, second arg required, ...)
+            return False, out.strip()  # entry refused (bad name, second arg required, ...)
         where = " ".join(path)
         if rollback:
             self.created.append(f"{where} > {nav_line}")
@@ -322,26 +409,63 @@ class Harvester:
             self.rolled_back.append((f"{where} > {rollback}", out.strip()))
         else:
             self.entered_existing.append(f"{where} > {nav_line}")
-        return True
+        return True, None
 
     def try_enter_parameterized(self, child: Node, path: list[str], labels: list[str],
                                 level_help: str, arg_help: str, info_text: str,
-                                prompt_here: str) -> bool:
-        """Harvest inside a parameterized context when it is safe:
-        an existing instance (pure navigation), or a string-named [no]-removable
-        object created with a temp name and rolled back right after."""
+                                prompt_here: str) -> tuple[bool, str | None]:
+        """Harvest inside a parameterized context when it is safe: an existing
+        instance (pure navigation), or a [no]-removable object created with a
+        temp name/index and rolled back right after (string-named, or
+        numeric and on the NUMERIC_CREATE_ALLOW list).
+
+        Returns (entered, diagnostic). diagnostic is only ever set on a
+        failed create attempt (string- or numeric-named): the device's own
+        refusal response — plus, for numeric attempts, a read-only
+        `<name> <idx> ?` follow-up probe (same non-mutating capture_help()
+        the rest of the harvest uses) — together these show whether the CLI
+        wanted another argument, or refused the otherwise-valid command
+        outright (e.g. a license/hardware gate), so the "not entered" record
+        says *why*, not just *that*.
+        """
         inst = self.existing_instance(info_text, child.name)
-        if inst is not None and self.enter_and_crawl(
-                child, path, labels, f"{child.name} {inst}", prompt_here, rollback=None):
-            return True
+        if inst is not None:
+            entered, _ = self.enter_and_crawl(
+                child, path, labels, f"{child.name} {inst}", prompt_here, rollback=None)
+            if entered:
+                return True, None
+        if not re.search(rf"\[no\]\s+{re.escape(child.name)}\b", level_help):
+            return False, None  # not [no]-removable -- never safe to create
+
         m = PARAM_STR_RE.search(arg_help)
-        removable = re.search(rf"\[no\]\s+{re.escape(child.name)}\b", level_help)
-        if m and removable and child.name not in CREATE_EXCLUDE:
+        if m and child.name not in CREATE_EXCLUDE:
             tmp = TMP_NAME[: max(1, int(m.group(1)))] if m.group(1) else TMP_NAME
-            return self.enter_and_crawl(
+            entered, refusal = self.enter_and_crawl(
                 child, path, labels, f"{child.name} {tmp}", prompt_here,
                 rollback=f"no {child.name} {tmp}")
-        return False
+            if entered:
+                return True, None
+            return False, f"auto-create probe '{child.name} {tmp}' refused.\ndevice response: {refusal}"
+
+        if child.name in NUMERIC_CREATE_ALLOW and PARAM_NUM_RE.search(arg_help):
+            rng = PARAM_NUM_RANGE_RE.search(arg_help)
+            lo, hi = (int(rng.group(1)), int(rng.group(2))) if rng else DEFAULT_NUM_RANGE
+            tried: list[tuple[int, str]] = []
+            for idx in self.pick_safe_numeric_indices(info_text, child.name, lo, hi):
+                entered, refusal = self.enter_and_crawl(
+                    child, path, labels, f"{child.name} {idx}", prompt_here,
+                    rollback=f"no {child.name} {idx}")
+                if entered:
+                    return True, None
+                tried.append((idx, refusal))
+            if tried:
+                last_idx, last_refusal = tried[-1]
+                diag = capture_help(self.conn, f"{child.name} {last_idx} ").strip()
+                attempted = ", ".join(str(i) for i, _ in tried)
+                return False, (f"auto-create tried indices [{attempted}], all refused.\n"
+                               f"last device response ('{child.name} {last_idx}'): {last_refusal}\n"
+                               f"next-arg help: {diag}")
+        return False, None
 
     def crawl(self, node: Node, path: list[str], labels: list[str] | None = None):
         labels = path if labels is None else labels
@@ -366,18 +490,20 @@ class Harvester:
                     # Prompt still didn't move: needs an argument (parameterized).
                     arg = capture_help(self.conn, child.name + " ")
                     entered = False
+                    diag = None
                     if path and path[0] == "configure":  # never under quick-setup etc.
                         if info_text is None:
                             info_text = self.level_info()
-                        entered = self.try_enter_parameterized(
+                        entered, diag = self.try_enter_parameterized(
                             child, path, labels, level, arg, info_text, prompt_here)
                     if entered:
                         self.record("args-param", ctx, child.name, arg)
                         self.log(f"[{len(self.records):4d}] param+ {ctx} > {child.name} (entered)", flush=True)
                     else:
                         self.parameterized.append(f"{ctx} > {child.name}")
-                        self.record("args-noenter", ctx, child.name, arg)
-                        self.log(f"[{len(self.records):4d}] param  {ctx} > {child.name}", flush=True)
+                        self.record("args-noenter", ctx, child.name, arg + (f"\n\n{diag}" if diag else ""))
+                        self.log(f"[{len(self.records):4d}] param  {ctx} > {child.name}"
+                                 + ("  (create-probe logged)" if diag else ""), flush=True)
                     continue
                 self.crawl(child, path + [child.name], labels + [child.name])
                 nav(self.conn, "exit")
