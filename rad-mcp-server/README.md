@@ -25,23 +25,38 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
 ## Documentation
 
-- **[INSTALL.md](INSTALL.md)** — setup for every Claude surface: Claude Code
-  (VS Code extension + CLI), Claude Desktop chat, Cowork. Start here.
+- **[INSTALL.md](INSTALL.md)** — setup hub for six agent targets (Claude
+  Code, Claude Desktop, GitHub Copilot, OpenAI Codex) and the three
+  deployment modes: local stdio (default, full write flow), a shared
+  HTTPS server you host (read-only), or connecting to a colleague's.
+  Per-target guides in [docs/install/](docs/install/). Start here.
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,
   safety model, knowledge layers, distribution roadmap.
 
-## What Claude can do with it
+## What the agent can do with it
 
-Ask in plain language — no CLI knowledge needed:
+Ask in plain language — no CLI knowledge needed. Five categories of
+operations:
 
-- *"Run a health check on lab-sf1p"* — device info + active alarms, interpreted
-- *"Back up the lab device and diff it against yesterday's backup"*
-- *"What arguments does `location` take under configure system?"* — live
-  firmware-exact syntax via the device's own `?` help
-- *"Change the device location to 'TLV lab rack 3'"* — staged: backup → diff
-  preview → **your explicit approval** → commit → verify
-- *"Reboot the device"* — **refused**: dangerous commands are out of scope by
-  design
+1. **CLI syntax lookup** (no device contact) — command paths and argument
+   constraints from the firmware-exact harvested reference:
+   *"What arguments does `location` take under configure system?"*
+2. **Device inquiry** (read, runs after your confirmation) — live state:
+   *"Run a health check on lab-sf1p"* — device info + active alarms,
+   interpreted; *"show the routing table"*, *"back up the lab device and
+   diff it against yesterday's backup"*
+3. **Device changes** (write, staged — never direct) —
+   *"Change the device location to 'TLV lab rack 3'"*: backup → diff
+   preview → **your explicit approval** → commit → verify
+4. **Manual & concept questions** (no device contact) — meaning, limits,
+   procedures from the ingested user manual: *"what does the LOS alarm
+   mean?"*, *"how many keys can the ETX-1p hold?"*
+5. **Knowledge upkeep** — `/rad-harvest` re-captures the CLI reference
+   after a firmware change; `/rad-load-manual` ingests a manual PDF.
+
+And the standing refusal: *"Reboot the device"* — **refused**; dangerous
+commands (`admin` context, factory-default, file deletes) are out of scope
+by design.
 
 ## MCP surface
 

@@ -19,6 +19,9 @@ Env:
                           internal-network interface to share; never a public one)
   RAD_MCP_PORT            http port (default 8080)
   RAD_MCP_TOKENS          http bearer tokens, comma-separated (required for http)
+  RAD_MCP_TLS_CERT        path to TLS certificate (PEM) — with RAD_MCP_TLS_KEY,
+                          serves https:// natively (both must be set together)
+  RAD_MCP_TLS_KEY         path to the certificate's private key (PEM)
 """
 from __future__ import annotations
 
@@ -406,9 +409,10 @@ if not READONLY:
         After this call: set credentials in server/.env as
         RAD_MCP_<NAME>_USERNAME / RAD_MCP_<NAME>_PASSWORD (name upper-cased,
         dashes -> underscores) — or rely on the global RAD_MCP_USERNAME /
-        RAD_MCP_PASSWORD if this device shares them — then restart the MCP
-        server so it picks up the new .env values (it loads .env once at
-        process start). Then run test_connectivity, then health_check.
+        RAD_MCP_PASSWORD if this device shares them. NEW .env keys are picked
+        up automatically on the next connection (no restart); only CHANGING
+        an already-loaded key still needs a server restart. Then run
+        test_connectivity, then health_check.
         """
         get_driver(family)  # raises with the valid-family list if unknown
         inv_path = add_device_entry(
@@ -427,7 +431,9 @@ if not READONLY:
                 f"Set credentials in server/.env: {env_prefix}_USERNAME=... and "
                 f"{env_prefix}_PASSWORD=... (or rely on the global "
                 "RAD_MCP_USERNAME/RAD_MCP_PASSWORD if this device shares them).",
-                "Restart the MCP server to pick up the new .env values.",
+                "New .env keys are picked up automatically on the next "
+                "connection — no restart needed. (Only changing an "
+                "already-loaded key requires a server restart.)",
                 f"Run test_connectivity('{name}') then health_check('{name}').",
                 f"If '{family}'s CLI reference is missing this unit's context "
                 f"or firmware differs from what was harvested, run "
@@ -535,9 +541,24 @@ def main() -> None:
     if _HTTP:
         host = os.environ.get("RAD_MCP_HOST", "127.0.0.1")
         port = int(os.environ.get("RAD_MCP_PORT", "8080"))
+        cert = os.environ.get("RAD_MCP_TLS_CERT", "").strip()
+        key = os.environ.get("RAD_MCP_TLS_KEY", "").strip()
+        if bool(cert) != bool(key):
+            raise SystemExit(
+                "RAD_MCP_TLS_CERT and RAD_MCP_TLS_KEY must be set together "
+                "(both for https, neither for plain http)."
+            )
+        uvicorn_config = None
+        scheme = "http"
+        if cert:
+            for label, p in (("RAD_MCP_TLS_CERT", cert), ("RAD_MCP_TLS_KEY", key)):
+                if not Path(p).is_file():
+                    raise SystemExit(f"{label} file not found: {p}")
+            uvicorn_config = {"ssl_certfile": cert, "ssl_keyfile": key}
+            scheme = "https"
         audit("server_start", "-",
-              detail=f"v{__version__} {mode} transport=http {host}:{port} (auth required)")
-        mcp.run(transport="http", host=host, port=port)
+              detail=f"v{__version__} {mode} transport={scheme} {host}:{port} (auth required)")
+        mcp.run(transport="http", host=host, port=port, uvicorn_config=uvicorn_config)
     else:
         audit("server_start", "-", detail=f"v{__version__} {mode} transport=stdio")
         mcp.run()  # stdio

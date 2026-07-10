@@ -15,8 +15,17 @@ import yaml
 from dotenv import load_dotenv
 
 # .env sits next to pyproject.toml (server/.env); also honor CWD .env
-load_dotenv(Path(__file__).resolve().parent.parent / ".env")
-load_dotenv()
+def _refresh_env() -> None:
+    """Pick up .env keys added after process start (e.g. a just-added device's
+    credentials) without a server restart. No override: values already in the
+    process environment — including a changed .env value for an EXISTING key —
+    keep their startup state; only genuinely new keys appear. Changing an
+    existing credential still requires a restart."""
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+    load_dotenv()
+
+
+_refresh_env()
 
 DEFAULT_INVENTORY = Path(__file__).resolve().parent.parent.parent / "inventory.yaml"
 
@@ -36,6 +45,7 @@ class Device:
 
     @property
     def username(self) -> str:
+        _refresh_env()
         user = os.environ.get(f"{self._env_prefix}_USERNAME") or os.environ.get("RAD_MCP_USERNAME")
         if not user:
             raise RuntimeError(
@@ -45,6 +55,7 @@ class Device:
 
     @property
     def password(self) -> str:
+        _refresh_env()
         pw = os.environ.get(f"{self._env_prefix}_PASSWORD") or os.environ.get("RAD_MCP_PASSWORD")
         if not pw:
             raise RuntimeError(
@@ -67,10 +78,15 @@ class Device:
 def load_inventory(path: str | Path | None = None) -> dict[str, Device]:
     inv_path = Path(path or os.environ.get("RAD_MCP_INVENTORY") or DEFAULT_INVENTORY)
     if not inv_path.exists():
-        raise FileNotFoundError(f"Inventory file not found: {inv_path}")
+        raise FileNotFoundError(
+            f"Inventory file not found: {inv_path} — copy inventory.example.yaml "
+            "there, or register your first device with add_device (it creates "
+            "the file)."
+        )
     raw = yaml.safe_load(inv_path.read_text(encoding="utf-8")) or {}
     devices: dict[str, Device] = {}
-    for entry in raw.get("devices", []):
+    # `devices:` with nothing under it parses as None — treat as empty, not an error
+    for entry in raw.get("devices") or []:
         dev = Device(**entry)
         devices[dev.name] = dev
     return devices
@@ -110,6 +126,13 @@ def add_device_entry(
             "RAD_MCP_<NAME>_USERNAME/_PASSWORD env var name)."
         )
     inv_path = Path(path or os.environ.get("RAD_MCP_INVENTORY") or DEFAULT_INVENTORY)
+    if not inv_path.exists():
+        # Fresh clone: the personal inventory is gitignored — create it.
+        inv_path.write_text(
+            "# rad-mcp device inventory — facts only, NEVER credentials "
+            "(those live in server/.env)\ndevices:\n",
+            encoding="utf-8",
+        )
     devices = load_inventory(inv_path)
     if name in devices and not overwrite:
         raise ValueError(
@@ -130,7 +153,10 @@ def add_device_entry(
         + f"    groups: {groups_yaml}\n"
         f'    description: "{desc_escaped}"\n'
     )
+    existing = inv_path.read_text(encoding="utf-8")
     with inv_path.open("a", encoding="utf-8") as f:
+        if existing and not existing.endswith("\n"):
+            f.write("\n")
         f.write(block)
     return inv_path
 

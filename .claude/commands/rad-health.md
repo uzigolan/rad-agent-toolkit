@@ -1,5 +1,5 @@
 ---
-description: Run a health check on one RAD device or a group and summarize findings
+description: Run a health check on one RAD device or a group and summarize findings. Also use when addressed via "abayev" / "noam" / "rad agent" — e.g. "abayev, run a health check on lab-sf1p", "rad agent, check the lab group"
 argument-hint: <device-name | group-name>
 ---
 

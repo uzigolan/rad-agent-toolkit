@@ -4,6 +4,29 @@ Living task list. See [README.md](README.md) for the project overview and
 [rad-mcp-server/docs/architecture.md](rad-mcp-server/docs/architecture.md)
 for the full design.
 
+## Done (2026-07-10 session)
+
+- **Per-target install guides for 6 agent surfaces.** ⚠️ **Written from
+  official-docs research (July 2026), not yet verified against live
+  Copilot/Codex installs.** `INSTALL.md` restructured into a hub (support
+  matrix + common setup + remote-connect + shared troubleshooting) with
+  per-target guides in `rad-mcp-server/docs/install/`: Claude Code
+  (VS Code ext), Claude Code (CLI), Claude Desktop (chat + Cowork), GitHub
+  Copilot (VS Code agent mode), GitHub Copilot CLI, and OpenAI Codex
+  (CLI/IDE/desktop + cloud). Key findings baked into the guides:
+  - Copilot and Codex both adopted the **Agent Skills** open standard
+    (SKILL.md) — the RAD skills install unmodified. Copilot even reads the
+    repo's `.claude/skills/` natively; Codex needs a copy into
+    `.agents/skills/` (repo) or `~/.agents/skills/` (user).
+  - MCP config root keys differ per client: VS Code Copilot = `servers`,
+    Copilot CLI = `mcpServers` with `type: "local"` (no `cwd` — safe, the
+    server is module-anchored), Codex = `[mcp_servers.<name>]` in
+    `~/.codex/config.toml` (`cwd` supported; shared by CLI/IDE/desktop).
+  - Codex **cloud** supports neither MCP nor LAN access — documented as
+    knowledge-only via `AGENTS.md` + the portable bundle.
+  - Root README integration table updated (Skills row now lists
+    Copilot/Codex; roadmap bullet closed).
+
 ## Done (2026-07-09 session)
 
 - **Device inventory CRUD + `rad-device-mng` skill.** ⚠️ **Built, not
@@ -103,20 +126,17 @@ for the full design.
   `isakmp-policy`, `mirroring-session`, `ppp`, `tunnel-interface` are done —
   check for others via each family's `args-noenter` entries).
 
-### New integration targets
-- [ ] **GitHub Copilot CLI** — package the MCP server + knowledge as a
-  Copilot CLI extension/config. Copilot CLI speaks MCP directly; the open
-  question is packaging (its own extension manifest format) and whether
-  `SKILL.md` content needs translating into Copilot's prompt/instruction
-  conventions or can be referenced as-is.
-- [ ] **VS Code Copilot extension** — adapt `scripts/build_portable_bundle.py`'s
-  output for Copilot Chat's MCP config (`.vscode/mcp.json` /
-  workspace settings) and instruction file convention
-  (`.github/copilot-instructions.md`). Decide whether personas
-  (Abayev/Noam) and the response/verification modes translate directly or
-  need Copilot-specific phrasing.
-- [ ] Update the root README's "AI integration technology" table with a row
-  once either lands, matching the existing MCP/Skills/Plugin rows' format.
+### New integration targets (guides written 2026-07-10, unverified)
+- [ ] **Verify the Copilot guides live**: VS Code agent mode
+  (`.vscode/mcp.json` + `.claude/skills/` auto-pickup) and Copilot CLI
+  (`/mcp add` + `copilot skill add`) against a real Copilot seat — org
+  policy "MCP servers in Copilot" must be enabled for Business/Enterprise.
+- [ ] **Verify the Codex guide live**: `~/.codex/config.toml` MCP entry +
+  `~/.agents/skills/` on Codex CLI (native Windows is still experimental —
+  test WSL2 fallback too, which needs Linux-side venv paths).
+- [ ] Optional: mirror the `/rad-health`, `/rad-backup` slash commands as
+  Copilot prompt files (`.github/prompts/*.prompt.md`) — skills cover the
+  same ground conversationally, so low priority.
 
 ### Pre-existing roadmap (carried over, not from this session)
 - [ ] `rad://cli-reference/{family}/{context}` keyed-lookup resource for

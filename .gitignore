@@ -17,3 +17,12 @@ rad-mcp-server/manuals/*.pdf
 # project artifacts, don't commit (Excel's own lock-file too)
 /*.xlsx
 /~$*.xlsx
+
+# Personal device inventory — never ships with the repo; clones start from
+# inventory.example.yaml (or let add_device create the file). Backups too.
+rad-mcp-server/inventory.yaml
+inventory_bck.yaml
+
+# Personal workspace MCP config (may hold a live bearer token) — ships via
+# docs/install examples instead
+.vscode/mcp.json

@@ -1,6 +1,6 @@
 ---
 name: rad-device-mng
-description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units.
+description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units. ALSO load whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent" with an inventory operation — e.g. "noam, show the list of devices", "rad agent, add my device", "abayev, remove Device3 from the list".
 ---
 
 # Managing the device inventory
@@ -35,12 +35,13 @@ RAD_MCP_<NAME>_PASSWORD=...
 on the global `RAD_MCP_USERNAME`/`RAD_MCP_PASSWORD` if this device shares
 credentials with others already in `.env`.
 
-**Then restart the MCP server.** `.env` is loaded once at process start
-(`load_dotenv()` in `inventory.py`) — a running server process will not see
-new `.env` values until it's relaunched. This has bitten this exact
-workflow before: adding a device and immediately calling `test_connectivity`
-against the *same running process* fails with a credentials error that has
-nothing to do with the device itself.
+**No restart for NEW keys** (since 2026-07-10): the server re-reads `.env`
+at every credential lookup (`_refresh_env()` in `inventory.py`), so a
+just-added device's fresh `RAD_MCP_<NAME>_*` keys work on the very next
+`test_connectivity` — the add-device flow is restart-free end to end.
+The one case that still needs a server restart: **changing the value of a
+key that was already loaded** (e.g. rotating a password) — already-loaded
+env vars are not overridden by the re-read.
 
 ## `family` must already exist as a driver
 
@@ -53,20 +54,50 @@ family is refused with the valid list in the error — this tool adds a new
 genuinely new dialect (legacy ETX-1, MP-4100, ...) needs its own driver —
 a code change, not an inventory change.
 
+## Adding a device — required intake (HARD GATE)
+
+Do NOT call `add_device` until ALL SIX fields below have been explicitly
+provided by the user in this conversation. If any are missing, ask for all
+the missing ones in ONE consolidated question — not a drip of follow-ups —
+and stop until answered.
+
+| Field | Constraint |
+|---|---|
+| **name** | letters/digits/hyphens/underscores only, starts with letter/digit (becomes `RAD_MCP_<NAME>_*` env-var names). If the user's choice is invalid, propose the closest legal form and get their OK — don't silently rename. |
+| **host** | IP address or resolvable hostname |
+| **family** | one of the shipped drivers — `secflow`, `etx1p`, `etx2` (see driver section below). Don't guess it from the name or from past sessions; confirm with the user. |
+| **group(s)** | at least one group tag, e.g. `lab` |
+| **username** | for `server/.env` ONLY — never an MCP tool argument |
+| **password** | same — `.env` only, and quote the value in `.env` if it contains `#` (dotenv comment char) |
+
+Rules:
+- Missing fields come from the USER — never scavenged from backups, old
+  configs, or prior sessions without the user explicitly confirming the value.
+- No partial adds: with any field missing, nothing is written anywhere —
+  not the inventory, not `.env`.
+- Optional extras (ask only if relevant, defaults otherwise): `port` (22),
+  `description` ("").
+
 ## Workflow
 
 1. **List first** — `list_devices()` to see what's already there and avoid
    name collisions.
-2. **Add** — `add_device(name, host, family, groups=[...], description="...")`.
-   Its response's `next_steps` spells out exactly what `.env` keys to set
-   and to restart the server — read that back to the user, don't just say
-   "done."
-3. **Guide the user to edit `server/.env`** — this step cannot be automated
-   from inside the tool call (credentials must never flow through an MCP
-   tool argument or response). Tell them the exact two line names to add.
-4. **After they confirm `.env` is set and the server's been restarted** —
-   `test_connectivity(name)`, then `health_check(name)`.
-5. **If this is a new unit whose exact firmware/context tree hasn't been
+2. **Intake gate** — collect all six required fields (section above).
+3. **Add** — `add_device(name, host, family, groups=[...], description="...")`
+   — facts only; the credentials NEVER appear in the tool call. Its
+   response's `next_steps` spells out the `.env` keys and the restart —
+   read that back to the user, don't just say "done."
+4. **Write the two `.env` lines** — `RAD_MCP_<NAME>_USERNAME` /
+   `RAD_MCP_<NAME>_PASSWORD` in `server/.env`. Credentials must never flow
+   through an MCP tool argument or response. A local agent (Claude Code) may
+   APPEND the two lines itself — append-only, without reading, printing, or
+   echoing the file's existing contents; single-quote a password containing
+   `#`. Otherwise, tell the user the exact two line names to add manually.
+5. **Verify immediately** — new `.env` keys are picked up automatically on
+   the next connection (no restart): `test_connectivity(name)`, then
+   `health_check(name)`. Only a CHANGED value for an already-loaded key
+   (password rotation) still needs a server restart first.
+6. **If this is a new unit whose exact firmware/context tree hasn't been
    harvested yet** (new to this family, or firmware differs from what's in
    `cli-reference-<family>.md`), suggest `/rad-harvest <name>` next — see
    the `rad-cli-operations` skill for what that produces and why.

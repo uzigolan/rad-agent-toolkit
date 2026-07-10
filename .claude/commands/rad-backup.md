@@ -1,5 +1,5 @@
 ---
-description: Back up the configuration of one RAD device or a group to the local archive
+description: Back up the configuration of one RAD device or a group to the local archive. Also use when addressed via "abayev" / "noam" / "rad agent" — e.g. "noam, back up lab-sf1p", "rad agent, back up the lab group"
 argument-hint: <device-name | group-name>
 ---
 

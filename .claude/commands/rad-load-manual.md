@@ -1,5 +1,5 @@
 ---
-description: Ingest a RAD device user-manual PDF into the skill's manual layer (per-chapter markdown + CLI-topic cross-links)
+description: Ingest a RAD device user-manual PDF into the skill's manual layer (per-chapter markdown + CLI-topic cross-links). Also use when addressed via "abayev" / "noam" / "rad agent" — e.g. "noam, load the ETX-1p manual", "rad agent, ingest this PDF for secflow"
 argument-hint: <pdf-path> <family>   e.g. manuals/ETX-1p_6.4_Mn_05-26_GA.pdf etx1p
 ---
 

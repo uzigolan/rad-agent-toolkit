@@ -1,5 +1,5 @@
 ---
-description: Re-harvest a RAD device's CLI `?`-help into the skill reference (after a firmware upgrade, or when the reference is missing a context)
+description: Re-harvest a RAD device's CLI `?`-help into the skill reference (after a firmware upgrade, or when the reference is missing a context). Also use when addressed via "abayev" / "noam" / "rad agent" — e.g. "rad agent, re-harvest lab-sf1p", "noam, refresh the etx1p CLI reference"
 argument-hint: <device-name> [subtree, e.g. configure crypto]
 ---
 

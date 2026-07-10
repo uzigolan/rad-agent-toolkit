@@ -18,10 +18,10 @@ be evaluated in a real context rather than a toy demo. It is built to plug into
 
 | AI integration technology | What it demonstrates | Plugs into |
 |---|---|---|
-| **MCP server** (tools + `rad://` resources) | The open Model Context Protocol as the portable core — device verbs + knowledge exposed to any MCP client | Claude Desktop, Claude Code, ChatGPT, Cursor, Zed, Gemini CLI, … |
-| **Skills** (`SKILL.md` + personas) | Packaging domain expertise, safety rules, and expert personas (Abayev/Noam) as loadable context | Claude Code / Desktop |
+| **MCP server** (tools + `rad://` resources) | The open Model Context Protocol as the portable core — device verbs + knowledge exposed to any MCP client | Claude Desktop, Claude Code, GitHub Copilot (VS Code + CLI), OpenAI Codex (CLI/IDE), Cursor, Zed, Gemini CLI, … |
+| **Skills** (`SKILL.md` + personas) | Packaging domain expertise, safety rules, and expert personas (Abayev/Noam) as loadable context — now the cross-vendor **Agent Skills** open standard | Claude Code / Desktop, GitHub Copilot (VS Code + CLI), OpenAI Codex |
 | **Plugin bundle** | One uploadable unit combining MCP + skills + commands | Claude Desktop "Upload local plugin" |
-| **Remote MCP** (HTTP + bearer auth, read-only) | One shared server many clients reach by URL — no per-user install; auth + read-only enforced in code | any MCP client on the network |
+| **Remote MCP** (HTTPS + bearer auth, read-only) | One shared server many clients reach by URL — auth, read-only, and native TLS enforced in code; one of [three deployment modes](rad-mcp-server/INSTALL.md) | any MCP client on the network |
 | **Portable bundle** | The knowledge + wiring guide re-packaged for non-Claude clients (Custom GPT, Cursor rules, RAG corpus) | ChatGPT/OpenAI, others |
 | **Knowledge layers** | Live-harvested CLI reference + ingested device manuals as lexical retrieval (RAG-adjacent), served as files and resources | client-agnostic |
 | **Automation hooks** | Duration/token metrics per skill run via lifecycle hooks + statusline | Claude Code |
@@ -36,10 +36,83 @@ connector config) differ per app.
 | Component | What it is |
 |---|---|
 | **[`rad-mcp-server/`](rad-mcp-server/)** | The first RAD MCP server + Claude Code plugin: SSH/Netmiko transport, per-family CLI drivers, read tools, interactive `?`-help relay (`cli_help`), staged-commit config writes with automatic backups, MCP resources. **Start at its [README](rad-mcp-server/README.md) and [INSTALL](rad-mcp-server/INSTALL.md).** |
-| **Skills** (`rad-mcp-server/skills/`) | Claude skills teaching the RAD context-based CLI: `rad-core` (safety rules, staged-commit workflow) and `rad-cli-operations` (CLI model + `references/` knowledge harvested from live devices). Work in Claude Code, Desktop, and Cowork. |
+| **Skills** (`rad-mcp-server/skills/`) | Agent Skills teaching the RAD context-based CLI: `rad-core` (safety rules, staged-commit workflow), `rad-cli-operations` (CLI model + `references/` knowledge harvested from live devices), `rad-device-mng` (self-onboard your own equipment). Details in [Skills, options, and an example](#skills-options-and-an-example). |
 | **CLI knowledge layer** | Firmware-exact command knowledge captured from real devices: full command trees (`tree`) and complete interactive `?` help harvested per context by [`scripts/harvest_cli.py`](rad-mcp-server/scripts/harvest_cli.py) — stored as grep-friendly references for skills and served to Desktop via MCP resources. |
 | **Docs** | [`rad-mcp-server/docs/architecture.md`](rad-mcp-server/docs/architecture.md) — the canonical design: stack, 7-point safety model, 5-layer knowledge strategy, distribution roadmap. [`vendor-mcp-baseline.md`](vendor-mcp-baseline.md) — survey of vendor MCP servers this project is modeled on. |
 | **Workspace wiring** (`.claude/`, `.mcp.json`) | Ready-to-use Claude Code configuration for this repo: launches the server, loads the skills and `/rad-health`, `/rad-backup` commands. |
+
+## Skills, options, and an example
+
+The toolkit ships three artifact kinds — **tools** do, **skills** know,
+**commands** orchestrate ([definitions](rad-mcp-server/INSTALL.md#the-three-artifact-kinds-used-throughout-these-docs)).
+The three skills in [`rad-mcp-server/skills/`](rad-mcp-server/skills/) load
+automatically when the conversation matches their trigger:
+
+| Skill | What it does | Loads when you say things like |
+|---|---|---|
+| [`rad-core`](rad-mcp-server/skills/rad-core/SKILL.md) | The safety contract: look-before-touch, the staged-commit flow (backup → stage → preview → explicit approval → commit → verify), inventory conventions | any RAD/ETX device work |
+| [`rad-cli-operations`](rad-mcp-server/skills/rad-cli-operations/SKILL.md) | The CLI expert: context-based CLI model + firmware-exact command knowledge for `etx2`, `etx1p`, `secflow`; expert personas; response/verification modes | *"how do I configure X on the ETX"*, *"what's the command for…"*, *"abayev, …"* / *"noam, …"* / *"rad agent, …"* — any CLI/syntax question |
+| [`rad-device-mng`](rad-mcp-server/skills/rad-device-mng/SKILL.md) | Inventory CRUD so you can point the toolkit at your own equipment (`list/add/update/remove_device`), including the credentials-go-in-`.env`-then-restart workflow | *"add my device"*, *"register a new unit"*, *"remove that device"* |
+
+### What you can ask `rad-cli-operations` — five categories of operations
+
+| Category | What it covers | Example | Touches the device? |
+|---|---|---|---|
+| **CLI syntax lookup** | "What's the command / what arguments does it take" — answered from the firmware-exact harvested reference | *"what's the command for a static route on the SecFlow?"* | No — reference lookup |
+| **Device inquiry** | Live state: alarms, health, config, ports, routing tables, identity | *"show the active alarms on sf-163-187"* | Read — after your confirmation |
+| **Device changes** | Config edits through the staged flow: backup → diff preview → **your explicit approval** → commit → verify | *"change router interface 1 to 10.0.100.5/24"* | Write — staged, never direct |
+| **Manual & concepts** | The *why / how many / what does it mean* layer, answered from the ingested user manual | *"what does the LOS alarm mean?"*, *"how many MQTT servers can it hold?"* | No — manual lookup |
+| **Knowledge upkeep** | Refreshing the skill's own knowledge from the device or a manual PDF | `/rad-harvest` after a firmware upgrade, `/rad-load-manual` | Read-only harvest |
+
+All five are available through plain language or by addressing the personas
+(*"abayev, …"*, *"noam, …"*, *"rad agent, …"*).
+
+### Slash commands (packaged recipes)
+
+Four explicit commands ([`rad-mcp-server/commands/`](rad-mcp-server/commands/)),
+invoked by name — Claude Code only; elsewhere ask in plain language.
+
+| Command | What it does |
+|---|---|
+| `/rad-health <device \| group>` | Health sweep on one device or a whole group; summarized findings |
+| `/rad-backup <device \| group>` | Back up running configs to the local archive |
+| `/rad-harvest <device> [subtree]` | Re-harvest the device's CLI `?`-help into the skill reference — after a firmware upgrade, or when the reference is missing a context (optionally one subtree, e.g. `configure crypto`) |
+| `/rad-load-manual <pdf> <family>` | Ingest a user-manual PDF into the skill's manual layer (per-chapter markdown + CLI-topic cross-links) |
+
+### Options (spoken toggles — no config files)
+
+`rad-cli-operations` has three session-scoped options, all switched by just
+saying so mid-conversation:
+
+| Option | Default | Alternative | Switch by saying |
+|---|---|---|---|
+| Expert persona | off — plain Claude | answer *as* Abayev or Noam, veteran RAD CLI experts, signed replies | address them: *"abayev, …"* / *"noam, …"* |
+| Response verbosity | `concise` — paste-ready command block first, only safety-critical notes around it | `verbose` — full walkthrough with explanation, tables, verify section | *"use verbose mode"* / *"back to concise"* |
+| Reference trust | `trust-reference` — answer syntax from the harvested reference, no device round-trip | `always-verify-live` — re-confirm every answer with a live `cli_help` call | *"always verify live"* / *"back to trusting the reference"* |
+
+A switched mode holds until you switch back or the session ends.
+
+### Example
+
+```text
+you:    abayev, change router interface 1 on Device3 to 10.0.100.5/24
+
+claude: [loads rad-cli-operations, greps the secflow reference, stages the
+        change — nothing touches the device yet]
+        Stage rs-4f21 ready. Preview:
+          configure router 1 interface 1
+          address 10.0.100.5/24
+        Pre-commit backup will be taken automatically. Commit?   — Abayev
+
+you:    yes, commit
+
+claude: Committed rs-4f21. Verified: interface 1 `show status` now reports
+        10.0.100.5/24. Backup at backups/Device3/…   — Abayev
+```
+
+The same conversation works on every surface in the
+[install matrix](rad-mcp-server/INSTALL.md) — only the skill install differs
+per client.
 
 ## Quick start
 
@@ -85,10 +158,10 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
 - Manuals knowledge layer: lexical retrieval ✅ done (all 3 families);
   semantic RAG over the corpus — not started.
 - Distribution: `.mcpb` Desktop Extension + Claude Code plugin marketplace.
-- **New integration targets: GitHub Copilot CLI and the VS Code Copilot
-  extension** — adapt the portable-bundle output (knowledge + MCP wiring)
-  to Copilot's instruction-file convention (`.github/copilot-instructions.md`)
-  and its MCP config format.
+- ~~New integration targets: GitHub Copilot (VS Code + CLI) and OpenAI
+  Codex (CLI/IDE/desktop).~~ ✅ [guides](rad-mcp-server/docs/install/)
+  written; both vendors adopted Agent Skills, so the skills load unmodified.
+  Copilot VS Code verified live 2026-07-10.
 
 Full task list: [TODO.md](TODO.md).
 

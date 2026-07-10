@@ -1,0 +1,15 @@
+# rad-mcp device inventory — facts only, NEVER credentials (those live in server/.env)
+#
+# Copy this file to inventory.yaml (same directory) and add your devices —
+# or skip the copy entirely: the add_device MCP tool / "rad agent, add my
+# device" creates inventory.yaml automatically on first use.
+#
+# Entry shape:
+#   - name: my-etx2            # letters/digits/hyphens/underscores; becomes
+#                              # the RAD_MCP_<NAME>_USERNAME/_PASSWORD env keys
+#     host: 192.0.2.10         # IP or resolvable hostname
+#     family: etx2             # one of the shipped drivers: secflow | etx1p | etx2
+#     port: 22                 # optional, default 22
+#     groups: [lab]            # at least one group tag
+#     description: "what/where this unit is"
+devices:

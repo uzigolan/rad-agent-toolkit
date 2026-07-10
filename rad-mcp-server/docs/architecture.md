@@ -253,7 +253,10 @@ RAG adds the fuzzy one.
 - **Now also available — shared remote server (internal, read-only):**
   `RAD_MCP_TRANSPORT=http` serves one authenticated read-only endpoint that
   many clients connect to by URL (no per-user local install). Read-only and
-  bearer-auth are enforced in code; internal-network hosting only. See
+  bearer-auth are enforced in code; native TLS (`RAD_MCP_TLS_CERT`/`_KEY`)
+  serves https directly; internal-network hosting only. Together with local
+  stdio this gives three deployment modes — local / host the shared server /
+  connect to someone else's — spelled out in `INSTALL.md`. See
   `docs/remote-server.md`.
 - **Next:** publish the `rad-mcp` Python package internally → configs become
   `uvx rad-mcp` (self-contained installs); package an `.mcpb` Desktop

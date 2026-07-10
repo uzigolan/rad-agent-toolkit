@@ -26,7 +26,24 @@
       "Bash(cp \"rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \"C:\\\\Users\\\\uzi_g\\\\.claude\\\\skills\\\\rad-cli-operations\\\\SKILL.md\")",
       "Bash(cp \"rad-mcp-server/skills/rad-cli-operations/SKILL.md\" \".claude/skills/rad-cli-operations/SKILL.md\")",
       "Bash('c:\\\\Users\\\\uzi_g\\\\Downloads\\\\ai-projects\\\\fusion-cli\\\\rad-mcp-server\\\\server\\\\.venv\\\\Scripts\\\\python.exe' -c ' *)",
-      "Read(//tmp/fonts/**)"
+      "Read(//tmp/fonts/**)",
+      "WebFetch(domain:github.blog)",
+      "WebFetch(domain:code.visualstudio.com)",
+      "WebFetch(domain:learn.chatgpt.com)",
+      "WebFetch(domain:developers.openai.com)",
+      "WebFetch(domain:docs.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Edit(/.claude/skills/rad-cli-operations/**)",
+      "Read(//c/Users/uzi_g/.claude/skills/**)",
+      "Read(//c/Users/uzi_g/.claude/**)",
+      "mcp__rad-mcp__list_devices",
+      "Bash(cp rad-mcp-server/skills/rad-device-mng/SKILL.md .claude/skills/rad-device-mng/SKILL.md)",
+      "Bash(cp rad-mcp-server/skills/rad-device-mng/SKILL.md \"C:/Users/uzi_g/.claude/skills/rad-device-mng/SKILL.md\")",
+      "Read(//c/Users/uzi_g/.claude/skills/rad-device-mng/**)",
+      "mcp__rad-mcp__add_device",
+      "Bash(server/.venv/Scripts/python.exe scripts/build_desktop_skills.py)",
+      "Bash(server/.venv/Scripts/python.exe scripts/build_plugin.py)",
+      "Bash(server/.venv/Scripts/python.exe scripts/build_portable_bundle.py)"
     ],
     "additionalDirectories": [
       "c:\\Users\\uzi_g\\Downloads\\ai-projects\\fusion-cli\\.claude\\skills\\rad-cli-operations"

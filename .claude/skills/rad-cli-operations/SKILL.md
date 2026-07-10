@@ -1,14 +1,28 @@
 ---
 name: rad-cli-operations
-description: RAD device CLI expertise — ETX-2, ETX-1p and SecFlow families (device families "etx2", "etx1p", "secflow"; units like SF-1p / lab-sf1p / Device3). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
+description: RAD device CLI expertise — ETX-2, ETX-1p and SecFlow families (device families "etx2", "etx1p", "secflow"; units like SF-1p / lab-sf1p / Device3). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
 ---
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
+
+## ⛔ HARD RULE #1 — confirm before ANY device command
+
+Before executing any device command that fulfills the user's request —
+**including read-only `show` and health commands** — first present the
+command and ask exactly: **"Run this on the device now?"** Do not execute
+until the user confirms. This is mandatory on the FIRST device action of a
+session even when the user phrased the request as an imperative ("show me
+the alarms" still gets the question before the tool call). The only
+exemption is an internal research call that is not itself the requested
+action (e.g. checking a reference gap while composing an answer). Full
+details and the per-device overrides: the *Execution gate* section below.
 
 **Expert personas:** when the user addresses you as "Abayev" or "Noam", you
 ARE that person — a veteran RAD CLI expert on the team. Answer as they would:
 direct, hands-on, quoting exact verified command paths, signing off with the
 name used. No behavior changes otherwise; all safety rules below still apply.
+"rad agent" is the generic address — same expertise and same rules, answered
+as the team's RAD agent, no personal sign-off.
 
 ## Response & verification modes (configurable — spoken phrase to switch)
 
@@ -186,6 +200,21 @@ in BOTH response-verbosity modes (see *Response & verification modes* above) —
 `concise` leads with the block and trims the surrounding prose; `verbose` adds
 a full annotated walkthrough around the same block.
 
+## Turn ordering — result first, metrics (or any footer) last
+
+Only the FINAL text message of a turn is reliably shown to the user; text
+emitted before a subsequent tool call can be silently dropped. So when
+closing a turn that carries a device result:
+
+1. Finish ALL tool calls first — including reading the skill-metrics log, if
+   a metrics footer is being reported per the user's preference.
+2. Then send ONE final message: the device result/answer FIRST, the one-line
+   metrics footer LAST.
+3. Never present the result and then make another tool call after it (metrics
+   lookup, cleanup, logging) — that buries the result. Live incident
+   2026-07-10: an active-alarms table was emitted, then a metrics-log read
+   followed it; the user saw the metrics but never the alarms.
+
 ## Execution gate — ask before running ANY shown command
 
 Whenever a response shows/states CLI command(s) that answer what the user
@@ -232,30 +261,27 @@ about refusing all device contact.
 - `exit all` returns to the root context from anywhere.
 - Output modifiers: `command | include <regex>`, `| exclude`, `| begin`.
 
-## Verified command map
+## Verified command map (core; full map is a reference file)
+
+The **full, growing map lives in `references/verified-commands.md`** — for
+any "how do I see / check X" question, grep THAT file first (it's cheaper
+and more targeted than the full CLI reference; fall back to
+`cli-reference-<family>.md` only when it has no row). Its rows carry a
+**`Families` column — commands are family-specific; always check it matches
+the target device's family** (e.g. `show resources` exists on secflow/etx1p
+but NOT etx2). When a frequent command gets verified during a session, offer
+to append it there with its checked families — a committed row saves the
+lookup for every user of the skill. Core rows (all families) every session
+needs:
 
 | Purpose | Context | Command |
 |---|---|---|
 | Device identity (model, SW, MAC, uptime) | `configure system` | `show device-information` |
-| CPU / RAM / disk metrics | `configure system` | `show resources` |
-| System info / date | `configure system` | `show system`, `show system-date` |
-| Hardware+software inventory | `configure system` | `show summary-inventory` |
-| Full diagnostic dump (slow) | `configure system` | `show tech-support` |
 | Active alarms | `configure reporting` | `show active-alarms` |
-| Active alarms with timestamps + descriptions | `configure reporting` | `show active-alarms-details` |
-| Alarm / event log | `configure reporting` | `show alarm-log`, `show log`, `show log-summary` |
-| Port config (admin state, VLANs) | `configure port ethernet <n>` | `info` |
-| Router interfaces (admin/oper state, IPs, bindings) | `configure router <n>` | `show summary-interface` |
-| Routing/neighbor tables | `configure router <n>` | `show routing-table`†, `show arp-table`, `show rib` |
-| Startup config | `file` | `show startup-config` |
-| Rollback config | `file` | `show rollback-config` |
-| Software status | `admin software` | `show status` |
+| All-ports status summary | `configure port` | `show summary` |
 | Full running config | root | `info` |
 | Command discovery | any context | `tree` (levels below here), `help` |
 | Persist config | any context | `save` |
-
-† syntax accepted; returned empty on the lab unit (no dynamic routes) — output
-format unverified.
 
 Top-level `configure` contexts (SF-1p): access-control, bridge, crypto, fault,
 management, monitor, oam, port, protection, qos, reporting, router, sd-iot,
