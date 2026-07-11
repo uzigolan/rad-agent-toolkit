@@ -37,9 +37,12 @@ startup_timeout_sec = 20
 Or from the terminal:
 
 ```bash
-codex mcp add rad-mcp --env RAD_MCP_INVENTORY=<repo>/rad-mcp-server/inventory.yaml -- <repo>/rad-mcp-server/server/.venv/bin/python -m rad_mcp.server
+codex mcp add rad-mcp --env RAD_MCP_INVENTORY=$HOME/rad-agent-toolkit/rad-mcp-server/inventory.yaml -- $HOME/rad-agent-toolkit/rad-mcp-server/server/.venv/bin/python -m rad_mcp.server
 codex mcp list
 ```
+
+(In the TOML file itself use the expanded absolute path — TOML does not
+resolve `$HOME` or `~`.)
 
 **The other mode — http client** (server runs manually, not by Codex;
 read-only). Same section name, different body:

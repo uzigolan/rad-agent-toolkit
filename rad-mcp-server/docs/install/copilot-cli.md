@@ -19,8 +19,9 @@ directories — each block starts where the previous one ended.
 
 ```bash
 sudo dnf install -y python3.11
+cd $HOME
 git clone https://github.com/uzigolan/rad-agent-toolkit.git
-cd rad-agent-toolkit/rad-mcp-server/server
+cd $HOME/rad-agent-toolkit/rad-mcp-server/server
 python3.11 -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -e .

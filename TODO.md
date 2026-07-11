@@ -126,14 +126,22 @@ for the full design.
   `isakmp-policy`, `mirroring-session`, `ppp`, `tunnel-interface` are done —
   check for others via each family's `args-noenter` entries).
 
-### New integration targets (guides written 2026-07-10)
-- [x] **Copilot verified live**: VS Code agent mode 2026-07-10 (Windows,
-  stdio + shared-http); Copilot CLI 2026-07-11 (Linux Rocky 8.9,
-  python3.11) — skills triggered on "rad agent", device-mng intake gate
-  enforced, fresh-clone inventory flow + restart-free `.env` pickup all
-  worked. Findings folded into `docs/install/copilot-cli.md`: the CLI
-  also discovers `.mcp.json` in the launch directory (repo ships one with
-  the committing machine's paths → spawn failure until rewritten locally).
+### New integration targets — ALL SIX VERIFIED LIVE (2026-07-11)
+- [x] Full verification record (type/version/model per target):
+  `docs/UNDERSTANDING.md` §8. Highlights per session:
+  - **Copilot VS Code** 2026-07-10 (Windows, stdio + shared-http).
+  - **Copilot CLI** 2026-07-11 (Linux, python3.11) — fresh-clone flow end
+    to end; found: the CLI discovers `.mcp.json` in the launch directory
+    (repo ships one with foreign paths → spawn failure until rewritten).
+  - **Codex / ChatGPT desktop** 2026-07-11 — MCP via shared http; skill
+    execution gate SKIPPED when the skill failed to load → behavioral
+    caveat + `~/.codex/AGENTS.md` backstop documented in the guide.
+  - **Claude Code CLI** 2026-07-11 (Linux) — user-home install
+    (`-s user` + `~/.claude/skills` + `~/.claude/commands`), the "any
+    project" usage shape, now the guide's primary route.
+- [ ] `scripts/install/update-home-install.sh` — re-sync home-installed
+  skills/commands after a repo update (copy-drift is the known cost of
+  the home-install approach; hit once already on Windows).
 - [ ] Ship `.mcp.json` as a portable-safe artifact (e.g. `.mcp.json.example`
   like the inventory, or document post-clone path editing) — the committed
   copy carries machine-specific absolute paths and breaks any other

@@ -185,7 +185,7 @@ everywhere unmodified — only the folder they load from differs.
 | Target | MCP tools | Skills | Slash commands | Verified live | Guide |
 |---|---|---|---|---|---|
 | Claude Code — VS Code extension | ✅ `.mcp.json` | ✅ plugin | ✅ `/rad-health`, … | ✅ daily driver (stdio + http, Windows) | [claude-code-vscode.md](docs/install/claude-code-vscode.md) |
-| Claude Code — CLI | ✅ plugin or `claude mcp add` | ✅ plugin | ✅ | — not yet | [claude-code-cli.md](docs/install/claude-code-cli.md) |
+| Claude Code — CLI | ✅ `claude mcp add -s user` (or plugin) | ✅ `~/.claude/skills/` | ✅ `~/.claude/commands/` | ✅ 2026-07-11 (Linux, user-home install) | [claude-code-cli.md](docs/install/claude-code-cli.md) |
 | Claude Desktop — chat + Cowork | ✅ `claude_desktop_config.json` | ✅ zip upload | ❌ plain language | ✅ stdio + skills (config file proven stdio-only, 2026-07-10) | [claude-desktop.md](docs/install/claude-desktop.md) |
 | GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode.md](docs/install/copilot-vscode.md) |
 | GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli.md](docs/install/copilot-cli.md) |

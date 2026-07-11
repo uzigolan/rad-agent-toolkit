@@ -1,5 +1,8 @@
 # Install target: Claude Code — CLI
 
+Verified live 2026-07-11 on Linux: user-home install, rad-mcp connected
+from a non-repo folder — the "works in any project" usage shape.
+
 | Capability | Status |
 |---|---|
 | MCP tools | ✅ |
@@ -13,28 +16,44 @@ instead of `.venv/bin/python`.)
 **Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
 — once per machine. Linux venv build:
 
+Examples assume the repo cloned at `$HOME/rad-agent-toolkit` — adjust if
+elsewhere.
+
 ```bash
-cd <repo>/rad-mcp-server/server
+cd $HOME/rad-agent-toolkit/rad-mcp-server/server
 python3.11 -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -e .
 ```
 
-## Everything at once (plugin)
+## Install to your user home (primary — works in ANY project)
+
+The same pattern as every other CLI dist (`~/.copilot`, `~/.agents`):
+install once into `~/.claude`, then `claude` finds it from any project
+folder. The repo stays the engine room (venv, `.env`, `inventory.yaml`,
+backups) — you never need to run claude inside it.
 
 ```bash
-claude plugin marketplace add <path-to-this-repo>
-claude plugin install rad-mcp@rad-marketplace
+claude mcp add -s user rad-mcp --env RAD_MCP_INVENTORY=$HOME/rad-agent-toolkit/rad-mcp-server/inventory.yaml -- $HOME/rad-agent-toolkit/rad-mcp-server/server/.venv/bin/python -m rad_mcp.server
+mkdir -p ~/.claude/skills ~/.claude/commands
+cp -r $HOME/rad-agent-toolkit/rad-mcp-server/skills/rad-core $HOME/rad-agent-toolkit/rad-mcp-server/skills/rad-cli-operations $HOME/rad-agent-toolkit/rad-mcp-server/skills/rad-device-mng ~/.claude/skills/
+cp $HOME/rad-agent-toolkit/rad-mcp-server/commands/*.md ~/.claude/commands/
 ```
 
-The plugin carries the MCP server registration, the skills, and the slash
-commands in one unit.
+All three artifact kinds land user-level: the MCP entry in `~/.claude.json`
+(`-s user`), the three skills in `~/.claude/skills/`, the four `/rad-*`
+commands in `~/.claude/commands/`.
 
-## MCP server only (no plugin system)
+## Alternatives
 
-```bash
-claude mcp add rad-mcp --env RAD_MCP_INVENTORY=<repo>/rad-mcp-server/inventory.yaml -- <repo>/rad-mcp-server/server/.venv/bin/python -m rad_mcp.server
-```
+- **Plugin:** `claude plugin marketplace add $HOME/rad-agent-toolkit/rad-mcp-server`
+  (the marketplace manifest lives in the `rad-mcp-server/` subdir, not the
+  repo root) then `claude plugin install rad-mcp@rad-marketplace` — same
+  three artifact kinds as one managed unit.
+- **Project-local:** run `claude` from the repo root — it reads the repo's
+  `.mcp.json`, `.claude/skills/`, and `.claude/commands/` directly; rewrite
+  `.mcp.json` with local paths first (it ships with the committing
+  machine's).
 
 ## The other mode: http client (server runs manually, not by Claude)
 

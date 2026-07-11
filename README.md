@@ -197,7 +197,8 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
 - ~~New integration targets: GitHub Copilot (VS Code + CLI) and OpenAI
   Codex (CLI/IDE/desktop).~~ ✅ [guides](rad-mcp-server/docs/install/)
   written; both vendors adopted Agent Skills, so the skills load unmodified.
-  Copilot VS Code verified live 2026-07-10.
+  **All six targets verified live** (2026-07-10/11, four model families) —
+  record in [UNDERSTANDING.md §8](rad-mcp-server/docs/UNDERSTANDING.md).
 
 Full task list: [TODO.md](TODO.md).
 
