@@ -4,7 +4,7 @@ One codebase, six agent targets. **Part 1** below explains the principles —
 true for every client. **Part 2** maps them to your specific target
 (full per-target guides in [docs/install/](docs/install/)). For all the
 project's principles beyond installation, see
-[docs/UNDERSTANDING.md](docs/UNDERSTANDING.md).
+[docs/CONCEPTS.md](docs/CONCEPTS.md).
 
 ---
 

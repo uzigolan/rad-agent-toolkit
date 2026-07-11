@@ -94,12 +94,15 @@ for the full design.
 
 ## Open
 
-### Device management (untested)
-- [ ] Test `rad-device-mng` for real: does the skill actually load on
-  its trigger phrases in a fresh conversation? Full `add_device` → edit
-  `server/.env` → restart server → `test_connectivity` → `health_check`
-  pass against a real device. `update_device`/`remove_device` similarly
-  untested outside isolated code-level calls.
+### Device management
+- [x] `rad-device-mng` tested for real (2026-07-10/11): skill loads on its
+  trigger phrases (incl. "rad agent"), six-field intake gate enforced,
+  `add_device` → `.env` → `test_connectivity` verified live — on Claude
+  Code (Windows), Copilot CLI (Linux, fresh clone), and Claude CLI
+  (Linux). Bonus fixes along the way: empty-inventory crash, missing-file
+  auto-create, restart-free `.env` pickup.
+- [ ] `update_device`/`remove_device` still untested outside code-level
+  calls.
 - [ ] Decide whether a slash command (e.g. `/rad-device`) is also wanted
   alongside the skill — currently skill-only (conversational trigger, no
   explicit command).
@@ -128,7 +131,7 @@ for the full design.
 
 ### New integration targets — ALL SIX VERIFIED LIVE (2026-07-11)
 - [x] Full verification record (type/version/model per target):
-  `docs/UNDERSTANDING.md` §8. Highlights per session:
+  `docs/CONCEPTS.md` §8. Highlights per session:
   - **Copilot VS Code** 2026-07-10 (Windows, stdio + shared-http).
   - **Copilot CLI** 2026-07-11 (Linux, python3.11) — fresh-clone flow end
     to end; found: the CLI discovers `.mcp.json` in the launch directory

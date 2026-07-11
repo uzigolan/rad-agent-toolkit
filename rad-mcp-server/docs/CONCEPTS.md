@@ -1,4 +1,4 @@
-# Understanding rad-mcp — every principle in one place
+# rad-mcp concepts — every principle in one place
 
 The one-file digest of how this toolkit thinks. Each section states the
 principles and links to the doc that owns the details. Nothing here is new —
@@ -6,10 +6,15 @@ it is gathered from the READMEs, INSTALL.md, the docs/, and the skills.
 
 ## 1. The idea
 
-Write the capability once — an MCP server (device verbs) + a knowledge layer
-(harvested CLI truth + manuals) — then surface it through whatever
-integration each AI app supports: skills, plugin, zips, URL. The server and
-knowledge are portable; only thin per-app wrappers differ.
+**The knowledge is the product; the server is its hands.** The main asset
+is the skill layer: firmware-exact CLI truth harvested live from real
+units, user manuals ingested into greppable chapters with CLI cross-links,
+a verified command map, personas, and safety rules — expertise no generic
+model has, captured once and loaded by any Agent-Skills client unmodified.
+The MCP server matters as the execution arm (staged writes, whitelisted
+reads, live `?` relay) — as important as hands are, and still second
+fiddle to the brain. Surface both through whatever integration each AI app
+supports: skills, plugin, zips, URL; only thin per-app wrappers differ.
 → [root README](../../README.md)
 
 ## 2. Three artifact kinds

@@ -1,9 +1,14 @@
 # rad-mcp-server
 
-MCP server + Claude Code plugin for operating RAD Data Communications devices
+Agent expertise + MCP server for operating RAD Data Communications devices
 through their CLI in natural language — the **full RAD portfolio** by design:
 SecFlow (SF-1p), ETX-1p, and ETX-2 (ETX-2I) verified live, and planned legacy
 ETX-1 and MP-4100/Megaplex.
+
+The center of gravity is the **skill layer** — live-harvested CLI knowledge,
+ingested user manuals, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
+§1). The MCP server is the execution arm that puts that knowledge to work on
+real devices.
 
 The first RAD entry in the MCP ecosystem — naming follows the vendor convention
 set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
@@ -25,7 +30,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
 ## Documentation
 
-- **[docs/UNDERSTANDING.md](docs/UNDERSTANDING.md)** — every principle in
+- **[docs/CONCEPTS.md](docs/CONCEPTS.md)** — every principle in
   one file: artifact kinds, deployment modes, safety model, credentials,
   knowledge layers, cross-client truths. The concepts entry point.
 - **[INSTALL.md](INSTALL.md)** — setup hub for six agent targets (Claude

@@ -1,21 +1,33 @@
 # rad-agent-toolkit
 
-Toolkit for AI agents operating **RAD Data Communications** devices: MCP
-servers per product line, Claude skills, a staged-commit safety model, and
-live-harvested CLI knowledge — SecFlow, ETX-1p, and ETX-2 verified live,
-the full RAD portfolio by design.
+Toolkit for AI agents operating **RAD Data Communications** devices.
+
+**The heart of it is the knowledge — the skill.** Firmware-exact CLI
+expertise **live-harvested from real units** (every context's `?` help,
+captured and verified), device **user manuals ingested** into greppable
+per-chapter knowledge with CLI cross-links, a growing verified command
+map, expert personas, and hard safety rules — packaged in the cross-vendor
+Agent Skills standard, so the same expertise loads in Claude, Copilot, and
+Codex unmodified. The **MCP server is the execution arm** — essential, but
+second fiddle: it gives the knowledge hands (staged-commit writes,
+whitelisted reads, live `?`-help relay). SecFlow, ETX-1p, and ETX-2
+verified live; the full RAD portfolio by design.
 
 > **Status: internal RAD pilot.** Private repository. Do not point at
 > production equipment.
 
-**Works in** (install per target: [INSTALL.md](rad-mcp-server/INSTALL.md)):
+**Works in** — all six verified live (install:
+[INSTALL.md](rad-mcp-server/INSTALL.md) · versions/models tested:
+[CONCEPTS.md §8](rad-mcp-server/docs/CONCEPTS.md)):
 
 - Claude Code — VS Code extension
 - Claude Code — CLI
 - Claude Desktop — chat + Cowork
 - GitHub Copilot — VS Code (agent mode)
 - GitHub Copilot — CLI (Windows / Linux)
-- OpenAI Codex — CLI / IDE extension / ChatGPT desktop
+- OpenAI Codex — Codex CLI
+- OpenAI Codex — Codex IDE extension (VS Code / JetBrains)
+- OpenAI Codex — Codex in the ChatGPT desktop app
 
 ## What this repo demonstrates
 
@@ -27,18 +39,19 @@ be evaluated in a real context rather than a toy demo. It is built to plug into
 
 | AI integration technology | What it demonstrates | Plugs into |
 |---|---|---|
-| **MCP server** (tools + `rad://` resources) | The open Model Context Protocol as the portable core — device verbs + knowledge exposed to any MCP client | Claude Desktop, Claude Code, GitHub Copilot (VS Code + CLI), OpenAI Codex (CLI/IDE), Cursor, Zed, Gemini CLI, … |
-| **Skills** (`SKILL.md` + personas) | Packaging domain expertise, safety rules, and expert personas (Abayev/Noam) as loadable context — now the cross-vendor **Agent Skills** open standard | Claude Code / Desktop, GitHub Copilot (VS Code + CLI), OpenAI Codex |
+| **Skills** (`SKILL.md` + harvested knowledge + personas) | **The main asset:** live-harvested CLI truth, ingested manuals, safety rules, and expert personas (Abayev/Noam) as loadable expertise — the cross-vendor **Agent Skills** open standard | Claude Code / Desktop, GitHub Copilot (VS Code + CLI), OpenAI Codex |
+| **MCP server** (tools + `rad://` resources) | The execution arm: device verbs + knowledge served over the open Model Context Protocol to any MCP client | Claude Desktop, Claude Code, GitHub Copilot (VS Code + CLI), OpenAI Codex (CLI/IDE), Cursor, Zed, Gemini CLI, … |
 | **Plugin bundle** | One uploadable unit combining MCP + skills + commands | Claude Desktop "Upload local plugin" |
 | **Remote MCP** (HTTPS + bearer auth, read-only) | One shared server many clients reach by URL — auth, read-only, and native TLS enforced in code; one of [three deployment modes](rad-mcp-server/INSTALL.md) | any MCP client on the network |
 | **Portable bundle** | The knowledge + wiring guide re-packaged for non-Claude clients (Custom GPT, Cursor rules, RAG corpus) | ChatGPT/OpenAI, others |
 | **Knowledge layers** | Live-harvested CLI reference + ingested device manuals as lexical retrieval (RAG-adjacent), served as files and resources | client-agnostic |
 | **Automation hooks** | Duration/token metrics per skill run via lifecycle hooks + statusline | Claude Code |
 
-The through-line: **write the capability once (the MCP server + knowledge),
-then surface it through whichever integration a given AI app supports.** The
-server and knowledge are portable; only the thin wrappers (skill, plugin,
-connector config) differ per app.
+The through-line: **capture the expertise once (harvest + manuals + rules),
+then surface it through whichever integration a given AI app supports** —
+with the MCP server as the shared execution arm. Knowledge and server are
+portable; only the thin wrappers (plugin, zips, connector config) differ
+per app.
 
 ## What's in the box
 
@@ -47,7 +60,7 @@ connector config) differ per app.
 | **[`rad-mcp-server/`](rad-mcp-server/)** | The first RAD MCP server + Claude Code plugin: SSH/Netmiko transport, per-family CLI drivers, read tools, interactive `?`-help relay (`cli_help`), staged-commit config writes with automatic backups, MCP resources. **Start at its [README](rad-mcp-server/README.md) and [INSTALL](rad-mcp-server/INSTALL.md).** |
 | **Skills** (`rad-mcp-server/skills/`) | Agent Skills teaching the RAD context-based CLI: `rad-core` (safety rules, staged-commit workflow), `rad-cli-operations` (CLI model + `references/` knowledge harvested from live devices), `rad-device-mng` (self-onboard your own equipment). Details in [Skills, options, and an example](#skills-options-and-an-example). |
 | **CLI knowledge layer** | Firmware-exact command knowledge captured from real devices: full command trees (`tree`) and complete interactive `?` help harvested per context by [`scripts/harvest_cli.py`](rad-mcp-server/scripts/harvest_cli.py) — stored as grep-friendly references for skills and served to Desktop via MCP resources. |
-| **Docs** | [`UNDERSTANDING.md`](rad-mcp-server/docs/UNDERSTANDING.md) — **every principle in one file** (start here for concepts). [`architecture.md`](rad-mcp-server/docs/architecture.md) — the canonical design: stack, 7-point safety model, 5-layer knowledge strategy, distribution roadmap. [`vendor-mcp-baseline.md`](vendor-mcp-baseline.md) — survey of vendor MCP servers this project is modeled on. |
+| **Docs** | [`CONCEPTS.md`](rad-mcp-server/docs/CONCEPTS.md) — **every principle in one file** (start here for concepts). [`architecture.md`](rad-mcp-server/docs/architecture.md) — the canonical design: stack, 7-point safety model, 5-layer knowledge strategy, distribution roadmap. [`vendor-mcp-baseline.md`](vendor-mcp-baseline.md) — survey of vendor MCP servers this project is modeled on. |
 | **Workspace wiring** (`.claude/`, `.mcp.json`) | Ready-to-use Claude Code configuration for this repo: launches the server, loads the skills and `/rad-health`, `/rad-backup` commands. |
 
 ## Skills, options, and an example
@@ -130,7 +143,7 @@ How the docs link together (each node is reachable from its parent):
 ```
 README.md (this file)
 ├── rad-mcp-server/README.md ........... server overview + five operation categories
-│   ├── docs/UNDERSTANDING.md .......... ALL principles in one file — concepts entry point
+│   ├── docs/CONCEPTS.md .......... ALL principles in one file — concepts entry point
 │   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
 │   │   ├── docs/install/claude-code-vscode.md
 │   │   ├── docs/install/claude-code-cli.md
@@ -198,7 +211,7 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
   Codex (CLI/IDE/desktop).~~ ✅ [guides](rad-mcp-server/docs/install/)
   written; both vendors adopted Agent Skills, so the skills load unmodified.
   **All six targets verified live** (2026-07-10/11, four model families) —
-  record in [UNDERSTANDING.md §8](rad-mcp-server/docs/UNDERSTANDING.md).
+  record in [CONCEPTS.md §8](rad-mcp-server/docs/CONCEPTS.md).
 
 Full task list: [TODO.md](TODO.md).
 
