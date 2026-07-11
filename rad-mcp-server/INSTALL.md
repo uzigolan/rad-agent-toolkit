@@ -103,6 +103,10 @@ python -m venv .venv
 .venv\Scripts\pip install -e .
 ```
 
+Linux: same steps with `.venv/bin/` instead of `.venv\Scripts\`, and use
+`python3.11` explicitly on RHEL-family distros (default `python3` is often
+3.6 — too old). Verified on Rocky 8.9.
+
 Create `server\.env` (gitignored — never commit credentials):
 
 ```
@@ -147,14 +151,14 @@ never exposed remotely. Skills are a separate client-side install.
 Copilot and Codex adopted the Agent Skills standard, so the skills install
 everywhere unmodified — only the folder they load from differs.
 
-| Target | MCP tools | Skills | Slash commands | Guide |
-|---|---|---|---|---|
-| Claude Code — VS Code extension | ✅ `.mcp.json` | ✅ plugin | ✅ `/rad-health`, … | [claude-code-vscode.md](docs/install/claude-code-vscode.md) |
-| Claude Code — CLI | ✅ plugin or `claude mcp add` | ✅ plugin | ✅ | [claude-code-cli.md](docs/install/claude-code-cli.md) |
-| Claude Desktop — chat + Cowork | ✅ `claude_desktop_config.json` | ✅ zip upload | ❌ plain language | [claude-desktop.md](docs/install/claude-desktop.md) |
-| GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | [copilot-vscode.md](docs/install/copilot-vscode.md) |
-| GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | [copilot-cli.md](docs/install/copilot-cli.md) |
-| OpenAI Codex — CLI / IDE / desktop | ✅ `~/.codex/config.toml` | ✅ `~/.agents/skills/` | `$skill-name` | [chatgpt-codex.md](docs/install/chatgpt-codex.md) |
+| Target | MCP tools | Skills | Slash commands | Verified live | Guide |
+|---|---|---|---|---|---|
+| Claude Code — VS Code extension | ✅ `.mcp.json` | ✅ plugin | ✅ `/rad-health`, … | ✅ daily driver (stdio + http, Windows) | [claude-code-vscode.md](docs/install/claude-code-vscode.md) |
+| Claude Code — CLI | ✅ plugin or `claude mcp add` | ✅ plugin | ✅ | — not yet | [claude-code-cli.md](docs/install/claude-code-cli.md) |
+| Claude Desktop — chat + Cowork | ✅ `claude_desktop_config.json` | ✅ zip upload | ❌ plain language | ✅ stdio + skills (config file proven stdio-only, 2026-07-10) | [claude-desktop.md](docs/install/claude-desktop.md) |
+| GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode.md](docs/install/copilot-vscode.md) |
+| GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli.md](docs/install/copilot-cli.md) |
+| OpenAI Codex — CLI / IDE / desktop | ✅ `~/.codex/config.toml` | ✅ `~/.agents/skills/` | `$skill-name` | — configured, not yet session-tested | [chatgpt-codex.md](docs/install/chatgpt-codex.md) |
 
 ## Scripted install (repo already cloned on this machine)
 

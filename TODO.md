@@ -126,11 +126,21 @@ for the full design.
   `isakmp-policy`, `mirroring-session`, `ppp`, `tunnel-interface` are done —
   check for others via each family's `args-noenter` entries).
 
-### New integration targets (guides written 2026-07-10, unverified)
-- [ ] **Verify the Copilot guides live**: VS Code agent mode
-  (`.vscode/mcp.json` + `.claude/skills/` auto-pickup) and Copilot CLI
-  (`/mcp add` + `copilot skill add`) against a real Copilot seat — org
-  policy "MCP servers in Copilot" must be enabled for Business/Enterprise.
+### New integration targets (guides written 2026-07-10)
+- [x] **Copilot verified live**: VS Code agent mode 2026-07-10 (Windows,
+  stdio + shared-http); Copilot CLI 2026-07-11 (Linux Rocky 8.9,
+  python3.11) — skills triggered on "rad agent", device-mng intake gate
+  enforced, fresh-clone inventory flow + restart-free `.env` pickup all
+  worked. Findings folded into `docs/install/copilot-cli.md`: the CLI
+  also discovers `.mcp.json` in the launch directory (repo ships one with
+  the committing machine's paths → spawn failure until rewritten locally).
+- [ ] Ship `.mcp.json` as a portable-safe artifact (e.g. `.mcp.json.example`
+  like the inventory, or document post-clone path editing) — the committed
+  copy carries machine-specific absolute paths and breaks any other
+  machine that launches Copilot CLI / Claude Code from the repo root.
+- [ ] Linux install scripts (`scripts/install/*.sh`) — the PowerShell ones
+  don't run there; the manual Linux flow is now documented in
+  `copilot-cli.md`.
 - [ ] **Verify the Codex guide live**: `~/.codex/config.toml` MCP entry +
   `~/.agents/skills/` on Codex CLI (native Windows is still experimental —
   test WSL2 fallback too, which needs Linux-side venv paths).

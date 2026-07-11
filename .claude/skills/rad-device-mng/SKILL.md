@@ -16,6 +16,16 @@ shipped in `inventory.yaml`. Four tools, full CRUD:
 | **Update** | `update_device(name, host?, family?, port?, groups?, description?)` | Partial update — omitted fields keep their current value. |
 | **Delete** | `remove_device(name, confirm=true)` | Requires explicit user approval first, same as `commit_config`/`save_startup`. |
 
+**Fresh install — no inventory file yet (expected, not a fault):**
+`inventory.yaml` is gitignored, so a fresh clone has none, and `list_devices`
+fails with *"Inventory file not found"* until a first device exists. Treat
+that error as "empty inventory": tell the user no devices are registered yet
+and offer to add the first one. **The file is created automatically by the
+first successful `add_device`** — no manual copy needed (copying
+`inventory.example.yaml` is the optional hand-edit path). A file that exists
+but has an empty `devices:` lists normally as `[]`. (Verified live on a
+fresh Linux clone via Copilot CLI, 2026-07-11.)
+
 ## The one thing that trips people up: credentials
 
 **Inventory facts and credentials live in two different places, and the
