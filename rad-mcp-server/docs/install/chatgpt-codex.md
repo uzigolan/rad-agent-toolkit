@@ -18,12 +18,16 @@ unmodified — but note Codex reads **`.agents/skills/`**, *not*
 All three local surfaces share `~/.codex/config.toml` — configure once.
 Add:
 
+Linux paths shown (the CLI's usual home); on Windows — e.g. for the ChatGPT
+desktop app — the venv python is `<repo>/rad-mcp-server/server/.venv/Scripts/python.exe`
+instead of `.../.venv/bin/python`:
+
 ```toml
 [mcp_servers.rad-mcp]
-command = "<repo>/server/.venv/Scripts/python.exe"
+command = "<repo>/rad-mcp-server/server/.venv/bin/python"
 args = ["-m", "rad_mcp.server"]
-cwd = "<repo>/server"
-env = { RAD_MCP_INVENTORY = "<repo>/inventory.yaml" }
+cwd = "<repo>/rad-mcp-server/server"
+env = { RAD_MCP_INVENTORY = "<repo>/rad-mcp-server/inventory.yaml" }
 startup_timeout_sec = 20
 ```
 
@@ -33,7 +37,7 @@ startup_timeout_sec = 20
 Or from the terminal:
 
 ```bash
-codex mcp add rad-mcp --env RAD_MCP_INVENTORY=<repo>/inventory.yaml -- <repo>/server/.venv/Scripts/python.exe -m rad_mcp.server
+codex mcp add rad-mcp --env RAD_MCP_INVENTORY=<repo>/rad-mcp-server/inventory.yaml -- <repo>/rad-mcp-server/server/.venv/bin/python -m rad_mcp.server
 codex mcp list
 ```
 
@@ -72,6 +76,21 @@ into one of:
 
 Skills trigger implicitly by description, or explicitly: `$rad-cli-operations`.
 `/skills` lists what's loaded. Restart Codex after adding/changing skills.
+
+## Behavioral caveat (observed live, 2026-07-11)
+
+MCP tools work, but **don't rely on skill-level safety rules on Codex**: in
+a ChatGPT-desktop session, the skill file failed to load and Codex executed
+a device read without the skill's mandatory "Run this on the device now?"
+confirmation — it treated the user's request as authorization. The code
+interlocks (read-only http, staged writes, whitelists) still held. Two
+mitigations, use both:
+
+1. Add the gate to `~/.codex/AGENTS.md` — Codex re-reads it every run,
+   unlike skills:
+   *"RAD devices: before executing ANY device command — read-only included —
+   show the command and ask for explicit confirmation."*
+2. Say it explicitly at session start when it matters.
 
 ## 3. Verify
 

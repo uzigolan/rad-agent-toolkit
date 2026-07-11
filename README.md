@@ -8,6 +8,15 @@ the full RAD portfolio by design.
 > **Status: internal RAD pilot.** Private repository. Do not point at
 > production equipment.
 
+**Works in** (install per target: [INSTALL.md](rad-mcp-server/INSTALL.md)):
+
+- Claude Code — VS Code extension
+- Claude Code — CLI
+- Claude Desktop — chat + Cowork
+- GitHub Copilot — VS Code (agent mode)
+- GitHub Copilot — CLI (Windows / Linux)
+- OpenAI Codex — CLI / IDE extension / ChatGPT desktop
+
 ## What this repo demonstrates
 
 Beyond operating RAD gear, this repo is a **working showcase of the ways AI
@@ -38,7 +47,7 @@ connector config) differ per app.
 | **[`rad-mcp-server/`](rad-mcp-server/)** | The first RAD MCP server + Claude Code plugin: SSH/Netmiko transport, per-family CLI drivers, read tools, interactive `?`-help relay (`cli_help`), staged-commit config writes with automatic backups, MCP resources. **Start at its [README](rad-mcp-server/README.md) and [INSTALL](rad-mcp-server/INSTALL.md).** |
 | **Skills** (`rad-mcp-server/skills/`) | Agent Skills teaching the RAD context-based CLI: `rad-core` (safety rules, staged-commit workflow), `rad-cli-operations` (CLI model + `references/` knowledge harvested from live devices), `rad-device-mng` (self-onboard your own equipment). Details in [Skills, options, and an example](#skills-options-and-an-example). |
 | **CLI knowledge layer** | Firmware-exact command knowledge captured from real devices: full command trees (`tree`) and complete interactive `?` help harvested per context by [`scripts/harvest_cli.py`](rad-mcp-server/scripts/harvest_cli.py) — stored as grep-friendly references for skills and served to Desktop via MCP resources. |
-| **Docs** | [`rad-mcp-server/docs/architecture.md`](rad-mcp-server/docs/architecture.md) — the canonical design: stack, 7-point safety model, 5-layer knowledge strategy, distribution roadmap. [`vendor-mcp-baseline.md`](vendor-mcp-baseline.md) — survey of vendor MCP servers this project is modeled on. |
+| **Docs** | [`UNDERSTANDING.md`](rad-mcp-server/docs/UNDERSTANDING.md) — **every principle in one file** (start here for concepts). [`architecture.md`](rad-mcp-server/docs/architecture.md) — the canonical design: stack, 7-point safety model, 5-layer knowledge strategy, distribution roadmap. [`vendor-mcp-baseline.md`](vendor-mcp-baseline.md) — survey of vendor MCP servers this project is modeled on. |
 | **Workspace wiring** (`.claude/`, `.mcp.json`) | Ready-to-use Claude Code configuration for this repo: launches the server, loads the skills and `/rad-health`, `/rad-backup` commands. |
 
 ## Skills, options, and an example
@@ -74,10 +83,10 @@ invoked by name — Claude Code only; elsewhere ask in plain language.
 
 | Command | What it does |
 |---|---|
-| `/rad-health <device \| group>` | Health sweep on one device or a whole group; summarized findings |
-| `/rad-backup <device \| group>` | Back up running configs to the local archive |
-| `/rad-harvest <device> [subtree]` | Re-harvest the device's CLI `?`-help into the skill reference — after a firmware upgrade, or when the reference is missing a context (optionally one subtree, e.g. `configure crypto`) |
-| `/rad-load-manual <pdf> <family>` | Ingest a user-manual PDF into the skill's manual layer (per-chapter markdown + CLI-topic cross-links) |
+| [`/rad-health`](rad-mcp-server/commands/rad-health.md) `<device \| group>` | Health sweep on one device or a whole group; summarized findings |
+| [`/rad-backup`](rad-mcp-server/commands/rad-backup.md) `<device \| group>` | Back up running configs to the local archive |
+| [`/rad-harvest`](rad-mcp-server/commands/rad-harvest.md) `<device> [subtree]` | Re-harvest the device's CLI `?`-help into the skill reference — after a firmware upgrade, or when the reference is missing a context (optionally one subtree, e.g. `configure crypto`) |
+| [`/rad-load-manual`](rad-mcp-server/commands/rad-load-manual.md) `<pdf> <family>` | Ingest a user-manual PDF into the skill's manual layer (per-chapter markdown + CLI-topic cross-links) |
 
 ### Options (spoken toggles — no config files)
 
@@ -113,6 +122,33 @@ claude: Committed rs-4f21. Verified: interface 1 `show status` now reports
 The same conversation works on every surface in the
 [install matrix](rad-mcp-server/INSTALL.md) — only the skill install differs
 per client.
+
+## Documentation map
+
+How the docs link together (each node is reachable from its parent):
+
+```
+README.md (this file)
+├── rad-mcp-server/README.md ........... server overview + five operation categories
+│   ├── docs/UNDERSTANDING.md .......... ALL principles in one file — concepts entry point
+│   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
+│   │   ├── docs/install/claude-code-vscode.md
+│   │   ├── docs/install/claude-code-cli.md
+│   │   ├── docs/install/claude-desktop.md
+│   │   ├── docs/install/copilot-vscode.md
+│   │   ├── docs/install/copilot-cli.md ─── incl. verified Linux quick start
+│   │   ├── docs/install/chatgpt-codex.md
+│   │   └── docs/remote-server.md ...... host / join the shared HTTPS server
+│   ├── docs/architecture.md ........... canonical design (safety, knowledge layers, roadmap)
+│   │   ├── docs/performance.md ........ ingestion timing
+│   │   └── docs/manual-quality.md ..... per-family manual-ingestion quality
+│   ├── skills/*/SKILL.md .............. the three agent skills
+│   ├── commands/*.md .................. the four slash commands
+│   └── tests/README.md ................ eval harness → RESULTS.md · eval-report.md
+├── TODO.md ............................ living task list
+├── vendor-mcp-baseline.md ............. vendor MCP survey this project is modeled on
+└── rad-fusion-architecture.md ......... original design note (superseded, points inward)
+```
 
 ## Quick start
 

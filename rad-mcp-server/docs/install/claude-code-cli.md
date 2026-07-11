@@ -6,8 +6,19 @@
 | Skills (rad-core, rad-cli-operations, rad-device-mng) | ✅ via plugin |
 | Slash commands | ✅ `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual` |
 
+CLI installs typically live on Linux — all commands below are Linux shell.
+(On Windows the only change is the venv path: `.venv\Scripts\python.exe`
+instead of `.venv/bin/python`.)
+
 **Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
-(venv, `server\.env`, `inventory.yaml`, smoke test) — once per machine.
+— once per machine. Linux venv build:
+
+```bash
+cd <repo>/rad-mcp-server/server
+python3.11 -m venv .venv
+.venv/bin/pip install --upgrade pip
+.venv/bin/pip install -e .
+```
 
 ## Everything at once (plugin)
 
@@ -22,7 +33,7 @@ commands in one unit.
 ## MCP server only (no plugin system)
 
 ```bash
-claude mcp add rad-mcp -- <repo>/server/.venv/Scripts/python.exe -m rad_mcp.server
+claude mcp add rad-mcp --env RAD_MCP_INVENTORY=<repo>/rad-mcp-server/inventory.yaml -- <repo>/rad-mcp-server/server/.venv/bin/python -m rad_mcp.server
 ```
 
 ## The other mode: http client (server runs manually, not by Claude)

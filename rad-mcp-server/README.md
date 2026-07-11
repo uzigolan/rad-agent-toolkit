@@ -25,6 +25,9 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
 ## Documentation
 
+- **[docs/UNDERSTANDING.md](docs/UNDERSTANDING.md)** — every principle in
+  one file: artifact kinds, deployment modes, safety model, credentials,
+  knowledge layers, cross-client truths. The concepts entry point.
 - **[INSTALL.md](INSTALL.md)** — setup hub for six agent targets (Claude
   Code, Claude Desktop, GitHub Copilot, OpenAI Codex) and the three
   deployment modes: local stdio (default, full write flow), a shared

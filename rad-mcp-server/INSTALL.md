@@ -2,7 +2,9 @@
 
 One codebase, six agent targets. **Part 1** below explains the principles —
 true for every client. **Part 2** maps them to your specific target
-(full per-target guides in [docs/install/](docs/install/)).
+(full per-target guides in [docs/install/](docs/install/)). For all the
+project's principles beyond installation, see
+[docs/UNDERSTANDING.md](docs/UNDERSTANDING.md).
 
 ---
 
@@ -17,6 +19,16 @@ true for every client. **Part 2** maps them to your specific target
 | **Slash commands** | The *procedures* — `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual` | Only when explicitly typed | Claude Code only (elsewhere: ask in plain language) |
 
 Rule of thumb: tools **do**, skills **know**, commands **orchestrate**.
+
+**Skill vs slash command — the pair people mix up:** a skill is knowledge
+that should *always be on* — it loads itself whenever the conversation is
+relevant, and you never type its name (`skills/<name>/SKILL.md` folders,
+Agent Skills standard, portable to Copilot/Codex). A slash command is a
+procedure you *deliberately fire* — nothing happens until you type
+`/rad-harvest <device>` (`commands/<name>.md` files with `$ARGUMENTS`
+templating, Claude-plugin format, Claude Code only). That's why
+`/rad-harvest` never appears in a skills listing: it's a command, and on
+Copilot/Codex you get its effect by asking in plain language instead.
 
 ## Choose a deployment mode first
 
@@ -92,6 +104,25 @@ VS Code: root key `servers`; Copilot CLI: `mcpServers` + `type: "local"`;
 Codex: TOML) — each guide shows its client's exact syntax for **both**
 modes. Never commit a real token — these config files are often tracked.
 
+## Where user-level config lives (Windows ↔ Linux)
+
+CLI/agent tools use the same dotfolder names under the home directory on
+both OSes — every `~/...` path in these docs works verbatim on Linux. Only
+the GUI apps (last two rows) follow per-OS conventions:
+
+| Purpose | Windows | Linux |
+|---|---|---|
+| Claude Code user-level (skills, settings, `~/.claude.json`) | `C:\Users\<you>\.claude\` | `~/.claude/` |
+| Copilot CLI (mcp-config, skills, permissions) | `C:\Users\<you>\.copilot\` | `~/.copilot/` |
+| Codex (config.toml, auth) | `C:\Users\<you>\.codex\` | `~/.codex/` |
+| Cross-vendor Agent Skills | `C:\Users\<you>\.agents\skills\` | `~/.agents/skills/` |
+| Claude Desktop config | `%APPDATA%\Claude\` | `~/.config/Claude/` |
+| VS Code user-level `mcp.json` | `%APPDATA%\Code\User\` | `~/.config/Code/User/` |
+
+(`~`/`$HOME` may not be `/home/<user>` — corporate boxes often map it
+elsewhere — but the tools resolve it correctly, which is why the docs use
+`~/...` rather than absolute paths.)
+
 ## Common setup (once per machine)
 
 Required for every target that runs the server locally.
@@ -158,7 +189,7 @@ everywhere unmodified — only the folder they load from differs.
 | Claude Desktop — chat + Cowork | ✅ `claude_desktop_config.json` | ✅ zip upload | ❌ plain language | ✅ stdio + skills (config file proven stdio-only, 2026-07-10) | [claude-desktop.md](docs/install/claude-desktop.md) |
 | GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode.md](docs/install/copilot-vscode.md) |
 | GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli.md](docs/install/copilot-cli.md) |
-| OpenAI Codex — CLI / IDE / desktop | ✅ `~/.codex/config.toml` | ✅ `~/.agents/skills/` | `$skill-name` | — configured, not yet session-tested | [chatgpt-codex.md](docs/install/chatgpt-codex.md) |
+| OpenAI Codex — CLI / IDE / desktop | ✅ `~/.codex/config.toml` | ⚠ `~/.agents/skills/` — loads unreliably; back rules up in `AGENTS.md` | `$skill-name` | ✅ 2026-07-11 (ChatGPT desktop, shared http; gate via `AGENTS.md` backstop — see guide's behavioral caveat) | [chatgpt-codex.md](docs/install/chatgpt-codex.md) |
 
 ## Scripted install (repo already cloned on this machine)
 
