@@ -24,7 +24,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 | `etx1p` | ETX-1p demarcation units | `drivers/etx1p.py` | ✅ verified live (Device3 Sw 6.5.0.43 + a 6.4.0.165 unit) — modern context CLI, harvested references + manual; NOT legacy `etx1` |
 | `etx2` | ETX-203AX / 205A / 220A / ETX-2I | `drivers/etx2.py` | ✅ verified live (ETX-2I Sw 6.8.5(1.116)) — `show resources` unsupported, slot/port naming; CLI reference + manual harvested |
 | `etx1` | legacy ETX-1 line | planned | different CLI — own driver base |
-| `mp4100` | Megaplex-4100 | planned | different CLI — own driver base |
+| `mp4100` | Megaplex-4100 multiservice access nodes | `drivers/mp4100.py` | ✅ verified live (marks-mp4, Mn 4.91) — same shared dialect + candidate-DB `commit` model; CLI reference + 1,202-page manual harvested |
 
 > **Status: internal RAD pilot.** Do not point at production equipment.
 

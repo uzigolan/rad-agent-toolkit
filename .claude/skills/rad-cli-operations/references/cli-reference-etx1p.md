@@ -1,6 +1,6 @@
 # etx1p CLI reference (harvested `?` help)
 
-Captured live from etx1p (Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI) on 2026-07-07 by scripts/harvest_cli.py
+Captured live from etx1p (Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI) on 2026-07-09 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -434,7 +434,7 @@ access-control                 + Configure access control
       terminal                       + Configure terminal
 ```
 
-### bridge *(not entered — parameterized context)*
+### bridge *(parameterized — inner help harvested under "configure bridge NAME")*
 ```text
 <number>             : Bridge number [number]
 
@@ -571,6 +571,165 @@ Device3>config>access-control>firewall>zone(zzz-hrvst)$
 Device3>config>access-control>firewall>zone(zzz-hrvst)$ member
 ```
 
+## configure bridge NAME
+
+Level help (`?`):
+```text
+aging-time                     - Configure MAC aging time
+      clear-mac-table                - Clear MAC address table
+ [no] filtering                      - Enable filtering forwarding mode
+ [no] name                           - Configure bridge name
+ [no] port                           + Configure bridge port
+ [no] vlan-aware                     - Enable VLAN aware mode
+
+ show mac-address-table              - Display MAC address table
+ show summary                        - Display bridge ports list
+
+Device3>config>bridge(1)$
+```
+
+### aging-time
+```text
+<seconds>            : MAC aging time (seconds) [number, default 300] [60..956]
+
+
+Device3>config>bridge(1)$ aging-time
+```
+
+### clear-mac-table
+```text
+<CR>
+
+Device3>config>bridge(1)$ clear-mac-table
+```
+
+### filtering
+```text
+<CR>
+
+Device3>config>bridge(1)$ filtering
+```
+
+### name
+```text
+<bridge-name>        : Bridge name [1..32 chars]
+
+
+Device3>config>bridge(1)$ name
+```
+
+### show mac-address-table
+```text
+<CR>
+
+Device3>config>bridge(1)# show mac-address-table
+```
+
+### show summary
+```text
+<CR>
+
+Device3>config>bridge(1)# show summary
+```
+
+### show vlans
+```text
+<CR>
+ vlan
+
+Device3>config>bridge(1)# show vlans
+```
+
+### static-mac
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# static-mac
+```
+
+### vlan-aware
+```text
+<CR>
+
+Device3>config>bridge(1)# vlan-aware
+```
+
+## configure bridge NAME port
+
+Level help (`?`):
+```text
+aging-time                     - Configure MAC aging time
+      clear-mac-table                - Clear MAC address table
+ [no] filtering                      - Enable filtering forwarding mode
+ [no] name                           - Configure bridge name
+ [no] port                           + Configure bridge port
+ [no] vlan-aware                     - Enable VLAN aware mode
+
+ show mac-address-table              - Display MAC address table
+ show summary                        - Display bridge ports list
+```
+
+### accept-frame-type
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# accept-frame-type
+```
+
+### bind
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# bind
+```
+
+### name
+```text
+<bridge-name>        : Bridge name [1..32 chars]
+
+
+Device3>config>bridge(1)# name
+```
+
+### pvid
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# pvid
+```
+
+### shutdown
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# shutdown
+```
+
+## configure bridge NAME vlan
+
+Level help (`?`):
+```text
+aging-time                     - Configure MAC aging time
+      clear-mac-table                - Clear MAC address table
+ [no] filtering                      - Enable filtering forwarding mode
+ [no] name                           - Configure bridge name
+ [no] port                           + Configure bridge port
+ [no] static-mac                     - Configure static MAC
+ [no] vlan                           + Configure bridge VLAN
+ [no] vlan-aware                     - Enable VLAN aware mode
+
+ show mac-address-table              - Display MAC address table
+ show summary                        - Display bridge ports list
+ show vlans                          - Display VLAN membership
+```
+
+### tagged-port
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# tagged-port
+```
+
+### untagged-port
+```text
+# cli error: Invalid Command
+Device3>config>bridge(1)# untagged-port
+```
+
 ## configure crypto
 
 Level help (`?`):
@@ -616,7 +775,7 @@ Device3>config>crypto# ipsec-transform-set
 Device3>config>crypto# isakmp-key
 ```
 
-### isakmp-policy *(not entered — parameterized context)*
+### isakmp-policy *(parameterized — inner help harvested under "configure crypto isakmp-policy NAME")*
 ```text
 <sequence>           : [number]
 
@@ -862,6 +1021,56 @@ Device3>config>crypto>ipsec-transform-set(zzz-hrvst)$ algorithms
 
 
 Device3>config>crypto>ipsec-transform-set(zzz-hrvst)$ mode
+```
+
+## configure crypto isakmp-policy NAME
+
+Level help (`?`):
+```text
+encryption                     - Configure encryption algorithm
+      group                          - Configure Diffie Hellman group
+      hash                           - Configure hashing algorithm
+
+
+Device3>config>crypto>isakmp-policy(1)$
+```
+
+### encryption
+```text
+<aes-cbc-128>        : 
+ <aes-cbc-256>        : 
+ <aes-128-gcm-64>     : 
+ <aes-128-gcm-96>     : 
+ <aes-128-gcm-128>    : 
+ <aes-256-gcm-64>     : 
+ <aes-256-gcm-96>     : 
+ <aes-256-gcm-128>    : 
+
+
+Device3>config>crypto>isakmp-policy(1)$ encryption
+```
+
+### group
+```text
+<1>                  : 
+ <2>                  : 
+ <5>                  : 
+ <14>                 : 
+ <19>                 : 
+ <20>                 : 
+
+
+Device3>config>crypto>isakmp-policy(1)$ group
+```
+
+### hash
+```text
+<sha1>               : 
+ <sha2-256>           : 
+ <sha2-512>           : 
+
+
+Device3>config>crypto>isakmp-policy(1)$ hash
 ```
 
 ## configure crypto key
@@ -1751,6 +1960,24 @@ Level help (`?`):
 
 
 Device3>config>mngmnt>snmp# access-group
+
+auto-create probe 'access-group zzz-hrvst' refused.
+device response: access-group zzz-hrvst
+#                                                  ^
+# cli error: parameter or keyword missing or wrong
+ - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
+   auth-no-priv|auth-priv}
+ - no access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
+   auth-no-priv|auth-priv}
+ <group-name>         : Group name [string]
+ <snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+ <no-auth-no-priv>    : No Authentication/No Privacy
+ <auth-no-priv>       : Authentication/No Privacy
+ <auth-priv>          : Authentication/Privacy
+
+Device3>config>mngmnt>snmp#
 ```
 
 ### bootstrap-notification
@@ -1789,6 +2016,17 @@ Device3>config>mngmnt>snmp# notify
 
 
 Device3>config>mngmnt>snmp# notify-filter
+
+auto-create probe 'notify-filter zzz-hrvst' refused.
+device response: notify-filter zzz-hrvst
+#                                                   ^
+# cli error: parameter or keyword missing or wrong
+ - notify-filter <name> <sub-tree-oid>
+ - no notify-filter <name> <sub-tree-oid>
+ <name>               : Notification group name [string]
+ <sub-tree-oid>       : Sub-tree OID [1.3.6.1...]
+
+Device3>config>mngmnt>snmp#
 ```
 
 ### notify-filter-profile *(parameterized — inner help harvested under "configure management snmp notify-filter-profile NAME")*
@@ -1872,6 +2110,17 @@ Device3>config>mngmnt>snmp# user
 
 
 Device3>config>mngmnt>snmp# view
+
+auto-create probe 'view zzz-hrvst' refused.
+device response: view zzz-hrvst
+#                                          ^
+# cli error: parameter or keyword missing or wrong
+ - view <view-name> <sub-tree-oid>
+ - no view <view-name> <sub-tree-oid>
+ <view-name>          : View name [string]
+ <sub-tree-oid>       : Subtree OID [1.3.6.1...]
+
+Device3>config>mngmnt>snmp#
 ```
 
 ## configure management snmp notify NAME
@@ -2097,12 +2346,50 @@ Level help (`?`):
 [no] mirroring-session              + Configure mirroring session
 ```
 
-### mirroring-session *(not entered — parameterized context)*
+### mirroring-session *(parameterized — inner help harvested under "configure monitor mirroring-session NAME")*
 ```text
 <number>             : Mirroring session number [number]
 
 
 Device3>config>monitor# mirroring-session
+```
+
+## configure monitor mirroring-session NAME
+
+Level help (`?`):
+```text
+[no] destination                    - Configure mirroring destination. Can not 
+                                       be used in more then one mirroring 
+                                       session
+ [no] shutdown                       - Disable session
+ [no] source                         - Configure mirroring source
+
+
+Device3>config>monitor>mirroring-session(1)$
+```
+
+### destination
+```text
+<ethernet>           : 
+
+
+Device3>config>monitor>mirroring-session(1)$ destination
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>monitor>mirroring-session(1)$ shutdown
+```
+
+### source
+```text
+<port>               : 
+ <tunnel-interface>   : 
+
+
+Device3>config>monitor>mirroring-session(1)$ source
 ```
 
 ## configure oam
@@ -2225,7 +2512,7 @@ Device3>config>port# cellular
 Device3>config>port# ethernet
 ```
 
-### ppp *(not entered — parameterized context)*
+### ppp *(parameterized — inner help harvested under "configure port ppp NAME")*
 ```text
 <port-number>        : PPP Port number [number]
 
@@ -2598,6 +2885,128 @@ Device3>config>port>eth(lan1)>traffic-class(zzz-hrvst)$ mark
 <CR>
 
 Device3>config>port>eth(lan1)>traffic-class(zzz-hrvst)$ shutdown
+```
+
+## configure port ppp NAME
+
+Level help (`?`):
+```text
+[no] bind                           - 
+ [no] chap-hostname                  - CHAP hostname
+ [no] chap-password                  - CHAP password
+ [no] ipcp-address                   - PPP ipv4 address
+ [no] name                           - Port name
+ [no] pap-username                   - Configure PAP credentials
+      pppoe                          + 
+ [no] refuse-chap                    - Refuse CHAP authentication
+ [no] refuse-no-auth                 - Refuse no authentication
+ [no] refuse-pap                     - Refuse PAP authentication
+
+ show status
+
+Device3>config>port>ppp(1)$
+```
+
+### bind
+```text
+<ethernet>           : 
+
+
+Device3>config>port>ppp(1)$ bind
+```
+
+### chap-hostname
+```text
+<name>               : [1..80 chars]
+
+
+Device3>config>port>ppp(1)$ chap-hostname
+```
+
+### chap-password
+```text
+<password>           : [1..80 chars]
+
+
+Device3>config>port>ppp(1)$ chap-password
+```
+
+### ipcp-address
+```text
+<ipv4-unicast-address: IPv4 unicast address [0.0.0.0]
+
+
+Device3>config>port>ppp(1)$ ipcp-address
+```
+
+### name
+```text
+<string>             : [1..80 chars]
+
+
+Device3>config>port>ppp(1)$ name
+```
+
+### pap-username
+```text
+<name>               : [1..80 chars]
+
+
+Device3>config>port>ppp(1)$ pap-username
+```
+
+### refuse-chap
+```text
+<CR>
+
+Device3>config>port>ppp(1)# refuse-chap
+```
+
+### refuse-no-auth
+```text
+<CR>
+
+Device3>config>port>ppp(1)# refuse-no-auth
+```
+
+### refuse-pap
+```text
+<CR>
+
+Device3>config>port>ppp(1)# refuse-pap
+```
+
+### show status
+```text
+<CR>
+
+Device3>config>port>ppp(1)# show status
+```
+
+## configure port ppp NAME pppoe
+
+Level help (`?`):
+```text
+[no] service-name                   - Configure Service-Name
+
+ show status
+
+Device3>config>port>ppp(1)>pppoe$
+```
+
+### service-name
+```text
+<string>             : [1..80 chars]
+
+
+Device3>config>port>ppp(1)>pppoe$ service-name
+```
+
+### show status
+```text
+<CR>
+
+Device3>config>port>ppp(1)>pppoe$ show status
 ```
 
 ## configure protection
@@ -3296,7 +3705,7 @@ Level help (`?`):
 Device3>config>router(1)# bfd-neighbor
 ```
 
-### bgp *(not entered — parameterized context)*
+### bgp *(parameterized — inner help harvested under "configure router NAME bgp NAME")*
 ```text
 <as-number>          : Set local AS [1..4294967295, default 0]
 
@@ -3357,6 +3766,17 @@ Device3>config>router(1)# name
 
 
 Device3>config>router(1)# prefix-list
+
+auto-create probe 'prefix-list zzz-hrvst' refused.
+device response: prefix-list zzz-hrvst
+#                                               ^
+# cli error: parameter or keyword missing or wrong
+ - prefix-list <name> {ipv4|ipv6}
+ - no prefix-list <name>
+ <name>               : Set prefix-list policy profile name. Profile name shall 
+                        be unique in the system [1..252 chars]
+
+Device3>config>router(1)#
 ```
 
 ### resequence
@@ -3460,12 +3880,441 @@ Device3>config>router(1)# show vrrp-summary
 Device3>config>router(1)# static-route
 ```
 
-### tunnel-interface *(not entered — parameterized context)*
+### tunnel-interface *(parameterized — inner help harvested under "configure router NAME tunnel-interface NAME")*
 ```text
 <number>             : Tunnel number [number] [1..30]
 
 
 Device3>config>router(1)# tunnel-interface
+```
+
+## configure router NAME bgp NAME
+
+Level help (`?`):
+```text
+clear-neighbor                 - Restart BGP session
+      ipv4-unicast-af                + Configure IPv4 unicast AF
+      ipv6-unicast-af                + Configure IPv6 unicast AF
+ [no] neighbor                       + Configure BGP neighbor
+      router-id                      - Configure router identifier
+ [no] shutdown                       - Disable BGP
+
+ show community
+ show rib
+ show summary
+```
+
+### clear-neighbor
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>bgp(65002)# clear-neighbor
+```
+
+### neighbor *(parameterized — inner help harvested under "configure router NAME bgp NAME neighbor NAME")*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>bgp(65002)# neighbor
+```
+
+### router-id
+```text
+<ip-address>         : Router ID (IP address format) [0.0.0.0]
+
+
+Device3>config>router(1)>bgp(65002)# router-id
+```
+
+### show community
+```text
+<ipv4>               : 
+ <ipv6>               : 
+
+
+Device3>config>router(1)>bgp(65002)# show community
+```
+
+### show rib
+```text
+<ipv4>               : 
+ <ipv6>               : 
+
+
+Device3>config>router(1)>bgp(65002)# show rib
+```
+
+### show summary
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)# show summary
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)# shutdown
+```
+
+## configure router NAME bgp NAME ipv4-unicast-af
+
+Level help (`?`):
+```text
+external-preference            - Configure external BGP route priority
+      internal-preference            - Configure internal BGP route priority
+      neighbor                       + Configure BGP neighbor
+ [no] network                        - Configure BGP network
+ [no] redistribute                   - Redistribute routes
+```
+
+### external-preference
+```text
+<priority>           : BGP route priority [1..255, default 20]
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af# external-preference
+```
+
+### internal-preference
+```text
+<priority>           : BGP route priority [1..255, default 200]
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af# internal-preference
+```
+
+### neighbor *(parameterized — inner help harvested under "configure router NAME bgp NAME ipv4-unicast-af neighbor NAME")*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af# neighbor
+```
+
+### network
+```text
+<prefix>             : Network prefix length [0.0.0.0/32]
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af# network
+```
+
+### redistribute
+```text
+<connected>          : Connected
+ <static>             : Static
+ <ospf>               : OSPF
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af# redistribute
+```
+
+## configure router NAME bgp NAME ipv4-unicast-af neighbor NAME
+
+Level help (`?`):
+```text
+[no] active                         - Activate neighbor
+ [no] prefix-list-bind               - 
+ [no] route-map-bind                 - 
+
+ show advertised-route               - Show advertised routes
+ show prefix-list
+ show received-route                 - Show received routes
+ show route-map
+```
+
+### active
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# active
+```
+
+### prefix-list-bind
+```text
+<name>               : [1..252 chars]
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# prefix-list-bind
+```
+
+### route-map-bind
+```text
+<name>               : [1..252 chars]
+
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# route-map-bind
+```
+
+### show advertised-route
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# show advertised-route
+```
+
+### show prefix-list
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# show prefix-list
+```
+
+### show received-route
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# show received-route
+```
+
+### show route-map
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv4-unicast-af>neighbor(2.2.2.2)# show route-map
+```
+
+## configure router NAME bgp NAME ipv6-unicast-af
+
+Level help (`?`):
+```text
+external-preference            - Configure external BGP route priority
+      internal-preference            - Configure internal BGP route priority
+      neighbor                       + Configure BGP neighbor
+ [no] network                        - Configure BGP network
+ [no] redistribute                   - Redistribute routes
+```
+
+### external-preference
+```text
+<priority>           : BGP route priority [1..255, default 20]
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af# external-preference
+```
+
+### internal-preference
+```text
+<priority>           : BGP route priority [1..255, default 200]
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af# internal-preference
+```
+
+### neighbor *(parameterized — inner help harvested under "configure router NAME bgp NAME ipv6-unicast-af neighbor NAME")*
+```text
+<ip-address>         : Neighbor IP address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af# neighbor
+```
+
+### network
+```text
+<prefix>             : Network prefix length [0.0.0.0/32|0:0:0:0::0/128]
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af# network
+```
+
+### redistribute
+```text
+<connected>          : Connected
+ <static>             : Static
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af# redistribute
+```
+
+## configure router NAME bgp NAME ipv6-unicast-af neighbor NAME
+
+Level help (`?`):
+```text
+[no] active                         - Activate neighbor
+ [no] prefix-list-bind               - 
+ [no] route-map-bind                 - 
+
+ show advertised-route               - Show advertised routes
+ show prefix-list
+ show received-route                 - Show received routes
+ show route-map
+```
+
+### active
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# active
+```
+
+### prefix-list-bind
+```text
+<name>               : [1..252 chars]
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# prefix-list-bind
+```
+
+### route-map-bind
+```text
+<name>               : [1..252 chars]
+
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# route-map-bind
+```
+
+### show advertised-route
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# show advertised-route
+```
+
+### show prefix-list
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# show prefix-list
+```
+
+### show received-route
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# show received-route
+```
+
+### show route-map
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>ipv6-unicast-af>neighbor(2.2.2.2)# show route-map
+```
+
+## configure router NAME bgp NAME neighbor NAME
+
+Level help (`?`):
+```text
+[no] allowas-in                     - Accept as-path with my AS present in it
+ [no] as-override                    - Override ASNs in outbound updates if 
+                                       aspath equals remote-as
+ [no] bfd                            - Enable IP-BFD
+      connect-timer                  - Configure BGP connect timer
+ [no] ebgp-multihop                  - Allow EBGP neighbors not on directly 
+                                       connected networks
+ [no] local-address                  - Configure local address
+      max-prefixes                   - Configure maximum prefixes
+ [no] next-hop-self                  - Disable the next hop calculation for this
+                                        neighbor
+ [no] password                       - Configure password
+      remote-as                      - Configure remote AS
+ [no] shutdown                       - Disable neighbor
+      timers                         - Configure BGP timers
+
+ show neighbor-connection            - Show neighbor connection
+```
+
+### allowas-in
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# allowas-in
+```
+
+### as-override
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# as-override
+```
+
+### bfd
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# bfd
+```
+
+### connect-timer
+```text
+<connect-time>       : BGP connect timer [1..65535, default 120]
+
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# connect-timer
+```
+
+### ebgp-multihop
+```text
+<CR>
+ <hop-number>         : Hop number [1..255, default 255]
+
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# ebgp-multihop
+```
+
+### local-address
+```text
+<ip-address>         : Neighbor local IP address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# local-address
+```
+
+### max-prefixes
+```text
+<number>             : Maximum prefixes [0..2147483647 , default 0]
+
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# max-prefixes
+```
+
+### next-hop-self
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# next-hop-self
+```
+
+### password
+```text
+<string>             : Password [0..80 chars]
+
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# password
+```
+
+### remote-as
+```text
+<as-number>          : Remote AS number [1..4294967295]
+
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# remote-as
+```
+
+### show neighbor-connection
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# show neighbor-connection
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# shutdown
+```
+
+### timers
+```text
+keepalive
+ holdtime
+
+Device3>config>router(1)>bgp(65002)>neighbor(2.2.2.2)# timers
 ```
 
 ## configure router NAME dhcp-client
@@ -3650,13 +4499,6 @@ Device3>config>router(1)>interface(32)# management-access
 Device3>config>router(1)>interface(32)# name
 ```
 
-### ospf *(not entered — parameterized context)*
-```text
-<CR>
-
-Device3>config>router(1)>interface(32)# ospf
-```
-
 ### router-advertisement
 ```text
 <CR>
@@ -3724,6 +4566,109 @@ client-id                      - Configure DHCP option 61 (client
 
 
 Device3>config>router(1)>interface(32)>dhcp-client# client-id
+```
+
+## configure router NAME interface NAME ospf
+
+Level help (`?`):
+```text
+area                           - Set area
+      authentication-key             - Configure authentication key
+ [no] authentication-type            - Configure authentication type
+      dead-interval                  - Configure dead interval
+      hello-interval                 - Configure hello interval
+      metric                         - Configure metric
+ [no] passive                        - Suppress hello packets
+      priority                       - Configure interface priority
+      retransmit-interval            - Configure retransmit interval
+ [no] shutdown                       - Disable OSPF
+      transit-delay                  - Configure transit delay
+```
+
+### area
+```text
+<area-id>            : Area ID [0.0.0.0]
+
+
+Device3>config>router(1)>interface(32)>ospf# area
+```
+
+### authentication-key
+```text
+<key>                : Key [0..22 chars]
+
+
+Device3>config>router(1)>interface(32)>ospf# authentication-key
+```
+
+### authentication-type
+```text
+<simple-password>    : Simple password
+
+
+Device3>config>router(1)>interface(32)>ospf# authentication-type
+```
+
+### dead-interval
+```text
+<seconds>            : Dead interval (seconds) [1..2147483647, default 40]
+
+
+Device3>config>router(1)>interface(32)>ospf# dead-interval
+```
+
+### hello-interval
+```text
+<seconds>            : Hello interval (seconds) [1..65535, default 10]
+
+
+Device3>config>router(1)>interface(32)>ospf# hello-interval
+```
+
+### metric
+```text
+<value>              : Metric [1..65535, default 1]
+
+
+Device3>config>router(1)>interface(32)>ospf# metric
+```
+
+### passive
+```text
+<CR>
+
+Device3>config>router(1)>interface(32)>ospf# passive
+```
+
+### priority
+```text
+<priority>           : Interface priority [0..255, default 1]
+
+
+Device3>config>router(1)>interface(32)>ospf# priority
+```
+
+### retransmit-interval
+```text
+<seconds>            : Retransmit interval (seconds) [0..3600, default 5]
+
+
+Device3>config>router(1)>interface(32)>ospf# retransmit-interval
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>router(1)>interface(32)>ospf# shutdown
+```
+
+### transit-delay
+```text
+<seconds>            : Transit delay (seconds) [0..3600, default 1]
+
+
+Device3>config>router(1)>interface(32)>ospf# transit-delay
 ```
 
 ## configure router NAME nat
@@ -3943,6 +4888,334 @@ Device3>config>router(1)>route-map(zzz-hrvst)$ permit
 Device3>config>router(1)>route-map(zzz-hrvst)$ remark
 ```
 
+## configure router NAME tunnel-interface NAME
+
+Level help (`?`):
+```text
+[no] access-group                   - Bind ACL to Tunnel Interface
+      clear-access-list-statistics   - Clear ACL statistics
+      clear-statistics               - Clears Tunnel statistics counters
+ [no] crypto-map                     - 
+ [no] ip-address                     - Configure tunnel IP address
+ [no] ip-mtu                         - Configure tunnel IP MTU
+ [no] multipoint                     - Configure tunnel as multipoint
+ [no] name                           - Configure Tunnel name
+ [no] nhrp-map                       - Configure NHRP mapping
+ [no] nhrp-nhs                       - Configure NHRP server
+ [no] nhrp-registration-timeout      - Configure NHRP registration timeout
+ [no] ospf                           + Configure OSPF
+ [no] pm-collection                  - Enable Performance Management (PM)
+ [no] shutdown                       - 
+ [no] tunnel-destination             - Configure tunnel destination
+ [no] tunnel-source                  - Configure tunnel source
+ [no] tunnel-underlay-destination    - Configure GREoIPsec underlay destination 
+                                       (for tunnel mode only)
+ [no] tunnel-underlay-source         - Configure GREoIPsec underlay source (for 
+                                       tunnel mode only)
+
+ show access-list-statistics         - Show ACL statistics
+ show access-list-summary            - ACL Information
+ show crypto-map-status
+ show status                         - Show tunnel status
+
+Device3>config>router(1)>tunnel-interface(1)$
+```
+
+### access-group
+```text
+<acl-name>           : ACL name [1..80 chars]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ access-group
+```
+
+### bind
+```text
+# cli error: Invalid Command
+Device3>config>router(1)>tunnel-interface(1)$ bind
+```
+
+### clear-access-list-statistics
+```text
+<CR>
+ <in>                 : In
+ <ipv4>               : IPv4
+ <ipv6>               : IPv6
+
+
+Device3>config>router(1)>tunnel-interface(1)$ clear-access-list-statistics
+```
+
+### clear-nhrp
+```text
+# cli error: Invalid Command
+Device3>config>router(1)>tunnel-interface(1)$ clear-nhrp
+```
+
+### clear-statistics
+```text
+<CR>
+
+Device3>config>router(1)>tunnel-interface(1)$ clear-statistics
+```
+
+### crypto-map
+```text
+<name>               : [1..80 chars]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ crypto-map
+```
+
+### dscp
+```text
+# cli error: Invalid Command
+Device3>config>router(1)>tunnel-interface(1)$ dscp
+```
+
+### ip-address
+```text
+<address-mask>       : Tunnel address [0.0.0.0/32|0:0:0:0::0/128]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ ip-address
+```
+
+### ip-mtu
+```text
+<bytes>              : MTU in bytes [number] [128..65535]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ ip-mtu
+```
+
+### key
+```text
+# cli error: Invalid Command
+Device3>config>router(1)>tunnel-interface(1)$ key
+```
+
+### multipoint
+```text
+<CR>
+
+Device3>config>router(1)>tunnel-interface(1)$ multipoint
+```
+
+### name
+```text
+<string>             : [1..64 chars]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ name
+```
+
+### nhrp-map
+```text
+<logical-ip-address> : Element to map to NBMA address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ nhrp-map
+```
+
+### nhrp-nhs
+```text
+<ip-address>         : NHRP server [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ nhrp-nhs
+```
+
+### nhrp-registration-timeout
+```text
+<seconds>            : NHRP registration timeout (in seconds) [number, default 
+                        2400] [1..65535]
+
+
+Device3>config>router(1)>tunnel-interface(1)$ nhrp-registration-timeout
+```
+
+### pm-collection
+```text
+<interval>           : PM collection interval
+
+
+Device3>config>router(1)>tunnel-interface(1)# pm-collection
+```
+
+### show access-list-statistics
+```text
+<CR>
+ <in>                 : In
+ <ipv4>               : IPv4
+ <ipv6>               : IPv6
+
+
+Device3>config>router(1)>tunnel-interface(1)# show access-list-statistics
+```
+
+### show access-list-summary
+```text
+<CR>
+
+Device3>config>router(1)>tunnel-interface(1)# show access-list-summary
+```
+
+### show crypto-map-status
+```text
+<CR>
+ <name>               : [1..80 chars]
+
+
+Device3>config>router(1)>tunnel-interface(1)# show crypto-map-status
+```
+
+### show status
+```text
+<CR>
+ <all>                : 
+ <nhrp>               : 
+ <dmvpn>              : 
+
+
+Device3>config>router(1)>tunnel-interface(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>router(1)>tunnel-interface(1)# shutdown
+```
+
+### transport-router
+```text
+# cli error: Invalid Command
+Device3>config>router(1)>tunnel-interface(1)# transport-router
+```
+
+### tunnel-destination
+```text
+<address>            : Destination address [0.0.0.0|0:0:0:0::0]
+
+
+Device3>config>router(1)>tunnel-interface(1)# tunnel-destination
+```
+
+### tunnel-source
+```text
+<address>            : Source address [0.0.0.0|0:0:0:0::0]
+ router-interface
+
+Device3>config>router(1)>tunnel-interface(1)# tunnel-source
+```
+
+## configure router NAME tunnel-interface NAME ospf
+
+Level help (`?`):
+```text
+area                           - Set area
+      authentication-key             - Configure authentication key
+ [no] authentication-type            - Configure authentication type
+      dead-interval                  - Configure dead interval
+      hello-interval                 - Configure hello interval
+      metric                         - Configure metric
+ [no] passive                        - Suppress hello packets
+      priority                       - Configure interface priority
+      retransmit-interval            - Configure retransmit interval
+ [no] shutdown                       - Disable OSPF
+      transit-delay                  - Configure transit delay
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$
+```
+
+### area
+```text
+<area-id>            : Area ID [0.0.0.0]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ area
+```
+
+### authentication-key
+```text
+<key>                : Key [0..22 chars]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ authentication-key
+```
+
+### authentication-type
+```text
+<simple-password>    : Simple password
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ authentication-type
+```
+
+### dead-interval
+```text
+<seconds>            : Dead interval (seconds) [1..2147483647, default 40]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ dead-interval
+```
+
+### hello-interval
+```text
+<seconds>            : Hello interval (seconds) [1..65535, default 10]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ hello-interval
+```
+
+### metric
+```text
+<value>              : Metric [1..65535, default 1]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ metric
+```
+
+### passive
+```text
+<CR>
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ passive
+```
+
+### priority
+```text
+<priority>           : Interface priority [0..255, default 1]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ priority
+```
+
+### retransmit-interval
+```text
+<seconds>            : Retransmit interval (seconds) [0..3600, default 5]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ retransmit-interval
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ shutdown
+```
+
+### transit-delay
+```text
+<seconds>            : Transit delay (seconds) [0..3600, default 1]
+
+
+Device3>config>router(1)>tunnel-interface(1)>ospf$ transit-delay
+```
+
 ## configure sd-iot
 
 Level help (`?`):
@@ -3961,8 +5234,6 @@ authentication-method          - Configure sd-iot authentication-method
 
  show statistics                     - Display sd-iot entity statistics
  show status                         - Display sd-iot entity status
-
-Device3>config>sd-iot$
 ```
 
 ### authentication-method
@@ -3971,7 +5242,7 @@ Device3>config>sd-iot$
  <certificate>        : Certificate-based authentication
 
 
-Device3>config>sd-iot$ authentication-method
+Device3>config>sd-iot# authentication-method
 ```
 
 ### certificate
@@ -3979,14 +5250,14 @@ Device3>config>sd-iot$ authentication-method
 <certificate-name>   : Sd-iot certificate name [1..64 chars]
 
 
-Device3>config>sd-iot$ certificate
+Device3>config>sd-iot# certificate
 ```
 
 ### clear-statistics
 ```text
 <CR>
 
-Device3>config>sd-iot$ clear-statistics
+Device3>config>sd-iot# clear-statistics
 ```
 
 ### client-number
@@ -3994,7 +5265,7 @@ Device3>config>sd-iot$ clear-statistics
 <number>             : Sd-iot client number [1..1000]
 
 
-Device3>config>sd-iot$ client-number
+Device3>config>sd-iot# client-number
 ```
 
 ### duplication
@@ -4002,7 +5273,7 @@ Device3>config>sd-iot$ client-number
 <ethernet>           : Ethernet
 
 
-Device3>config>sd-iot$ duplication
+Device3>config>sd-iot# duplication
 ```
 
 ### ingress-port
@@ -4010,7 +5281,7 @@ Device3>config>sd-iot$ duplication
 <ethernet>           : Ethernet
 
 
-Device3>config>sd-iot$ ingress-port
+Device3>config>sd-iot# ingress-port
 ```
 
 ### keep-alive
@@ -4018,7 +5289,7 @@ Device3>config>sd-iot$ ingress-port
 interval
  retries
 
-Device3>config>sd-iot$ keep-alive
+Device3>config>sd-iot# keep-alive
 ```
 
 ### show statistics
@@ -4039,7 +5310,15 @@ Device3>config>sd-iot# show status
 ```text
 <CR>
 
-Device3>config>sd-iot$ shutdown
+Device3>config>sd-iot# shutdown
+```
+
+### tunnel *(not entered — parameterized context)*
+```text
+<number>             : Sd-iot tunnel number [1..2]
+
+
+Device3>config>sd-iot# tunnel
 ```
 
 ### username
@@ -4048,51 +5327,6 @@ Device3>config>sd-iot$ shutdown
 
 
 Device3>config>sd-iot# username
-```
-
-## configure sd-iot tunnel
-
-Level help (`?`):
-```text
-authentication-method          - Configure sd-iot authentication-method
- [no] certificate                    - Configure sd-iot certification
-      clear-statistics               - Clear sd-iot statistics
- [no] client-number                  - Configure sd-iot client number
- [no] duplication                    - Configure sd-iot duplication function
- [no] ingress-port                   - Configure sd-iot ingress port
-      keep-alive                     - Configure sd-iot tunnels keep alive 
-                                       interval and retries
- [no] shutdown                       - Configure sd-iot entity activity
- [no] tunnel                         + Configure sd-iot tunnel
- [no] username                       - Configure sd-iot username and password
-
- show statistics                     - Display sd-iot entity statistics
- show status                         - Display sd-iot entity status
-```
-
-### peer-address
-```text
-# cli error: Invalid Command
-Device3>config>sd-iot# peer-address
-```
-
-### priority
-```text
-# cli error: Invalid Command
-Device3>config>sd-iot# priority
-```
-
-### secondary-peer-address
-```text
-# cli error: Invalid Command
-Device3>config>sd-iot# secondary-peer-address
-```
-
-### shutdown
-```text
-<CR>
-
-Device3>config>sd-iot# shutdown
 ```
 
 ## configure system
@@ -5086,6 +6320,7 @@ Level help (`?`):
 ```text
 [no] ipsec-transform-set            + Configure IPsec phase 2 policy
  [no] isakmp-policy                  + Configure IPsec phase 1 policy
+      submit                         - 
  [no] tunnel                         + Configure tunnel interface
 ```
 

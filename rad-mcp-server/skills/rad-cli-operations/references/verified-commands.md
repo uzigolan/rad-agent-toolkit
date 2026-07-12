@@ -5,11 +5,14 @@ the harvested `?`-help reference with its captured prompt). This file is the
 grow-as-you-go layer: SKILL.md carries only the core rows; everything else
 lives here so the skill stays small while the map keeps growing.
 
-**Commands are family-specific.** The three families share the dialect, but
-not every command exists everywhere — ALWAYS match the `Families` column
+**Commands are family-specific.** The families share the dialect, but not
+every command exists everywhere — ALWAYS match the `Families` column
 against the target device's inventory `family` before answering. `all` =
 confirmed in the harvested references of secflow, etx1p, AND etx2
-(cross-checked 2026-07-10). Port naming still differs per family even for
+(cross-checked 2026-07-10). **`mp4100` is NOT covered by `all`** — its
+reference was harvested 2026-07-12 but these rows haven't been
+cross-checked against it yet; grep `cli-reference-mp4100.md` before
+answering mp4100 syntax from this table. Port naming still differs per family even for
 `all` rows: secflow ports are numeric (`ethernet 3`), etx1p ports are named
 (`ethernet lan1`).
 

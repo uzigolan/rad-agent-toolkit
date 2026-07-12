@@ -10,8 +10,8 @@ map, expert personas, and hard safety rules — packaged in the cross-vendor
 Agent Skills standard, so the same expertise loads in Claude, Copilot, and
 Codex unmodified. The **MCP server is the execution arm** — essential, but
 second fiddle: it gives the knowledge hands (staged-commit writes,
-whitelisted reads, live `?`-help relay). SecFlow, ETX-1p, and ETX-2
-verified live; the full RAD portfolio by design.
+whitelisted reads, live `?`-help relay). SecFlow, ETX-1p, ETX-2, and
+Megaplex-4100 verified live; the full RAD portfolio by design.
 
 > **Status: internal RAD pilot.** Private repository. Do not point at
 > production equipment.

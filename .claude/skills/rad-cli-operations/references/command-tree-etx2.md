@@ -1708,7 +1708,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   +---router-id
 |   |   |   |
 |   |   |   +---shutdown
-
 |   |   |   |
 |   |   |   +---show community
 |   |   |   |

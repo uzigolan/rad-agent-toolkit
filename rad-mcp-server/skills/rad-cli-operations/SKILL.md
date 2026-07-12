@@ -1,6 +1,6 @@
 ---
 name: rad-cli-operations
-description: RAD device CLI expertise — ETX-2, ETX-1p and SecFlow families (device families "etx2", "etx1p", "secflow"; units like SF-1p / lab-sf1p / Device3). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
+description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow and Megaplex-4100 families (device families "etx2", "etx1p", "secflow", "mp4100"; units like SF-1p / lab-sf1p / Device3 / marks-mp4). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
 ---
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
@@ -53,13 +53,22 @@ or the session ends) — say out loud which mode is now active.
 Revert either or both: *"back to concise"* / *"back to trusting the
 reference"* / *"revert to default behavior"*.
 
-Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35) and an ETX-1p
-(Device3, Sw 6.5.0.43) lab unit. The ETX-2 family shares this dialect
-(per-family differences: ETX-2 adds flows/EVC contexts; ETX-1p is the modern
-context-based CLI, NOT the legacy ETX-1 menu CLI). Each family has its own
-`references/` file set — grep the one matching the device's inventory family.
-Legacy ETX-1 and MP-4100/Megaplex use different CLIs and will get their own
-skills. SecFlow-1p manual: https://www.rad.com/docs/965
+Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35), an ETX-1p
+(Device3, Sw 6.5.0.43), and an MP-4100 (marks-mp4, Mn 4.91) lab unit. The
+ETX-2 family shares this dialect (per-family differences: ETX-2 adds
+flows/EVC contexts; ETX-1p is the modern context-based CLI, NOT the legacy
+ETX-1 menu CLI). **mp4100 (Megaplex-4100) speaks the same dialect with one
+structural difference — a candidate-database config model:** config edits
+land in a candidate DB and apply to the running config ONLY when the
+device's own `commit` global is issued. Consequences: staged sequences for
+mp4100 MUST end with `commit` (before the final `exit all`) or they
+silently change nothing; and NEVER send `discard-changes` casually — its
+help text ("Resets to last-saved parameter profile") is ambiguous enough
+to be running-config-destructive; check the manual before ever using it.
+MP-specific contexts: chassis, cross-connect, peer, pwe, slot. Each family
+has its own `references/` file set — grep the one matching the device's
+inventory family. Legacy ETX-1 uses a different (menu) CLI and will get
+its own skill. SecFlow-1p manual: https://www.rad.com/docs/965
 
 **Harvested knowledge in `references/` (per family):**
 
@@ -405,8 +414,13 @@ location "site-A rack 3"
 exit all
 ```
 
-Always end with `exit all`. Changes affect the **running** config only until
-`save_startup` is called — a revert is just staging the previous value back.
+Always end with `exit all`. **On `mp4100` the sequence must include the
+device's `commit` global as the last command before the final `exit all`** —
+the MP's candidate-DB model applies nothing to the running config until
+`commit` (and never send `discard-changes` casually; see the family notes
+above). On the other families, changes affect the **running** config
+immediately; on all families nothing survives reboot until `save_startup` —
+a revert is just staging the previous value back.
 Verify after commit by re-running the relevant context `info` or `show`.
 Rollback: stage the inverse commands or restore from the pre-commit backup
 (path is in the commit_config output).

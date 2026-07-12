@@ -4,6 +4,27 @@ Living task list. See [README.md](README.md) for the project overview and
 [rad-mcp-server/docs/architecture.md](rad-mcp-server/docs/architecture.md)
 for the full design.
 
+## Done (2026-07-12 session)
+
+- **mp4100 (Megaplex-4100) family support — end to end in one pass:**
+  live probe overturned the "different CLI, own driver base" assumption
+  (same context dialect; netmiko rad_etx + pager-disable work), new
+  `drivers/mp4100.py` (one structural difference: candidate-DB config —
+  staged sequences must end with the device's `commit`; `discard-changes`
+  flagged as ambiguous/dangerous), smoke test passed (real SDH/TDM
+  alarms), full CLI harvest (130 KB reference; 9 temp objects created +
+  rolled back in the candidate DB; 62 parameterized gaps with reasons),
+  1,202-page manual ingested (38 chapters; the etx2-built adaptive
+  splitter fired automatically — validation recorded in
+  `docs/manual-quality.md` along with the cross-link vocabulary gap:
+  matcher topics are ETX-shaped, MP areas like cross-connect/pwe/
+  teleprotection got no rows). Skills/READMEs updated; device
+  `marks-mp4` registered.
+- [ ] Cross-link matcher: per-family topic vocabulary (or derive from the
+  family's command tree) — mp4100's headline areas are unmatched.
+- [ ] Cross-check the verified-commands table against
+  `cli-reference-mp4100.md` and extend its `Families` column to mp4100.
+
 ## Done (2026-07-10 session)
 
 - **Per-target install guides for 6 agent surfaces.** ⚠️ **Written from

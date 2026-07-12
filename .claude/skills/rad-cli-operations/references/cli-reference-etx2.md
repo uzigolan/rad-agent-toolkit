@@ -1161,7 +1161,8 @@ ETX-2I>config>crypto>crypto-map(zzz-hrvst)$ pfs-group
 
 ### sa-lifetime
 ```text
-seconds
+<CR>
+ seconds
  kilobytes
 
 ETX-2I>config>crypto>crypto-map(zzz-hrvst)$ sa-lifetime
@@ -1541,6 +1542,16 @@ Level help (`?`):
 
 
 ETX-2I>config>flows# classifier-profile
+
+auto-create probe 'classifier-profile zzz-hrvst' refused.
+device response: classifier-profile zzz-hrvst
+#                                                 ^
+# cli error: parameter or keyword missing or wrong
+ - classifier-profile <classification-name> match-any
+ - no classifier-profile <classification-name>
+ <classification-name>                      : [1..32 chars]
+
+ETX-2I>config>flows#
 ```
 
 ### clear-flow-mac-table
@@ -1655,20 +1666,20 @@ Level help (`?`):
 <classification-name>                      : [1..32 chars]
 
 
-ETX-2I>config>flows>flow# classifier
+ETX-2I>config>flows>flow(mng_access_defa)# classifier
 ```
 
 ### clear-statistics
 ```text
 # cli error: Invalid Command
-ETX-2I>config>flows>flow# clear-statistics
+ETX-2I>config>flows>flow(mng_access_defa)# clear-statistics
 ```
 
 ### drop
 ```text
 <CR>
 
-ETX-2I>config>flows>flow# drop
+ETX-2I>config>flows>flow(mng_access_defa)# drop
 ```
 
 ### egress-port
@@ -1682,7 +1693,7 @@ ETX-2I>config>flows>flow# drop
  <int-ethernet>                             : 
 
 
-ETX-2I>config>flows>flow# egress-port
+ETX-2I>config>flows>flow(mng_access_defa)# egress-port
 ```
 
 ### ingress-color
@@ -1692,21 +1703,29 @@ ETX-2I>config>flows>flow# egress-port
  <profile>                                  : 
 
 
-ETX-2I>config>flows>flow# ingress-color
+ETX-2I>config>flows>flow(mng_access_defa)# ingress-color
 ```
 
 ### l2cp
 ```text
 profile
 
-ETX-2I>config>flows>flow# l2cp
+ETX-2I>config>flows>flow(mng_access_defa)# l2cp
 ```
 
 ### mac-learning
 ```text
 <CR>
 
-ETX-2I>config>flows>flow# mac-learning
+ETX-2I>config>flows>flow(mng_access_defa)# mac-learning
+```
+
+### mark *(not entered — parameterized context)*
+```text
+<all>                                      : 
+
+
+ETX-2I>config>flows>flow(mng_access_defa)# mark
 ```
 
 ### marking-profile
@@ -1828,108 +1847,6 @@ ETX-2I>config>flows>flow(mng_access_defa)# test
 
 
 ETX-2I>config>flows>flow(mng_access_defa)# vlan-tag
-```
-
-## configure flows flow NAME mark
-
-Level help (`?`):
-```text
-[no] classifier                              - 
- [no] cos-mapping                             - 
- [no] drop                                    - 
- [no] egress-port                             - 
-      ingress-color                           - 
- [no] ingress-port                            - 
- [no] l2cp                                    - 
- [no] mac-learning                            - Invoke MAC address learning for 
-                                                specific flow
- [no] mark                                    + 
- [no] marking-profile                         - 
- [no] multi-cos-counters                      - 
- [no] pm-collection                           - Enable Performance Management 
-                                                (PM)
- [no] policer                                 - 
- [no] rate-measure                            - Beginning the measurement of the
-                                                 port rate
-      rate-sampling-window                    - 
- [no] reverse-direction                       - 
- [no] service-name                            - 
- [no] shutdown                                - Enable/disable the flow
- [no] test                                    - This command puts the specified 
-                                                port into a loopback mode. The 
-                                                no form of the command disables 
-                                                the s
- [no] vlan-tag                                - 
-
- show rate
- show status
- show test
-```
-
-### inner-marking-profile
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# inner-marking-profile
-```
-
-### inner-p-bit
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# inner-p-bit
-```
-
-### inner-tag-ether-type
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# inner-tag-ether-type
-```
-
-### inner-vlan
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# inner-vlan
-```
-
-### ip
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# ip
-```
-
-### mac
-```text
-<CR>
-
-ETX-2I>config>flows>flow(mng_access_defa)# mac
-```
-
-### marking-profile
-```text
-<marking-profile-name>                     : [1..32 chars]
-
-
-ETX-2I>config>flows>flow(mng_access_defa)# marking-profile
-```
-
-### p-bit
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# p-bit
-```
-
-### tag-ether-type
-```text
-# cli error: Invalid Command
-ETX-2I>config>flows>flow(mng_access_defa)# tag-ether-type
-```
-
-### vlan
-```text
-<push>                                     : 
- <pop>                                      : 
-
-
-ETX-2I>config>flows>flow(mng_access_defa)# vlan
 ```
 
 ## configure management
@@ -2263,6 +2180,7 @@ Level help (`?`):
       snmp-engine-id                          - Configure SNMP Engine ID
  [no] target                                  + Configure SNMP target
  [no] target-params                           + Configure target parameters
+
       trap-sync-group                         + Configure trap synchronization 
                                                 group
  [no] user                                    + Configure SNMP user
@@ -2278,6 +2196,24 @@ Level help (`?`):
 
 
 ETX-2I>config>mngmnt>snmp# access-group
+
+auto-create probe 'access-group zzz-hrvst' refused.
+device response: access-group zzz-hrvst
+#                                                 ^
+# cli error: parameter or keyword missing or wrong
+ - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
+   auth-no-priv|auth-priv}
+ - no access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
+   auth-no-priv|auth-priv}
+ <group-name>                               : Group name [string]
+ <snmpv1>                                   : SNMPv1
+ <snmpv2c>                                  : SNMPv2c
+ <usm>                                      : USM
+ <no-auth-no-priv>                          : No Authentication/No Privacy
+ <auth-no-priv>                             : Authentication/No Privacy
+ <auth-priv>                                : Authentication/Privacy
+
+ETX-2I>config>mngmnt>snmp#
 ```
 
 ### bootstrap-notification
@@ -2316,6 +2252,17 @@ ETX-2I>config>mngmnt>snmp# notify
 
 
 ETX-2I>config>mngmnt>snmp# notify-filter
+
+auto-create probe 'notify-filter zzz-hrvst' refused.
+device response: notify-filter zzz-hrvst
+#                                                  ^
+# cli error: parameter or keyword missing or wrong
+ - notify-filter <name> <sub-tree-oid>
+ - no notify-filter <name> <sub-tree-oid>
+ <name>                                     : Notification group name [string]
+ <sub-tree-oid>                             : Sub-tree OID [1.3.6.1...]
+
+ETX-2I>config>mngmnt>snmp#
 ```
 
 ### notify-filter-profile *(parameterized — inner help harvested under "configure management snmp notify-filter-profile NAME")*
@@ -2400,6 +2347,17 @@ ETX-2I>config>mngmnt>snmp# user
 
 
 ETX-2I>config>mngmnt>snmp# view
+
+auto-create probe 'view zzz-hrvst' refused.
+device response: view zzz-hrvst
+#                                         ^
+# cli error: parameter or keyword missing or wrong
+ - view <view-name> <sub-tree-oid>
+ - no view <view-name> <sub-tree-oid>
+ <view-name>                                : View name [string]
+ <sub-tree-oid>                             : Subtree OID [1.3.6.1...]
+
+ETX-2I>config>mngmnt>snmp#
 ```
 
 ## configure management snmp notify NAME
@@ -2863,7 +2821,8 @@ ETX-2I>config>oam>cfm# alarm-type
 
 ### availability
 ```text
-delta-t
+<CR>
+ delta-t
  n
  forward-thr
  backward-thr
@@ -2873,7 +2832,8 @@ ETX-2I>config>oam>cfm# availability
 
 ### ltr
 ```text
-port-id-subtype
+<CR>
+ port-id-subtype
  up-mep-port
 
 ETX-2I>config>oam>cfm# ltr
@@ -3048,7 +3008,7 @@ ETX-2I>config>oam>cfm>md(1)>ma(1)# classification
 ETX-2I>config>oam>cfm>md(1)>ma(1)# interface-status-tlv
 ```
 
-### mep *(not entered — parameterized context)*
+### mep *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME")*
 ```text
 <mepid>                                    : Maintenance Endpoint Identifier 
                                               (MEP ID) [number]
@@ -3066,6 +3026,274 @@ ETX-2I>config>oam>cfm>md(1)>ma(1)# mep
 
 
 ETX-2I>config>oam>cfm>md(1)>ma(1)# name
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME
+
+Level help (`?`):
+```text
+[no] ais                                     - Configure AIS transmission 
+                                                parameters
+ [no] bind                                    - Bind MEP to lower layer
+ [no] ccm-initiate                            - Enable CCM message generation
+      ccm-priority                            - Configure priority for 
+                                                transmitted CCM and LTM
+ [no] classification                          - Configure classification
+      clear-statistics                        - Clear MEP statistics
+      client-md-level                         - Configure client MD level for 
+                                                AIS, LCK transmission
+      dest-addr-type                          - Configure CFM message 
+                                                destination address type
+      direction                               - Configure direction MEP faces on
+                                                 the bridge port
+ [no] flow                                    - Associate flow with MEP
+      forwarding-method                       - Configure forwarding mode
+      lbm                                     - Activate CFM loopback (LBM)
+      linktrace                               - Activate linktrace (LTM)
+ [no] mef46-ll                                - Enable/disable LLF
+ [no] queue                                   - Associate queue with MEP
+ [no] remote-mep                              - Configure remote MEP
+ [no] rmep-learning                           - Enable/disable dynamic RMEP 
+                                                learning
+ [no] service                                 + Configure MEP service
+ [no] shutdown                                - Disable MEP
+
+ show lbm-results                             - Display loopback status
+ show linktrace-results                       - Display linktrace status
+ show remote-mep-status                       - Display remote MEP status
+ show status                                  - Display MEP status
+```
+
+### ais
+```text
+<CR>
+ interval
+ priority
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# ais
+```
+
+### bind
+```text
+<ethernet>                                 : Ethernet
+ <logical-mac>                              : Logical MAC
+ <etp>                                      : ETP
+ <pcs>                                      : PCS
+ <bridge-port>                              : Bridge
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# bind
+```
+
+### ccm-initiate
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# ccm-initiate
+```
+
+### ccm-priority
+```text
+<priority>                                 : Priority for transmitted CCM and 
+                                              LTM [0..7]
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# ccm-priority
+```
+
+### classification
+```text
+<vlan>                                     : VLAN
+ <profile>                                  : Mapping profile
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# classification
+```
+
+### clear-dynamic-rmep
+```text
+# cli error: Invalid Command
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# clear-dynamic-rmep
+```
+
+### clear-statistics
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# clear-statistics
+```
+
+### client-md-level
+```text
+<md-level>                                 : Client MD level for AIS, LCK 
+                                              transmission [0..7]
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# client-md-level
+```
+
+### continuity-verification
+```text
+# cli error: Invalid Command
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# continuity-verification
+```
+
+### customer-tags-excluded
+```text
+# cli error: Invalid Command
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# customer-tags-excluded
+```
+
+### dest-addr-type
+```text
+<CR>
+ ccm
+ pm
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# dest-addr-type
+```
+
+### dest-mac-addr
+```text
+# cli error: Invalid Command
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# dest-mac-addr
+```
+
+### direction
+```text
+<up>                                       : Up
+ <down>                                     : Down
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# direction
+```
+
+### flow
+```text
+<uni-direction>                            : Unidirectional flows
+ <bi-direction>                             : Bidirectional flow
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# flow
+```
+
+### forwarding-method
+```text
+<e-line>                                   : E-Line
+ <e-lan>                                    : E-LAN
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# forwarding-method
+```
+
+### lbm
+```text
+<address>                                  : Unicast destination MAC address of
+                                               target MEP
+ <remote-mep>                               : MEP ID of target MEP
+ <multicast>                                : Multicast destination MAC address 
+                                              of target MEP
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# lbm
+```
+
+### linktrace
+```text
+<address>                                  : Unicast destination MAC address of
+                                               target MEP
+ <remote-mep>                               : MEP ID of target MEP
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# linktrace
+```
+
+### mef46-ll
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# mef46-ll
+```
+
+### queue
+```text
+<fixed>                                    : Fixed queue
+ <queue-mapping>                            : Mapping profile
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# queue
+```
+
+### remote-mep
+```text
+<remote-mep-id>                            : Remote MEP ID [n1..n2,n3]
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# remote-mep
+```
+
+### rmep-learning
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# rmep-learning
+```
+
+### service *(not entered — parameterized context)*
+```text
+<serviceid>                                : Service ID [number]
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# service
+```
+
+### show lbm-results
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# show lbm-results
+```
+
+### show linktrace-results
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# show linktrace-results
+```
+
+### show mef46-ll-status
+```text
+# cli error: Invalid Command
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# show mef46-ll-status
+```
+
+### show remote-mep-status
+```text
+<remote-mep-id>                            : 
+ <all>                                      : 
+
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# show remote-mep-status
+```
+
+### show statistics
+```text
+# cli error: Invalid Command
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# show statistics
+```
+
+### show status
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+ETX-2I>config>oam>cfm>md(1)>ma(1)>mep(1)# shutdown
 ```
 
 ## configure oam cfm measurement-bin-profile NAME
@@ -3122,6 +3350,11 @@ Level help (`?`):
 
 
 ETX-2I>config>oam>twamp# controller
+
+auto-create probe 'controller zzz-hrvst' refused.
+device response: controller zzz-hrvst
+# cli error: License required
+ETX-2I>config>oam>twamp#
 ```
 
 ### profile *(not entered — parameterized context)*
@@ -3130,6 +3363,11 @@ ETX-2I>config>oam>twamp# controller
 
 
 ETX-2I>config>oam>twamp# profile
+
+auto-create probe 'profile zzz-hrvst' refused.
+device response: profile zzz-hrvst
+# cli error: License required
+ETX-2I>config>oam>twamp#
 ```
 
 ### responder *(not entered — parameterized context)*
@@ -3139,6 +3377,18 @@ ETX-2I>config>oam>twamp# profile
 
 
 ETX-2I>config>oam>twamp# responder
+
+auto-create probe 'responder zzz-hrvst' refused.
+device response: responder zzz-hrvst
+#                                            ^
+# cli error: parameter or keyword missing or wrong
+ - responder <name> [<number>] light [l2-probe]
+ - no responder <name> [<number>]
+ <name>                                     : Assign a meaningful name to the 
+                                              responder [1..32 chars]
+ <number>                                   : The responder number [number]
+
+ETX-2I>config>oam>twamp#
 ```
 
 ## configure port
@@ -3245,7 +3495,7 @@ ETX-2I>config>port# int-ethernet
 ETX-2I>config>port# l2cp-profile
 ```
 
-### lag *(not entered — parameterized context)*
+### lag *(parameterized — inner help harvested under "configure port lag NAME")*
 ```text
 <port-number>                              : LAG port number [number] [1..4]
 
@@ -3354,6 +3604,7 @@ ETX-2I>config>port# show summary
  <fe-mux-eth-tdm>                           : 
  <fe-user-eth>                              : 
  <fe-mng-eth>                               : 
+
  <e1-i>                                     : 
  <t1-i>                                     : 
  <fe-e1>                                    : 
@@ -3836,7 +4087,8 @@ ETX-2I>config>port>eth(0/1)>classifier# delete
 
 ### drop
 ```text
-dst-mac
+<CR>
+ dst-mac
  src-mac
  ether-type
  <untagged>                                 : 
@@ -4017,6 +4269,166 @@ ETX-2I>config>port>l2cp-profile(mac2peer)# mac
 
 
 ETX-2I>config>port>l2cp-profile(mac2peer)# protocol
+```
+
+## configure port lag NAME
+
+Level help (`?`):
+```text
+admin-key                               - Defines LAG capability
+ [no] anchor-port                             - Anchor LAG port
+ [no] bind                                    - 
+      clear-lacp-statistics                   - 
+      clear-statistics                        - 
+      distribution-method                     - Defines load sharing between LAG
+                                                 ports
+ [no] lacp                                    - Enable the lacp protocol on the 
+                                                 LAG
+      mode                                    - Defines LAG mode
+ [no] name                                    - Assigns/removes a port name
+ [no] shutdown                                - shutdown the LAG
+
+ show bind
+ show lacp-statistics                         - Displays the LAG members 
+                                                 statistics
+ show lacp-status                             - Displays LAG members status
+ show statistics                              - Displays the LAG statistics
+ show status
+
+ETX-2I>config>port>lag(1)$
+```
+
+### admin-key
+```text
+<fast-ethernet>                            : Defines Fast Ethernet capability 
+                                              for the LAG
+ <giga-ethernet>                            : Defines Giga Ethernet capability 
+                                              for the LAG
+ <ten-giga-ethernet>                        : Defines 10 Giga Ethernet 
+                                              capability for the LAG
+ <hundred-giga-ethernet>                    : Defines 100 Giga Ethernet 
+                                              capability for the LAG
+
+
+ETX-2I>config>port>lag(1)$ admin-key
+```
+
+### anchor-port
+```text
+<ethernet>                                 : 
+
+
+ETX-2I>config>port>lag(1)$ anchor-port
+```
+
+### bind
+```text
+<ethernet>                                 : 
+
+
+ETX-2I>config>port>lag(1)$ bind
+```
+
+### clear-lacp-statistics
+```text
+<CR>
+
+ETX-2I>config>port>lag(1)$ clear-lacp-statistics
+```
+
+### clear-statistics
+```text
+<CR>
+
+ETX-2I>config>port>lag(1)$ clear-statistics
+```
+
+### distribution-method
+```text
+<one-to-one>                               : Distribution according to 
+                                              one-to-one algorithm
+
+
+ETX-2I>config>port>lag(1)$ distribution-method
+```
+
+### lacp
+```text
+<CR>
+ tx-activity
+ tx-speed
+ sys-priority
+
+ETX-2I>config>port>lag(1)$ lacp
+```
+
+### minimum-link-number
+```text
+# cli error: Invalid Command
+ETX-2I>config>port>lag(1)$ minimum-link-number
+```
+
+### mode
+```text
+<redundancy>                               : Defines redundancy mode
+ <load-balance>                             : Defines load balance mode
+
+
+ETX-2I>config>port>lag(1)$ mode
+```
+
+### name
+```text
+<string>                                   : Adds free text to assign a name to
+                                               the port [1..64 chars]
+
+
+ETX-2I>config>port>lag(1)$ name
+```
+
+### show bind
+```text
+<CR>
+
+ETX-2I>config>port>lag(1)$ show bind
+```
+
+### show lacp-statistics
+```text
+<ethernet>                                 : 
+
+
+ETX-2I>config>port>lag(1)$ show lacp-statistics
+```
+
+### show lacp-status
+```text
+<ethernet>                                 : 
+
+
+ETX-2I>config>port>lag(1)$ show lacp-status
+```
+
+### show statistics
+```text
+<running>                                  : Displays the running statistics
+
+
+ETX-2I>config>port>lag(1)$ show statistics
+```
+
+### show status
+```text
+<CR>
+
+ETX-2I>config>port>lag(1)$ show status
+```
+
+### shutdown
+```text
+<CR>
+
+ETX-2I>config>port>lag(1)$ shutdown
 ```
 
 ## configure port logical-mac NAME
@@ -4280,7 +4692,8 @@ ETX-2I>config>port>log-mac(3)>classifier# delete
 
 ### drop
 ```text
-dst-mac
+<CR>
+ dst-mac
  src-mac
  ether-type
  <untagged>                                 : 
@@ -4366,7 +4779,8 @@ ETX-2I>config>port>log-mac(3)>lldp# clear-statistics
 
 ### nearest-bridge-802.3
 ```text
-<mac-phy-configuration>                    : 
+<CR>
+ <mac-phy-configuration>                    : 
  <power-via-mdi>                            : 
  <max-frame-size>                           : 
 
@@ -4376,7 +4790,8 @@ ETX-2I>config>port>log-mac(3)>lldp# nearest-bridge-802.3
 
 ### nearest-bridge-basic-management
 ```text
-<port-description>                         : 
+<CR>
+ <port-description>                         : 
  <sys-name>                                 : 
  <sys-description>                          : 
  <sys-capabilities>                         : 
@@ -4619,6 +5034,18 @@ Level help (`?`):
 
 
 ETX-2I>config>pwe# pw
+
+auto-create tried indices [1, 2, 3, 4, 5, 6], all refused.
+last device response ('pw 6'): pw 6
+# cli error: PW creation failed: PW type must be configured.
+# cli error: Incorrect parameter value
+ETX-2I>config>pwe#
+next-arg help: <CR>
+ type
+ <psn>                                      : PSN type of the configured PW
+
+
+ETX-2I>config>pwe# pw 6
 ```
 
 ### show summary
@@ -4753,6 +5180,11 @@ ETX-2I>config>qos# shaper-profile
 
 
 ETX-2I>config>qos# wred-profile
+
+auto-create probe 'wred-profile zzz-hrvst' refused.
+device response: wred-profile zzz-hrvst
+# cli error: Entity cannot be added. Table entries have reached maximum
+ETX-2I>config>qos#
 ```
 
 ## configure qos color-map-profile NAME
@@ -4983,7 +5415,8 @@ bandwidth                               -
 
 ### bandwidth
 ```text
-cir
+<CR>
+ cir
  cbs
  eir
  ebs
@@ -5132,7 +5565,8 @@ bandwidth                               -
 
 ### bandwidth
 ```text
-cir
+<CR>
+ cir
  cbs
 
 ETX-2I>config>qos>shaper-profile(100M-Shaper)# bandwidth
@@ -5380,7 +5814,8 @@ ETX-2I>config>reporting# log-file-timestamp-type
 
 ### low-memory-alarm
 ```text
-clear-threshold
+<CR>
+ clear-threshold
  raise-threshold
  critical-raise-threshold
 
@@ -5389,7 +5824,8 @@ ETX-2I>config>reporting# low-memory-alarm
 
 ### mask-minimum-severity
 ```text
-log
+<CR>
+ log
  snmp-trap
  led
  popup
@@ -6091,7 +6527,8 @@ ETX-2I>config>reporting# show log-summary
 
 ### soaking-time
 ```text
-interval
+<CR>
+ interval
  clear
 
 ETX-2I>config>reporting# soaking-time
@@ -6252,6 +6689,18 @@ ETX-2I>config>router(1)# nslookup
 
 
 ETX-2I>config>router(1)# prefix-list
+
+auto-create probe 'prefix-list zzz-hrvst' refused.
+device response: prefix-list zzz-hrvst
+#                                              ^
+# cli error: parameter or keyword missing or wrong
+ - prefix-list <name> {ipv4|ipv6}
+ - no prefix-list <name>
+ <name>                                     : Set prefix-list policy profile 
+                                              name. Profile name shall be unique
+                                               in the system [1..252 chars]
+
+ETX-2I>config>router(1)#
 ```
 
 ### resequence
@@ -6775,7 +7224,8 @@ ETX-2I>config>router(1)>bgp(64515)>neighbor(10.10.10.1)# shutdown
 
 ### timers
 ```text
-keepalive
+<CR>
+ keepalive
  holdtime
 
 ETX-2I>config>router(1)>bgp(64515)>neighbor(10.10.10.1)# timers
@@ -7181,7 +7631,8 @@ ETX-2I>config>router(1)>nat# nat-inside-source-static-port
 
 ### nat-timeout
 ```text
-tcp
+<CR>
+ tcp
  udp
  others
 
@@ -8278,7 +8729,8 @@ ETX-2I>config>test>l3sat>peer-profile(1)# report-type
 
 ### scope
 ```text
-<configuration>                            : 
+<CR>
+ <configuration>                            : 
  <performance>                              : 
 
 
@@ -8471,7 +8923,7 @@ Level help (`?`):
 ETX-2I>config>test>rfc2544# profile-name
 ```
 
-### test *(not entered — parameterized context)*
+### test *(parameterized — inner help harvested under "configure test rfc2544 test NAME")*
 ```text
 <id>                                       : [number]
 
@@ -8515,7 +8967,8 @@ ETX-2I>config>test>rfc2544>profile-name(zzz-hrvst)$ frame-loss-tolerance
 
 ### frame-size
 ```text
-<64>                                       : 
+<CR>
+ <64>                                       : 
  <128>                                      : 
  <256>                                      : 
  <512>                                      : 
@@ -8592,6 +9045,113 @@ ETX-2I>config>test>rfc2544>profile-name(zzz-hrvst)$ throughput-measurement-accur
 
 
 ETX-2I>config>test>rfc2544>profile-name(zzz-hrvst)$ tlv-type
+```
+
+## configure test rfc2544 test NAME
+
+Level help (`?`):
+```text
+[no] activate                                - 
+ [no] associated-flow                         - Associate flow with test
+ [no] bind                                    - 
+      clear-reports                           - 
+      max-rate                                - 
+ [no] max-test-duration                       - Maximum duration of test
+      test-profile                            - 
+      type                                    - 
+
+ show attempt-lost-frames
+ show status
+ show summary
+
+ETX-2I>config>test>rfc2544>test(1)$
+```
+
+### activate
+```text
+<CR>
+ <date>                                     : 
+ <recurring>                                : 
+
+
+ETX-2I>config>test>rfc2544>test(1)$ activate
+```
+
+### associated-flow
+```text
+<name>                                     : [string]
+
+
+ETX-2I>config>test>rfc2544>test(1)$ associated-flow
+```
+
+### bind
+```text
+<oam-cfm>                                  : 
+
+
+ETX-2I>config>test>rfc2544>test(1)$ bind
+```
+
+### clear-reports
+```text
+<CR>
+
+ETX-2I>config>test>rfc2544>test(1)$ clear-reports
+```
+
+### max-test-duration
+```text
+<minutes>                                  : [2..2880]
+
+
+ETX-2I>config>test>rfc2544>test(1)$ max-test-duration
+```
+
+### show attempt-lost-frames
+```text
+<CR>
+
+ETX-2I>config>test>rfc2544>test(1)$ show attempt-lost-frames
+```
+
+### show report
+```text
+# cli error: Invalid Command
+ETX-2I>config>test>rfc2544>test(1)$ show report
+```
+
+### show status
+```text
+<CR>
+
+ETX-2I>config>test>rfc2544>test(1)$ show status
+```
+
+### show summary
+```text
+<CR>
+
+ETX-2I>config>test>rfc2544>test(1)$ show summary
+```
+
+### test-profile
+```text
+<name>                                     : [string]
+
+
+ETX-2I>config>test>rfc2544>test(1)$ test-profile
+```
+
+### type
+```text
+<CR>
+ <throughput>                               : 
+ <latency>                                  : 
+ <frame-loss>                               : 
+
+
+ETX-2I>config>test>rfc2544>test(1)$ type
 ```
 
 ## configure test y1564
@@ -8781,7 +9341,8 @@ ETX-2I>config>test>y1564>profile(zzz-hrvst)$ bandwidth-round-up
 
 ### burst-test
 ```text
-<cbs>                                      : 
+<CR>
+ <cbs>                                      : 
  <ebs>                                      : 
 
 
@@ -8903,7 +9464,8 @@ ETX-2I>config>test>y1564>profile(zzz-hrvst)# round-trip-thresholds
 
 ### scope
 ```text
-<configuration>                            : 
+<CR>
+ <configuration>                            : 
  <performance>                              : 
 
 

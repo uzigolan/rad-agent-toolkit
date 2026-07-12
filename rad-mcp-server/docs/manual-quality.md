@@ -9,14 +9,14 @@ RAG chunking. Companion to `docs/performance.md` (which covers ingestion
 
 ## Comparative verdict
 
-| | etx1p | secflow | etx2 |
-|---|---|---|---|
-| Source structure | Flat, per-topic chapters (22 TOC entries) | Same shape as etx1p (23 entries) | 5 giant "Parts," real topics nested 3-6 levels deep |
-| Out of the box | **Good immediately** — no fixes needed | **Good immediately** — no fixes needed | **Bad initially** — 1 cross-link hit, one 1,079-page unusable "chapter" |
-| Final chapters | 14 | 17 | 44 |
-| Avg file size | 65.4 KB | 59.2 KB | 51.9 KB |
-| Cross-link rows | 21 | 21 | 17 (3 topics genuinely absent — see below) |
-| Extraction (mojibake) | Clean | Clean | Clean |
+| | etx1p | secflow | etx2 | mp4100 |
+|---|---|---|---|---|
+| Source structure | Flat, per-topic chapters (22 TOC entries) | Same shape as etx1p (23 entries) | 5 giant "Parts," real topics nested 3-6 levels deep | Hybrid: topic chapters + one 259-page "Cards and Ports" holding 26 port types + module annexes (1,202 pages total) |
+| Out of the box | **Good immediately** — no fixes needed | **Good immediately** — no fixes needed | **Bad initially** — 1 cross-link hit, one 1,079-page unusable "chapter" | **Good immediately** — the etx2-built adaptive splitter fired automatically, zero code changes |
+| Final chapters | 14 | 17 | 44 | 38 |
+| Avg file size | 65.4 KB | 59.2 KB | 51.9 KB | 42.6 KB |
+| Cross-link rows | 21 | 21 | 17 (3 topics genuinely absent — see below) | 12 (matcher vocabulary gap for MP-specific areas — see below) |
+| Extraction (mojibake) | Clean | Clean | Clean | Clean |
 
 **etx1p and secflow were naturally excellent for lexical retrieval from the
 first ingest.** Their source PDFs already segment by topic at exactly the
@@ -70,6 +70,30 @@ carrier-Ethernet demarcation device with no IoT-gateway capability, unlike
 SecFlow, which explicitly targets industrial IoT (`sd-iot`, LoRaWAN,
 cellular). The manual correctly has nothing to link there; forcing a match
 would be the actual bug.
+
+## mp4100 — the first "next manual" (2026-07-12), checklist applied
+
+The Megaplex-4 manual (Mn 4.91, 1,202 pages) was the first ingest after the
+checklist below was written, and it validated the etx2 engineering: the
+adaptive recursive splitter **triggered on its own** for the 259-page "Cards
+and Ports" chapter, splitting it into 20 per-port-type files (T3, SDH/SONET,
+teleprotection, voice, VCG, …) with no code changes and no reprocessing.
+Checklist results: 38 chapters / 42.6 KB avg (inside the known range), zero
+mojibake, all page ranges contiguous.
+
+Two findings worth banking:
+
+1. **Cross-link vocabulary is ETX-shaped.** Only 12 rows matched because the
+   matcher's CLI-topic list was written for the ETX/SecFlow feature set. The
+   MP-4100's *own* headline areas — `cross-connect`, `pwe`, `slot`/`chassis`,
+   teleprotection — have rich manual chapters but no vocabulary entries, and
+   `configure crypto` exists in the device tree yet matched nothing. Unlike
+   the etx2/MQTT case this is NOT a legitimate absence — it's the first real
+   improvement item for the matcher: per-family topic vocabularies (or
+   deriving candidate topics from the family's harvested command tree).
+2. **A French quick-start chapter** (`02-guide-d-installation-rapide…`) rode
+   along from the bilingual PDF — harmless grep noise, but a reminder that
+   chapter lists aren't always monolingual.
 
 ## Lexical vs. true RAG
 

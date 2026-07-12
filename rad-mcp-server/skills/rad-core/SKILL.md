@@ -44,5 +44,9 @@ The plugin targets the full RAD portfolio; each family maps to a driver under
 - `etx2` — ETX-2 carrier-Ethernet demarcation family (ETX-203AX/205A/220A/
   ETX-2I), verified live on an ETX-2I unit. Same dialect, with family-specific
   quirks (no `show resources`, slot/port naming) — see `drivers/etx2.py`.
-- Planned: `etx1` (legacy ETX-1), `mp4100` (Megaplex-4100) — different CLI
-  dialects, own drivers and skills to come.
+- `mp4100` — Megaplex-4100 multiservice access nodes, verified live
+  (marks-mp4, Mn 4.91). Same shared dialect with a **candidate-DB config
+  model**: staged sequences must end with the device's `commit` global or
+  nothing applies — see `rad-cli-operations` and `drivers/mp4100.py`.
+- Planned: `etx1` (legacy ETX-1) — different (menu) CLI dialect, own driver
+  and skill to come.
