@@ -14,4 +14,14 @@ even with no MCP wired, and the MCP tools work without skills (but then
 nothing teaches the agent the safety rules — install both).
 
 Scripted (both at once): [`scripts/install/install-claude-code.ps1`](../../../scripts/install/install-claude-code.ps1).
-Quick combined verify: `/mcp` shows rad-mcp · `/rad-health <device>` runs.
+
+## Verify (both installs)
+
+| Check | How — in the Claude panel |
+|---|---|
+| MCP connected | type **`/mcp`** → rad-mcp listed as connected, with its tools (14 = stdio full set; 8 = read-only http) |
+| Skills loaded | say ***"rad agent, list the managed devices"*** — the skill must load by trigger (skills never appear in the `/` menu; they self-activate) |
+| Slash commands | type **`/rad`** → `/rad-health`, `/rad-backup`, … autocomplete; run `/rad-health <device>` |
+
+Sigils here: **`/` = slash commands and built-ins** (`/mcp`, `/rad-health`);
+skills have no sigil — they trigger on conversation content.

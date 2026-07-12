@@ -19,6 +19,17 @@
 independent; install both, plus the `AGENTS.md` backstop (skills.md).
 
 **Restart for this surface:** **fully quit and relaunch the app** (config + skills load at startup).
-Quick verify: Settings → **Plugins → MCPs** lists rad-mcp with an enabled toggle; **Plugins → Skills** lists the three rad skills; then a local Codex session: *\"rad agent, list the managed devices\"*.
 
 Scripted (both at once, Windows): [`scripts/install/install-codex.ps1`](../../../scripts/install/install-codex.ps1).
+
+## Verify (both installs)
+
+| Check | How — in the ChatGPT desktop app (Codex mode, NOT Work/chat) |
+|---|---|
+| MCP connected | **Settings → Plugins → MCPs** → rad-mcp with an enabled toggle (verified: toggles map to config.toml `enabled` flags); in-session **`/mcp`** also works |
+| Skills loaded | **Settings → Plugins → Skills** → the three rad skills; in-session **`/skills`** |
+| Round-trip | in a **local** Codex session: ***"rad agent, list the managed devices"*** — approve the tool prompt |
+
+Sigils here: **`/` = built-ins**, **`$` = explicit skill invocation**
+(`$rad-cli-operations`). Reminder: regular ChatGPT chat (Work mode) reads
+neither config.toml nor skills.

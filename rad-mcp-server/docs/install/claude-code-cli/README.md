@@ -17,4 +17,14 @@ lose the safety rules, skills without tools still answer syntax/manual
 questions.
 
 Scripted (both at once, Windows): [`scripts/install/install-claude-code.ps1`](../../../scripts/install/install-claude-code.ps1).
-Quick combined verify: `claude mcp list` shows rad-mcp · `/rad-health <device>` runs.
+
+## Verify (both installs)
+
+| Check | How |
+|---|---|
+| MCP connected | shell: **`claude mcp list`** → rad-mcp ✔ Connected; in-session: **`/mcp`** (14 tools = stdio; 8 = http) |
+| Skills loaded | say ***"rad agent, list the managed devices"*** — the skill must load by trigger (no menu lists skills; they self-activate) |
+| Slash commands | type **`/rad`** → the four `/rad-*` commands autocomplete; run `/rad-health <device>` |
+
+Sigils here: **`/` = slash commands and built-ins**; skills have no sigil —
+they trigger on conversation content.

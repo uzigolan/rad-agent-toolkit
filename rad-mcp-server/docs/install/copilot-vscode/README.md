@@ -15,4 +15,16 @@ The two installs are independent; install both. Verified live 2026-07-10
 skills fallback).
 
 Scripted (both at once): [`scripts/install/install-copilot-vscode.ps1`](../../../scripts/install/install-copilot-vscode.ps1).
-Quick combined verify: agent mode → tools picker shows rad-mcp · `/rad` autocompletes the skills.
+
+## Verify (both installs)
+
+| Check | How — Copilot Chat in **agent mode** (MCP is invisible in Ask/Edit) |
+|---|---|
+| MCP connected | Command Palette → **"MCP: List Servers"** → rad-mcp running; in chat, the **tools picker** (wrench icon) lists the rad-mcp tools |
+| Skills loaded | type **`/rad`** → `/rad-core`, `/rad-cli-operations`, `/rad-device-mng` autocomplete; **`/skills`** opens the skills menu |
+| Round-trip | say ***"rad agent, list the managed devices"*** |
+
+Sigils here — different from Claude: **`/` = skills and prompt files**,
+**`#` = attach files/context** (incl. `.instructions.md` in the fallback
+route), **`@` = chat participants** (not skills). Claude's `/rad-health`
+command format doesn't exist here.

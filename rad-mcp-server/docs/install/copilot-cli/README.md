@@ -53,3 +53,15 @@ cp -r rad-mcp-server/skills/rad-core rad-mcp-server/skills/rad-cli-operations ra
 Then `copilot` → `/mcp show` · `/skills list` · *"rad agent, list the
 managed devices"* → *"rad agent, add my device"* (six-field intake, file
 auto-created) → *"test connectivity to <name>"* (no restart needed).
+
+## Verify (both installs)
+
+| Check | How — inside a `copilot` session |
+|---|---|
+| MCP connected | **`/mcp show`** → rad-mcp listed and running (started at session launch) |
+| Skills loaded | **`/skills list`** → the three rad skills (loaded at startup — restart the session after changes) |
+| Round-trip | say ***"rad agent, list the managed devices"*** — first tool call prompts for permission; answer "yes, always" |
+
+Sigils here: **`/` = session commands** (`/mcp`, `/skills`); skills trigger
+on conversation content or by name. Non-interactive runs (`copilot -p`)
+need `--allow-tool 'rad-mcp(*)'`.

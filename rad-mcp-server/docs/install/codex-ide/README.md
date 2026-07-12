@@ -19,6 +19,17 @@
 independent; install both, plus the `AGENTS.md` backstop (skills.md).
 
 **Restart for this surface:** **reload the IDE window / restart the extension** (config + skills load at startup).
-Quick verify: `/mcp` and `/skills` in the Codex panel composer.
 
 Scripted (both at once, Windows): [`scripts/install/install-codex.ps1`](../../../scripts/install/install-codex.ps1).
+
+## Verify (both installs)
+
+| Check | How — in the Codex panel composer |
+|---|---|
+| MCP connected | type **`/mcp`** → rad-mcp listed (loads at startup — reload the window after config changes) |
+| Skills loaded | type **`/skills`** → the three rad skills |
+| Round-trip | say ***"rad agent, list the managed devices"*** — or force the skill explicitly: **`$rad-cli-operations`** |
+
+Sigils here: **`/` = built-ins** (`/mcp`, `/skills`), **`$` = explicit
+skill invocation** (`$rad-cli-operations`) — Codex's equivalent of
+Copilot's `/skill-name`.
