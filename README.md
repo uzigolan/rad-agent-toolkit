@@ -25,7 +25,6 @@ Megaplex-4100 verified live; the full RAD portfolio by design.
 - Claude Desktop — chat + Cowork
 - GitHub Copilot — VS Code (agent mode)
 - GitHub Copilot — CLI (Windows / Linux)
-- OpenAI Codex — Codex CLI
 - OpenAI Codex — Codex IDE extension (VS Code / JetBrains)
 - OpenAI Codex — Codex in the ChatGPT desktop app
 
@@ -145,13 +144,16 @@ README.md (this file)
 ├── rad-mcp-server/README.md ........... server overview + five operation categories
 │   ├── docs/CONCEPTS.md .......... ALL principles in one file — concepts entry point
 │   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
+│   │   │      (each target folder: README index + mcp.md + skills.md + samples)
 │   │   ├── docs/install/claude-code-vscode/
 │   │   ├── docs/install/claude-code-cli/
 │   │   ├── docs/install/claude-desktop/
 │   │   ├── docs/install/copilot-vscode/
 │   │   ├── docs/install/copilot-cli/ ─── incl. verified Linux quick start
-│   │   ├── docs/install/chatgpt-codex/
-│   │   └── docs/remote-server.md ...... host / join the shared HTTPS server
+│   │   ├── docs/install/codex-ide/
+│   │   ├── docs/install/codex-chatgpt-desktop/
+│   │   └── docs/connecting-remote-mcp.md . host / join a shared server (http)
+│   │   ├── docs/connecting-local-mcp.md .. same-machine wiring (stdio + http)
 │   ├── docs/architecture.md ........... canonical design (safety, knowledge layers, roadmap)
 │   │   ├── docs/performance.md ........ ingestion timing
 │   │   └── docs/manual-quality.md ..... per-family manual-ingestion quality

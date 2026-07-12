@@ -46,7 +46,7 @@ entry has two shapes — stdio = "how do I launch it" (client owns process),
 http = "where do I find it" (you run the server manually; the client can't
 start or stop it).
 → [INSTALL.md, Part 1](../INSTALL.md#choose-a-deployment-mode-first) ·
-[remote-server.md](remote-server.md)
+[connecting-remote-mcp.md](connecting-remote-mcp.md)
 
 ## 4. The safety model
 
@@ -160,11 +160,12 @@ status:
 | Claude Desktop | Desktop | ✅ | 1.20 | Claude Fable 5 | stdio MCP + uploaded skill zips in production use; config file proven stdio-only, 2026-07-10 |
 | GitHub Copilot — VS Code | IDE ext | ✅ | 0.41 | GPT-5.3-Codex | live session 2026-07-10: agent mode, MCP tools, skills from `.claude/skills/`. Second machine 2026-07-12 (VS Code 1.100): http client to a remote server + the older-VS-Code skills fallback — both worked |
 | GitHub Copilot — CLI (Linux) | CLI | ✅ | 1.0.70 | Claude Sonnet 4.6 | live session 2026-07-11 on Rocky 8.9: fresh-clone flow end to end — skill triggers, intake gate, inventory auto-create, restart-free credentials |
-| OpenAI Codex — ChatGPT desktop | Desktop | ✅ | 27.7 (engine 0.144.0-alpha.4) | GPT-5.6 Sol (session; config.toml default gpt-5.4, reasoning medium) | live session 2026-07-11: MCP tools via the shared http server; Plugins → MCPs UI honored `enabled` flags. **Caveat stands:** first session skipped the skill's execution gate (skill failed to load) — now backstopped by `~/.codex/AGENTS.md`, re-verified working |
+| Codex — ChatGPT desktop app | Desktop | ✅ | 27.7 (engine 0.144.0-alpha.4) | GPT-5.6 Sol (session; config.toml default gpt-5.4, reasoning medium) | live session 2026-07-11: MCP tools via the shared http server; Plugins → MCPs UI honored `enabled` flags. **Caveat stands:** first session skipped the skill's execution gate (skill failed to load) — now backstopped by `~/.codex/AGENTS.md`, re-verified working |
+| Codex — IDE extension | IDE ext | ⏳ | — | — | shares the verified config.toml; no dedicated session test yet |
 
 No **web** row by design: browser/cloud surfaces (ChatGPT web, Codex cloud,
 claude.ai) run outside your network and cannot reach an internal-only
-rad-mcp — see [remote-server.md](remote-server.md)'s cloud-clients note.
+rad-mcp — see [connecting-remote-mcp.md](connecting-remote-mcp.md)'s cloud-clients note.
 
 Versions and models matter here: the Codex gate failure was a *behavioral*
 issue, and behavior shifts across model/client updates — a ✅ is a statement
@@ -177,7 +178,7 @@ about the recorded combination, not the target forever.
 
 - [architecture.md](architecture.md) — the full design: stack, drivers,
   knowledge strategy, distribution roadmap.
-- [remote-server.md](remote-server.md) — hosting the shared server (mode 2).
+- [connecting-remote-mcp.md](connecting-remote-mcp.md) — hosting the shared server (mode 2).
 - [tests/README.md](../tests/README.md) — the knowledge-coverage eval
   harness; [tests/eval-report.md](../tests/eval-report.md) and
   [tests/RESULTS.md](../tests/RESULTS.md) — its findings.

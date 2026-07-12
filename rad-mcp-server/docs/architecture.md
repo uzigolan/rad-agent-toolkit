@@ -257,7 +257,7 @@ RAG adds the fuzzy one.
   serves https directly; internal-network hosting only. Together with local
   stdio this gives three deployment modes — local / host the shared server /
   connect to someone else's — spelled out in `INSTALL.md`. See
-  `docs/remote-server.md`.
+  `docs/connecting-remote-mcp.md`.
 - **Next:** publish the `rad-mcp` Python package internally → configs become
   `uvx rad-mcp` (self-contained installs); package an `.mcpb` Desktop
   Extension for one-click NOC installs; plugin marketplace moves from local

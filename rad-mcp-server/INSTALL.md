@@ -1,6 +1,6 @@
 # Installing rad-mcp
 
-One codebase, six agent targets. **Part 1** below explains the principles —
+One codebase, seven agent targets (six configuration units — the two Codex surfaces share one config). **Part 1** below explains the principles —
 true for every client. **Part 2** maps them to your specific target
 (full per-target guides in [docs/install/](docs/install/)). For all the
 project's principles beyond installation, see
@@ -14,7 +14,7 @@ project's principles beyond installation, see
 
 | Artifact | What it is | How it activates | Portability |
 |---|---|---|---|
-| **MCP server** (tools) | The *verbs* — executable device operations (`run_show`, `health_check`, `stage_config`, …) | Agent calls tools during a task; wired per client via an MCP config entry | Any MCP client — all six targets |
+| **MCP server** (tools) | The *verbs* — executable device operations (`run_show`, `health_check`, `stage_config`, …) | Agent calls tools during a task; wired per client via an MCP config entry | Any MCP client — all targets |
 | **Skills** | The *knowledge* — `rad-core` (safety rules), `rad-cli-operations` (CLI expertise + personas), `rad-device-mng` (inventory workflow) | Auto-loads when the conversation matches the skill description | Agent Skills open standard — Claude, Copilot, Codex, unmodified |
 | **Slash commands** | The *procedures* — `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual` | Only when explicitly typed | Claude Code only (elsewhere: ask in plain language) |
 
@@ -35,7 +35,7 @@ Copilot/Codex you get its effect by asking in plain language instead.
 | Mode | What runs where | Writes | Setup |
 |---|---|---|---|
 | **1. Local (stdio)** — the default | each client launches its own server process on your machine | ✅ staged commits | common setup + your target's guide |
-| **2. Shared server, hosted by you (HTTPS)** | you run one HTTP(S) server; colleagues connect by URL + bearer token | ❌ read-only, forced in code | common setup + [docs/remote-server.md](docs/remote-server.md) |
+| **2. Shared server, hosted by you (HTTPS)** | you run one HTTP(S) server; colleagues connect by URL + bearer token | ❌ read-only, forced in code | common setup + [docs/connecting-remote-mcp.md](docs/connecting-remote-mcp.md) |
 | **3. Client to someone else's server** | a colleague hosts mode 2; you just add a URL | ❌ read-only | no venv, no repo, no credentials — [see below](#connect-to-a-shared-remote-server-someone-else-is-hosting-rad-mcp) |
 
 **Mode 1 — Local (stdio).** The client spawns the server as its own child
@@ -77,7 +77,8 @@ An MCP entry has exactly two shapes:
   client owns the process (spawn, kill, restart). You never run the server.
 - **http — "where do I FIND it":** `url` + `Authorization` header. The
   server is started **manually by you** (terminal, task, or service — see
-  [docs/remote-server.md](docs/remote-server.md)), never by the client,
+  [docs/connecting-local-mcp.md](docs/connecting-local-mcp.md) /
+  [docs/connecting-remote-mcp.md](docs/connecting-remote-mcp.md)), never by the client,
   which cannot start/stop/restart it.
 
 In Claude Code's `.mcp.json`:
@@ -171,39 +172,32 @@ the `add_device` tool create it on first use. Then smoke-test one device:
 
 ## Connect to a shared remote server (someone else is hosting rad-mcp)
 
-You need three things from the host:
-
-1. **Network reach** — the server is internal-only (RAD network / VPN).
-2. The **URL**, e.g. `https://<host>:8080/mcp` (`http://` if the host runs
-   without TLS; a self-signed cert must be trusted by your client).
-3. A **bearer token** — your own, so it can be revoked independently.
-
-Then use the **http section of your target's guide** — every guide shows
-its client's exact http config. One exception worth knowing: **Claude
-Desktop** takes remote servers only via Customize → Connectors (an http
-entry in `claude_desktop_config.json` is silently ignored — stdio-only
-file, verified 2026-07-10).
-
-You get the read-only tools + `rad://` resources; config-change tools are
-never exposed remotely. Skills are a separate client-side install.
+Everything you need — hosting it, joining it, security model, TLS, the
+Desktop and cloud caveats — lives in
+**[docs/connecting-remote-mcp.md](docs/connecting-remote-mcp.md)**. Its
+same-machine sibling (stdio, or a shared localhost instance) is
+**[docs/connecting-local-mcp.md](docs/connecting-local-mcp.md)**. Short
+version: URL + your own bearer token + network reach; read-only tools;
+skills stay a client-side install.
 
 ---
 
 # Part 2 — Your target (per-client specifics)
 
-## The six targets
+## The targets
 
 Copilot and Codex adopted the Agent Skills standard, so the skills install
 everywhere unmodified — only the folder they load from differs.
 
 | Target | MCP tools | Skills | Slash commands | Verified live | Guide |
 |---|---|---|---|---|---|
-| Claude Code — VS Code extension | ✅ `.mcp.json` | ✅ plugin | ✅ `/rad-health`, … | ✅ daily driver (stdio + http, Windows) | [claude-code-vscode.md](docs/install/claude-code-vscode/) |
-| Claude Code — CLI | ✅ `claude mcp add -s user` (or plugin) | ✅ `~/.claude/skills/` | ✅ `~/.claude/commands/` | ✅ 2026-07-11 (Linux, user-home install) | [claude-code-cli.md](docs/install/claude-code-cli/) |
-| Claude Desktop — chat + Cowork | ✅ `claude_desktop_config.json` | ✅ zip upload | ❌ plain language | ✅ stdio + skills (config file proven stdio-only, 2026-07-10) | [claude-desktop.md](docs/install/claude-desktop/) |
-| GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode.md](docs/install/copilot-vscode/) |
-| GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli.md](docs/install/copilot-cli/) |
-| OpenAI Codex — CLI / IDE / desktop | ✅ `~/.codex/config.toml` | ⚠ `~/.agents/skills/` — loads unreliably; back rules up in `AGENTS.md` | `$skill-name` | ✅ 2026-07-11 (ChatGPT desktop, shared http; gate via `AGENTS.md` backstop — see guide's behavioral caveat) | [chatgpt-codex.md](docs/install/chatgpt-codex/) |
+| Claude Code — VS Code extension | ✅ [`.mcp.json`](docs/install/claude-code-vscode/mcp.md) | ✅ [plugin](docs/install/claude-code-vscode/skills.md) | ✅ `/rad-health`, … | ✅ daily driver (stdio + http, Windows) | [claude-code-vscode.md](docs/install/claude-code-vscode/) |
+| Claude Code — CLI | ✅ [`claude mcp add -s user`](docs/install/claude-code-cli/mcp.md) | ✅ [`~/.claude/skills/`](docs/install/claude-code-cli/skills.md) | ✅ `~/.claude/commands/` | ✅ 2026-07-11 (Linux, user-home install) | [claude-code-cli.md](docs/install/claude-code-cli/) |
+| Claude Desktop — chat + Cowork | ✅ [config file](docs/install/claude-desktop/mcp.md) | ✅ [zip upload](docs/install/claude-desktop/skills.md) | ❌ plain language | ✅ stdio + skills (config file proven stdio-only, 2026-07-10) | [claude-desktop.md](docs/install/claude-desktop/) |
+| GitHub Copilot — VS Code (agent mode) | ✅ [`.vscode/mcp.json`](docs/install/copilot-vscode/mcp.md) | ✅ [`.claude/skills/` read natively](docs/install/copilot-vscode/skills.md) | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode.md](docs/install/copilot-vscode/) |
+| GitHub Copilot — CLI | ✅ [`~/.copilot/mcp-config.json`](docs/install/copilot-cli/mcp.md) | ✅ [`copilot skill add`](docs/install/copilot-cli/skills.md) | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli.md](docs/install/copilot-cli/) |
+| OpenAI Codex — IDE extension | ✅ [`~/.codex/config.toml`](docs/install/codex-ide/mcp.md) (shared) | ⚠ [`~/.agents/skills/`](docs/install/codex-ide/skills.md) + `AGENTS.md` backstop | `$skill-name` | ⏳ shared config verified; no dedicated session test | [codex-ide/](docs/install/codex-ide/) |
+| OpenAI Codex — ChatGPT desktop app | ✅ [`~/.codex/config.toml`](docs/install/codex-chatgpt-desktop/mcp.md) (shared) | ⚠ [`~/.agents/skills/`](docs/install/codex-chatgpt-desktop/skills.md) + `AGENTS.md` backstop | `$skill-name` | ✅ 2026-07-11 (app 27.7, shared http; gate via `AGENTS.md` backstop) | [codex-chatgpt-desktop/](docs/install/codex-chatgpt-desktop/) |
 
 ## Scripted install (repo already cloned on this machine)
 
@@ -233,4 +227,3 @@ Target-specific tables live in each guide. Common to every surface:
 | Tool calls hang | Device unreachable — check SSH to the host in `inventory.yaml` |
 | Write tools missing | `RAD_MCP_READONLY=true`, or you're on the remote HTTP transport — both intentional guards |
 | Config edits not picked up | MCP config is read at client startup — fully restart the client/session (Desktop needs tray-Quit) |
-
