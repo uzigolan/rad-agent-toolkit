@@ -13,7 +13,7 @@ CLI installs typically live on Linux — all commands below are Linux shell.
 (On Windows the only change is the venv path: `.venv\Scripts\python.exe`
 instead of `.venv/bin/python`.)
 
-**Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
+**Prerequisite:** the [common setup](../../../INSTALL.md#common-setup-once-per-machine)
 — once per machine. Linux venv build:
 
 Examples assume the repo cloned at `$HOME/rad-agent-toolkit` — adjust if
@@ -57,7 +57,7 @@ commands in `~/.claude/commands/`.
 
 ## The other mode: http client (server runs manually, not by Claude)
 
-Works for a colleague's server ([remote-server.md](../remote-server.md)) or
+Works for a colleague's server ([remote-server.md](../../remote-server.md)) or
 one you host yourself — read-only tools, no venv needed on the client side.
 
 **Disable the previous config first** (one `rad-mcp` per scope; skip
@@ -84,5 +84,13 @@ stdio form from above. Verify after any switch: `claude mcp list`.
 
 ## Troubleshooting
 
-See [INSTALL.md → Troubleshooting](../../INSTALL.md#troubleshooting-all-targets)
+See [INSTALL.md → Troubleshooting](../../../INSTALL.md#troubleshooting-all-targets)
 (credentials, hangs, missing write tools).
+
+**http mode reminder:** an http entry never starts anything — the server must already be running as a separate process, started by you, even when it lives on the same machine as this client. Launch block: [remote-server.md](../../remote-server.md). Only stdio entries auto-start.
+
+## In this folder / pointers
+
+- No sample files — this target is command-driven (`claude mcp add`, `cp` to `~/.claude/`); the blocks above are the artifacts
+- Install script (Windows): [`scripts/install/install-claude-code.ps1`](../../../scripts/install/install-claude-code.ps1)
+- Skills + commands source: [`rad-mcp-server/skills/`](../../../skills/) · [`commands/`](../../../commands/)

@@ -9,7 +9,7 @@ intake gate, fresh-clone inventory flow, restart-free `.env` pickup.
 | Skills | ✅ native Agent Skills (same `SKILL.md` format, no translation) |
 | Slash commands | ✅ skills invocable by name; `/skills` to manage |
 
-**Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
+**Prerequisite:** the [common setup](../../../INSTALL.md#common-setup-once-per-machine)
 — once per machine.
 
 ## Linux quick start (complete, exactly as verified)
@@ -177,4 +177,12 @@ the read tools).
 | Everything gated | Copilot Business/Enterprise: org policy "MCP servers in Copilot" applies to the CLI too |
 | Tool calls silently skipped in `-p` mode | Non-interactive runs need `--allow-tool` / `--allow-all-tools` |
 
-Credentials / hangs: [INSTALL.md → Troubleshooting](../../INSTALL.md#troubleshooting-all-targets).
+Credentials / hangs: [INSTALL.md → Troubleshooting](../../../INSTALL.md#troubleshooting-all-targets).
+
+**http mode reminder:** an http entry never starts anything — the server must already be running as a separate process, started by you, even when it lives on the same machine as this client. Launch block: [remote-server.md](../../remote-server.md). Only stdio entries auto-start.
+
+## In this folder / pointers
+
+- [mcp-config.stdio.sample.json](mcp-config.stdio.sample.json) / [mcp-config.http.sample.json](mcp-config.http.sample.json) — merge into `~/.copilot/mcp-config.json`, fix paths
+- Install script (Windows): [`scripts/install/install-copilot-cli.ps1`](../../../scripts/install/install-copilot-cli.ps1); Linux flow is in this README
+- Skills source (no zips — folders only): [`rad-mcp-server/skills/`](../../../skills/)

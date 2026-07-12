@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "rad-mcp": {
+      "type": "stdio",
+      "command": "<repo>/rad-mcp-server/server/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "rad_mcp.server"
+      ],
+      "cwd": "<repo>/rad-mcp-server/server",
+      "env": {
+        "RAD_MCP_INVENTORY": "<repo>/rad-mcp-server/inventory.yaml"
+      }
+    }
+  }
+}

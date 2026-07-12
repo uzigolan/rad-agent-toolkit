@@ -158,7 +158,7 @@ status:
 | Claude Code — VS Code extension | IDE ext | ✅ | 1.128.0 | Claude Fable 5 (also Opus 4.x in earlier sessions) | daily development driver through 2026-07-11; both stdio and shared-http modes (Windows) |
 | Claude Code — CLI | CLI | ✅ | *to record* (`claude --version`) | *to record* | live session 2026-07-11 on Linux: user-home install (`claude mcp add -s user` + `~/.claude/skills` + `~/.claude/commands`) — the "any project" usage shape; rad-mcp connected from a non-repo folder |
 | Claude Desktop | Desktop | ✅ | 1.20 | Claude Fable 5 | stdio MCP + uploaded skill zips in production use; config file proven stdio-only, 2026-07-10 |
-| GitHub Copilot — VS Code | IDE ext | ✅ | 0.41 | GPT-5.3-Codex | live session 2026-07-10: agent mode, MCP tools, skills from `.claude/skills/` |
+| GitHub Copilot — VS Code | IDE ext | ✅ | 0.41 | GPT-5.3-Codex | live session 2026-07-10: agent mode, MCP tools, skills from `.claude/skills/`. Second machine 2026-07-12 (VS Code 1.100): http client to a remote server + the older-VS-Code skills fallback — both worked |
 | GitHub Copilot — CLI (Linux) | CLI | ✅ | 1.0.70 | Claude Sonnet 4.6 | live session 2026-07-11 on Rocky 8.9: fresh-clone flow end to end — skill triggers, intake gate, inventory auto-create, restart-free credentials |
 | OpenAI Codex — ChatGPT desktop | Desktop | ✅ | 27.7 (engine 0.144.0-alpha.4) | GPT-5.6 Sol (session; config.toml default gpt-5.4, reasoning medium) | live session 2026-07-11: MCP tools via the shared http server; Plugins → MCPs UI honored `enabled` flags. **Caveat stands:** first session skipped the skill's execution gate (skill failed to load) — now backstopped by `~/.codex/AGENTS.md`, re-verified working |
 

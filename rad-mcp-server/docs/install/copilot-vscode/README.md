@@ -6,7 +6,7 @@
 | Skills | ✅ native Agent Skills (same `SKILL.md` format, no translation) |
 | Slash commands | ✅ skills are invocable as `/rad-core`, `/rad-cli-operations`, `/rad-device-mng` (the Claude plugin's `/rad-health`-style commands are not read; see note below) |
 
-**Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
+**Prerequisite:** the [common setup](../../../INSTALL.md#common-setup-once-per-machine)
 (venv, `server\.env`, `inventory.yaml`, smoke test) — once per machine.
 
 Copilot adopted the open **Agent Skills** standard (GA Dec 2025), so the RAD
@@ -38,11 +38,11 @@ the server never starts; "MCP: Reset Trust" from the Command Palette clears
 the decision).
 
 > A Claude `.mcp.json` in the same workspace is fine — each client spawns
-> its own instance ([details](../../INSTALL.md#same-mcp-in-several-clients--several-separate-instances-mode-1)).
+> its own instance ([details](../../../INSTALL.md#same-mcp-in-several-clients--several-separate-instances-mode-1)).
 
 That's the **stdio shape** (Copilot launches the server). The **http shape**
 connects to a server you run manually — read-only
-([anatomy](../../INSTALL.md#config-anatomy-who-runs-the-server)):
+([anatomy](../../../INSTALL.md#config-anatomy-who-runs-the-server)):
 
 ```json
 {
@@ -64,6 +64,10 @@ Claude config — disable that setting. Restart the server ("MCP: List
 Servers" → Restart) or reload the window after the switch.
 
 ## 2. Skills
+
+Native Agent Skills needs a **Dec-2025+ Copilot Chat** (`chat.useAgentSkills`).
+On older VS Code (e.g. 1.100), use the field-tested
+[fallback via instructions files](fallback-older-vscode.md) instead.
 
 Pick one:
 
@@ -103,4 +107,13 @@ knowledge files next to its `SKILL.md`.
 | Everything gated/greyed out | Copilot Business/Enterprise: org policy "MCP servers in Copilot" must be enabled (an MCP-registry allowlist may also apply) |
 | Tools disappear on large setups | VS Code caps a chat request at **128 tools** total — deselect unused servers in the tools picker |
 
-Credentials / hangs: [INSTALL.md → Troubleshooting](../../INSTALL.md#troubleshooting-all-targets).
+Credentials / hangs: [INSTALL.md → Troubleshooting](../../../INSTALL.md#troubleshooting-all-targets).
+
+**http mode reminder:** an http entry never starts anything — the server must already be running as a separate process, started by you, even when it lives on the same machine as this client. Launch block: [remote-server.md](../../remote-server.md). Only stdio entries auto-start.
+
+## In this folder / pointers
+
+- [mcp.stdio.sample.json](mcp.stdio.sample.json) / [mcp.http.sample.json](mcp.http.sample.json) — copy into the workspace as `.vscode/mcp.json`, fix paths
+- [fallback-older-vscode.md](fallback-older-vscode.md) — skills via instructions files when Agent Skills isn't available (pre-Dec-2025 VS Code; field-tested 2026-07-12)
+- Install script: [`scripts/install/install-copilot-vscode.ps1`](../../../scripts/install/install-copilot-vscode.ps1)
+- Skills source (no zips — folders only): [`rad-mcp-server/skills/`](../../../skills/)

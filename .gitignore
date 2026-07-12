@@ -26,3 +26,7 @@ inventory_bck.yaml
 # Personal workspace MCP config (may hold a live bearer token) — ships via
 # docs/install examples instead
 .vscode/mcp.json
+
+# One-off proposal drafts at the repo root — personal working files
+/etx1p-l2tpv3-proposal.md
+/etx1p-l2tpv3-proposal.html

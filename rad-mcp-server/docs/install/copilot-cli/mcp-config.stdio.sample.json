@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "rad-mcp": {
+      "type": "local",
+      "command": "<repo>/rad-mcp-server/server/.venv/bin/python",
+      "args": [
+        "-m",
+        "rad_mcp.server"
+      ],
+      "env": {
+        "RAD_MCP_INVENTORY": "<repo>/rad-mcp-server/inventory.yaml"
+      },
+      "tools": [
+        "*"
+      ]
+    }
+  }
+}

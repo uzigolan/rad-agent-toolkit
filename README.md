@@ -145,12 +145,12 @@ README.md (this file)
 ├── rad-mcp-server/README.md ........... server overview + five operation categories
 │   ├── docs/CONCEPTS.md .......... ALL principles in one file — concepts entry point
 │   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
-│   │   ├── docs/install/claude-code-vscode.md
-│   │   ├── docs/install/claude-code-cli.md
-│   │   ├── docs/install/claude-desktop.md
-│   │   ├── docs/install/copilot-vscode.md
-│   │   ├── docs/install/copilot-cli.md ─── incl. verified Linux quick start
-│   │   ├── docs/install/chatgpt-codex.md
+│   │   ├── docs/install/claude-code-vscode/
+│   │   ├── docs/install/claude-code-cli/
+│   │   ├── docs/install/claude-desktop/
+│   │   ├── docs/install/copilot-vscode/
+│   │   ├── docs/install/copilot-cli/ ─── incl. verified Linux quick start
+│   │   ├── docs/install/chatgpt-codex/
 │   │   └── docs/remote-server.md ...... host / join the shared HTTPS server
 │   ├── docs/architecture.md ........... canonical design (safety, knowledge layers, roadmap)
 │   │   ├── docs/performance.md ........ ingestion timing

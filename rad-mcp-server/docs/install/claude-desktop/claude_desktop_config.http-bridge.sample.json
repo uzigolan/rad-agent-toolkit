@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "rad-mcp": {
+      "command": "<repo>/rad-mcp-server/server/.venv/Scripts/python.exe",
+      "args": ["<repo>/rad-mcp-server/scripts/desktop_http_bridge.py"],
+      "env": {
+        "RAD_MCP_URL": "http://127.0.0.1:8080/mcp",
+        "RAD_MCP_TOKEN": "<your-token>"
+      }
+    }
+  }
+}

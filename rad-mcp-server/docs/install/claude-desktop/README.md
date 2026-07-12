@@ -6,7 +6,7 @@
 | Skills | ✅ zip upload (Customize → Skills) |
 | Slash commands | ❌ — use plain language |
 
-**Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
+**Prerequisite:** the [common setup](../../../INSTALL.md#common-setup-once-per-machine)
 (venv, `server\.env`, `inventory.yaml`, smoke test) — once per machine.
 
 ## 1. MCP server
@@ -31,20 +31,26 @@ Note: no `cwd` key (Desktop doesn't support it) — all server paths (`.env`,
 backups, logs) are module-anchored, so this is safe, and Desktop shares the
 same backup archive and audit log as Claude Code.
 
-**The other mode — http client** (server runs manually in a terminal, not
-by Desktop; read-only). ⚠ **Desktop's config file is stdio-only** — a
-`"type": "http"` entry in `claude_desktop_config.json` is silently ignored
-(verified 2026-07-10: Desktop never attempts to start it; nothing in the
-logs). Remote servers are added through the **UI instead**: Customize →
-Connectors → add custom connector → URL (+ Authorization header if the
-dialog offers advanced settings; if it only supports OAuth, a bearer-token
-rad-mcp cannot be connected from Desktop — use stdio).
+**The other mode — http client** (joining a shared server; read-only, and
+the server must already be running — Desktop never starts http servers).
+⚠ **Desktop's config file is stdio-only** — a `"type": "http"` entry in
+`claude_desktop_config.json` is silently ignored (verified 2026-07-10:
+Desktop never attempts to start it; nothing in the logs). Two working
+routes:
 
-**Switching modes = disabling the previous config:** stdio lives in the
-config file, http lives in Connectors — make sure only ONE of the two
-exists (remove the `rad-mcp` config entry before adding the connector, or
-vice versa), then **fully restart via tray-quit** (the config file is read
-only at launch).
+- **Option A — Connectors UI:** Customize → Connectors → add custom
+  connector → URL (+ Authorization header if the dialog offers advanced
+  settings; if it only supports OAuth, use option B).
+- **Option B — the stdio→http bridge** (file-only, python-based; proxy
+  round-trip verified 2026-07-12): keep a stdio-shaped entry whose command
+  is [`scripts/desktop_http_bridge.py`](../../../scripts/desktop_http_bridge.py) —
+  Desktop spawns the bridge, the bridge connects onward with the bearer
+  header. Sample:
+  [claude_desktop_config.http-bridge.sample.json](claude_desktop_config.http-bridge.sample.json).
+
+**Switching modes = disabling the previous config:** one `rad-mcp` — remove
+the old entry/connector before adding the new one, then **fully restart via
+tray-quit** (the config file is read only at launch).
 
 ## 2. Fully restart Desktop
 
@@ -75,7 +81,7 @@ plain language only.
   tools don't appear in Cowork, run device operations from Desktop chat or
   Claude Code instead, or connect to a shared remote server: Customize →
   Connectors → add a custom/remote MCP server → URL + header
-  `Authorization: Bearer <token>` (see [remote-server.md](../remote-server.md)).
+  `Authorization: Bearer <token>` (see [remote-server.md](../../remote-server.md)).
 
 ## Troubleshooting
 
@@ -84,4 +90,13 @@ plain language only.
 | Server missing after config edit | You closed the window instead of tray-Quit; config is read only at launch. Logs: `%APPDATA%\Claude\logs\mcp*.log` |
 | Skill zip upload: "invalid character" | Zip built with `Compress-Archive` — rebuild with Python `zipfile` (forward-slash paths) |
 
-Credentials / hangs: [INSTALL.md → Troubleshooting](../../INSTALL.md#troubleshooting-all-targets).
+Credentials / hangs: [INSTALL.md → Troubleshooting](../../../INSTALL.md#troubleshooting-all-targets).
+
+**http mode reminder:** an http entry never starts anything — the server must already be running as a separate process, started by you, even when it lives on the same machine as this client. Launch block: [remote-server.md](../../remote-server.md). Only stdio entries auto-start.
+
+## In this folder / pointers
+
+- [claude_desktop_config.sample.json](claude_desktop_config.sample.json) — merge into `%APPDATA%\Claude\claude_desktop_config.json`, fix paths (stdio only — http entries are ignored by Desktop)
+- [claude_desktop_config.http-bridge.sample.json](claude_desktop_config.http-bridge.sample.json) - the stdio-to-http bridge entry (option B)
+- Skill zips to upload: [`dist/claude-desktop-skills/`](../../../dist/claude-desktop-skills/) (rebuild: `python scripts/build_desktop_skills.py`)
+- Install script: [`scripts/install/install-claude-desktop.ps1`](../../../scripts/install/install-claude-desktop.ps1)

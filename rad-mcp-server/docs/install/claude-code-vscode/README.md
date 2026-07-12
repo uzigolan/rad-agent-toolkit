@@ -6,7 +6,7 @@
 | Skills (rad-core, rad-cli-operations, rad-device-mng) | ✅ via plugin |
 | Slash commands | ✅ `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual` |
 
-**Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
+**Prerequisite:** the [common setup](../../../INSTALL.md#common-setup-once-per-machine)
 (venv, `server\.env`, `inventory.yaml`, smoke test) — once per machine.
 
 Two pieces: the MCP server (project `.mcp.json`) and the plugin
@@ -31,7 +31,7 @@ In the workspace root, create/merge `.mcp.json`:
 
 That's the **stdio shape** (Claude launches the server). The **http shape**
 connects to a server you run manually — read-only
-([anatomy](../../INSTALL.md#config-anatomy-who-runs-the-server)):
+([anatomy](../../../INSTALL.md#config-anatomy-who-runs-the-server)):
 
 ```json
 {
@@ -81,4 +81,12 @@ tools. Then try `/rad-health <device-name>`.
 |---|---|
 | Server missing in `/mcp` | Reload window; check Output panel → "Claude Code" channel for launch errors |
 
-Credentials / hangs / missing write tools: [INSTALL.md → Troubleshooting](../../INSTALL.md#troubleshooting-all-targets).
+Credentials / hangs / missing write tools: [INSTALL.md → Troubleshooting](../../../INSTALL.md#troubleshooting-all-targets).
+
+**http mode reminder:** an http entry never starts anything — the server must already be running as a separate process, started by you, even when it lives on the same machine as this client. Launch block: [remote-server.md](../../remote-server.md). Only stdio entries auto-start.
+
+## In this folder / pointers
+
+- [mcp.stdio.sample.json](mcp.stdio.sample.json) / [mcp.http.sample.json](mcp.http.sample.json) — copy into the workspace as `.mcp.json`, fix paths
+- Install script: [`scripts/install/install-claude-code.ps1`](../../../scripts/install/install-claude-code.ps1)
+- Skills + commands source: [`rad-mcp-server/skills/`](../../../skills/) · [`commands/`](../../../commands/) (plugin delivers both)

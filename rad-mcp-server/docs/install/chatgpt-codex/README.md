@@ -6,7 +6,7 @@
 | Skills | ✅ native Agent Skills via `.agents/skills/` |
 | Slash commands | `$skill-name` / `/skills` |
 
-**Prerequisite:** the [common setup](../../INSTALL.md#common-setup-once-per-machine)
+**Prerequisite:** the [common setup](../../../INSTALL.md#common-setup-once-per-machine)
 (venv, `server\.env`, `inventory.yaml`, smoke test) — once per machine.
 
 Codex adopted the open **Agent Skills** standard, so the RAD skills load
@@ -111,4 +111,13 @@ Codex approval prompts — expected, keep them.
 | Server times out on start | Raise `startup_timeout_sec` (default 10) |
 | Windows: server won't spawn | Native Windows Codex is still labeled experimental — use full paths (no `~`), or run under WSL2 (then use Linux-side paths for the venv) |
 
-Credentials / hangs: [INSTALL.md → Troubleshooting](../../INSTALL.md#troubleshooting-all-targets).
+Credentials / hangs: [INSTALL.md → Troubleshooting](../../../INSTALL.md#troubleshooting-all-targets).
+
+**http mode reminder:** an http entry never starts anything — the server must already be running as a separate process, started by you, even when it lives on the same machine as this client. Launch block: [remote-server.md](../../remote-server.md). Only stdio entries auto-start.
+
+## In this folder / pointers
+
+- [config.sample.toml](config.sample.toml) — append to `~/.codex/config.toml`, fix paths (both modes included, one disabled)
+- Install script (Windows): [`scripts/install/install-codex.ps1`](../../../scripts/install/install-codex.ps1)
+- Skills source: copy [`rad-mcp-server/skills/`](../../../skills/) folders to `~/.agents/skills/`
+- Behavioral backstop: put the device-confirmation rule in `~/.codex/AGENTS.md` (see caveat section above)

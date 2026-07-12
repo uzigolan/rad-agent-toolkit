@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "rad-mcp": {
+      "type": "http",
+      "url": "https://<host>:8080/mcp",
+      "headers": {
+        "Authorization": "Bearer <your-token>"
+      }
+    }
+  }
+}
