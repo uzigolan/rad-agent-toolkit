@@ -1,7 +1,7 @@
 <#
-(Re)start the rad-mcp server over HTTP (manual launch — this window IS the
-server; closing it stops it). If a server is already listening on the chosen
-port, it is stopped first. This does NOT configure any client; run the
+(Re)start the rad-mcp server over HTTP/HTTPS (manual launch — this window IS
+the server; closing it stops it). If a server is already listening on the
+chosen port, it is stopped first. This does NOT configure any client; run the
 matching install-*.ps1 in http mode for that.
 
   .\install-and-restart-mcp-server.ps1                            # interactive prompts
@@ -11,6 +11,10 @@ matching install-*.ps1 in http mode for that.
 At least one token is required (http refuses to start unauthenticated).
   -ReadToken  -> RAD_MCP_TOKENS        (read-only clients)
   -WriteToken -> RAD_MCP_WRITE_TOKENS  (read-write clients: manage devices + config)
+
+TLS NOTE: Claude Desktop (and most hosted MCP clients) only connect to HTTPS
+endpoints. Provide -TlsCert + -TlsKey (PEM files) or answer the interactive
+prompt. Without TLS the server runs plain HTTP — only local stdio clients work.
 #>
 param(
     [string]$BindHost,
@@ -24,6 +28,25 @@ param(
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 Assert-CommonSetup
 
+# Transport selection
+Write-Host ""
+Write-Host "Select transport:"
+Write-Host "  1) stdio  - run locally in stdio mode (no network; a client connects via command/args)"
+Write-Host "  2) http   - shared HTTP/HTTPS network server (clients connect by URL + bearer token)"
+$transAns = Read-Host "Choice [2]"
+
+if ($transAns -match '^1$|^stdio') {
+    $env:RAD_MCP_TRANSPORT = 'stdio'
+    $env:RAD_MCP_INVENTORY = $Inventory
+    Write-Host ""
+    Write-Host "Starting rad-mcp in stdio mode  (Ctrl-C to stop)"
+    Push-Location (Join-Path $RadRoot 'server')
+    try { & $VenvPython -m rad_mcp.server }
+    finally { Pop-Location }
+    exit
+}
+
+# --- HTTP/HTTPS mode ---
 # Tokens persist across restarts in this gitignored file so a restart reuses the
 # same values (no need to reconfigure clients). Delete it or pass -NewTokens to
 # regenerate.
@@ -106,6 +129,122 @@ if (-not $fromStore -and ($WriteToken -or $ReadToken)) {
     Write-Host ""
 }
 
+# TLS — prompt interactively when not supplied as flags.
+# Required for Claude Desktop and other HTTPS-only clients.
+if (-not $TlsCert -and -not $TlsKey) {
+    $tlsDir  = Join-Path $RadRoot 'server\tls'
+    $defaultCert = Join-Path $tlsDir 'rad-mcp.crt'
+    $defaultKey  = Join-Path $tlsDir 'rad-mcp.key'
+    $certExists  = Test-Path $defaultCert
+    $keyExists   = Test-Path $defaultKey
+
+    Write-Host ""
+    Write-Host "TLS configuration (required for Claude Desktop and other HTTPS-only clients):"
+    if ($certExists -and $keyExists) {
+        Write-Host "  Found existing cert from previous run: $defaultCert"
+        Write-Host "  1) No TLS       - plain HTTP (delete the old cert); only local/stdio clients will connect"
+        Write-Host "  2) Reuse cert   - HTTPS; use the existing certificate"
+        Write-Host "  3) Self-signed  - HTTPS; generate a new cert + key (replaces the old one)"
+        Write-Host "  4) Imported     - HTTPS; provide paths to different PEM cert + key files"
+        $tlsAns = Read-Host "Choice [2]"
+        if ($tlsAns -match '^1$|^no') {
+            Write-Host "  Deleting old certificate..."
+            Remove-Item -Force -ErrorAction SilentlyContinue $defaultCert, $defaultKey
+            $TlsCert = ''; $TlsKey = ''
+        } elseif ($tlsAns -match '^2$|^reuse') {
+            $TlsCert = $defaultCert
+            $TlsKey = $defaultKey
+        } elseif ($tlsAns -match '^3$|^self') {
+            $TlsCert = $defaultCert
+            $TlsKey = $defaultKey
+            Write-Host "  Generating self-signed certificate (10 years) ..."
+            $pyScript = @'
+import sys, datetime, ipaddress, pathlib
+from cryptography import x509
+from cryptography.x509.oid import NameOID
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+cert_path, key_path, bind_host = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3]
+key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, u"rad-mcp")])
+now = datetime.datetime.now(datetime.timezone.utc)
+sans = [x509.IPAddress(ipaddress.IPv4Address("127.0.0.1")), x509.DNSName("localhost")]
+if bind_host not in ("127.0.0.1", "0.0.0.0", "localhost", ""):
+    try: sans.append(x509.IPAddress(ipaddress.IPv4Address(bind_host)))
+    except ValueError: sans.append(x509.DNSName(bind_host))
+cert = (x509.CertificateBuilder()
+    .subject_name(name).issuer_name(name).public_key(key.public_key())
+    .serial_number(x509.random_serial_number())
+    .not_valid_before(now).not_valid_after(now + datetime.timedelta(days=3650))
+    .add_extension(x509.SubjectAlternativeName(sans), critical=False)
+    .sign(key, hashes.SHA256()))
+cert_path.write_bytes(cert.public_bytes(serialization.Encoding.PEM))
+key_path.write_bytes(key.private_bytes(serialization.Encoding.PEM,
+    serialization.PrivateFormat.TraditionalOpenSSL, serialization.NoEncryption()))
+print(f"  cert -> {cert_path}")
+print(f"  key  -> {key_path}")
+'@
+            New-Item -ItemType Directory -Force $tlsDir | Out-Null
+            $tmpPy = [System.IO.Path]::GetTempFileName() + '.py'
+            try {
+                [System.IO.File]::WriteAllText($tmpPy, $pyScript)
+                & $VenvPython $tmpPy $TlsCert $TlsKey $BindHost
+                if ($LASTEXITCODE -ne 0) { throw "Self-signed certificate generation failed." }
+            } finally { Remove-Item -ErrorAction SilentlyContinue $tmpPy }
+            Write-Host "  NOTE: clients must trust or skip-verify this self-signed cert."
+        } elseif ($tlsAns -match '^4$|^imp') {
+            $TlsCert = Read-Host "Path to TLS certificate PEM"
+            $TlsKey  = Read-Host "Path to TLS private key PEM"
+        }
+    } else {
+        Write-Host "  1) No TLS       - plain HTTP; only local/stdio clients will connect"
+        Write-Host "  2) Self-signed  - HTTPS; generate a new cert + key automatically (fastest)"
+        Write-Host "  3) Imported     - HTTPS; provide paths to existing PEM cert + key files"
+        $tlsAns = Read-Host "Choice [1]"
+        if ($tlsAns -match '^2$|^self') {
+            New-Item -ItemType Directory -Force $tlsDir | Out-Null
+            $TlsCert = $defaultCert
+            $TlsKey  = $defaultKey
+            Write-Host "  Generating self-signed certificate (10 years) ..."
+            $pyScript = @'
+import sys, datetime, ipaddress, pathlib
+from cryptography import x509
+from cryptography.x509.oid import NameOID
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+cert_path, key_path, bind_host = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3]
+key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, u"rad-mcp")])
+now = datetime.datetime.now(datetime.timezone.utc)
+sans = [x509.IPAddress(ipaddress.IPv4Address("127.0.0.1")), x509.DNSName("localhost")]
+if bind_host not in ("127.0.0.1", "0.0.0.0", "localhost", ""):
+    try: sans.append(x509.IPAddress(ipaddress.IPv4Address(bind_host)))
+    except ValueError: sans.append(x509.DNSName(bind_host))
+cert = (x509.CertificateBuilder()
+    .subject_name(name).issuer_name(name).public_key(key.public_key())
+    .serial_number(x509.random_serial_number())
+    .not_valid_before(now).not_valid_after(now + datetime.timedelta(days=3650))
+    .add_extension(x509.SubjectAlternativeName(sans), critical=False)
+    .sign(key, hashes.SHA256()))
+cert_path.write_bytes(cert.public_bytes(serialization.Encoding.PEM))
+key_path.write_bytes(key.private_bytes(serialization.Encoding.PEM,
+    serialization.PrivateFormat.TraditionalOpenSSL, serialization.NoEncryption()))
+print(f"  cert -> {cert_path}")
+print(f"  key  -> {key_path}")
+'@
+            $tmpPy = [System.IO.Path]::GetTempFileName() + '.py'
+            try {
+                [System.IO.File]::WriteAllText($tmpPy, $pyScript)
+                & $VenvPython $tmpPy $TlsCert $TlsKey $BindHost
+                if ($LASTEXITCODE -ne 0) { throw "Self-signed certificate generation failed." }
+            } finally { Remove-Item -ErrorAction SilentlyContinue $tmpPy }
+            Write-Host "  NOTE: clients must trust or skip-verify this self-signed cert."
+        } elseif ($tlsAns -match '^3$|^imp') {
+            $TlsCert = Read-Host "Path to TLS certificate PEM"
+            $TlsKey  = Read-Host "Path to TLS private key PEM"
+        }
+    }
+}
 # TLS is all-or-nothing (the server also enforces this).
 if (($TlsCert -or $TlsKey) -and -not ($TlsCert -and $TlsKey)) {
     throw "-TlsCert and -TlsKey must be given together."
@@ -117,8 +256,8 @@ $env:RAD_MCP_PORT      = "$Port"
 $env:RAD_MCP_INVENTORY = $Inventory
 if ($ReadToken)  { $env:RAD_MCP_TOKENS       = $ReadToken }
 if ($WriteToken) { $env:RAD_MCP_WRITE_TOKENS = $WriteToken }
-if ($TlsCert)    { $env:RAD_MCP_TLS_CERT     = $TlsCert }
-if ($TlsKey)     { $env:RAD_MCP_TLS_KEY      = $TlsKey }
+if ($TlsCert)    { $env:RAD_MCP_TLS_CERT     = $TlsCert } else { Remove-Item Env:RAD_MCP_TLS_CERT -ErrorAction SilentlyContinue }
+if ($TlsKey)     { $env:RAD_MCP_TLS_KEY      = $TlsKey }   else { Remove-Item Env:RAD_MCP_TLS_KEY -ErrorAction SilentlyContinue }
 
 # Restart: if a server is already listening on this port, stop it first.
 try {
@@ -133,7 +272,15 @@ try {
 } catch { }
 
 $scheme = if ($TlsCert) { "https" } else { "http" }
+if ($WriteToken) { Write-Host "  read-write token (RAD_MCP_WRITE_TOKENS): $WriteToken" }
+if ($ReadToken)  { Write-Host "  read-only  token (RAD_MCP_TOKENS):        $ReadToken" }
+if ($TlsCert) {
+    Write-Host "  TLS cert: $TlsCert"
+    Write-Host "  TLS key:  $TlsKey"
+    Write-Host "  (FastMCP logs 'transport http' - transport name, not the scheme; Uvicorn confirms https://)"
+}
 Write-Host "Starting rad-mcp on ${scheme}://${BindHost}:${Port}/mcp  (Ctrl-C to stop)"
 if ($BindHost -ne '127.0.0.1') { Write-Host "Reachable on the LAN - internal networks only, never a public interface." }
-Set-Location (Join-Path $RadRoot 'server')
-& $VenvPython -m rad_mcp.server
+Push-Location (Join-Path $RadRoot 'server')
+try { & $VenvPython -m rad_mcp.server }
+finally { Pop-Location }

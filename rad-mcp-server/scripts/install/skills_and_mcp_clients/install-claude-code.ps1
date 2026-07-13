@@ -2,7 +2,7 @@
 Install rad-mcp (MCP + skills + slash commands) for Claude Code (CLI and the
 VS Code extension — both read the same plugin/config).
 
-  .\install-claude-code.ps1                                   # plugin + stdio (default)
+  .\install-claude-code.ps1                                   # interactive prompts
   .\install-claude-code.ps1 -Http [-Url <url>] -Token <token> # http client
 
 Default mode uses the plugin system (`claude` CLI must be on PATH): the
@@ -21,7 +21,17 @@ if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
     throw "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)"
 }
 
-if ($Http) {
+if (-not ($Http -or $Url -or $Token)) {
+    # Interactive transport prompt when no flags given
+    $transport = Invoke-TransportPrompt
+    $Http = ($transport.Mode -eq 'http')
+    if ($Http) {
+        $Url = $transport.Url
+        $Token = $transport.Token
+    }
+}
+
+if ($Http -or $Url -or $Token) {
     $u, $t = Resolve-HttpArgs $Url $Token
     claude mcp remove rad-mcp 2>$null
     claude mcp add --transport http rad-mcp $u --header "Authorization: Bearer $t"

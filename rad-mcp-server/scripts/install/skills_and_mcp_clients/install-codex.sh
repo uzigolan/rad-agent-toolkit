@@ -29,6 +29,14 @@ if [ -f "$CFG_PATH" ] && grep -q '\[mcp_servers\.rad-mcp\]' "$CFG_PATH"; then
     exit 1
 fi
 
+# Backup before modifying
+if [ -f "$CFG_PATH" ]; then
+    ts=$(date +%Y%m%d-%H%M%S)
+    backup="$CFG_PATH.bak.$ts"
+    cp "$CFG_PATH" "$backup"
+    echo "  backup -> $backup"
+fi
+
 prompt_transport
 
 if [ "$MODE" = http ]; then

@@ -12,7 +12,7 @@ machine. Principles (stdio vs http, who-starts-the-server, artifact kinds):
 |---|---|---|
 | [Claude Code](#claude-code--cli--vs-code-extension) (CLI + VS Code ext) | `install-claude-code.ps1` / `.sh` | plugin/stdio (default), `-Http -Token <t>` |
 | [Claude Desktop](#claude-desktop--chat--cowork) | `install-claude-desktop.ps1` / `.sh` | stdio only; zip upload stays manual |
-| [Copilot VS Code](#github-copilot--vs-code-agent-mode) | `install-copilot-vscode.ps1 [-Workspace <dir>]` / `.sh` | stdio (default), `-Http -Token <t>` |
+| [Copilot VS Code](#github-copilot--vs-code-agent-mode) | `install-copilot-vscode.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Copilot CLI](#github-copilot--cli) | `install-copilot-cli.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Codex](#openai-codex--ide-extension--chatgpt-desktop-app) (IDE + ChatGPT desktop) | `install-codex.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 
@@ -20,6 +20,10 @@ machine. Principles (stdio vs http, who-starts-the-server, artifact kinds):
 `-Url`) and requires a server you run yourself — see
 [`../mcp_server/`](../mcp_server/README.md). **http entries never start a
 server and the http toolset is read-only**; only stdio entries auto-start.
+For Copilot specifically: running the MCP listener process is separate from
+Copilot's MCP UI actions. `MCP: List Servers` -> Start/Restart manages only
+the Copilot-side server lifecycle/connection and does not start or restart
+an external HTTP listener process.
 Switching modes = replacing the previous rad-mcp entry, then doing the
 client's restart step.
 
@@ -59,11 +63,8 @@ devices"* triggers the skill. Launch errors (extension): Output panel →
 (Windows) / `~/Library/Application Support/Claude/claude_desktop_config.json`
 (macOS), root key `mcpServers`, **no `cwd` key** (unsupported — safe, server
 paths are module-anchored). ⚠ A `"type": "http"` entry is **silently
-ignored** (verified 2026-07-10). To join a shared server: the Connectors UI
-(Customize → Connectors), or the **stdio→http bridge** — a stdio entry whose
-command runs
-[`scripts/desktop_http_bridge.py`](../../desktop_http_bridge.py) with the
-URL + bearer token as args (verified 2026-07-12).
+ignored** (verified 2026-07-10). For this toolkit, Claude Desktop is
+**local stdio only** for `rad-mcp`.
 
 **Skills (zip upload, the one manual-refresh target):** sidebar Customize →
 Skills → upload the three zips from `dist/claude-desktop-skills/`. Build
@@ -106,6 +107,11 @@ caps a chat request at **128 tools** (deselect unused servers); invalid
 skill frontmatter fails **silently** (`name` lowercase and matching the
 folder).
 
+**Important (http mode):** you must start the MCP listener yourself (for
+example via `scripts/install/mcp_server/install-and-restart-mcp-server.ps1`
+or `.sh`). Copilot's Start/Restart action does not launch that listener; it
+only controls Copilot's local MCP runtime/connection state.
+
 ## GitHub Copilot — CLI
 
 **Config:** `~/.copilot/mcp-config.json` — root key **is** `mcpServers`,
@@ -127,6 +133,10 @@ running; `/skills list` → the three skills; *"rad agent, list the managed
 devices"* — answer the first tool-permission prompt "yes, always".
 Non-interactive runs (`copilot -p`) need `--allow-tool 'rad-mcp(*)'`.
 (Full fresh-clone flow verified 2026-07-11 on Rocky 8.9.)
+
+**Important (http mode):** the listener process is external to Copilot CLI.
+Start it separately (see [`../mcp_server/`](../mcp_server/README.md));
+Copilot commands do not start that listener for you.
 
 ## OpenAI Codex — IDE extension + ChatGPT desktop app
 

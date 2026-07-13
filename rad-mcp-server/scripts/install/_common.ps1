@@ -12,6 +12,7 @@ $script:SkillNames = @('rad-core', 'rad-cli-operations', 'rad-device-mng')
 
 # First interpreter that is Python >= 3.10. Returns the command or $null.
 function Get-BestPython {
+    # Prefer explicit python* commands first (works on all platforms).
     foreach ($c in @('python3.13', 'python3.12', 'python3.11', 'python3.10', 'python', 'python3')) {
         $cmd = Get-Command $c -ErrorAction SilentlyContinue
         if (-not $cmd) { continue }
@@ -20,6 +21,23 @@ function Get-BestPython {
             if ($LASTEXITCODE -eq 0) { return $c }
         } catch { }
     }
+
+    # Windows fallback: discover interpreter via the Python launcher (py).
+    $pyLauncher = Get-Command py -ErrorAction SilentlyContinue
+    if ($pyLauncher) {
+        foreach ($sel in @('-3.13', '-3.12', '-3.11', '-3.10', '-3')) {
+            try {
+                & py $sel -c 'import sys; raise SystemExit(0 if sys.version_info[:2] >= (3,10) else 1)' 2>$null
+                if ($LASTEXITCODE -ne 0) { continue }
+                $exeOut = & py $sel -c 'import sys; print(sys.executable)' 2>$null
+                if ($LASTEXITCODE -eq 0 -and $exeOut) {
+                    $exe = ($exeOut -split "`r?`n" | Select-Object -First 1).ToString().Trim()
+                    if ($exe) { return $exe }
+                }
+            } catch { }
+        }
+    }
+
     return $null
 }
 
@@ -99,6 +117,62 @@ function Set-JsonMcpEntry {
     $json = $cfg | ConvertTo-Json -Depth 10
     [System.IO.File]::WriteAllText($Path, $json + "`n")
     Write-Host "  mcp   -> $Path"
+}
+
+function Backup-JsonConfig {
+    # Copy <Path> to <Path>.bak.<yyyyMMdd-HHmmss> before overwriting, if it exists.
+    param([Parameter(Mandatory)][string]$Path)
+    if (-not (Test-Path $Path)) { return }
+    $ts = (Get-Date -Format 'yyyyMMdd-HHmmss')
+    $backup = "$Path.bak.$ts"
+    Copy-Item $Path $backup
+    Write-Host "  backup -> $backup"
+}
+
+function Invoke-TransportPrompt {
+    # Interactive stdio/http transport picker.  Returns a hashtable:
+    #   @{ Mode='stdio'|'http'; Url='...'; Token='...' }
+    Write-Host ""
+    Write-Host "Select MCP transport:"
+    Write-Host "  1) stdio  - local; the client launches the server via command/args (full toolset)"
+    Write-Host "  2) http   - remote; connect to an HTTPS server by URL + bearer token (read-only)"
+    $ans = Read-Host "Choice [1]"
+    $mode = if ($ans -match '^2$|^http$|^HTTP$|^Http$') { 'http' } else { 'stdio' }
+    if ($mode -eq 'http') {
+        Write-Host "  Note: Claude Desktop only accepts HTTPS URLs for remote MCP servers."
+        Write-Host "        HTTP URLs work with other clients; proceed at your own risk."
+        do {
+            $url = Read-Host "Server URL [https://127.0.0.1:8080/mcp]"
+            if (-not $url) { $url = 'https://127.0.0.1:8080/mcp' }
+            if ($url -notmatch '^https?://') {
+                Write-Host "  ERROR: URL must start with http:// or https://. Please re-enter."
+            } elseif ($url -match '^http://') {
+                Write-Host "  WARNING: http:// URL detected. Claude Desktop requires https://."
+                Write-Host "           If you're using another MCP client, this is fine. Proceeding..."
+                break
+            }
+        } while ($url -notmatch '^https?://')
+        $token = Read-Host "Bearer token (leave blank to auto-generate one)"
+        if (-not $token) {
+            try   { $token = (& $script:VenvPython -c 'import secrets; print(secrets.token_urlsafe(32))' 2>$null).Trim() }
+            catch { $token = '' }
+            if (-not $token) {
+                # Pure-PS fallback: 32 random bytes as base64url
+                $bytes = [byte[]]::new(32)
+                [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+                $token = [System.Convert]::ToBase64String($bytes) -replace '[+/=]', ''
+            }
+            Write-Host ""
+            Write-Host "  Generated bearer token. Configure the server with the SAME value:"
+            Write-Host "    RAD_MCP_TOKENS=<token>        read-only"
+            Write-Host "    RAD_MCP_WRITE_TOKENS=<token>  read-write (also manage devices + config)"
+            Write-Host ""
+            Write-Host "      $token"
+            Write-Host ""
+        }
+        return @{ Mode = 'http'; Url = $url; Token = $token }
+    }
+    return @{ Mode = 'stdio'; Url = ''; Token = '' }
 }
 
 function Resolve-HttpArgs {

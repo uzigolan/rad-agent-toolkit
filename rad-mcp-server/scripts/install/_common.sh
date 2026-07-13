@@ -102,8 +102,8 @@ prompt_transport() {
     fi
     if [ -z "$MODE" ]; then
         echo "Select MCP transport:"
-        echo "  1) stdio  - local, the client launches the server (full toolset incl. staged writes)"
-        echo "  2) http   - client of a manually-run shared server (token-scoped access)"
+        echo "  1) stdio  - local; the client launches the server via command/args (full toolset)"
+        echo "  2) http   - remote; connect to an HTTPS server by URL + bearer token (read-only)"
         local ans
         read -r -p "Choice [1]: " ans || ans=""
         case "$ans" in
@@ -114,20 +114,30 @@ prompt_transport() {
     if [ "$MODE" = http ]; then
         if [ -z "$HTTP_URL" ]; then
             local ip; ip="$(_first_ipv4)"
+            echo "Note: Claude Desktop only accepts HTTPS URLs for remote MCP servers."
+            echo "      HTTP URLs work with other clients."
             echo "Server URL:"
-            echo "  1) http://127.0.0.1:8080/mcp   (server on this same machine)"
+            echo "  1) https://127.0.0.1:8080/mcp   (server on this same machine)"
             if [ -n "$ip" ]; then
-                echo "  2) http://$ip:8080/mcp   (this host's LAN address)"
+                echo "  2) https://$ip:8080/mcp   (this host's LAN address)"
             fi
-            echo "  or type a full URL"
+            echo "  or type a full http:// or https:// URL"
             local uans
-            read -r -p "Choice [1]: " uans || uans=""
-            case "$uans" in
-                ""|1) HTTP_URL="http://127.0.0.1:8080/mcp" ;;
-                2) HTTP_URL="${ip:+http://$ip:8080/mcp}"; HTTP_URL="${HTTP_URL:-http://127.0.0.1:8080/mcp}" ;;
-                http://*|https://*) HTTP_URL="$uans" ;;
-                *) echo "  (unrecognized, using localhost)"; HTTP_URL="http://127.0.0.1:8080/mcp" ;;
-            esac
+            while true; do
+                read -r -p "Choice [1]: " uans || uans=""
+                case "$uans" in
+                    ""|1) HTTP_URL="https://127.0.0.1:8080/mcp"; break ;;
+                    2) HTTP_URL="${ip:+https://$ip:8080/mcp}"; HTTP_URL="${HTTP_URL:-https://127.0.0.1:8080/mcp}"; break ;;
+                    https://*) HTTP_URL="$uans"; break ;;
+                    http://*)
+                        echo "  WARNING: http:// URL detected. Claude Desktop requires https://."
+                        echo "           If you're using another MCP client, this is fine."
+                        HTTP_URL="$uans"
+                        break
+                        ;;
+                    *) echo "  (unrecognized, using localhost)"; HTTP_URL="https://127.0.0.1:8080/mcp"; break ;;
+                esac
+            done
         fi
         if [ -z "$HTTP_TOKEN" ]; then
             read -r -p "Bearer token (leave blank to auto-generate one): " HTTP_TOKEN || HTTP_TOKEN=""
@@ -176,6 +186,16 @@ url, token = sys.argv[1], sys.argv[2]
 print(json.dumps({"type": "http", "url": url,
                   "headers": {"Authorization": f"Bearer {token}"}}))
 PY
+}
+
+# Backup a JSON config file to <path>.bak.<timestamp> before overwriting.
+# No-op if the file does not yet exist.
+backup_json_config() {
+    local path="$1"
+    [ -f "$path" ] || return 0
+    local ts; ts="$(date +%Y%m%d-%H%M%S)"
+    cp "$path" "$path.bak.$ts"
+    echo "  backup -> $path.bak.$ts"
 }
 
 # Create/merge a JSON config file, replacing any existing rad-mcp entry under

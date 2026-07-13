@@ -85,9 +85,8 @@ run, unlike skills.
   `server/.env` (`RAD_MCP_<NAME>_USERNAME/_PASSWORD`, or the globals) and
   never pass through an MCP tool argument or response.
 - **The inventory is personal:** gitignored; a clone starts empty
-  (`inventory.example.yaml` is the template); the first `add_device`
-  creates the file automatically. "Inventory file not found" on a fresh
-  install means *empty*, not *broken*.
+  (`inventory.example.yaml` is the template); on first read, the server
+  auto-creates `inventory.yaml` as `devices: []`.
 - **Adding a device requires all six facts from the user** (name, host,
   family, group, username, password) — the intake gate; nothing is written
   until all are given.

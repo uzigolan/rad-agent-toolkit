@@ -16,13 +16,12 @@ the server itself.
 
 | Script | What it does |
 |---|---|
-| `install-and-start-mcp-server.ps1` / `.sh` | Verify common setup, then start the HTTP server (interactive prompts for anything not passed as flags) |
-| `install-and-restart-mcp-server.ps1` / `.sh` | Same, but first stops a server already listening on the chosen port |
+| `install-and-restart-mcp-server.ps1` / `.sh` | Verify common setup, then stop any existing server on the port and start the HTTP server (interactive prompts for anything not passed as flags) |
 
 ```powershell
-.\install-and-start-mcp-server.ps1                            # interactive prompts
-.\install-and-start-mcp-server.ps1 -BindHost 0.0.0.0 -Port 8080 -WriteToken <t>
-.\install-and-start-mcp-server.ps1 -ReadToken <t> -WriteToken <t> -TlsCert c.pem -TlsKey k.pem
+.\install-and-restart-mcp-server.ps1                            # interactive prompts
+.\install-and-restart-mcp-server.ps1 -BindHost 0.0.0.0 -Port 8080 -WriteToken <t>
+.\install-and-restart-mcp-server.ps1 -ReadToken <t> -WriteToken <t> -TlsCert c.pem -TlsKey k.pem
 ```
 
 Key behaviors:

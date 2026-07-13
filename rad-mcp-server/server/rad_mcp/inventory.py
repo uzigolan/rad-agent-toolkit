@@ -78,11 +78,9 @@ class Device:
 def load_inventory(path: str | Path | None = None) -> dict[str, Device]:
     inv_path = Path(path or os.environ.get("RAD_MCP_INVENTORY") or DEFAULT_INVENTORY)
     if not inv_path.exists():
-        raise FileNotFoundError(
-            f"Inventory file not found: {inv_path} — copy inventory.example.yaml "
-            "there, or register your first device with add_device (it creates "
-            "the file)."
-        )
+        # Fresh install: create an empty personal inventory on first use.
+        inv_path.parent.mkdir(parents=True, exist_ok=True)
+        inv_path.write_text("devices: []\n", encoding="utf-8")
     raw = yaml.safe_load(inv_path.read_text(encoding="utf-8")) or {}
     devices: dict[str, Device] = {}
     # `devices:` with nothing under it parses as None — treat as empty, not an error

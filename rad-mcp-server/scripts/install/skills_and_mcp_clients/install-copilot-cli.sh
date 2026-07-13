@@ -5,7 +5,7 @@
 #   ./install-copilot-cli.sh                       # interactive transport prompt
 #   ./install-copilot-cli.sh --http --url <url> --token <token>   # non-interactive http
 #
-# Writes/merges ~/.copilot/mcp-config.json (root key "mcpServers") and copies
+# Writes/merges ~/.copilot/mcp.json (root key "mcpServers") and copies
 # the skills to ~/.copilot/skills. Replaces any existing rad-mcp entry.
 # Afterwards: RESTART the copilot session (skills + MCP load at startup only).
 
@@ -22,7 +22,7 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-CFG="$HOME/.copilot/mcp-config.json"
+CFG="$HOME/.copilot/mcp.json"
 maybe_keep_existing "$CFG" mcpServers
 if [ -n "$KEEP_EXISTING" ]; then
     echo "  mcp   -> kept existing rad-mcp entry in $CFG"

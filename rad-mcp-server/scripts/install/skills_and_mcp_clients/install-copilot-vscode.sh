@@ -3,20 +3,17 @@
 # Install rad-mcp (MCP + skills) for the GitHub Copilot VS Code extension.
 #
 #   ./install-copilot-vscode.sh                       # interactive transport prompt
-#   ./install-copilot-vscode.sh --workspace <folder>  # set the target workspace
 #   ./install-copilot-vscode.sh --http --url <url> --token <token>   # non-interactive http
 #
-# Writes/merges <workspace>/.vscode/mcp.json (root key "servers") and copies the
+# Writes/merges VS Code user mcp.json (root key "servers") and copies the
 # skills to ~/.copilot/skills (read by Copilot in VS Code AND Copilot CLI).
 # Replaces any existing rad-mcp entry. Afterwards: reload the VS Code window,
 # accept the trust dialog, use agent mode.
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
-WORKSPACE="$(pwd)"
 while [ $# -gt 0 ]; do
     case "$1" in
-        --workspace) WORKSPACE="$2"; shift 2 ;;
         --http) MODE=http; shift ;;
         --stdio) MODE=stdio; shift ;;
         --url) HTTP_URL="$2"; shift 2 ;;
@@ -26,7 +23,12 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-CFG="$WORKSPACE/.vscode/mcp.json"
+case "$(uname -s)" in
+    Darwin) CFG="$HOME/Library/Application Support/Code/User/mcp.json" ;;
+    MINGW*|MSYS*|CYGWIN*) CFG="$APPDATA/Code/User/mcp.json" ;;
+    *) CFG="$HOME/.config/Code/User/mcp.json" ;;
+esac
+
 maybe_keep_existing "$CFG" servers
 if [ -n "$KEEP_EXISTING" ]; then
     echo "  mcp   -> kept existing rad-mcp entry in $CFG"
