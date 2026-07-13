@@ -28,6 +28,11 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
 > **Status: internal RAD pilot.** Do not point at production equipment.
 
+> **Prerequisites:** Python **3.11+** (3.10 minimum) and SSH reachability to
+> your devices. On RHEL-family distros (Rocky/RHEL/Alma) the default `python3`
+> is often 3.6 — too old; install a newer one (`sudo dnf install -y python3.11`)
+> and build the venv with `python3.11`. Full steps in [INSTALL.md](INSTALL.md#common-setup-once-per-machine).
+
 ## Documentation
 
 - **[docs/CONCEPTS.md](docs/CONCEPTS.md)** — every principle in

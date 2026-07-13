@@ -62,6 +62,9 @@ if (-not $ReadToken -and -not $WriteToken) {
     Write-Host ""
     Write-Host "      $tok"
     Write-Host ""
+    Write-Host "  If a client is ALREADY configured, update its Authorization header to"
+    Write-Host "  this exact value or it will get 401 Unauthorized (token mismatch)."
+    Write-Host ""
 }
 
 # TLS is all-or-nothing (the server also enforces this).

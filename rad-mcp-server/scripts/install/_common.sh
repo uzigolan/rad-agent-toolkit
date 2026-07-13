@@ -23,12 +23,44 @@ _py() {
     else echo python; fi
 }
 
+# First interpreter that is Python >= 3.10, preferring newer explicit names.
+# Empty if none is found (e.g. RHEL where python3 is 3.6).
+_best_python() {
+    local c
+    for c in python3.13 python3.12 python3.11 python3.10 python3 python; do
+        if command -v "$c" >/dev/null 2>&1 \
+           && "$c" -c 'import sys; raise SystemExit(0 if sys.version_info[:2] >= (3, 10) else 1)' 2>/dev/null; then
+            echo "$c"; return 0
+        fi
+    done
+    return 1
+}
+
 assert_common_setup() {
-    if [ ! -x "$VENV_PYTHON" ]; then
-        echo "venv not found at $VENV_PYTHON - run the common setup first (see INSTALL.md):" >&2
-        echo "  cd rad-mcp-server/server && python3 -m venv .venv && .venv/bin/pip install -e ." >&2
+    if [ -x "$VENV_PYTHON" ]; then return; fi
+    # No venv yet — bootstrap it automatically so install is a single command.
+    local py; py="$(_best_python || true)"
+    if [ -z "$py" ]; then
+        echo "No Python >= 3.10 found, and the server venv doesn't exist yet." >&2
+        echo "  (RHEL's default python3 is often 3.6, too old.)" >&2
+        echo "  On RHEL-family:  sudo dnf install -y python3.11   (or python3.12)" >&2
+        echo "  then re-run this installer." >&2
+        echo "  (see INSTALL.md -> Common setup)" >&2
         exit 1
     fi
+    echo "Setting up the server venv (one-time, using $py) ..." >&2
+    "$py" -m venv "$RAD_ROOT/server/.venv" >&2 || {
+        echo "failed to create the venv with '$py -m venv' (venv module missing?)." >&2
+        echo "  On RHEL-family:  sudo dnf install -y python3.11 python3.11-pip" >&2
+        exit 1
+    }
+    echo "  installing rad-mcp into the venv (pip install -e .) ..." >&2
+    "$VENV_PYTHON" -m pip install --quiet --upgrade pip >&2 || true
+    "$VENV_PYTHON" -m pip install --quiet -e "$RAD_ROOT/server" >&2 || {
+        echo "pip install failed - check network / PyPI access, then re-run." >&2
+        exit 1
+    }
+    echo "  venv ready: $VENV_PYTHON" >&2
 }
 
 copy_skills_to() {
@@ -170,4 +202,53 @@ with open(path, "w") as f:
     f.write("\n")
 print(f"  mcp   -> {path}")
 PY
+}
+
+# If a rad-mcp entry already exists in the JSON config, summarize it and ask
+# whether to keep it. Sets KEEP_EXISTING=1 when the user keeps it (the caller
+# then skips prompt_transport + set_json_mcp_entry, leaving the config as-is).
+# Skipped when reconfiguration is explicit: flags preset MODE, or --reconfigure
+# sets RAD_RECONFIGURE=1. $1=config-path $2=root-key.
+KEEP_EXISTING=""
+maybe_keep_existing() {
+    local path="$1" root="$2"
+    KEEP_EXISTING=""
+    [ -n "$MODE" ] && return                       # flags => reconfigure
+    [ "${RAD_RECONFIGURE:-}" = "1" ] && return      # --reconfigure => reconfigure
+    local summary
+    summary="$("$(_py)" - "$path" "$root" <<'PY'
+import json, os, sys
+path, root = sys.argv[1], sys.argv[2]
+if not os.path.exists(path):
+    sys.exit(0)
+try:
+    with open(path) as f:
+        cfg = json.load(f)
+except Exception:
+    sys.exit(0)
+e = (cfg.get(root) or {}).get("rad-mcp")
+if not e:
+    sys.exit(0)
+t = e.get("type", "stdio")
+if t == "http":
+    url = e.get("url", "?")
+    auth = (e.get("headers") or {}).get("Authorization", "")
+    tok = auth.split()[-1] if auth else ""
+    masked = (tok[:4] + "..." + tok[-4:]) if len(tok) > 8 else ("set" if tok else "none")
+    print(f"http  url={url}  token={masked}")
+else:
+    print(f"{t}  command={e.get('command', '?')}")
+PY
+)"
+    [ -z "$summary" ] && return
+    echo "rad-mcp is already configured in $path:"
+    echo "    $summary"
+    echo "  1) Keep existing configuration (leave it unchanged)"
+    echo "  2) Reconfigure from scratch (re-run the prompts and replace it)"
+    local ans
+    read -r -p "Choice [1]: " ans || ans=""
+    case "$ans" in
+        2|r|R|reconfigure) KEEP_EXISTING="" ;;
+        *) KEEP_EXISTING=1 ;;
+    esac
 }

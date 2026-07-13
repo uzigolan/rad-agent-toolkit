@@ -17,15 +17,21 @@ while [ $# -gt 0 ]; do
         --stdio) MODE=stdio; shift ;;
         --url) HTTP_URL="$2"; shift 2 ;;
         --token) HTTP_TOKEN="$2"; shift 2 ;;
+        --reconfigure) RAD_RECONFIGURE=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
 
-prompt_transport
+CFG="$HOME/.copilot/mcp-config.json"
+maybe_keep_existing "$CFG" mcpServers
+if [ -n "$KEEP_EXISTING" ]; then
+    echo "  mcp   -> kept existing rad-mcp entry in $CFG"
+else
+    prompt_transport
 
-if [ "$MODE" = http ]; then
-    # http entry plus tools:["*"] which Copilot CLI expects.
-    ENTRY="$("$(_py)" - "$HTTP_URL" "$HTTP_TOKEN" <<'PY'
+    if [ "$MODE" = http ]; then
+        # http entry plus tools:["*"] which Copilot CLI expects.
+        ENTRY="$("$(_py)" - "$HTTP_URL" "$HTTP_TOKEN" <<'PY'
 import json, sys
 url, token = sys.argv[1], sys.argv[2]
 print(json.dumps({"type": "http", "url": url,
@@ -33,11 +39,11 @@ print(json.dumps({"type": "http", "url": url,
                   "tools": ["*"]}))
 PY
 )"
-else
-    assert_common_setup
-    # Copilot CLI's stdio type is "local" and has no cwd support (the server's
-    # own paths are module-anchored, so that's safe).
-    ENTRY="$("$(_py)" - "$VENV_PYTHON" "$INVENTORY" <<'PY'
+    else
+        assert_common_setup
+        # Copilot CLI's stdio type is "local" and has no cwd support (the server's
+        # own paths are module-anchored, so that's safe).
+        ENTRY="$("$(_py)" - "$VENV_PYTHON" "$INVENTORY" <<'PY'
 import json, sys
 venv, inv = sys.argv[1], sys.argv[2]
 print(json.dumps({"type": "local", "command": venv,
@@ -46,13 +52,13 @@ print(json.dumps({"type": "local", "command": venv,
                   "tools": ["*"]}))
 PY
 )"
+    fi
+    set_json_mcp_entry "$CFG" mcpServers "$ENTRY"
 fi
-
-set_json_mcp_entry "$HOME/.copilot/mcp-config.json" mcpServers "$ENTRY"
 copy_skills_to "$HOME/.copilot/skills"
 
 echo ""
 echo "Done. Now: restart the copilot session, then verify with /mcp show and /skills list."
 echo "First tool call prompts for permission - answer 'yes, always'."
-[ "$MODE" = http ] && echo "http mode: make sure the shared server is running (read-only tools)."
+[ "$MODE" = http ] && echo "http mode: make sure the shared server is running, and its token matches this client's."
 exit 0

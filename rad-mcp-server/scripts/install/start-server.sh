@@ -65,6 +65,9 @@ if [ -z "$READ_TOKEN" ] && [ -z "$WRITE_TOKEN" ]; then
     echo ""
     echo "      $tok"
     echo ""
+    echo "  If a client is ALREADY configured, update its Authorization header to"
+    echo "  this exact value or it will get 401 Unauthorized (token mismatch)."
+    echo ""
 fi
 
 # TLS is all-or-nothing (the server also enforces this).

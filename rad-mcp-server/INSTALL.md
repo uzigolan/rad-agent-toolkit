@@ -141,7 +141,17 @@ elsewhere — but the tools resolve it correctly, which is why the docs use
 ## Common setup (once per machine)
 
 Required for every target that runs the server locally.
-Requirements: Python 3.11+, SSH reachability to your RAD devices.
+Requirements: Python 3.10+, SSH reachability to your RAD devices.
+
+**The install scripts now do this for you.** On first run, the bash and
+PowerShell installers (and `start-server.*`) auto-create `server/.venv` and
+`pip install -e .` using the newest Python ≥ 3.10 they can find — so for a
+local (stdio) setup you can skip straight to your target's install script.
+The one thing they can't do is install Python itself: on RHEL-family distros
+whose default `python3` is 3.6 (verified on Rocky 8.9), first run
+`sudo dnf install -y python3.11` (or `python3.12`), then the installer.
+
+To do the venv step manually instead:
 
 ```powershell
 cd rad-mcp-server\server
@@ -150,8 +160,7 @@ python -m venv .venv
 ```
 
 Linux: same steps with `.venv/bin/` instead of `.venv\Scripts\`, and use
-`python3.11` explicitly on RHEL-family distros (default `python3` is often
-3.6 — too old). Verified on Rocky 8.9.
+`python3.11` explicitly on RHEL-family distros.
 
 Create `server\.env` (gitignored — never commit credentials):
 

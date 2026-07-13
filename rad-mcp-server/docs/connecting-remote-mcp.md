@@ -112,8 +112,28 @@ curl -sL -o /dev/null -w "%{http_code}\n" -X POST http://<host>:8080/mcp \
 # 200 with a valid token + initialize.
 ```
 
+## Troubleshooting: 401 Unauthorized (token mismatch)
+
+The #1 first-run gotcha: the **client token must be byte-for-byte identical**
+to a token the server was started with. `start-server.sh` and the install
+scripts each auto-generate a token when you don't supply one, so running both
+without pinning a value yields **two different tokens** — every request then
+logs `401 Unauthorized` / `invalid_token`. (The `/.well-known/oauth-*` 404s in
+the log are harmless client discovery probes, not the problem.)
+
+Fix — make them match, then restart the client session:
+
+```
+# EITHER start the server with the client's existing token:
+./scripts/install/start-server.sh --host 0.0.0.0 --write-token <client-token>
+
+# OR repoint the client at the running server's token (Copilot CLI shown):
+sed -i 's#Bearer [^"]*#Bearer <server-token>#' ~/.copilot/mcp-config.json
+```
+
+Grant the role you intend: `--write-token` / `RAD_MCP_WRITE_TOKENS` for a
+read-write client, `--read-token` / `RAD_MCP_TOKENS` for read-only.
+
 ## Not covered yet (future)
 
-- Remote *write* access (staged commits over HTTP) — deliberately excluded;
-  higher risk tier, revisit with per-token scopes if needed.
 - External/cloud reach — needs a hardened gateway + likely OAuth, not a tunnel.
