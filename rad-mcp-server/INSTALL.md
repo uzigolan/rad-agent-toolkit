@@ -144,7 +144,7 @@ Required for every target that runs the server locally.
 Requirements: Python 3.10+, SSH reachability to your RAD devices.
 
 **The install scripts now do this for you.** On first run, the bash and
-PowerShell installers (and `start-server.*`) auto-create `server/.venv` and
+PowerShell installers (and `install-and-restart-mcp-server.*`) auto-create `server/.venv` and
 `pip install -e .` using the newest Python ≥ 3.10 they can find — so for a
 local (stdio) setup you can skip straight to your target's install script.
 The one thing they can't do is install Python itself: on RHEL-family distros

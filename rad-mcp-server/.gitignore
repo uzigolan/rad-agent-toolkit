@@ -1,4 +1,5 @@
 .env
+.rad-mcp-tokens
 .venv/
 __pycache__/
 *.pyc
