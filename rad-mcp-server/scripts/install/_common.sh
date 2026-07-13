@@ -42,6 +42,23 @@ copy_skills_to() {
     done
 }
 
+# First non-loopback IPv4 of this host (best-effort, Linux/macOS). Empty if none.
+_first_ipv4() {
+    local ip=""
+    if command -v hostname >/dev/null 2>&1; then
+        ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+    fi
+    if [ -z "$ip" ] && command -v ip >/dev/null 2>&1; then
+        ip="$(ip -4 -o addr show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n1)"
+    fi
+    echo "$ip"
+}
+
+# Generate a URL-safe bearer token (32 bytes). Empty if no python is available.
+_gen_token() {
+    "$(_py)" -c 'import secrets; print(secrets.token_urlsafe(32))' 2>/dev/null || echo ""
+}
+
 # Interactive transport picker. Honors a pre-set MODE (from flag parsing) and
 # only asks for whatever is still missing. Sets MODE, HTTP_URL, HTTP_TOKEN.
 # $1 (optional) = "stdio-only" to refuse http (e.g. Claude Desktop).
@@ -54,7 +71,7 @@ prompt_transport() {
     if [ -z "$MODE" ]; then
         echo "Select MCP transport:"
         echo "  1) stdio  - local, the client launches the server (full toolset incl. staged writes)"
-        echo "  2) http   - client of a manually-run shared server (read-only by the code interlock)"
+        echo "  2) http   - client of a manually-run shared server (token-scoped access)"
         local ans
         read -r -p "Choice [1]: " ans || ans=""
         case "$ans" in
@@ -64,14 +81,27 @@ prompt_transport() {
     fi
     if [ "$MODE" = http ]; then
         if [ -z "$HTTP_URL" ]; then
-            read -r -p "Server URL [http://127.0.0.1:8080/mcp]: " HTTP_URL || HTTP_URL=""
-            HTTP_URL="${HTTP_URL:-http://127.0.0.1:8080/mcp}"
+            local ip; ip="$(_first_ipv4)"
+            echo "Server URL:"
+            echo "  1) http://127.0.0.1:8080/mcp   (server on this same machine)"
+            if [ -n "$ip" ]; then
+                echo "  2) http://$ip:8080/mcp   (this host's LAN address)"
+            fi
+            echo "  or type a full URL"
+            local uans
+            read -r -p "Choice [1]: " uans || uans=""
+            case "$uans" in
+                ""|1) HTTP_URL="http://127.0.0.1:8080/mcp" ;;
+                2) HTTP_URL="${ip:+http://$ip:8080/mcp}"; HTTP_URL="${HTTP_URL:-http://127.0.0.1:8080/mcp}" ;;
+                http://*|https://*) HTTP_URL="$uans" ;;
+                *) echo "  (unrecognized, using localhost)"; HTTP_URL="http://127.0.0.1:8080/mcp" ;;
+            esac
         fi
         if [ -z "$HTTP_TOKEN" ]; then
             read -r -p "Bearer token (leave blank to auto-generate one): " HTTP_TOKEN || HTTP_TOKEN=""
         fi
         if [ -z "$HTTP_TOKEN" ]; then
-            HTTP_TOKEN="$("$(_py)" -c 'import secrets; print(secrets.token_urlsafe(32))')"
+            HTTP_TOKEN="$(_gen_token)"
             if [ -z "$HTTP_TOKEN" ]; then
                 echo "could not auto-generate a token (no python found); rerun with --token <t>" >&2
                 exit 1
