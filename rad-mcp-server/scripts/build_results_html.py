@@ -47,6 +47,9 @@ for source_row, cases in by_row.items():
         "cli_path": rep["cli_path"],
         "show_command": rep["show_command"],
         "full_cli": rep["expected_cli_command"],
+        "classic_prompts": [c["prompt"] for c in cases if c["prompt_type"] == "classic"],
+        "implicit_prompts": [c["prompt"] for c in cases if c["prompt_type"] == "implicit"],
+        "t5_prompt": next((c["wrapped_prompt"] for c in cases if c["prompt_type"] == "classic"), cases[0]["wrapped_prompt"]),
         "t1": rep["prior_test_results"]["test1_baseline"] or "",
         "t2": rep["prior_test_results"]["test2_post_training"] or "",
         "t3": rep["prior_test_results"]["test3_optimized_prompts"] or "",
@@ -105,13 +108,15 @@ for r in rows:
     stripe = "stripe--pass" if r["verdict"] == "PASS" else "stripe--fail"
     comment_html = (f'<div class="comment">{esc(r["prior_comments"])}</div>'
                      if r["prior_comments"] else "")
+    classic_cell = "<br>".join(esc(x) for x in r["classic_prompts"]) or "&mdash;"
+    implicit_cell = "<br>".join(esc(x) for x in r["implicit_prompts"]) or "&mdash;"
     row_html.append(f'''
       <tr class="{stripe}">
         <td class="num">{r["num"]}</td>
         <td class="cat">{esc(r["category"])}</td>
-        <td class="code code--small">{esc(r["cli_path"])}</td>
         <td class="code code--small">{esc(r["show_command"])}</td>
-        <td class="code code--muted">{esc(r["full_cli"])}</td>
+        <td class="prompt">{classic_cell}</td>
+        <td class="prompt">{implicit_cell}</td>
         <td class="tcol">{t_dot(r["t1"])}</td>
         <td class="tcol">{t_dot(r["t2"])}</td>
         <td class="tcol">{t_dot(r["t3"])}</td>
@@ -271,11 +276,11 @@ h1 {{
 table {{ width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }}
 col.c-num {{ width: 3.4%; }}
 col.c-cat {{ width: 5.5%; }}
-col.c-path {{ width: 9%; }}
-col.c-show {{ width: 10%; }}
-col.c-full {{ width: 15%; }}
-col.c-t {{ width: 7.2%; }}
-col.c-t5 {{ width: 6.5%; }}
+col.c-show {{ width: 9%; }}
+col.c-prompt {{ width: 14%; }}
+td.prompt {{ font-size: 12px; line-height: 1.45; }}
+col.c-t {{ width: 3.6%; }}
+col.c-t5 {{ width: 5%; }}
 col.c-reason {{ width: 7%; }}
 col.c-detail {{ width: 22%; }}
 thead th {{
@@ -374,21 +379,32 @@ footer a {{ color: var(--accent); }}
     <div class="table-scroll">
       <table>
         <colgroup>
-          <col class="c-num"><col class="c-cat"><col class="c-path"><col class="c-show">
-          <col class="c-full"><col class="c-t"><col class="c-t"><col class="c-t">
+          <col class="c-num"><col class="c-cat"><col class="c-show">
+          <col class="c-prompt"><col class="c-prompt"><col class="c-t"><col class="c-t"><col class="c-t">
           <col class="c-t5"><col class="c-reason"><col class="c-detail">
         </colgroup>
         <thead>
           <tr>
-            <th>#</th><th>Category</th><th>CLI Path</th><th>Show Command</th>
-            <th>Full CLI Command</th><th>T1</th><th>T2</th><th>T3</th>
-            <th>Fusion CLI (T5)</th><th>Reason</th><th>Detail</th>
+            <th>#</th><th>Category</th><th>Show Command</th>
+            <th>RAD CLI classic prompt (T1&ndash;T3)</th>
+            <th>RAD CLI implicit variants (T1&ndash;T3)</th>
+            <th>T1</th><th>T2</th><th>T3</th>
+            <th>Fusion (T5)</th><th>Reason</th><th>Detail</th>
           </tr>
         </thead>
         <tbody>{"".join(row_html)}
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section class="card">
+    <p><b>Prompt columns:</b> the phrasings RAD CLI (T1&ndash;T3) was driven with.
+      <b>Fusion (T5) used no prompt</b> &mdash; its verdict is a mechanical lookup of the
+      row&rsquo;s expected command in the harvested reference, identical for every
+      phrasing (0 mixed rows). A per-phrasing end-to-end round (each wrapped as
+      &ldquo;abayev, &lt;phrasing&gt; on etx2i&rdquo; to a live agent) is prepared in the
+      dataset but not yet run.</p>
   </section>
 
   <footer>35 rows &middot; generated from <code>tests/eval-coverage-report.json</code> &middot; see <code>tests/eval-report.md</code> for full method &middot; zero device execution</footer>

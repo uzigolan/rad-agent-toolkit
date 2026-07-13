@@ -51,12 +51,17 @@ for source_row, cases in by_row.items():
     rep = cases[0]
     n_classic = sum(1 for c in cases if c["prompt_type"] == "classic")
     n_implicit = sum(1 for c in cases if c["prompt_type"] == "implicit")
+    classic_prompts = [c["prompt"] for c in cases if c["prompt_type"] == "classic"]
+    implicit_prompts = [c["prompt"] for c in cases if c["prompt_type"] == "implicit"]
     rows.append({
         "num": source_row,
         "category": rep["category"],
         "cli_path": rep["cli_path"],
         "show_command": rep["show_command"],
         "full_cli": rep["expected_cli_command"],
+        "classic_prompts": classic_prompts,
+        "implicit_prompts": implicit_prompts,
+        "t5_prompt": next((c["wrapped_prompt"] for c in cases if c["prompt_type"] == "classic"), cases[0]["wrapped_prompt"]),
         "t1": rep["prior_test_results"]["test1_baseline"],
         "t2": rep["prior_test_results"]["test2_post_training"],
         "t3": rep["prior_test_results"]["test3_optimized_prompts"],
@@ -135,22 +140,30 @@ lines = [
     "  `MISSING`: the command was not found anywhere at the claimed context",
     "  at all.",
     "",
-    "| # | Category | CLI Path | Show Command | Full CLI Command | T1 | T2 | T3 | Prior comment | **Fusion CLI (T5)** | **Reason** | **Detail** |",
+    "| # | Category | Show Command | RAD CLI classic prompt (T1-T3) | RAD CLI implicit variants (T1-T3) | T1 | T2 | T3 | Prior comment | **Fusion (T5)** | **Reason** | **Detail** |",
     "|---|---|---|---|---|---|---|---|---|---|---|---|",
 ]
 for r in rows:
     def esc(s):
         return str(s).replace("|", "\\|").replace("\n", " ")
+    classic = "<br>".join(esc(x) for x in r["classic_prompts"]) or "—"
+    implicit = "<br>".join(esc(x) for x in r["implicit_prompts"]) or "—"
     lines.append(
-        f"| {r['num']} | {esc(r['category'])} | `{esc(r['cli_path'])}` | "
-        f"`{esc(r['show_command'])}` | `{esc(r['full_cli'])}` | {colorize(r['t1'])} | "
+        f"| {r['num']} | {esc(r['category'])} | `{esc(r['show_command'])}` | "
+        f"{classic} | {implicit} | {colorize(r['t1'])} | "
         f"{colorize(r['t2'])} | {colorize(r['t3'])} | {esc(r['prior_comments'])[:60]} | "
         f"{colorize(r['verdict'])} | {colorize(r['reason'])} | {esc(r['detail'])[:120]} |"
     )
 
 lines += [
     "",
-    "`n_prompts` (classic+implicit count per row) omitted from the table above for width; see the JSON for the full per-prompt breakdown — coverage is identical across all of a row's phrasings (verified: 0 rows have mixed coverage).",
+    "Prompt columns: the phrasings RAD CLI (T1-T3) was driven with — classic "
+    "(bold in the source) and implicit variants (one per line). "
+    "**Fusion (T5) used NO prompt**: its verdict is a mechanical lookup of the "
+    "row's expected command in the harvested reference, so it is identical for "
+    "every phrasing (verified: 0 mixed rows). A per-phrasing end-to-end round "
+    "(each wrapped as \"abayev, <phrasing> on etx2i\" to a live agent) is "
+    "prepared in the dataset but not yet run.",
 ]
 
 out = REPO / "tests" / "RESULTS.md"

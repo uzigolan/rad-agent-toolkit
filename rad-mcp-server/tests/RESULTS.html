@@ -149,11 +149,11 @@ h1 {
 table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
 col.c-num { width: 3.4%; }
 col.c-cat { width: 5.5%; }
-col.c-path { width: 9%; }
-col.c-show { width: 10%; }
-col.c-full { width: 15%; }
-col.c-t { width: 7.2%; }
-col.c-t5 { width: 6.5%; }
+col.c-show { width: 9%; }
+col.c-prompt { width: 14%; }
+td.prompt { font-size: 12px; line-height: 1.45; }
+col.c-t { width: 3.6%; }
+col.c-t5 { width: 5%; }
 col.c-reason { width: 7%; }
 col.c-detail { width: 22%; }
 thead th {
@@ -252,24 +252,26 @@ footer a { color: var(--accent); }
     <div class="table-scroll">
       <table>
         <colgroup>
-          <col class="c-num"><col class="c-cat"><col class="c-path"><col class="c-show">
-          <col class="c-full"><col class="c-t"><col class="c-t"><col class="c-t">
+          <col class="c-num"><col class="c-cat"><col class="c-show">
+          <col class="c-prompt"><col class="c-prompt"><col class="c-t"><col class="c-t"><col class="c-t">
           <col class="c-t5"><col class="c-reason"><col class="c-detail">
         </colgroup>
         <thead>
           <tr>
-            <th>#</th><th>Category</th><th>CLI Path</th><th>Show Command</th>
-            <th>Full CLI Command</th><th>T1</th><th>T2</th><th>T3</th>
-            <th>Fusion CLI (T5)</th><th>Reason</th><th>Detail</th>
+            <th>#</th><th>Category</th><th>Show Command</th>
+            <th>RAD CLI classic prompt (T1&ndash;T3)</th>
+            <th>RAD CLI implicit variants (T1&ndash;T3)</th>
+            <th>T1</th><th>T2</th><th>T3</th>
+            <th>Fusion (T5)</th><th>Reason</th><th>Detail</th>
           </tr>
         </thead>
         <tbody>
       <tr class="stripe--fail">
         <td class="num">10</td>
         <td class="cat">Root</td>
-        <td class="code code--small">ETX-2i&gt;</td>
         <td class="code code--small">show configure service</td>
-        <td class="code code--muted">ETX-2i&gt; show configure service</td>
+        <td class="prompt">Show all configured services and their current status</td>
+        <td class="prompt">What services are currently running or stopped?<br>show list of configured services</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -280,9 +282,9 @@ footer a { color: var(--accent); }
       <tr class="stripe--pass">
         <td class="num">28</td>
         <td class="cat">File</td>
-        <td class="code code--small">ETX-2i&gt;file#</td>
         <td class="code code--small">show schedule-log</td>
-        <td class="code code--muted">ETX-2i&gt;file# show schedule-log</td>
+        <td class="prompt">Display the scheduled tasks log and their execution history</td>
+        <td class="prompt">show  schedule log<br>list scheduled tasks history</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -294,9 +296,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">29</td>
         <td class="cat">File</td>
-        <td class="code code--small">ETX-2i&gt;file#</td>
         <td class="code code--small">show startup-config</td>
-        <td class="code code--muted">ETX-2i&gt;file# show startup-config</td>
+        <td class="prompt">Show the startup configuration that loads on next reboot</td>
+        <td class="prompt">display startup config<br>show boot configuration</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -307,9 +309,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">34</td>
         <td class="cat">Admin</td>
-        <td class="code code--small">ETX-2i&gt;admin&gt;scheduler#</td>
         <td class="code code--small">show scheduler</td>
-        <td class="code code--muted">ETX-2i&gt;admin&gt;scheduler# show scheduler</td>
+        <td class="prompt">Display all configured scheduled tasks and their next execution times</td>
+        <td class="prompt">show scheduler tasks<br>list all schedules</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -320,9 +322,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">35</td>
         <td class="cat">Admin</td>
-        <td class="code code--small">ETX-2i&gt;admin&gt;scheduler#</td>
         <td class="code code--small">show scheduler-details</td>
-        <td class="code code--muted">ETX-2i&gt;admin&gt;scheduler# show scheduler-details</td>
+        <td class="prompt">Show detailed information about each scheduled task including history</td>
+        <td class="prompt">display scheduler details<br>check detailed schedule info</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -333,9 +335,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">43</td>
         <td class="cat">System</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;chassis#</td>
         <td class="code code--small">show environment</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;chassis# show environment</td>
+        <td class="prompt">Display chassis environmental readings  temperature and fan status</td>
+        <td class="prompt">check chassis temperature<br>show chasis status</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -346,9 +348,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">48</td>
         <td class="cat">Management</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;mngmnt&gt;radius#</td>
         <td class="code code--small">show statistics</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;mngmnt&gt;radius# show statistics</td>
+        <td class="prompt">Show RADIUS authentication statistics, success and failure counts</td>
+        <td class="prompt">check radius stats<br>display radius statistics</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -359,9 +361,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">50</td>
         <td class="cat">Management</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;mngmnt&gt;snmp#</td>
         <td class="code code--small">show trap-sync</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;mngmnt&gt;snmp# show trap-sync</td>
+        <td class="prompt">Show the SNMP trap synchronization status and pending traps</td>
+        <td class="prompt">check trap sync<br>display pending traps</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -372,9 +374,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">52</td>
         <td class="cat">Port</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;port#</td>
         <td class="code code--small">show summary</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;port# show summary</td>
+        <td class="prompt">Show a summary of all port configurations and operational states</td>
+        <td class="prompt">show ports summary<br>show port status</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -385,9 +387,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">53</td>
         <td class="cat">Port</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;port#</td>
         <td class="code code--small">show summary-full-name</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;port# show summary-full-name</td>
+        <td class="prompt">Display port summary using full interface names</td>
+        <td class="prompt">show ports full name<br>list interfaces with full names</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -398,9 +400,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">60</td>
         <td class="cat">Port</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;port&gt;eth(port)#</td>
         <td class="code code--small">show oam-efm</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;port&gt;eth(port)# show oam-efm</td>
+        <td class="prompt">Display OAM EFM (802.3ah) status and peer information on this port</td>
+        <td class="prompt">show oam efm status<br>check link OAM on port 0/1</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -412,9 +414,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">69</td>
         <td class="cat">Port</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;port&gt;lag(n)#</td>
         <td class="code code--small">show lacp-status ethernet &lt;port&gt;</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;port&gt;lag(n)# show lacp-status ethernet &lt;port&gt;</td>
+        <td class="prompt">Show LACP negotiation status for  port 1</td>
+        <td class="prompt">show lacp status port 1<br>display LACP state on member port</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -425,9 +427,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">70</td>
         <td class="cat">Port</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;port&gt;lag(n)#</td>
         <td class="code code--small">show lacp-statistics ethernet &lt;port&gt;</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;port&gt;lag(n)# show lacp-statistics ethernet &lt;port&gt;</td>
+        <td class="prompt">Display LACP PDU statistics for this member port 1</td>
+        <td class="prompt">show lacp statistics<br>display LACP PDU counters</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -438,9 +440,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">90</td>
         <td class="cat">PWE</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;pwe#</td>
         <td class="code code--small">show summary</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;pwe# show summary</td>
+        <td class="prompt">Display a summary of all pseudowire connections and their status</td>
+        <td class="prompt">show pwe summary<br>list all pseudowires</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -451,9 +453,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">91</td>
         <td class="cat">PWE</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;pwe&gt;pw(n)#</td>
         <td class="code code--small">show status</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;pwe&gt;pw(n)# show status</td>
+        <td class="prompt">Show the operational status of this pseudowire 1 including signaling state</td>
+        <td class="prompt">show pw 1 status<br>is pseudowire 1 up</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -464,9 +466,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">92</td>
         <td class="cat">PWE</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;pwe&gt;pw(n)#</td>
         <td class="code code--small">show statistics current</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;pwe&gt;pw(n)# show statistics current</td>
+        <td class="prompt">Display current  pseudowire1  traffic and error statistics</td>
+        <td class="prompt">show pw 1 current stats<br>display pseudowire current counters</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -477,9 +479,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">96</td>
         <td class="cat">PWE</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;pwe&gt;pw(n)#</td>
         <td class="code code--small">show statistics all</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;pwe&gt;pw(n)# show statistics all</td>
+        <td class="prompt">Display all pseudowire statistics</td>
+        <td class="prompt">show pw 1  all stats<br>display all pw 1 counters</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -490,9 +492,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">98</td>
         <td class="cat">PWE</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;pwe&gt;pw(n)#</td>
         <td class="code code--small">show connectivity-statistics interval &lt;n&gt;</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;pwe&gt;pw(n)# show connectivity-statistics interval &lt;n&gt;</td>
+        <td class="prompt">Show pseudowire connectivity statistics for a  interval 1</td>
+        <td class="prompt">display pw connectivity counters refresh each 1 sec</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -503,9 +505,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">102</td>
         <td class="cat">Router</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;router(n)#</td>
         <td class="code code--small">show rib { ipv4 | ipv6 }</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;router(n)# show rib  ipv4 </td>
+        <td class="prompt">Show the Routing Information Base for IPv4</td>
+        <td class="prompt">show RIB ipv4</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -516,9 +518,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">116</td>
         <td class="cat">Router</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;router(n)#</td>
         <td class="code code--small">show nat-statistics</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;router(n)# show nat-statistics</td>
+        <td class="prompt">Show NAT  translation statistics including hit counts and timeouts</td>
+        <td class="prompt">show nat  stats<br>display nat  counters</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -529,9 +531,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">135</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;cfm&gt;md(n)&gt;ma(n)&gt;mep(n)#</td>
         <td class="code code--small">show lbm-results</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;cfm&gt;md(n)&gt;ma(n)&gt;mep(n)# show lbm-results</td>
+        <td class="prompt">Display t loopback message (LBM) results  for MEP 1</td>
+        <td class="prompt">show lbm results<br>display loopback test results</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -542,9 +544,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">136</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;cfm&gt;md(n)&gt;ma(n)&gt;mep(n)#</td>
         <td class="code code--small">show linktrace-results</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;cfm&gt;md(n)&gt;ma(n)&gt;mep(n)# show linktrace-results</td>
+        <td class="prompt">Show the results of the  linktrace operation for  MEP 1</td>
+        <td class="prompt">show linktrace results<br>display path trace results</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -555,9 +557,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">149</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)#</td>
         <td class="code code--small">show status</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)# show status</td>
+        <td class="prompt">Display  TWAMP test  status toward peer 10.10.10.1</td>
+        <td class="prompt">show twamp peer status<br>check twamp test session toward peer</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -568,9 +570,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">150</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)#</td>
         <td class="code code--small">show report &lt;n&gt; all</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)# show report &lt;n&gt; all</td>
+        <td class="prompt">Show all TWAMP test report data for this peer</td>
+        <td class="prompt">show twamp report all<br>display all twamp test data</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -581,9 +583,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">151</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)#</td>
         <td class="code code--small">show report &lt;n&gt; current</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)# show report &lt;n&gt; current</td>
+        <td class="prompt">Display the current TWAMP measurement report toward this peer</td>
+        <td class="prompt">show twamp current report<br>display current twamp measurement</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -594,9 +596,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">152</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)#</td>
         <td class="code code--small">show report &lt;n&gt; interval</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;twamp&gt;controller(n)&gt;peer(ip)# show report &lt;n&gt; interval</td>
+        <td class="prompt">Show TWAMP report data for a specific measurement interval</td>
+        <td class="prompt">show twamp interval report<br>display twamp interval measurement</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -607,9 +609,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">154</td>
         <td class="cat">OAM</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;oam&gt;twamp&gt;responder(n)#</td>
         <td class="code code--small">show status</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;oam&gt;twamp&gt;responder(n)# show status</td>
+        <td class="prompt">Show the status of this TWAMP responder1  session</td>
+        <td class="prompt">show twamp responder status<br>check twamp responder state</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -620,9 +622,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">155</td>
         <td class="cat">Test</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;test&gt;y1564&gt;generator(n)#</td>
         <td class="code code--small">show status</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;test&gt;y1564&gt;generator(n)# show status</td>
+        <td class="prompt">show current test status of Y1564 generator 1</td>
+        <td class="prompt">show y1564 generator 1 status<br>check y1564 test progress</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -633,9 +635,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">156</td>
         <td class="cat">Test</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;test&gt;y1564&gt;generator(n)#</td>
         <td class="code code--small">show mef46-ll-status</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;test&gt;y1564&gt;generator(n)# show mef46-ll-status</td>
+        <td class="prompt">Display  the status of the MEF46 Latching Loopback generator 1</td>
+        <td class="prompt">show y1564 mef46 status<br>check mef46 loopback in y1564</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -646,9 +648,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">158</td>
         <td class="cat">Test</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;test&gt;y1564&gt;generator(n)#</td>
         <td class="code code--small">show report detailed</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;test&gt;y1564&gt;generator(n)# show report detailed</td>
+        <td class="prompt">Display a detailed Y.1564 test report for this generator</td>
+        <td class="prompt">show y1564 detailed report<br>display y1564 full results</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -659,9 +661,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">163</td>
         <td class="cat">Test</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;test&gt;rfc2544&gt;test(n)#</td>
         <td class="code code--small">show summary</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;test&gt;rfc2544&gt;test(n)# show summary</td>
+        <td class="prompt">Display a summary of RFC 2544 test results</td>
+        <td class="prompt">show rfc2544 summary<br>display benchmark test summary</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -672,9 +674,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--fail">
         <td class="num">167</td>
         <td class="cat">Test</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;test&gt;l3sat&gt;generator(name)&gt;peer(ip)#</td>
         <td class="code code--small">show summary-report</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;test&gt;l3sat&gt;generator(name)&gt;peer(ip)# show summary-report</td>
+        <td class="prompt">Display a summary of L3 SAT test results toward this peer</td>
+        <td class="prompt">show l3sat summary report<br>display l3sat results summary</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS*</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -685,9 +687,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">170</td>
         <td class="cat">Reporting</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;reporting#</td>
         <td class="code code--small">show accounting-log</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;reporting# show accounting-log</td>
+        <td class="prompt">show account log report</td>
+        <td class="prompt">show accounting log<br>display session records</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -698,9 +700,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">173</td>
         <td class="cat">Reporting</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;reporting#</td>
         <td class="code code--small">show alarm-log</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;reporting# show alarm-log</td>
+        <td class="prompt">Show the alarm log including historical alarm events</td>
+        <td class="prompt">show alarm log<br>display alarm history</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -711,9 +713,9 @@ Test3: AI failed on other prompts</div></td>
       <tr class="stripe--pass">
         <td class="num">180</td>
         <td class="cat">Reporting</td>
-        <td class="code code--small">ETX-2i&gt;config&gt;reporting#</td>
         <td class="code code--small">show alarm-information &lt;source-type&gt; &lt;alarm-list&gt;</td>
-        <td class="code code--muted">ETX-2i&gt;config&gt;reporting# show alarm-information &lt;source-type&gt; &lt;alarm-list&gt;</td>
+        <td class="prompt">Display all alarm information for a eps  source type</td>
+        <td class="prompt">show eps alarm info<br>display alarm details for source type eps</td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--pass"></span>PASS</span></td>
         <td class="tcol"><span class="tmini"><span class="dot dot--fail"></span>FAIL</span></td>
@@ -724,6 +726,15 @@ Test3: AI failed on other prompts</div></td>
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section class="card">
+    <p><b>Prompt columns:</b> the phrasings RAD CLI (T1&ndash;T3) was driven with.
+      <b>Fusion (T5) used no prompt</b> &mdash; its verdict is a mechanical lookup of the
+      row&rsquo;s expected command in the harvested reference, identical for every
+      phrasing (0 mixed rows). A per-phrasing end-to-end round (each wrapped as
+      &ldquo;abayev, &lt;phrasing&gt; on etx2i&rdquo; to a live agent) is prepared in the
+      dataset but not yet run.</p>
   </section>
 
   <footer>35 rows &middot; generated from <code>tests/eval-coverage-report.json</code> &middot; see <code>tests/eval-report.md</code> for full method &middot; zero device execution</footer>
