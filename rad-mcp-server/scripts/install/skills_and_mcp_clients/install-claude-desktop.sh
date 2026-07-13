@@ -11,7 +11,7 @@
 # No http switch: Desktop's config file is stdio-only (verified 2026-07-10);
 # for a remote server use the Customize -> Connectors UI instead.
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
 prompt_transport stdio-only
 assert_common_setup

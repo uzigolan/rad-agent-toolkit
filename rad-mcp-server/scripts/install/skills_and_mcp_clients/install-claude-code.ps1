@@ -15,7 +15,7 @@ param(
     [string]$Url,
     [string]$Token
 )
-. (Join-Path $PSScriptRoot '_common.ps1')
+. (Join-Path $PSScriptRoot '..\_common.ps1')
 
 if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
     throw "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)"

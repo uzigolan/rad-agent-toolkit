@@ -18,7 +18,7 @@ param(
     [string]$Token,
     [switch]$Reconfigure
 )
-. (Join-Path $PSScriptRoot '_common.ps1')
+. (Join-Path $PSScriptRoot '..\_common.ps1')
 
 $cfgPath = Join-Path $Workspace '.vscode\mcp.json'
 $explicit = $Http -or $Url -or $Token -or $Reconfigure

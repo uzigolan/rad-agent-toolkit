@@ -172,7 +172,7 @@ issue, and behavior shifts across model/client updates — a ✅ is a statement
 about the recorded combination, not the target forever.
 
 → [INSTALL.md](../INSTALL.md) (matrix with the same status) ·
-[docs/install/](install/) per-target guides
+[scripts/install/skills_and_mcp_clients/](../scripts/install/skills_and_mcp_clients/README.md) per-target specifics
 
 ## 9. Where everything else is
 

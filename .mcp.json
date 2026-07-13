@@ -1,11 +1,4 @@
 {
-  "mcpServers": {
-    "rad-mcp": {
-      "type": "http",
-      "url": "http://127.0.0.1:8080/mcp",
-      "headers": {
-        "Authorization": "Bearer yu26aOiUBk7nR9OIXFUxcgmbyv8fpaXLlwr_hQunP90"
-      }
-    }
-  }
+  "mcpServers": {}
+
 }

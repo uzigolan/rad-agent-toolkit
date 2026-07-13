@@ -14,7 +14,7 @@ param(
     [string]$Url,
     [string]$Token
 )
-. (Join-Path $PSScriptRoot '_common.ps1')
+. (Join-Path $PSScriptRoot '..\_common.ps1')
 
 $cfgPath = "$env:USERPROFILE\.codex\config.toml"
 if ((Test-Path $cfgPath) -and ((Get-Content $cfgPath -Raw) -match '\[mcp_servers\.rad-mcp\]')) {

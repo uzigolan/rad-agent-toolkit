@@ -11,7 +11,7 @@
 # Replaces any existing rad-mcp entry. Afterwards: reload the VS Code window,
 # accept the trust dialog, use agent mode.
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
 WORKSPACE="$(pwd)"
 while [ $# -gt 0 ]; do

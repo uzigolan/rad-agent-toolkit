@@ -23,8 +23,8 @@ rad-mcp-server/manuals/*.pdf
 rad-mcp-server/inventory.yaml
 inventory_bck.yaml
 
-# Personal workspace MCP config (may hold a live bearer token) — ships via
-# docs/install examples instead
+# Personal workspace MCP config (may hold a live bearer token) — the install
+# scripts (scripts/install/skills_and_mcp_clients/) generate it instead
 .vscode/mcp.json
 
 # One-off proposal drafts at the repo root — personal working files

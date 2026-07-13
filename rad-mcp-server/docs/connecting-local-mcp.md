@@ -17,9 +17,10 @@ For a server on **another machine**, see
 
 Each client launches its own private instance over stdin/stdout; nothing
 listens on the network. This is the only mode with the write tools, and the
-right choice for a single-user machine. Your client's
-[install guide](install/) has the exact entry syntax (root key and quirks
-differ per client; every guide shows it).
+right choice for a single-user machine. Your client's section in the
+[install guide](../scripts/install/skills_and_mcp_clients/README.md) has the
+exact entry syntax (root key and quirks
+differ per client; every section shows it).
 
 What multiple stdio clients share vs. don't
 ([full principle](../INSTALL.md#same-mcp-in-several-clients--several-separate-instances-mode-1)):
@@ -52,7 +53,7 @@ $env:RAD_MCP_INVENTORY = "<repo>/rad-mcp-server/inventory.yaml"
   every local client loses rad-mcp until you relaunch. (An http entry only
   says where to find a server; only stdio entries auto-start one.)
 - Claude Desktop can join via the
-  [stdio→http bridge](install/claude-desktop/README.md) (its config file
+  [stdio→http bridge](../scripts/install/skills_and_mcp_clients/README.md#claude-desktop--chat--cowork) (its config file
   can't hold http entries).
 - Binding `127.0.0.1` means nothing outside this machine can connect — to
   serve colleagues too, switch to the

@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 #
-# (Re)start the rad-mcp server over HTTP (manual launch — the terminal IS the
-# server; closing it stops it). If a server is already listening on the chosen
-# port, it is stopped first. This does NOT configure any client; run the
+# Start the rad-mcp server over HTTP (manual launch — the terminal IS the
+# server; closing it stops it). This does NOT configure any client; run the
 # matching install-*.sh in http mode for that.
 #
-#   ./install-and-restart-mcp-server.sh                       # interactive host/port/token prompts
-#   ./install-and-restart-mcp-server.sh --host 0.0.0.0 --port 8080 --write-token <t>
-#   ./install-and-restart-mcp-server.sh --read-token <t> --write-token <t> --tls-cert c.pem --tls-key k.pem
+#   ./install-and-start-mcp-server.sh                       # interactive host/port/token prompts
+#   ./install-and-start-mcp-server.sh --host 0.0.0.0 --port 8080 --write-token <t>
+#   ./install-and-start-mcp-server.sh --read-token <t> --write-token <t> --tls-cert c.pem --tls-key k.pem
 #
 # At least one token is required (http refuses to start unauthenticated). With
 # no token flags, the interactive prompt offers read-write, read-only, or BOTH
@@ -16,7 +15,7 @@
 #   --write-token -> RAD_MCP_WRITE_TOKENS  (read-write clients: manage devices + config)
 # Pass both flags to run with a read-only AND a read-write token at once.
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
 HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""
 while [ $# -gt 0 ]; do
@@ -123,23 +122,6 @@ export RAD_MCP_INVENTORY="$INVENTORY"
 [ -n "$WRITE_TOKEN" ] && export RAD_MCP_WRITE_TOKENS="$WRITE_TOKEN"
 [ -n "$TLS_CERT" ] && export RAD_MCP_TLS_CERT="$TLS_CERT"
 [ -n "$TLS_KEY" ] && export RAD_MCP_TLS_KEY="$TLS_KEY"
-
-# Restart: if a server is already listening on this port, stop it first.
-pids=""
-if command -v lsof >/dev/null 2>&1; then
-    pids="$(lsof -ti tcp:"$PORT" -sTCP:LISTEN 2>/dev/null || true)"
-elif command -v fuser >/dev/null 2>&1; then
-    pids="$(fuser "$PORT/tcp" 2>/dev/null | tr -s ' ' | sed 's/^ *//' || true)"
-fi
-if [ -n "$pids" ]; then
-    echo "Port $PORT already in use — stopping existing server (PID: $pids) ..."
-    # shellcheck disable=SC2086
-    kill $pids 2>/dev/null || true
-    sleep 1
-    for p in $pids; do
-        if kill -0 "$p" 2>/dev/null; then kill -9 "$p" 2>/dev/null || true; fi
-    done
-fi
 
 scheme="http"; [ -n "$TLS_CERT" ] && scheme="https"
 echo "Starting rad-mcp on ${scheme}://${HOST}:${PORT}/mcp  (Ctrl-C to stop)"

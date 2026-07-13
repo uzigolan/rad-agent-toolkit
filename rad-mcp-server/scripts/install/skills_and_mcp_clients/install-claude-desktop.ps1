@@ -11,7 +11,7 @@ has no API for it.
 No -Http switch: Desktop's config file is stdio-only (verified 2026-07-10);
 for a remote server use the Customize -> Connectors UI instead.
 #>
-. (Join-Path $PSScriptRoot '_common.ps1')
+. (Join-Path $PSScriptRoot '..\_common.ps1')
 
 Assert-CommonSetup
 

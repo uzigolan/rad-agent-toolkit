@@ -88,14 +88,15 @@ $env:RAD_MCP_TLS_KEY  = "<path>/key.pem"
 ## Connect a client (mode 3)
 
 You need three things from the host: **network reach** (RAD network/VPN),
-the **URL**, and **your own bearer token**. Each
-[install guide](install/) shows your client's exact http config. Two
+the **URL**, and **your own bearer token**. Each client's section in the
+[install guide](../scripts/install/skills_and_mcp_clients/README.md) shows
+its exact http config. Two
 special cases:
 
 **Claude Desktop** — its config file is stdio-only (http entries silently
 ignored, verified 2026-07-10). Use Customize → Connectors (URL +
 Authorization header), or the file-only route: the
-[stdio→http bridge](install/claude-desktop/README.md).
+[stdio→http bridge](../scripts/install/skills_and_mcp_clients/README.md#claude-desktop--chat--cowork).
 
 **Cloud clients (ChatGPT etc.)** — OUTSIDE RAD's network; they cannot reach
 an internal-only URL, and the server must never be exposed publicly to
@@ -125,7 +126,7 @@ Fix — make them match, then restart the client session:
 
 ```
 # EITHER start the server with the client's existing token:
-./scripts/install/install-and-restart-mcp-server.sh --host 0.0.0.0 --write-token <client-token>
+./scripts/install/mcp_server/install-and-restart-mcp-server.sh --host 0.0.0.0 --write-token <client-token>
 
 # OR repoint the client at the running server's token (Copilot CLI shown):
 sed -i 's#Bearer [^"]*#Bearer <server-token>#' ~/.copilot/mcp-config.json

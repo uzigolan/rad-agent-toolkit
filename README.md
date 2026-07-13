@@ -144,14 +144,8 @@ README.md (this file)
 ├── rad-mcp-server/README.md ........... server overview + five operation categories
 │   ├── docs/CONCEPTS.md .......... ALL principles in one file — concepts entry point
 │   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
-│   │   │      (each target folder: README index + mcp.md + skills.md + samples)
-│   │   ├── docs/install/claude-code-vscode/
-│   │   ├── docs/install/claude-code-cli/
-│   │   ├── docs/install/claude-desktop/
-│   │   ├── docs/install/copilot-vscode/
-│   │   ├── docs/install/copilot-cli/ ─── incl. verified Linux quick start
-│   │   ├── docs/install/codex-ide/
-│   │   ├── docs/install/codex-chatgpt-desktop/
+│   │   ├── scripts/install/mcp_server/ ─── run a shared http server (start/restart scripts)
+│   │   ├── scripts/install/skills_and_mcp_clients/ ─── per-client install scripts + consolidated guide
 │   │   └── docs/connecting-remote-mcp.md . host / join a shared server (http)
 │   │   ├── docs/connecting-local-mcp.md .. same-machine wiring (stdio + http)
 │   ├── docs/architecture.md ........... canonical design (safety, knowledge layers, roadmap)
@@ -210,7 +204,7 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
   semantic RAG over the corpus — not started.
 - Distribution: `.mcpb` Desktop Extension + Claude Code plugin marketplace.
 - ~~New integration targets: GitHub Copilot (VS Code + CLI) and OpenAI
-  Codex (CLI/IDE/desktop).~~ ✅ [guides](rad-mcp-server/docs/install/)
+  Codex (CLI/IDE/desktop).~~ ✅ [install scripts + guide](rad-mcp-server/scripts/install/skills_and_mcp_clients/README.md)
   written; both vendors adopted Agent Skills, so the skills load unmodified.
   **All six targets verified live** (2026-07-10/11, four model families) —
   record in [CONCEPTS.md §8](rad-mcp-server/docs/CONCEPTS.md).

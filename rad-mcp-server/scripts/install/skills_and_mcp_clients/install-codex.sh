@@ -10,7 +10,7 @@
 # one already exists - TOML is edited as text, remove the old section first)
 # and copies the skills to ~/.agents/skills. Afterwards: restart Codex.
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
 while [ $# -gt 0 ]; do
     case "$1" in

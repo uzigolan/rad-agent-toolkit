@@ -31,7 +31,8 @@ for the full design.
   official-docs research (July 2026), not yet verified against live
   Copilot/Codex installs.** `INSTALL.md` restructured into a hub (support
   matrix + common setup + remote-connect + shared troubleshooting) with
-  per-target guides in `rad-mcp-server/docs/install/`: Claude Code
+  per-target guides (2026-07-13: consolidated into
+  `rad-mcp-server/scripts/install/skills_and_mcp_clients/README.md`): Claude Code
   (VS Code ext), Claude Code (CLI), Claude Desktop (chat + Cowork), GitHub
   Copilot (VS Code agent mode), GitHub Copilot CLI, and OpenAI Codex
   (CLI/IDE/desktop + cloud). Key findings baked into the guides:

@@ -9,7 +9,7 @@
 # the skills to ~/.copilot/skills. Replaces any existing rad-mcp entry.
 # Afterwards: RESTART the copilot session (skills + MCP load at startup only).
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
 while [ $# -gt 0 ]; do
     case "$1" in

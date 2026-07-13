@@ -11,7 +11,7 @@
 # Http mode removes any existing rad-mcp registration first, then adds the URL.
 # Afterwards: reload the VS Code window / start a new claude session.
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
 while [ $# -gt 0 ]; do
     case "$1" in

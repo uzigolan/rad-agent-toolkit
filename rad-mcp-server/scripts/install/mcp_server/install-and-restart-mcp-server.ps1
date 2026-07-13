@@ -21,7 +21,7 @@ param(
     [string]$TlsKey,
     [switch]$NewTokens
 )
-. (Join-Path $PSScriptRoot '_common.ps1')
+. (Join-Path $PSScriptRoot '..\_common.ps1')
 Assert-CommonSetup
 
 # Tokens persist across restarts in this gitignored file so a restart reuses the

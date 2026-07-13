@@ -16,7 +16,7 @@ param(
     [string]$Token,
     [switch]$Reconfigure
 )
-. (Join-Path $PSScriptRoot '_common.ps1')
+. (Join-Path $PSScriptRoot '..\_common.ps1')
 
 $cfgPath = "$env:USERPROFILE\.copilot\mcp-config.json"
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
