@@ -8,17 +8,22 @@ Transports (RAD_MCP_TRANSPORT):
   stdio (default)  local — each client launches its own server process.
   http             remote — one server, many clients connect by URL. For
                    sharing on an INTERNAL network only. Two hard interlocks in
-                   code (not just config): http REQUIRES bearer tokens
-                   (RAD_MCP_TOKENS) or it refuses to start, and http FORCES
-                   read-only (write tools are never registered remotely).
+                   code (not just config): http REQUIRES bearer tokens or it
+                   refuses to start, and write tools are SCOPED — registered
+                   over http only when write-scoped tokens exist, and every
+                   write call is re-checked so only write-token holders can
+                   invoke it (read-only tokens get reads regardless).
 
 Env:
-  RAD_MCP_READONLY=true   disable write tools at registration (implied by http)
+  RAD_MCP_READONLY=true   disable write tools at registration (all transports)
   RAD_MCP_TRANSPORT       stdio | http
   RAD_MCP_HOST            http bind address (default 127.0.0.1 — set to the
                           internal-network interface to share; never a public one)
   RAD_MCP_PORT            http port (default 8080)
-  RAD_MCP_TOKENS          http bearer tokens, comma-separated (required for http)
+  RAD_MCP_TOKENS          http READ-ONLY bearer tokens, comma-separated
+  RAD_MCP_WRITE_TOKENS    http READ-WRITE bearer tokens, comma-separated —
+                          holders may also run the staged-write/inventory tools
+                          (at least one of TOKENS/WRITE_TOKENS is required for http)
   RAD_MCP_TLS_CERT        path to TLS certificate (PEM) — with RAD_MCP_TLS_KEY,
                           serves https:// natively (both must be set together)
   RAD_MCP_TLS_KEY         path to the certificate's private key (PEM)
@@ -32,6 +37,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from fastmcp import FastMCP
+from fastmcp.exceptions import ToolError
+from fastmcp.server.dependencies import get_access_token
 
 from . import __version__
 from .audit import audit, redact
@@ -42,27 +49,66 @@ from .inventory import add_device_entry, get_device, load_inventory, remove_devi
 _TRANSPORT = os.environ.get("RAD_MCP_TRANSPORT", "stdio").lower()
 _HTTP = _TRANSPORT in ("http", "streamable-http")
 
-# Interlock 1: HTTP (remote/shared) is read-only, period — write tools are
-# never registered when serving over the network, regardless of RAD_MCP_READONLY.
-READONLY = _HTTP or os.environ.get("RAD_MCP_READONLY", "").lower() in ("1", "true", "yes")
+
+def _parse_tokens(var: str) -> list[str]:
+    return [t.strip() for t in os.environ.get(var, "").split(",") if t.strip()]
+
+
+# Per-token roles: RAD_MCP_TOKENS are read-only, RAD_MCP_WRITE_TOKENS are
+# read-write. A value present in both lists is treated as read-write.
+_READ_TOKENS = _parse_tokens("RAD_MCP_TOKENS")
+_WRITE_TOKENS = _parse_tokens("RAD_MCP_WRITE_TOKENS")
+_READONLY_ENV = os.environ.get("RAD_MCP_READONLY", "").lower() in ("1", "true", "yes")
+
+# Interlock 1 (scoped): over HTTP the write tools are REGISTERED only when at
+# least one write-scoped token exists, and every write call is re-checked at
+# call time (see _require_write_scope) so only write-token holders can invoke
+# them. Over stdio (local, trusted) writes are on unless RAD_MCP_READONLY.
+if _HTTP:
+    WRITE_TOOLS_ENABLED = bool(_WRITE_TOKENS) and not _READONLY_ENV
+else:
+    WRITE_TOOLS_ENABLED = not _READONLY_ENV
+
 BACKUP_DIR = Path(__file__).resolve().parent.parent / "backups"
 
 
 def _build_auth():
     """Interlock 2: HTTP requires bearer tokens — refuse to serve unauthenticated.
-    Tokens come from RAD_MCP_TOKENS (comma-separated). stdio needs no auth."""
+    Read-only tokens come from RAD_MCP_TOKENS, read-write tokens from
+    RAD_MCP_WRITE_TOKENS; each token carries its scope so write tools can
+    re-check the caller at call time. stdio needs no auth."""
     if not _HTTP:
         return None
-    tokens = [t.strip() for t in os.environ.get("RAD_MCP_TOKENS", "").split(",") if t.strip()]
-    if not tokens:
+    if not _READ_TOKENS and not _WRITE_TOKENS:
         raise SystemExit(
-            "RAD_MCP_TRANSPORT=http requires RAD_MCP_TOKENS (comma-separated bearer "
-            "tokens). Refusing to start an unauthenticated network server."
+            "RAD_MCP_TRANSPORT=http requires RAD_MCP_TOKENS (read-only) and/or "
+            "RAD_MCP_WRITE_TOKENS (read-write). Refusing to start an "
+            "unauthenticated network server."
         )
+    tokens: dict[str, dict] = {}
+    for i, tok in enumerate(_READ_TOKENS):
+        tokens[tok] = {"client_id": f"rad-ro-{i+1}", "scopes": ["read"]}
+    # Write tokens win if a value appears in both lists.
+    for i, tok in enumerate(_WRITE_TOKENS):
+        tokens[tok] = {"client_id": f"rad-rw-{i+1}", "scopes": ["read", "write"]}
     from fastmcp.server.auth.providers.jwt import StaticTokenVerifier
-    return StaticTokenVerifier(
-        {tok: {"client_id": f"rad-client-{i+1}"} for i, tok in enumerate(tokens)}
-    )
+    return StaticTokenVerifier(tokens)
+
+
+def _require_write_scope() -> None:
+    """Interlock 1 (per-call): over HTTP, only tokens carrying the 'write'
+    scope (RAD_MCP_WRITE_TOKENS) may invoke a write tool. stdio is local and
+    trusted, so it is exempt."""
+    if not _HTTP:
+        return
+    token = get_access_token()
+    scopes = list(getattr(token, "scopes", None) or [])
+    if "write" not in scopes:
+        raise ToolError(
+            "This token is read-only. A write-scoped token "
+            "(RAD_MCP_WRITE_TOKENS on the server) is required for "
+            "configuration and inventory changes."
+        )
 
 
 mcp = FastMCP(
@@ -387,7 +433,7 @@ def manual_chapter_resource(family: str, chapter: str) -> str:
 
 # -------------------------------------------------------------------- write
 
-if not READONLY:
+if WRITE_TOOLS_ENABLED:
 
     @mcp.tool()
     def add_device(
@@ -414,6 +460,7 @@ if not READONLY:
         an already-loaded key still needs a server restart. Then run
         test_connectivity, then health_check.
         """
+        _require_write_scope()
         get_driver(family)  # raises with the valid-family list if unknown
         inv_path = add_device_entry(
             name, host, family, port=port, groups=groups or [],
@@ -458,6 +505,7 @@ if not READONLY:
         misconfigured, not that the hardware changed) — confirm with the user
         before doing that specifically.
         """
+        _require_write_scope()
         if family is not None:
             get_driver(family)  # raises with the valid-family list if unknown
         updated = update_device_entry(
@@ -473,6 +521,7 @@ if not READONLY:
         device itself or delete any backups/audit history — this only stops
         rad-mcp from knowing about it. Requires confirm=true after the user
         has approved removing this specific device."""
+        _require_write_scope()
         if not confirm:
             return "REFUSED: remove_device requires confirm=true after the user has approved removing this device."
         get_device(name)  # raises with the known-devices list if unknown
@@ -487,6 +536,7 @@ if not READONLY:
         Returns a stage_id and a preview. Present the preview to the user and
         only call commit_config after they explicitly approve.
         """
+        _require_write_scope()
         dev = get_device(device)  # validates the device exists
         stage_id = secrets.token_hex(4)
         _STAGES[stage_id] = {
@@ -507,6 +557,7 @@ if not READONLY:
     @mcp.tool()
     def commit_config(stage_id: str, confirm: bool = False) -> str:
         """Apply a staged config after user approval. Auto-backs-up the running config first."""
+        _require_write_scope()
         if stage_id not in _STAGES:
             return f"Unknown stage_id '{stage_id}'. Stage the change first with stage_config."
         if not confirm:
@@ -527,6 +578,7 @@ if not READONLY:
     @mcp.tool()
     def save_startup(device: str, confirm: bool = False) -> str:
         """Persist the running configuration to startup (survives reboot)."""
+        _require_write_scope()
         if not confirm:
             return "REFUSED: save_startup requires confirm=true after user approval."
         dev = get_device(device)
@@ -537,7 +589,7 @@ if not READONLY:
 
 
 def main() -> None:
-    mode = "READ-ONLY" if READONLY else "read-write (staged commits)"
+    mode = "read-write (staged commits)" if WRITE_TOOLS_ENABLED else "READ-ONLY"
     if _HTTP:
         host = os.environ.get("RAD_MCP_HOST", "127.0.0.1")
         port = int(os.environ.get("RAD_MCP_PORT", "8080"))

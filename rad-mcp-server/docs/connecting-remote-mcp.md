@@ -9,21 +9,27 @@ http — see [connecting-local-mcp.md](connecting-local-mcp.md).
 
 ## Security model (built into the code, not just docs)
 
-- **Read-only, enforced.** `RAD_MCP_TRANSPORT=http` forces `READONLY` on — the
-  write tools (`stage_config`, `commit_config`, `save_startup`, inventory
-  writes) are never registered. Remote clients get reads only: `cli_help`,
-  `run_show`, `run_show_in_context`, `get_config`, `backup_config`,
-  `health_check`, `test_connectivity`, `list_devices`.
-- **Auth required, fail-closed.** HTTP refuses to start without
-  `RAD_MCP_TOKENS`. Every request needs `Authorization: Bearer <token>`;
-  missing/wrong token → HTTP 401 (verified).
+- **Per-token roles.** Tokens in `RAD_MCP_TOKENS` are **read-only**; tokens in
+  `RAD_MCP_WRITE_TOKENS` are **read-write**. Over http the write tools
+  (`stage_config`, `commit_config`, `save_startup`, inventory
+  `add_device`/`update_device`/`remove_device`) are registered only when at
+  least one write token exists, and every write call re-checks the caller's
+  token — a read-only token is refused with *"This token is read-only…"*.
+  Reads (`cli_help`, `run_show`, `run_show_in_context`, `get_config`,
+  `backup_config`, `health_check`, `test_connectivity`, `list_devices`) are
+  available to every token. `RAD_MCP_READONLY=true` forces the whole server
+  read-only regardless of tokens.
+- **Auth required, fail-closed.** HTTP refuses to start without at least one of
+  `RAD_MCP_TOKENS` / `RAD_MCP_WRITE_TOKENS`. Every request needs
+  `Authorization: Bearer <token>`; missing/wrong token → HTTP 401 (verified).
 - **Internal only.** The server reaches devices on 172.17.x.x, so it lives
   inside RAD's network. **Do not** bind it to a public interface or put it
   behind a public tunnel. Bind internal and rely on network perimeter + the
-  token.
+  token. A write token grants config-write on live gear — treat it like a
+  device password: TLS on the wire, one per operator, rotate on change.
 - Device credentials in `server/.env` stay on the host: a token holder
-  inherits (read-only) device access, never the credentials. Give each
-  consumer a distinct token; rotate by editing `RAD_MCP_TOKENS` + restart.
+  inherits device access at its role, never the credentials. Give each
+  consumer a distinct token; rotate by editing the token env vars + restart.
 
 ## Host it (mode 2)
 
@@ -41,7 +47,8 @@ internal IP):
 $env:RAD_MCP_TRANSPORT = "http"
 $env:RAD_MCP_HOST      = "0.0.0.0"        # or this host's internal IP — never a public one
 $env:RAD_MCP_PORT      = "8080"
-$env:RAD_MCP_TOKENS    = "<token-alice>,<token-bob>"
+$env:RAD_MCP_TOKENS       = "<token-alice>,<token-bob>"   # read-only viewers
+$env:RAD_MCP_WRITE_TOKENS = "<token-admin>"              # read-write operators (manage devices + config)
 $env:RAD_MCP_INVENTORY = "<repo>/rad-mcp-server/inventory.yaml"
 & "<repo>/rad-mcp-server/server/.venv/Scripts/python.exe" -m rad_mcp.server
 ```

@@ -127,10 +127,55 @@ Rules:
 
 ## Why these are write tools, not always-on
 
-`add_device`/`update_device`/`remove_device` are registered only when the
-server isn't running read-only (`RAD_MCP_READONLY`, and always implied by
-the shared/remote HTTP transport). A remote client silently registering or
-deleting inventory entries on a shared server is exactly the class of
-surprise the read-only interlock exists to prevent — see
-`docs/architecture.md`'s safety model. `list_devices` stays available
-everywhere since it's pure read.
+`add_device`/`update_device`/`remove_device` (and the config-write tools
+`stage_config`/`commit_config`/`save_startup`) are gated by transport:
+
+- **stdio (local):** on by default — full toolset. `RAD_MCP_READONLY=true`
+  turns them off.
+- **http (shared/remote):** off unless the server is started with at least one
+  **write-scoped** token (`RAD_MCP_WRITE_TOKENS`). Even then, every write call
+  re-checks the caller's token at call time — a read-only token
+  (`RAD_MCP_TOKENS`) gets reads only and is refused any write with
+  *"This token is read-only…"*. `list_devices` and the other reads stay
+  available to every token.
+
+This is the per-token role model (server interlock 1): you decide, per bearer
+token, who may only look and who may also change inventory/config on a shared
+server. See `docs/connecting-remote-mcp.md`.
+
+## Generating a token WITH permissions (http / shared server)
+
+When someone wants to MANAGE devices against a server that isn't on their own
+machine, they need a **write-scoped** token, and the server must be started
+with that token in `RAD_MCP_WRITE_TOKENS`. Two roles, two env vars:
+
+| Role | Env var on the server | What the holder can do |
+|---|---|---|
+| read-only | `RAD_MCP_TOKENS` | reads only: `list_devices`, `run_show`, `health_check`, `get_config`, `backup_config`, … |
+| read-write | `RAD_MCP_WRITE_TOKENS` | all reads **plus** `add_device`/`update_device`/`remove_device` and staged `stage_config`/`commit_config`/`save_startup` |
+
+Both are comma-separated; http refuses to start with neither set.
+
+Generate a token — the value is a **secret**: it goes in the server's
+environment, NEVER in an MCP tool call or the inventory:
+
+```
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Then, on the SERVER host, put it under the variable for the role you're
+granting and (re)start the server:
+
+```
+# read-write operator (can manage devices + config):
+RAD_MCP_WRITE_TOKENS=<generated-token>[,<another-rw-token>]
+# read-only viewer:
+RAD_MCP_TOKENS=<generated-token>[,<another-ro-token>]
+```
+
+The client sends the same token as `Authorization: Bearer <token>` (the http
+install-script prompt collects or auto-generates it). A token grants only the
+role it was listed under on the server — a client can't self-escalate. Rotate
+by editing the env var + restarting; a token appearing in BOTH lists is
+treated as read-write. Use TLS once tokens cross the LAN
+(`RAD_MCP_TLS_CERT`/`RAD_MCP_TLS_KEY`).
