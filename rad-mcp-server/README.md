@@ -41,7 +41,9 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 - **[INSTALL.md](INSTALL.md)** — setup hub for six agent targets (Claude
   Code, Claude Desktop, GitHub Copilot, OpenAI Codex) and the three
   deployment modes: local stdio (default, full write flow), a shared
-  HTTPS server you host (read-only), or connecting to a colleague's.
+  HTTPS server you host, or connecting to a colleague's — over http what
+  a client may do follows its bearer token: read-only (`RAD_MCP_TOKENS`)
+  or read-write (`RAD_MCP_WRITE_TOKENS`).
   Per-target specifics in
   [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md). Start here.
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,

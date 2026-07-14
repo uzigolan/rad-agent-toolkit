@@ -35,24 +35,29 @@ Copilot/Codex you get its effect by asking in plain language instead.
 
 | Mode | What runs where | Writes | Setup |
 |---|---|---|---|
-| **1. Local (stdio)** — the default | each client launches its own server process on your machine | ✅ staged commits | common setup + your target's guide |
-| **2. Shared server, hosted by you (HTTPS)** | you run one HTTP(S) server; colleagues connect by URL + bearer token | ❌ read-only, forced in code | common setup + [docs/connecting-remote-mcp.md](docs/connecting-remote-mcp.md) |
-| **3. Client to someone else's server** | a colleague hosts mode 2; you just add a URL | ❌ read-only | no venv, no repo, no credentials — [see below](#connect-to-a-shared-remote-server-someone-else-is-hosting-rad-mcp) |
+| **1. Local (stdio)** — the default | each client launches its own server process on your machine | ✅ staged commits, no token needed | common setup + your target's guide |
+| **2. Shared server, hosted by you (HTTPS)** | you run one HTTP(S) server; colleagues connect by URL + bearer token | per token: read-only (`RAD_MCP_TOKENS`) or read-write (`RAD_MCP_WRITE_TOKENS`) | common setup + [docs/connecting-remote-mcp.md](docs/connecting-remote-mcp.md) |
+| **3. Client to someone else's server** | a colleague hosts mode 2; you just add a URL | depends on which token the host gave you | no venv, no repo, no credentials — [see below](#connect-to-a-shared-remote-server-someone-else-is-hosting-rad-mcp) |
 
 **Mode 1 — Local (stdio).** The client spawns the server as its own child
-process; nothing listens on the network. The only mode with the full
-toolset (staged writes, `save_startup`, inventory writes). Choose it when
+process; nothing listens on the network. Full toolset (staged writes,
+`save_startup`, inventory writes) with no tokens involved. Choose it when
 you operate devices yourself.
 
 **Mode 2 — Shared server, hosted by you.** One long-running
-`RAD_MCP_TRANSPORT=http` process, many clients by URL. Two interlocks are
-enforced in code: no start without bearer tokens (`RAD_MCP_TOKENS`, one per
-consumer), and read-only — write tools are never registered. Set
+`RAD_MCP_TRANSPORT=http` process, many clients by URL. Interlocks are
+enforced in code: no start without bearer tokens, and **what each client
+may do follows the token it presents** — `RAD_MCP_TOKENS` are read-only
+(show/info/health only), `RAD_MCP_WRITE_TOKENS` are read-write (staged
+config commits + inventory management); hand out one per consumer. Set
 `RAD_MCP_TLS_CERT`/`RAD_MCP_TLS_KEY` for native **https**. Internal network
 only — never bind to a public interface.
 
 **Mode 3 — Client to someone else's server.** URL + your personal token in
-your client, nothing else. Modes 2 and 3 are the same server — the only
+your client, nothing else. Read-only or read-write is not your choice —
+it's baked into the token the host issued you (a read-only token gets
+*"This token is read-only…"* on any write attempt). Modes 2 and 3 are the
+same server — the only
 difference is which side of the URL you're on. Skills remain a client-side
 install (the URL provides tools, not knowledge).
 
@@ -68,7 +73,8 @@ server — **each client spawns and owns its own process**. In practice:
 - **Restarts are per-client** — reconnecting in one client doesn't touch
   the others.
 
-One genuinely shared instance = mode 2 on localhost, at the cost of writes.
+One genuinely shared instance = mode 2 on localhost; writes then need a
+write-scoped token (`RAD_MCP_WRITE_TOKENS`).
 
 ### Config anatomy: who runs the server
 

@@ -184,6 +184,9 @@ README.md (this file)
   never execute anything.
 - Dangerous commands (`reboot`, `factory-default`, …) are out of scope by
   design. `RAD_MCP_READONLY=true` removes all write tools.
+- Over http/https, capability follows the bearer token: read-only
+  (`RAD_MCP_TOKENS`) or read-write (`RAD_MCP_WRITE_TOKENS`) — a read-only
+  token is refused on any write attempt.
 - Credentials live only in gitignored `server/.env`; audit log is append-only
   with secrets redacted.
 
