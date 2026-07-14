@@ -43,7 +43,7 @@ from fastmcp.server.dependencies import get_access_token
 from . import __version__
 from .audit import audit, redact
 from .backends import get_backend
-from .drivers import get_driver
+from .drivers import _DRIVERS, get_driver
 from .inventory import add_device_entry, get_device, load_inventory, remove_device_entry, update_device_entry
 
 _TRANSPORT = os.environ.get("RAD_MCP_TRANSPORT", "stdio").lower()
@@ -113,6 +113,7 @@ def _require_write_scope() -> None:
 
 mcp = FastMCP(
     os.environ.get("RAD_MCP_SERVER_NAME", "rad-mcp"),
+    version=__version__,   # reported via MCP serverInfo at the initialize handshake
     instructions=(
         "Operate RAD Data Communications devices (ETX-2 family and beyond). "
         "New device not in list_devices yet? Use add_device to register it "
@@ -143,6 +144,29 @@ def list_devices(group: str = "", family: str = "") -> list[dict]:
             continue
         out.append(d.summary())
     return out
+
+
+@mcp.tool()
+def list_versions() -> dict:
+    """Report the loaded rad-mcp component versions — the server, each skill, and
+    each family driver — so you can tell which revision is running. Read-only,
+    available on every transport. Skill versions are read from the server
+    install's skills/ dir; driver versions from the live driver registry."""
+    skills = []
+    for skill_md in sorted((REPO_ROOT / "skills").glob("*/SKILL.md")):
+        ver, seen = "", 0
+        for line in skill_md.read_text(encoding="utf-8").splitlines():
+            if line.strip() == "---":
+                seen += 1
+                if seen == 2:
+                    break
+                continue
+            if seen == 1 and line.lower().startswith("version:"):
+                ver = line.split(":", 1)[1].strip()
+        skills.append({"name": skill_md.parent.name, "version": ver or "(unset)"})
+    drivers = [{"family": f, "version": getattr(d, "version", "?")}
+               for f, d in sorted(_DRIVERS.items())]
+    return {"server": __version__, "skills": skills, "drivers": drivers}
 
 
 @mcp.tool()

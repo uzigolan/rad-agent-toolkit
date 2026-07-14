@@ -9,14 +9,14 @@ RAG chunking. Companion to `docs/performance.md` (which covers ingestion
 
 ## Comparative verdict
 
-| | etx1p | secflow | etx2 | mp4100 |
-|---|---|---|---|---|
-| Source structure | Flat, per-topic chapters (22 TOC entries) | Same shape as etx1p (23 entries) | 5 giant "Parts," real topics nested 3-6 levels deep | Hybrid: topic chapters + one 259-page "Cards and Ports" holding 26 port types + module annexes (1,202 pages total) |
-| Out of the box | **Good immediately** — no fixes needed | **Good immediately** — no fixes needed | **Bad initially** — 1 cross-link hit, one 1,079-page unusable "chapter" | **Good immediately** — the etx2-built adaptive splitter fired automatically, zero code changes |
-| Final chapters | 14 | 17 | 44 | 38 |
-| Avg file size | 65.4 KB | 59.2 KB | 51.9 KB | 42.6 KB |
-| Cross-link rows | 21 | 21 | 17 (3 topics genuinely absent — see below) | 12 (matcher vocabulary gap for MP-specific areas — see below) |
-| Extraction (mojibake) | Clean | Clean | Clean | Clean |
+| | etx1p | secflow | etx2 | mp4100 | mp1 |
+|---|---|---|---|---|---|
+| Source structure | Flat, per-topic chapters (22 TOC entries) | Same shape as etx1p (23 entries) | 5 giant "Parts," real topics nested 3-6 levels deep | Hybrid: topic chapters + one 259-page "Cards and Ports" holding 26 port types + module annexes (1,202 pages total) | Topic chapters + a 74-page "Ports" chapter (5.x) + 3 appendices; 517 pages |
+| Out of the box | **Good immediately** — no fixes needed | **Good immediately** — no fixes needed | **Bad initially** — 1 cross-link hit, one 1,079-page unusable "chapter" | **Good immediately** — the etx2-built adaptive splitter fired automatically, zero code changes | **Good immediately** — same adaptive splitter, zero code changes |
+| Final chapters | 14 | 17 | 44 | 38 | 17 |
+| Avg file size | 65.4 KB | 59.2 KB | 51.9 KB | 42.6 KB | 37.2 KB |
+| Cross-link rows | 21 | 21 | 17 (3 topics genuinely absent — see below) | 12 (matcher vocabulary gap for MP-specific areas — see below) | 9 (MP-1 is a compact subset — fewer feature areas) |
+| Extraction (mojibake) | Clean | Clean | Clean | Clean | Clean |
 
 **etx1p and secflow were naturally excellent for lexical retrieval from the
 first ingest.** Their source PDFs already segment by topic at exactly the

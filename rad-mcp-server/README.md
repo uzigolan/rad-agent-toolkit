@@ -2,8 +2,8 @@
 
 Agent expertise + MCP server for operating RAD Data Communications devices
 through their CLI in natural language — the **full RAD portfolio** by design:
-SecFlow (SF-1p), ETX-1p, ETX-2 (ETX-2I), and Megaplex-4100 verified live, with
-legacy ETX-1 planned.
+SecFlow (SF-1p), ETX-1p, ETX-2 (ETX-2I), Megaplex-4100, and MP-1 verified live,
+with legacy ETX-1 planned.
 
 The center of gravity is the **skill layer** — live-harvested CLI knowledge,
 ingested user manuals, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
@@ -25,6 +25,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 | `etx2` | ETX-203AX / 205A / 220A / ETX-2I | `drivers/etx2.py` | ✅ verified live (ETX-2I Sw 6.8.5(1.116)) — `show resources` unsupported, slot/port naming; CLI reference + manual harvested |
 | `etx1` | legacy ETX-1 line | planned | different CLI — own driver base |
 | `mp4100` | Megaplex-4100 multiservice access nodes | `drivers/mp4100.py` | ✅ verified live (marks-mp4, Mn 4.91) — same shared dialect + candidate-DB `commit` model; CLI reference + 1,202-page manual harvested |
+| `mp1` | MP-1 | `drivers/mp1.py` | ✅ verified live (mp-one, SW 2.20(0.61)) — shared dialect + candidate-DB `commit` model; standard SSH; CLI reference + manual harvested |
 
 > **Status: internal RAD pilot.** Do not point at production equipment.
 
@@ -48,6 +49,9 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md). Start here.
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,
   safety model, knowledge layers, distribution roadmap.
+- **[docs/VERSIONS.md](docs/VERSIONS.md)** — component versions (server, skills,
+  drivers), where each version lives, and the bump policy. Live view: the
+  `list_versions` tool.
 
 ## What the agent can do with it
 

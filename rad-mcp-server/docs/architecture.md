@@ -35,7 +35,8 @@ into the MCP ecosystem.
         │                   ├── secflow  (SF-1p — verified live)
         │                   ├── etx1p    (ETX-1p — verified live)
         │                   ├── etx2     (ETX-203AX/205A/220A/ETX-2I — verified live)
-        │                   └── mp4100   (Megaplex-4100 — verified live; candidate-DB commit)
+        │                   ├── mp4100   (Megaplex-4100 — verified live; candidate-DB commit)
+        │                   └── mp1      (MP-1 — verified live; shared dialect + candidate-DB commit)
         │                 etx1 (legacy) — different CLI, own driver base [planned]
         │
  devices                  inventory.yaml (name/host/family/groups; creds in server/.env)

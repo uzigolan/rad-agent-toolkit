@@ -37,13 +37,18 @@ class SSHBackend(Backend):
 
     def _connect(self, device: Device, timeout: int):
         driver = get_driver(device.family)
+        # Per-family SSH tuning (legacy KEX/ciphers, timeouts, keepalive for old
+        # or unstable links). The driver's options override this baseline.
+        opts = {"conn_timeout": 15, **getattr(driver, "ssh_connect_options", {})}
         # RAD units refuse a new SSH session while the previous one is still
         # being torn down (Paramiko surfaces this as "No existing session"),
-        # so retry connection setup with a short backoff.
+        # so retry connection setup with a backoff — both tunable per family.
+        attempts = max(1, getattr(driver, "connect_attempts", 3))
+        backoff = getattr(driver, "connect_backoff", 2.0)
         last_exc: Exception | None = None
-        for attempt in range(3):
+        for attempt in range(attempts):
             if attempt:
-                time.sleep(2.0 * attempt)
+                time.sleep(backoff * attempt)
             try:
                 return ConnectHandler(
                     device_type=driver.netmiko_device_type,
@@ -52,7 +57,7 @@ class SSHBackend(Backend):
                     username=device.username,
                     password=device.password,
                     timeout=timeout,
-                    conn_timeout=15,
+                    **opts,
                 )
             except Exception as exc:
                 last_exc = exc

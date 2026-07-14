@@ -1,7 +1,10 @@
 ---
 name: rad-device-mng
 description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units. ALSO load whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent" with an inventory operation — e.g. "noam, show the list of devices", "rad agent, add my device", "abayev, remove Device3 from the list".
+version: 1.0.0
 ---
+
+> **Skill version:** 1.0.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Managing the device inventory
 

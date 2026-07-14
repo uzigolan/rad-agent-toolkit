@@ -9,10 +9,11 @@ lives here so the skill stays small while the map keeps growing.
 every command exists everywhere — ALWAYS match the `Families` column
 against the target device's inventory `family` before answering. `all` =
 confirmed in the harvested references of secflow, etx1p, AND etx2
-(cross-checked 2026-07-10). **`mp4100` is NOT covered by `all`** — its
-reference was harvested 2026-07-12 but these rows haven't been
-cross-checked against it yet; grep `cli-reference-mp4100.md` before
-answering mp4100 syntax from this table. Port naming still differs per family even for
+(cross-checked 2026-07-10). **`mp4100` and `mp1` are NOT covered by `all`** —
+their references were harvested (mp4100 2026-07-12, mp1 2026-07-14) but these
+rows haven't been cross-checked against them yet; grep
+`cli-reference-mp4100.md` / `cli-reference-mp1.md` before answering
+mp4100/mp1 syntax from this table. Port naming still differs per family even for
 `all` rows: secflow ports are numeric (`ethernet 3`), etx1p ports are named
 (`ethernet lan1`).
 
