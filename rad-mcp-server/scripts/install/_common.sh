@@ -25,11 +25,15 @@ _py() {
 
 # First interpreter that is Python >= 3.10, preferring newer explicit names.
 # Empty if none is found (e.g. RHEL where python3 is 3.6).
+# Candidates may be broken shims that print error text to stdout — this
+# function's stdout is captured by callers, so probe output must never leak
+# into it, and the RADPY marker proves a real interpreter actually ran.
 _best_python() {
-    local c
+    local c out
     for c in python3.13 python3.12 python3.11 python3.10 python3 python; do
-        if command -v "$c" >/dev/null 2>&1 \
-           && "$c" -c 'import sys; raise SystemExit(0 if sys.version_info[:2] >= (3, 10) else 1)' 2>/dev/null; then
+        command -v "$c" >/dev/null 2>&1 || continue
+        out="$("$c" -c 'import sys; sys.stdout.write("RADPY" if sys.version_info[:2] >= (3, 10) else "")' 2>/dev/null)" || continue
+        if [ "$out" = "RADPY" ]; then
             echo "$c"; return 0
         fi
     done

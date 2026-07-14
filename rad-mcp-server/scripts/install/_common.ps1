@@ -12,13 +12,21 @@ $script:SkillNames = @('rad-core', 'rad-cli-operations', 'rad-device-mng')
 
 # First interpreter that is Python >= 3.10. Returns the command or $null.
 function Get-BestPython {
+    # Candidates may be broken shims (e.g. stale Chocolatey shims) that print
+    # their own error text to stdout — capture probe output instead of letting
+    # it leak into this function's return value, and require the "RADPY" marker
+    # to prove a real interpreter actually ran.
+    # NB: single quotes inside the Python code — PS 5.1 mangles embedded double
+    # quotes when passing arguments to native executables.
+    $probe = "import sys; sys.stdout.write('RADPY'); raise SystemExit(0 if sys.version_info[:2] >= (3,10) else 1)"
+
     # Prefer explicit python* commands first (works on all platforms).
     foreach ($c in @('python3.13', 'python3.12', 'python3.11', 'python3.10', 'python', 'python3')) {
         $cmd = Get-Command $c -ErrorAction SilentlyContinue
         if (-not $cmd) { continue }
         try {
-            & $c -c 'import sys; raise SystemExit(0 if sys.version_info[:2] >= (3,10) else 1)' 2>$null
-            if ($LASTEXITCODE -eq 0) { return $c }
+            $out = & $c -c $probe 2>$null
+            if ($LASTEXITCODE -eq 0 -and "$out" -match 'RADPY') { return $c }
         } catch { }
     }
 
@@ -27,12 +35,12 @@ function Get-BestPython {
     if ($pyLauncher) {
         foreach ($sel in @('-3.13', '-3.12', '-3.11', '-3.10', '-3')) {
             try {
-                & py $sel -c 'import sys; raise SystemExit(0 if sys.version_info[:2] >= (3,10) else 1)' 2>$null
-                if ($LASTEXITCODE -ne 0) { continue }
+                $out = & py $sel -c $probe 2>$null
+                if ($LASTEXITCODE -ne 0 -or "$out" -notmatch 'RADPY') { continue }
                 $exeOut = & py $sel -c 'import sys; print(sys.executable)' 2>$null
                 if ($LASTEXITCODE -eq 0 -and $exeOut) {
                     $exe = ($exeOut -split "`r?`n" | Select-Object -First 1).ToString().Trim()
-                    if ($exe) { return $exe }
+                    if ($exe -and (Test-Path $exe)) { return $exe }
                 }
             } catch { }
         }
