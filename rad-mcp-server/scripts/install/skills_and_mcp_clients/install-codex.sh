@@ -18,13 +18,15 @@ while [ $# -gt 0 ]; do
         --stdio) MODE=stdio; shift ;;
         --url) HTTP_URL="$2"; shift 2 ;;
         --token) HTTP_TOKEN="$2"; shift 2 ;;
+        --name) NAME="$2"; shift 2 ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
+NAME="${NAME:-rad-mcp}"
 
 CFG_PATH="$HOME/.codex/config.toml"
-if [ -f "$CFG_PATH" ] && grep -q '\[mcp_servers\.rad-mcp\]' "$CFG_PATH"; then
-    echo "$CFG_PATH already has a [mcp_servers.rad-mcp] section - remove or edit" >&2
+if [ -f "$CFG_PATH" ] && grep -q "\[mcp_servers\.${NAME}\]" "$CFG_PATH"; then
+    echo "$CFG_PATH already has a [mcp_servers.$NAME] section - remove or edit" >&2
     echo "that section first (disable-previous rule), then rerun." >&2
     exit 1
 fi
@@ -41,16 +43,16 @@ prompt_transport
 
 if [ "$MODE" = http ]; then
     BLOCK="
-# rad-mcp - http client: server runs manually (read-only by the code interlock)
-[mcp_servers.rad-mcp]
+# $NAME - http client: server runs manually (read-only by the code interlock)
+[mcp_servers.$NAME]
 url = \"$HTTP_URL\"
 http_headers = { Authorization = \"Bearer $HTTP_TOKEN\" }
 "
 else
     assert_common_setup
     BLOCK="
-# rad-mcp - stdio: Codex launches its own instance (full toolset incl. staged writes)
-[mcp_servers.rad-mcp]
+# $NAME - stdio: Codex launches its own instance (full toolset incl. staged writes)
+[mcp_servers.$NAME]
 command = \"$RAD_ROOT/server/.venv/bin/python\"
 args = [\"-m\", \"rad_mcp.server\"]
 cwd = \"$RAD_ROOT/server\"

@@ -14,6 +14,14 @@
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
+NAME="rad-mcp"
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --name) NAME="$2"; shift 2 ;;
+        *) echo "unknown argument: $1" >&2; exit 1 ;;
+    esac
+done
+
 assert_common_setup
 
 case "$(uname -s)" in
@@ -33,14 +41,14 @@ esac
 
 backup_json_config "$CFG_PATH"
 
-set_json_mcp_entry "$CFG_PATH" mcpServers "$(new_stdio_entry)"
+set_json_mcp_entry "$CFG_PATH" mcpServers "$(new_stdio_entry)" "$NAME"
 
 "$VENV_PYTHON" "$RAD_ROOT/scripts/build_desktop_skills.py"
 ZIP_DIR="$RAD_ROOT/dist/claude-desktop-skills"
 
 echo ""
 echo "Done, two manual steps remain (Desktop offers no automation for them):"
-echo "  MCP client config is set in: $CFG_PATH (mcpServers.rad-mcp, mode: stdio)"
+echo "  MCP client config is set in: $CFG_PATH (mcpServers.$NAME, mode: stdio)"
 echo "  1. FULLY restart Desktop: quit from the tray/menu (window close is NOT enough), relaunch."
 echo "  2. Sidebar Customize -> Skills -> upload the zips now opening in your file manager"
 echo "     (replace existing ones if already uploaded)."

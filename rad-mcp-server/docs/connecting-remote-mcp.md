@@ -116,7 +116,7 @@ curl -sL -o /dev/null -w "%{http_code}\n" -X POST http://<host>:8080/mcp \
 ## Troubleshooting: 401 Unauthorized (token mismatch)
 
 The #1 first-run gotcha: the **client token must be byte-for-byte identical**
-to a token the server was started with. `install-and-restart-mcp-server.sh` and the install
+to a token the server was started with. `install-and-start-http-mcp-server.sh` and the install
 scripts each auto-generate a token when you don't supply one, so running both
 without pinning a value yields **two different tokens** — every request then
 logs `401 Unauthorized` / `invalid_token`. (The `/.well-known/oauth-*` 404s in
@@ -126,7 +126,7 @@ Fix — make them match, then restart the client session:
 
 ```
 # EITHER start the server with the client's existing token:
-./scripts/install/mcp_server/install-and-restart-mcp-server.sh --host 0.0.0.0 --write-token <client-token>
+./scripts/install/mcp_server/install-and-start-http-mcp-server.sh --host 0.0.0.0 --write-token <client-token>
 
 # OR repoint the client at the running server's token (Copilot CLI shown):
 sed -i 's#Bearer [^"]*#Bearer <server-token>#' ~/.copilot/mcp-config.json

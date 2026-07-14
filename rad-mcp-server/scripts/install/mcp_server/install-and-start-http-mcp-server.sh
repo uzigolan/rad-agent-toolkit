@@ -1,35 +1,38 @@
 #!/usr/bin/env bash
 #
-# (Re)start the rad-mcp server over HTTP/HTTPS (manual launch — the terminal
-# IS the server; closing it stops it). If a server is already listening on the
-# chosen port, it is stopped first. This does NOT configure any client; run
-# the matching install-*.sh in http mode for that.
+# Install and start the rad-mcp server over HTTP/HTTPS (manual launch — the
+# terminal IS the server; closing it stops it). If a server is already
+# listening on the chosen port, it is stopped first (so re-running restarts
+# it). This does NOT configure any client; run the matching install-*.sh in
+# http mode for that.
 #
-#   ./install-and-restart-mcp-server.sh                       # interactive host/port/token prompts
-#   ./install-and-restart-mcp-server.sh --host 0.0.0.0 --port 8080 --write-token <t>
-#   ./install-and-restart-mcp-server.sh --read-token <t> --write-token <t> --tls-cert c.pem --tls-key k.pem
+#   ./install-and-start-http-mcp-server.sh                       # interactive host/port/token prompts
+#   ./install-and-start-http-mcp-server.sh --host 0.0.0.0 --port 8080 --write-token <t>
+#   ./install-and-start-http-mcp-server.sh --read-token <t> --write-token <t> --tls-cert c.pem --tls-key k.pem
 #
 # At least one token is required (http refuses to start unauthenticated). With
 # no token flags, the interactive prompt offers read-write, read-only, or BOTH
 # (one of each), so you can hand out whichever role to each client.
 #   --read-token  -> RAD_MCP_TOKENS        (read-only clients)
 #   --write-token -> RAD_MCP_WRITE_TOKENS  (read-write clients: manage devices + config)
+#   --name        -> RAD_MCP_SERVER_NAME   (server name reported to clients; default rad-mcp)
 # Pass both flags to run with a read-only AND a read-write token at once.
 #
 # TLS NOTE: Claude Desktop (and most hosted MCP clients) only connect to HTTPS
 # endpoints. Provide --tls-cert + --tls-key (PEM files) or answer the
-# interactive prompt. Without TLS the server runs plain HTTP — only local
-# stdio clients will connect.
+# interactive prompt. Without TLS the server runs plain HTTP — only clients
+# that accept plain-HTTP endpoints (e.g. local VS Code / Codex) will connect.
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
-HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""
+HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""; NAME="rad-mcp"
 while [ $# -gt 0 ]; do
     case "$1" in
         --host) HOST="$2"; shift 2 ;;
         --port) PORT="$2"; shift 2 ;;
         --read-token) READ_TOKEN="$2"; shift 2 ;;
         --write-token) WRITE_TOKEN="$2"; shift 2 ;;
+        --name) NAME="$2"; shift 2 ;;
         --new-tokens) NEW_TOKENS=1; shift ;;
         --tls-cert) TLS_CERT="$2"; shift 2 ;;
         --tls-key) TLS_KEY="$2"; shift 2 ;;
@@ -38,22 +41,6 @@ while [ $# -gt 0 ]; do
 done
 
 assert_common_setup
-
-# Transport selection
-echo ""
-echo "Select transport:"
-echo "  1) stdio  - run locally in stdio mode (no network; a client connects via command/args)"
-echo "  2) http   - shared HTTP/HTTPS network server (clients connect by URL + bearer token)"
-read -r -p "Choice [2]: " trans_ans || trans_ans=""
-case "$trans_ans" in
-    1|stdio)
-        export RAD_MCP_TRANSPORT="stdio"
-        export RAD_MCP_INVENTORY="$INVENTORY"
-        echo ""
-        echo "Starting rad-mcp in stdio mode  (Ctrl-C to stop)"
-        (cd "$RAD_ROOT/server" && exec "$VENV_PYTHON" -m rad_mcp.server)
-        exit
-esac
 
 # --- HTTP/HTTPS mode ---
 # Tokens persist across restarts in this gitignored file so a restart reuses the
@@ -145,7 +132,7 @@ if [ -z "$TLS_CERT" ] && [ -z "$TLS_KEY" ]; then
     echo "TLS configuration (required for Claude Desktop and other HTTPS-only clients):"
     if [ "$CERT_EXISTS" = "1" ] && [ "$KEY_EXISTS" = "1" ]; then
         echo "  Found existing cert from previous run: $DEFAULT_CERT"
-        echo "  1) No TLS       - plain HTTP (delete the old cert); only local/stdio clients will connect"
+        echo "  1) No TLS       - plain HTTP (delete the old cert); only plain-HTTP clients (local VS Code/Codex) will connect"
         echo "  2) Reuse cert   - HTTPS; use the existing certificate"
         echo "  3) Self-signed  - HTTPS; generate a new cert + key (replaces the old one)"
         echo "  4) Imported     - HTTPS; provide paths to different PEM cert + key files"
@@ -204,7 +191,7 @@ PY
                 ;;
         esac
     else
-        echo "  1) No TLS       - plain HTTP; only local/stdio clients will connect"
+        echo "  1) No TLS       - plain HTTP; only plain-HTTP clients (local VS Code/Codex) will connect"
         echo "  2) Self-signed  - HTTPS; generate a new cert + key automatically (fastest)"
         echo "  3) Imported     - HTTPS; provide paths to existing PEM cert + key files"
         read -r -p "Choice [1]: " tls_ans || tls_ans=""
@@ -257,6 +244,7 @@ if [ -n "$TLS_CERT$TLS_KEY" ] && { [ -z "$TLS_CERT" ] || [ -z "$TLS_KEY" ]; }; t
 fi
 
 export RAD_MCP_TRANSPORT="http"
+export RAD_MCP_SERVER_NAME="$NAME"
 export RAD_MCP_HOST="$HOST"
 export RAD_MCP_PORT="$PORT"
 export RAD_MCP_INVENTORY="$INVENTORY"
@@ -290,6 +278,6 @@ if [ -n "$TLS_CERT" ]; then
     echo "  TLS key:  $TLS_KEY"
     echo "  (FastMCP logs 'transport http' — transport name, not scheme; Uvicorn confirms https://)"
 fi
-echo "Starting rad-mcp on ${scheme}://${HOST}:${PORT}/mcp  (Ctrl-C to stop)"
+echo "Starting $NAME on ${scheme}://${HOST}:${PORT}/mcp  (Ctrl-C to stop)"
 [ "$HOST" != "127.0.0.1" ] && echo "Reachable on the LAN — internal networks only, never a public interface."
 (cd "$RAD_ROOT/server" && exec "$VENV_PYTHON" -m rad_mcp.server)

@@ -19,9 +19,11 @@ while [ $# -gt 0 ]; do
         --stdio) MODE=stdio; shift ;;
         --url) HTTP_URL="$2"; shift 2 ;;
         --token) HTTP_TOKEN="$2"; shift 2 ;;
+        --name) NAME="$2"; shift 2 ;;   # http mode only; plugin/stdio uses the plugin's bundled name
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
+NAME="${NAME:-rad-mcp}"
 
 if ! command -v claude >/dev/null 2>&1; then
     echo "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)" >&2
@@ -31,8 +33,8 @@ fi
 prompt_transport
 
 if [ "$MODE" = http ]; then
-    claude mcp remove rad-mcp 2>/dev/null || true
-    claude mcp add --transport http rad-mcp "$HTTP_URL" --header "Authorization: Bearer $HTTP_TOKEN"
+    claude mcp remove "$NAME" 2>/dev/null || true
+    claude mcp add --transport http "$NAME" "$HTTP_URL" --header "Authorization: Bearer $HTTP_TOKEN"
     echo "  mcp   -> http client of $HTTP_URL (read-only)"
     show_mcp_config_text "transport = http
 url       = $HTTP_URL

@@ -15,6 +15,7 @@ param(
     [switch]$Http,
     [string]$Url,
     [string]$Token,
+    [string]$Name = 'rad-mcp',
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
@@ -24,8 +25,8 @@ New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
 Backup-JsonConfig -Path $cfgPath
 
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
-if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers')) {
-    Write-Host "  mcp   -> kept existing rad-mcp entry in $cfgPath"
+if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -Name $Name)) {
+    Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
     Copy-SkillsTo "$env:USERPROFILE\.copilot\skills"
     Write-Host ""
     Write-Host "Done. Existing MCP config kept; skills refreshed. Reload the VS Code window."
@@ -54,7 +55,7 @@ if (-not ($Http -or $Url -or $Token)) {
     $entry = New-StdioEntry -WithType
 }
 
-Set-JsonMcpEntry -Path $cfgPath -RootKey 'servers' -Entry $entry
+Set-JsonMcpEntry -Path $cfgPath -RootKey 'servers' -Entry $entry -Name $Name
 Copy-SkillsTo "$env:USERPROFILE\.copilot\skills"
 
 Write-Host ""

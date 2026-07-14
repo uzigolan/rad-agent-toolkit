@@ -10,7 +10,10 @@ skill zips and opens the zip folder — the upload itself is manual
 
 Prompts for transport:
   stdio only — Desktop launches the server itself (full toolset incl. staged writes).
+
+  .\install-claude-desktop.ps1 -Name my-rad   # register under a custom name (default rad-mcp)
 #>
+param([string]$Name = 'rad-mcp')
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 
 Assert-CommonSetup
@@ -25,14 +28,14 @@ Backup-JsonConfig -Path $cfgPath
 
 $entry = New-StdioEntry
 
-Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry
+Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry -Name $Name
 
 & $VenvPython (Join-Path $RadRoot 'scripts\build_desktop_skills.py')
 $zipDir = Join-Path $RadRoot 'dist\claude-desktop-skills'
 
 Write-Host ""
 Write-Host "Done, two manual steps remain (Desktop offers no automation for them):"
-Write-Host "  MCP client config is set in: $cfgPath (mcpServers.rad-mcp, mode: stdio)"
+Write-Host "  MCP client config is set in: $cfgPath (mcpServers.$Name, mode: stdio)"
 Write-Host "  1. FULLY restart Desktop: system-tray icon -> Quit (window close is NOT enough), relaunch."
 Write-Host "  2. Sidebar Customize -> Skills -> upload the zips now opening in Explorer"
 Write-Host "     (replace existing ones if already uploaded)."

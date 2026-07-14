@@ -108,7 +108,7 @@ skill frontmatter fails **silently** (`name` lowercase and matching the
 folder).
 
 **Important (http mode):** you must start the MCP listener yourself (for
-example via `scripts/install/mcp_server/install-and-restart-mcp-server.ps1`
+example via `scripts/install/mcp_server/install-and-start-http-mcp-server.ps1`
 or `.sh`). Copilot's Start/Restart action does not launch that listener; it
 only controls Copilot's local MCP runtime/connection state.
 

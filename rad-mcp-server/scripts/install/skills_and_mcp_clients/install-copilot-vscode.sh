@@ -18,10 +18,12 @@ while [ $# -gt 0 ]; do
         --stdio) MODE=stdio; shift ;;
         --url) HTTP_URL="$2"; shift 2 ;;
         --token) HTTP_TOKEN="$2"; shift 2 ;;
+        --name) NAME="$2"; shift 2 ;;
         --reconfigure) RAD_RECONFIGURE=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
+NAME="${NAME:-rad-mcp}"
 
 case "$(uname -s)" in
     Darwin) CFG="$HOME/Library/Application Support/Code/User/mcp.json" ;;
@@ -29,9 +31,9 @@ case "$(uname -s)" in
     *) CFG="$HOME/.config/Code/User/mcp.json" ;;
 esac
 
-maybe_keep_existing "$CFG" servers
+maybe_keep_existing "$CFG" servers "$NAME"
 if [ -n "$KEEP_EXISTING" ]; then
-    echo "  mcp   -> kept existing rad-mcp entry in $CFG"
+    echo "  mcp   -> kept existing $NAME entry in $CFG"
 else
     prompt_transport
 
@@ -41,7 +43,7 @@ else
         assert_common_setup
         ENTRY="$(new_stdio_entry with-type)"
     fi
-    set_json_mcp_entry "$CFG" servers "$ENTRY"
+    set_json_mcp_entry "$CFG" servers "$ENTRY" "$NAME"
 fi
 copy_skills_to "$HOME/.copilot/skills"
 

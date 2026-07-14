@@ -142,12 +142,13 @@ function Format-Json {
 }
 
 function Set-JsonMcpEntry {
-    # Create/merge a JSON config file, replacing any existing rad-mcp entry
+    # Create/merge a JSON config file, replacing any existing entry named $Name
     # under the given root key ("mcpServers" or "servers").
     param(
         [Parameter(Mandatory)][string]$Path,
         [Parameter(Mandatory)][string]$RootKey,
-        [Parameter(Mandatory)]$Entry
+        [Parameter(Mandatory)]$Entry,
+        [string]$Name = 'rad-mcp'
     )
     if (Test-Path $Path) {
         $cfg = Get-Content $Path -Raw | ConvertFrom-Json
@@ -159,15 +160,15 @@ function Set-JsonMcpEntry {
         $cfg | Add-Member -NotePropertyName $RootKey -NotePropertyValue ([pscustomobject]@{})
     }
     $root = $cfg.$RootKey
-    if ($root.PSObject.Properties['rad-mcp']) {
-        $root.PSObject.Properties.Remove('rad-mcp')
-        Write-Host "  replaced existing rad-mcp entry in $Path"
+    if ($root.PSObject.Properties[$Name]) {
+        $root.PSObject.Properties.Remove($Name)
+        Write-Host "  replaced existing $Name entry in $Path"
     }
-    $root | Add-Member -NotePropertyName 'rad-mcp' -NotePropertyValue ([pscustomobject]$Entry)
+    $root | Add-Member -NotePropertyName $Name -NotePropertyValue ([pscustomobject]$Entry)
     $json = Format-Json ($cfg | ConvertTo-Json -Depth 10 -Compress)
     [System.IO.File]::WriteAllText($Path, $json + "`n")
     Write-Host "  mcp   -> $Path"
-    Show-McpConfigText -Text (Format-Json (([pscustomobject]@{ 'rad-mcp' = [pscustomobject]$Entry }) | ConvertTo-Json -Depth 10 -Compress))
+    Show-McpConfigText -Text (Format-Json (([pscustomobject]@{ $Name = [pscustomobject]$Entry }) | ConvertTo-Json -Depth 10 -Compress))
 }
 
 function Hide-BearerToken {
@@ -266,14 +267,15 @@ function Test-KeepExisting {
     param(
         [Parameter(Mandatory)][string]$Path,
         [Parameter(Mandatory)][string]$RootKey,
+        [string]$Name = 'rad-mcp',
         [switch]$Reconfigure
     )
     if ($Reconfigure) { return $false }
     if (-not (Test-Path $Path)) { return $false }
     try { $cfg = Get-Content $Path -Raw | ConvertFrom-Json } catch { return $false }
     $root = $cfg.$RootKey
-    if (-not $root -or -not $root.PSObject.Properties['rad-mcp']) { return $false }
-    $e = $root.'rad-mcp'
+    if (-not $root -or -not $root.PSObject.Properties[$Name]) { return $false }
+    $e = $root.$Name
     $type = if ($e.PSObject.Properties['type']) { $e.type } else { 'stdio' }
     if ($type -eq 'http') {
         $auth = ''
@@ -288,7 +290,7 @@ function Test-KeepExisting {
         $cmd = if ($e.PSObject.Properties['command']) { $e.command } else { '?' }
         $summary = "$type  command=$cmd"
     }
-    Write-Host "rad-mcp is already configured in ${Path}:"
+    Write-Host "$Name is already configured in ${Path}:"
     Write-Host "    $summary"
     Write-Host "  1) Keep existing configuration (leave it unchanged)"
     Write-Host "  2) Reconfigure from scratch (re-run setup and replace it)"

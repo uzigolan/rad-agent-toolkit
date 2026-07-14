@@ -16,12 +16,12 @@ the server itself.
 
 | Script | What it does |
 |---|---|
-| `install-and-restart-mcp-server.ps1` / `.sh` | Verify common setup, then stop any existing server on the port and start the HTTP server (interactive prompts for anything not passed as flags) |
+| `install-and-start-http-mcp-server.ps1` / `.sh` | Verify common setup, then stop any existing server on the port and start the HTTP server (interactive prompts for anything not passed as flags) |
 
 ```powershell
-.\install-and-restart-mcp-server.ps1                            # interactive prompts
-.\install-and-restart-mcp-server.ps1 -BindHost 0.0.0.0 -Port 8080 -WriteToken <t>
-.\install-and-restart-mcp-server.ps1 -ReadToken <t> -WriteToken <t> -TlsCert c.pem -TlsKey k.pem
+.\install-and-start-http-mcp-server.ps1                            # interactive prompts
+.\install-and-start-http-mcp-server.ps1 -BindHost 0.0.0.0 -Port 8080 -WriteToken <t>
+.\install-and-start-http-mcp-server.ps1 -ReadToken <t> -WriteToken <t> -TlsCert c.pem -TlsKey k.pem
 ```
 
 Key behaviors:
@@ -45,7 +45,7 @@ prints your real ones; give the read-only token to clients, keep the
 read-write one restricted):
 
 ```text
-.\install-and-restart-mcp-server.ps1
+.\install-and-start-http-mcp-server.ps1
 Bind address (RAD_MCP_HOST):
   1) 127.0.0.1     (this machine only)
   2) 192.168.56.1     (this host's LAN address - reachable by other machines)

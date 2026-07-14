@@ -112,7 +112,7 @@ def _require_write_scope() -> None:
 
 
 mcp = FastMCP(
-    "rad-mcp",
+    os.environ.get("RAD_MCP_SERVER_NAME", "rad-mcp"),
     instructions=(
         "Operate RAD Data Communications devices (ETX-2 family and beyond). "
         "New device not in list_devices yet? Use add_device to register it "

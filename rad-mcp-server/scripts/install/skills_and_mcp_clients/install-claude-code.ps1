@@ -13,7 +13,8 @@ Afterwards: reload the VS Code window / start a new claude session.
 param(
     [switch]$Http,
     [string]$Url,
-    [string]$Token
+    [string]$Token,
+    [string]$Name = 'rad-mcp'   # http mode only; plugin/stdio mode uses the plugin's bundled name
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 
@@ -33,8 +34,8 @@ if (-not ($Http -or $Url -or $Token)) {
 
 if ($Http -or $Url -or $Token) {
     $u, $t = Resolve-HttpArgs $Url $Token
-    claude mcp remove rad-mcp 2>$null
-    claude mcp add --transport http rad-mcp $u --header "Authorization: Bearer $t"
+    claude mcp remove $Name 2>$null
+    claude mcp add --transport http $Name $u --header "Authorization: Bearer $t"
     Write-Host "  mcp   -> http client of $u (read-only)"
     Show-McpConfigText -Text ("transport = http`nurl       = $u`nheader    = Authorization: Bearer $t") `
                        -Title 'added MCP configuration (claude mcp, token masked):'

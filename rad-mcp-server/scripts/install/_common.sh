@@ -205,11 +205,11 @@ backup_json_config() {
 # Create/merge a JSON config file, replacing any existing rad-mcp entry under
 # the given root key ("mcpServers" or "servers"). $1=path $2=root $3=entry-json.
 set_json_mcp_entry() {
-    local path="$1" root="$2" entry="$3"
+    local path="$1" root="$2" entry="$3" name="${4:-rad-mcp}"
     mkdir -p "$(dirname "$path")"
-    "$(_py)" - "$path" "$root" "$entry" <<'PY'
+    "$(_py)" - "$path" "$root" "$entry" "$name" <<'PY'
 import json, os, sys
-path, root, entry_json = sys.argv[1], sys.argv[2], sys.argv[3]
+path, root, entry_json, name = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 entry = json.loads(entry_json)
 if os.path.exists(path):
     with open(path) as f:
@@ -217,16 +217,16 @@ if os.path.exists(path):
 else:
     cfg = {}
 cfg.setdefault(root, {})
-if "rad-mcp" in cfg[root]:
-    del cfg[root]["rad-mcp"]
-    print(f"  replaced existing rad-mcp entry in {path}")
-cfg[root]["rad-mcp"] = entry
+if name in cfg[root]:
+    del cfg[root][name]
+    print(f"  replaced existing {name} entry in {path}")
+cfg[root][name] = entry
 with open(path, "w") as f:
     json.dump(cfg, f, indent=2)
     f.write("\n")
 print(f"  mcp   -> {path}")
 PY
-    show_mcp_config_text "$("$(_py)" -c 'import json,sys; print(json.dumps({"rad-mcp": json.loads(sys.argv[1])}, indent=2))' "$entry")"
+    show_mcp_config_text "$("$(_py)" -c 'import json,sys; print(json.dumps({sys.argv[2]: json.loads(sys.argv[1])}, indent=2))' "$entry" "$name")"
 }
 
 # Print an MCP config snippet with any bearer token masked (first4...last4).
@@ -253,17 +253,17 @@ PY
 # whether to keep it. Sets KEEP_EXISTING=1 when the user keeps it (the caller
 # then skips prompt_transport + set_json_mcp_entry, leaving the config as-is).
 # Skipped when reconfiguration is explicit: flags preset MODE, or --reconfigure
-# sets RAD_RECONFIGURE=1. $1=config-path $2=root-key.
+# sets RAD_RECONFIGURE=1. $1=config-path $2=root-key $3=entry-name (default rad-mcp).
 KEEP_EXISTING=""
 maybe_keep_existing() {
-    local path="$1" root="$2"
+    local path="$1" root="$2" name="${3:-rad-mcp}"
     KEEP_EXISTING=""
     [ -n "$MODE" ] && return                       # flags => reconfigure
     [ "${RAD_RECONFIGURE:-}" = "1" ] && return      # --reconfigure => reconfigure
     local summary
-    summary="$("$(_py)" - "$path" "$root" <<'PY'
+    summary="$("$(_py)" - "$path" "$root" "$name" <<'PY'
 import json, os, sys
-path, root = sys.argv[1], sys.argv[2]
+path, root, name = sys.argv[1], sys.argv[2], sys.argv[3]
 if not os.path.exists(path):
     sys.exit(0)
 try:
@@ -271,7 +271,7 @@ try:
         cfg = json.load(f)
 except Exception:
     sys.exit(0)
-e = (cfg.get(root) or {}).get("rad-mcp")
+e = (cfg.get(root) or {}).get(name)
 if not e:
     sys.exit(0)
 t = e.get("type", "stdio")
@@ -286,7 +286,7 @@ else:
 PY
 )"
     [ -z "$summary" ] && return
-    echo "rad-mcp is already configured in $path:"
+    echo "$name is already configured in $path:"
     echo "    $summary"
     echo "  1) Keep existing configuration (leave it unchanged)"
     echo "  2) Reconfigure from scratch (re-run the prompts and replace it)"

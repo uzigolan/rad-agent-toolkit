@@ -12,13 +12,15 @@ and copies the skills to ~\.agents\skills. Afterwards: restart Codex.
 param(
     [switch]$Http,
     [string]$Url,
-    [string]$Token
+    [string]$Token,
+    [string]$Name = 'rad-mcp'
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 
 $cfgPath = "$env:USERPROFILE\.codex\config.toml"
-if ((Test-Path $cfgPath) -and ((Get-Content $cfgPath -Raw) -match '\[mcp_servers\.rad-mcp\]')) {
-    throw ("$cfgPath already has a [mcp_servers.rad-mcp] section - remove or " +
+$sectionRe = "\[mcp_servers\.$([regex]::Escape($Name))\]"
+if ((Test-Path $cfgPath) -and ((Get-Content $cfgPath -Raw) -match $sectionRe)) {
+    throw ("$cfgPath already has a [mcp_servers.$Name] section - remove or " +
            "edit that section first (disable-previous rule), then rerun.")
 }
 
@@ -39,8 +41,8 @@ if (-not ($Http -or $Url -or $Token)) {
         $u, $t = $transport.Url, $transport.Token
         $block = @"
 
-# rad-mcp - http client: server runs manually (read-only by the code interlock)
-[mcp_servers.rad-mcp]
+# $Name - http client: server runs manually (read-only by the code interlock)
+[mcp_servers.$Name]
 url = "$u"
 http_headers = { Authorization = "Bearer $t" }
 "@
@@ -48,8 +50,8 @@ http_headers = { Authorization = "Bearer $t" }
         Assert-CommonSetup
         $block = @"
 
-# rad-mcp - stdio: Codex launches its own instance (full toolset incl. staged writes)
-[mcp_servers.rad-mcp]
+# $Name - stdio: Codex launches its own instance (full toolset incl. staged writes)
+[mcp_servers.$Name]
 command = "$fwd/server/.venv/Scripts/python.exe"
 args = ["-m", "rad_mcp.server"]
 cwd = "$fwd/server"
@@ -61,8 +63,8 @@ startup_timeout_sec = 20
     $u, $t = Resolve-HttpArgs $Url $Token
     $block = @"
 
-# rad-mcp - http client: server runs manually (read-only by the code interlock)
-[mcp_servers.rad-mcp]
+# $Name - http client: server runs manually (read-only by the code interlock)
+[mcp_servers.$Name]
 url = "$u"
 http_headers = { Authorization = "Bearer $t" }
 "@
@@ -70,8 +72,8 @@ http_headers = { Authorization = "Bearer $t" }
     Assert-CommonSetup
     $block = @"
 
-# rad-mcp - stdio: Codex launches its own instance (full toolset incl. staged writes)
-[mcp_servers.rad-mcp]
+# $Name - stdio: Codex launches its own instance (full toolset incl. staged writes)
+[mcp_servers.$Name]
 command = "$fwd/server/.venv/Scripts/python.exe"
 args = ["-m", "rad_mcp.server"]
 cwd = "$fwd/server"
