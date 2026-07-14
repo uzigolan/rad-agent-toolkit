@@ -3,7 +3,7 @@
 One codebase, seven agent targets (six configuration units — the two Codex surfaces share one config). **Part 1** below explains the principles —
 true for every client. **Part 2** maps them to your specific target
 (per-target specifics in
-[scripts/install/skills_and_mcp_clients/](scripts/install/skills_and_mcp_clients/README.md)). For all the
+[scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md)). For all the
 project's principles beyond installation, see
 [docs/CONCEPTS.md](docs/CONCEPTS.md).
 
@@ -201,13 +201,13 @@ everywhere unmodified — only the folder they load from differs.
 
 | Target | MCP tools | Skills | Slash commands | Verified live | Guide |
 |---|---|---|---|---|---|
-| Claude Code — VS Code extension | ✅ `.mcp.json` | ✅ plugin | ✅ `/rad-health`, … | ✅ daily driver (stdio + http, Windows) | [claude-code §](scripts/install/skills_and_mcp_clients/README.md#claude-code--cli--vs-code-extension) |
-| Claude Code — CLI | ✅ `claude mcp add -s user` | ✅ `~/.claude/skills/` | ✅ `~/.claude/commands/` | ✅ 2026-07-11 (Linux, user-home install) | [claude-code §](scripts/install/skills_and_mcp_clients/README.md#claude-code--cli--vs-code-extension) |
-| Claude Desktop — chat + Cowork | ✅ config file | ✅ zip upload | ❌ plain language | ✅ local stdio only + skills (HTTP/HTTPS entry ignored; proven 2026-07-10) | [claude-desktop §](scripts/install/skills_and_mcp_clients/README.md#claude-desktop--chat--cowork) |
-| GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode §](scripts/install/skills_and_mcp_clients/README.md#github-copilot--vs-code-agent-mode) |
-| GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli §](scripts/install/skills_and_mcp_clients/README.md#github-copilot--cli) |
-| OpenAI Codex — IDE extension | ✅ `~/.codex/config.toml` (shared) | ⚠ `~/.agents/skills/` + `AGENTS.md` backstop | `$skill-name` | ⏳ shared config verified; no dedicated session test | [codex §](scripts/install/skills_and_mcp_clients/README.md#openai-codex--ide-extension--chatgpt-desktop-app) |
-| OpenAI Codex — ChatGPT desktop app | ✅ `~/.codex/config.toml` (shared) | ⚠ `~/.agents/skills/` + `AGENTS.md` backstop | `$skill-name` | ✅ 2026-07-11 (app 27.7, shared http; gate via `AGENTS.md` backstop) | [codex §](scripts/install/skills_and_mcp_clients/README.md#openai-codex--ide-extension--chatgpt-desktop-app) |
+| Claude Code — VS Code extension | ✅ `.mcp.json` | ✅ plugin | ✅ `/rad-health`, … | ✅ daily driver (stdio + http, Windows) | [claude-code §](scripts/install/skills_and_mcp/README.md#claude-code--cli--vs-code-extension) |
+| Claude Code — CLI | ✅ `claude mcp add -s user` | ✅ `~/.claude/skills/` | ✅ `~/.claude/commands/` | ✅ 2026-07-11 (Linux, user-home install) | [claude-code §](scripts/install/skills_and_mcp/README.md#claude-code--cli--vs-code-extension) |
+| Claude Desktop — chat + Cowork | ✅ config file | ✅ zip upload | ❌ plain language | ✅ local stdio only + skills (HTTP/HTTPS entry ignored; proven 2026-07-10) | [claude-desktop §](scripts/install/skills_and_mcp/README.md#claude-desktop--chat--cowork) |
+| GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode §](scripts/install/skills_and_mcp/README.md#github-copilot--vs-code-agent-mode) |
+| GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli §](scripts/install/skills_and_mcp/README.md#github-copilot--cli) |
+| OpenAI Codex — IDE extension | ✅ `~/.codex/config.toml` (shared) | ⚠ `~/.agents/skills/` + `AGENTS.md` backstop | `$skill-name` | ⏳ shared config verified; no dedicated session test | [codex §](scripts/install/skills_and_mcp/README.md#openai-codex--ide-extension--chatgpt-desktop-app) |
+| OpenAI Codex — ChatGPT desktop app | ✅ `~/.codex/config.toml` (shared) | ⚠ `~/.agents/skills/` + `AGENTS.md` backstop | `$skill-name` | ✅ 2026-07-11 (app 27.7, shared http; gate via `AGENTS.md` backstop) | [codex §](scripts/install/skills_and_mcp/README.md#openai-codex--ide-extension--chatgpt-desktop-app) |
 
 ## Scripted install (repo already cloned on this machine)
 
@@ -217,22 +217,22 @@ duplicating it; each ends by printing its client's restart/verify step):
 
 | Target | Script | Modes |
 |---|---|---|
-| Claude Code (CLI + VS Code ext) | `scripts\install\skills_and_mcp_clients\install-claude-code.ps1` | plugin/stdio (default), `-Http -Token <t>` |
-| Claude Desktop | `scripts\install\skills_and_mcp_clients\install-claude-desktop.ps1` | local stdio only (no HTTP/HTTPS); zip upload stays manual |
-| Copilot VS Code | `scripts\install\skills_and_mcp_clients\install-copilot-vscode.ps1 [-Workspace <dir>]` | stdio (default), `-Http -Token <t>` |
-| Copilot CLI | `scripts\install\skills_and_mcp_clients\install-copilot-cli.ps1` | stdio (default), `-Http -Token <t>` |
-| Codex (CLI/IDE/desktop) | `scripts\install\skills_and_mcp_clients\install-codex.ps1` | stdio (default), `-Http -Token <t>` |
+| Claude Code (CLI + VS Code ext) | `scripts\install\skills_and_mcp\install-claude-code.ps1` | plugin/stdio (default), `-Http -Token <t>` |
+| Claude Desktop | `scripts\install\skills_and_mcp\install-claude-desktop.ps1` | local stdio only (no HTTP/HTTPS); zip upload stays manual |
+| Copilot VS Code | `scripts\install\skills_and_mcp\install-copilot-vscode.ps1 [-Workspace <dir>]` | stdio (default), `-Http -Token <t>` |
+| Copilot CLI | `scripts\install\skills_and_mcp\install-copilot-cli.ps1` | stdio (default), `-Http -Token <t>` |
+| Codex (CLI/IDE/desktop) | `scripts\install\skills_and_mcp\install-codex.ps1` | stdio (default), `-Http -Token <t>` |
 
 `-Http` defaults the URL to `http://127.0.0.1:8080/mcp` (override with
 `-Url`). The per-client sections in
-[scripts/install/skills_and_mcp_clients/](scripts/install/skills_and_mcp_clients/README.md)
+[scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md)
 remain the reference for trust dialogs, org-policy gates, and
 troubleshooting.
 
 ## Troubleshooting (all targets)
 
 Target-specific tables live in the per-client sections of
-[scripts/install/skills_and_mcp_clients/](scripts/install/skills_and_mcp_clients/README.md).
+[scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md).
 Common to every surface:
 
 | Symptom | Fix |

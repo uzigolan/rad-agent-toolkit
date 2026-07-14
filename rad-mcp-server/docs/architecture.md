@@ -252,10 +252,11 @@ RAG adds the fuzzy one.
 
 - **Now (internal pilot):** absolute venv paths in `.mcp.json` / Desktop
   config on the pilot machine.
-- **Now also available — shared remote server (internal, read-only):**
-  `RAD_MCP_TRANSPORT=http` serves one authenticated read-only endpoint that
-  many clients connect to by URL (no per-user local install). Read-only and
-  bearer-auth are enforced in code; native TLS (`RAD_MCP_TLS_CERT`/`_KEY`)
+- **Now also available — shared remote server (internal):**
+  `RAD_MCP_TRANSPORT=http` serves one authenticated endpoint that
+  many clients connect to by URL (no per-user local install). Bearer-auth
+  is enforced in code with per-token scope — `RAD_MCP_TOKENS` read-only,
+  `RAD_MCP_WRITE_TOKENS` read-write; native TLS (`RAD_MCP_TLS_CERT`/`_KEY`)
   serves https directly; internal-network hosting only. Together with local
   stdio this gives three deployment modes — local / host the shared server /
   connect to someone else's — spelled out in `INSTALL.md`. See

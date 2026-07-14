@@ -89,14 +89,16 @@ $env:RAD_MCP_TLS_KEY  = "<path>/key.pem"
 
 You need three things from the host: **network reach** (RAD network/VPN),
 the **URL**, and **your own bearer token**. Each client's section in the
-[install guide](../scripts/install/skills_and_mcp_clients/README.md) shows
-its exact http config. Two
+[install guide](../scripts/install/skills_and_mcp/README.md) shows
+its exact http config. Entries are independent — one VS Code (or CLI) can
+hold a local stdio rad-mcp **and** one or more remote ones side by side,
+each under its own name. Two
 special cases:
 
 **Claude Desktop** — its config file is stdio-only (http entries silently
 ignored, verified 2026-07-10). Use Customize → Connectors (URL +
 Authorization header), or the file-only route: the
-[stdio→http bridge](../scripts/install/skills_and_mcp_clients/README.md#claude-desktop--chat--cowork).
+[stdio→http bridge](../scripts/install/skills_and_mcp/README.md#claude-desktop--chat--cowork).
 
 **Cloud clients (ChatGPT etc.)** — OUTSIDE RAD's network; they cannot reach
 an internal-only URL, and the server must never be exposed publicly to

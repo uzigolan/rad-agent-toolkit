@@ -145,7 +145,7 @@ README.md (this file)
 │   ├── docs/CONCEPTS.md .......... ALL principles in one file — concepts entry point
 │   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
 │   │   ├── scripts/install/mcp_server/ ─── run a shared http server (start/restart scripts)
-│   │   ├── scripts/install/skills_and_mcp_clients/ ─── per-client install scripts + consolidated guide
+│   │   ├── scripts/install/skills_and_mcp/ ─── per-client install scripts + consolidated guide
 │   │   └── docs/connecting-remote-mcp.md . host / join a shared server (http)
 │   │   ├── docs/connecting-local-mcp.md .. same-machine wiring (stdio + http)
 │   ├── docs/architecture.md ........... canonical design (safety, knowledge layers, roadmap)
@@ -163,11 +163,18 @@ README.md (this file)
 
 1. Clone, then create `rad-mcp-server/server/.env` with device credentials
    (never committed — see [INSTALL.md](rad-mcp-server/INSTALL.md)).
-2. `cd rad-mcp-server/server && python -m venv .venv && .venv/Scripts/pip install -e .`
-3. Open the repo in VS Code with the Claude extension (or `claude` CLI) —
-   `.mcp.json` starts the server automatically. Desktop and Cowork setup:
-   [INSTALL.md](rad-mcp-server/INSTALL.md).
-4. Ask Claude: *"Run a health check on lab-sf1p"*.
+2. Run the installer for your client from
+   [rad-mcp-server/scripts/install/skills_and_mcp/](rad-mcp-server/scripts/install/skills_and_mcp/README.md)
+   — it auto-creates `server/.venv` and wires **both** the MCP server entry
+   (stdio — the client starts the server itself) and the skills:
+   - VS Code + Copilot extension: `.\install-copilot-vscode.ps1`
+   - Claude Desktop: `.\install-claude-desktop.ps1`
+   - other clients (Claude Code, Copilot CLI, Codex): see the
+     [folder README](rad-mcp-server/scripts/install/skills_and_mcp/README.md)
+3. Restart the client as the script instructs (reload the VS Code window /
+   tray-quit and relaunch Desktop) — the stdio entry launches the server
+   automatically.
+4. Ask: *"rad agent, run a health check on <device-name>"*.
 
 ## Safety model (short version)
 
@@ -205,7 +212,7 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
   semantic RAG over the corpus — not started.
 - Distribution: `.mcpb` Desktop Extension + Claude Code plugin marketplace.
 - ~~New integration targets: GitHub Copilot (VS Code + CLI) and OpenAI
-  Codex (CLI/IDE/desktop).~~ ✅ [install scripts + guide](rad-mcp-server/scripts/install/skills_and_mcp_clients/README.md)
+  Codex (CLI/IDE/desktop).~~ ✅ [install scripts + guide](rad-mcp-server/scripts/install/skills_and_mcp/README.md)
   written; both vendors adopted Agent Skills, so the skills load unmodified.
   **All six targets verified live** (2026-07-10/11, four model families) —
   record in [CONCEPTS.md §8](rad-mcp-server/docs/CONCEPTS.md).

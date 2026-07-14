@@ -34,18 +34,45 @@ supports: skills, plugin, zips, URL; only thin per-app wrappers differ.
 ## 3. Three MCP / connector deployment modes
 
 1. **Local (stdio)** — the client spawns and owns its own server process.
-   The only mode with writes.
-2. **Shared server you host (HTTPS)** — one `RAD_MCP_TRANSPORT=http`
-   process; bearer token per consumer; read-only forced in code; native TLS.
+2. **Shared server you host (HTTP/HTTPS)** — one `RAD_MCP_TRANSPORT=http`
+   process; bearer token per consumer; native TLS.
 3. **Client to someone else's server** — URL + token, zero install.
+
+**Who runs the process — the fact everything else follows from:**
+
+- **stdio** = "how do I LAUNCH it". The **hosting client** (Claude Desktop,
+  VS Code, a CLI session) starts, stops, and restarts the server process as
+  part of its own lifecycle — you never run it yourself. Config edits and
+  code changes therefore take effect on the *client's* restart (reload the
+  VS Code window, tray-quit Desktop, restart the CLI session).
+- **http/https** = "where do I FIND it". The server is a **separate process
+  you run yourself** (see
+  [scripts/install/mcp_server/](../scripts/install/mcp_server/README.md));
+  VS Code, the CLIs, and every other client just connect to its URL with a
+  bearer token — they can't start or stop it. Two token classes:
+  **read-only** (`RAD_MCP_TOKENS`) and **read-write**
+  (`RAD_MCP_WRITE_TOKENS` — manage devices + config); what a client may do
+  is decided by which token it presents.
+
+**VS Code specifics:**
+
+- MCP is an **editor-level facility**: besides the per-workspace
+  `.vscode/mcp.json` there is a **user-level (global) configuration**
+  ("MCP: Open User Configuration") that applies in every workspace and is
+  shared by the MCP-consuming AI extensions — define rad-mcp once, use it
+  everywhere.
+- A VS Code on one machine can connect to an MCP server on a **remote
+  machine** (the http shape + reachability + token — see
+  [connecting-remote-mcp.md](connecting-remote-mcp.md)), and to **several
+  MCP servers at once** — each entry under `servers` is independent, so
+  local stdio and one or more remote rad-mcp instances can coexist in the
+  same setup.
 
 Corollaries: the same stdio entry in N clients = N independent processes
 (disk state shared: inventory, `.env`, backups, audit log; memory state
-per-instance: staged configs, SSH sessions; restarts per-client). A config
-entry has two shapes — stdio = "how do I launch it" (client owns process),
-http = "where do I find it" (you run the server manually; the client can't
-start or stop it).
+per-instance: staged configs, SSH sessions; restarts per-client).
 → [INSTALL.md, Part 1](../INSTALL.md#choose-a-deployment-mode-first) ·
+[connecting-local-mcp.md](connecting-local-mcp.md) ·
 [connecting-remote-mcp.md](connecting-remote-mcp.md)
 
 ## 4. The safety model
@@ -58,15 +85,17 @@ start or stop it).
 - **Reads are whitelisted;** `admin` (reboot/factory-default) and `file`
   delete commands are out of scope by design; `clear-*`/`delete` tokens are
   writes.
-- **Interlocks in code, not config:** http transport forces read-only and
-  refuses to start without tokens; TLS is fail-closed (cert XOR key =
-  refuse); write tools simply don't exist remotely.
+- **Interlocks in code, not config:** http transport refuses to start
+  without tokens, and write tools work only for a token with write scope
+  (`RAD_MCP_WRITE_TOKENS`); TLS is fail-closed (cert XOR key =
+  refuse).
 - **Check documented limits before additive writes** (key counts, server
   counts — the manual knows, the `?` help doesn't).
 
 **Code guarantees vs behavioral rules — know which is which.** The
 interlocks live in code and cannot be talked around: http transport is
-read-only and token-gated, writes need `commit_config(confirm=true)`, reads
+token-gated with per-token read/write scope, writes need
+`commit_config(confirm=true)`, reads
 are whitelisted. The **execution gate** ("Run this on the device now?") is
 a *skill* rule — it works only if the agent loads and honors the skill,
 which varies by model and app (observed 2026-07-11: Codex in the ChatGPT
@@ -171,7 +200,7 @@ issue, and behavior shifts across model/client updates — a ✅ is a statement
 about the recorded combination, not the target forever.
 
 → [INSTALL.md](../INSTALL.md) (matrix with the same status) ·
-[scripts/install/skills_and_mcp_clients/](../scripts/install/skills_and_mcp_clients/README.md) per-target specifics
+[scripts/install/skills_and_mcp/](../scripts/install/skills_and_mcp/README.md) per-target specifics
 
 ## 9. Where everything else is
 

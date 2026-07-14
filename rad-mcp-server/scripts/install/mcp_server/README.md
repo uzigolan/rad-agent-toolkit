@@ -4,7 +4,7 @@ Scripts that install (venv + deps, via the common setup check) and **run the
 rad-mcp server as a manually-launched HTTP process**. The window running the
 script IS the server — closing it stops it. They configure no client; wire
 clients with the scripts in
-[`../skills_and_mcp_clients/`](../skills_and_mcp_clients/README.md) (http
+[`../skills_and_mcp/`](../skills_and_mcp/README.md) (http
 mode).
 
 You only need these for the **shared-server** modes — one local instance for

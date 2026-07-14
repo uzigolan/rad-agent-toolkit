@@ -43,7 +43,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   deployment modes: local stdio (default, full write flow), a shared
   HTTPS server you host (read-only), or connecting to a colleague's.
   Per-target specifics in
-  [scripts/install/skills_and_mcp_clients/](scripts/install/skills_and_mcp_clients/README.md). Start here.
+  [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md). Start here.
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,
   safety model, knowledge layers, distribution roadmap.
 
