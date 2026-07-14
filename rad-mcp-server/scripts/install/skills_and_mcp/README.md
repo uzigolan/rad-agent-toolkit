@@ -16,6 +16,14 @@ machine. Principles (stdio vs http, who-starts-the-server, artifact kinds):
 | [Copilot CLI](#github-copilot--cli) | `install-copilot-cli.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Codex](#openai-codex--ide-extension--chatgpt-desktop-app) (IDE + ChatGPT desktop) | `install-codex.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 
+> **Windows: "running scripts is disabled on this system"** — the machine's
+> PowerShell execution policy blocks `.ps1` files. Run the script through a
+> one-off bypass instead (no policy change persists):
+>
+> ```powershell
+> PowerShell -ExecutionPolicy Bypass -File .\install-copilot-vscode.ps1
+> ```
+
 `-Http` defaults the URL to `http://127.0.0.1:8080/mcp` (override with
 `-Url`) and requires a server you run yourself — see
 [`../mcp_server/`](../mcp_server/README.md). **http entries never start a

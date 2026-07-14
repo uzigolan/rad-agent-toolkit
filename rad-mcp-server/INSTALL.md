@@ -229,6 +229,10 @@ duplicating it; each ends by printing its client's restart/verify step):
 | Copilot CLI | `scripts\install\skills_and_mcp\install-copilot-cli.ps1` | stdio (default), `-Http -Token <t>` |
 | Codex (CLI/IDE/desktop) | `scripts\install\skills_and_mcp\install-codex.ps1` | stdio (default), `-Http -Token <t>` |
 
+> If Windows refuses with *"running scripts is disabled on this system"*
+> (execution policy), run the script via a one-off bypass:
+> `PowerShell -ExecutionPolicy Bypass -File .\install-copilot-vscode.ps1`
+
 `-Http` defaults the URL to `http://127.0.0.1:8080/mcp` (override with
 `-Url`). The per-client sections in
 [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md)
