@@ -34,6 +34,9 @@ if [ "$MODE" = http ]; then
     claude mcp remove rad-mcp 2>/dev/null || true
     claude mcp add --transport http rad-mcp "$HTTP_URL" --header "Authorization: Bearer $HTTP_TOKEN"
     echo "  mcp   -> http client of $HTTP_URL (read-only)"
+    show_mcp_config_text "transport = http
+url       = $HTTP_URL
+header    = Authorization: Bearer $HTTP_TOKEN" "added MCP configuration (claude mcp, token masked):"
     # Skills still need a client-side install in http mode:
     copy_skills_to "$HOME/.claude/skills"
 else
@@ -42,6 +45,8 @@ else
     claude plugin marketplace add "$REPO_ROOT"
     claude plugin install rad-mcp@rad-marketplace
     echo "  plugin -> rad-mcp@rad-marketplace (MCP + 3 skills + 4 commands)"
+    show_mcp_config_text "$("$(_py)" -c 'import json,sys; print(json.dumps({"rad-mcp": json.loads(sys.argv[1])}, indent=2))' "$(new_stdio_entry)")" \
+        "MCP configuration the plugin registers (stdio; the client launches the server):"
 fi
 
 echo ""

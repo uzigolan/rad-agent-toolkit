@@ -226,6 +226,27 @@ with open(path, "w") as f:
     f.write("\n")
 print(f"  mcp   -> {path}")
 PY
+    show_mcp_config_text "$("$(_py)" -c 'import json,sys; print(json.dumps({"rad-mcp": json.loads(sys.argv[1])}, indent=2))' "$entry")"
+}
+
+# Print an MCP config snippet with any bearer token masked (first4...last4).
+# $1 = config text, $2 = optional title line.
+show_mcp_config_text() {
+    local title="${2:-added MCP configuration (token masked):}"
+    echo ""
+    echo "  $title"
+    "$(_py)" - "$1" <<'PY'
+import re, sys
+
+def _mask(m):
+    tok = m.group(1)
+    return "Bearer " + (tok[:4] + "..." + tok[-4:] if len(tok) > 8 else "***")
+
+text = re.sub(r'Bearer\s+([^\s"\'}]+)', _mask, sys.argv[1].strip("\n"))
+for line in text.splitlines():
+    print("    " + line)
+PY
+    echo ""
 }
 
 # If a rad-mcp entry already exists in the JSON config, summarize it and ask

@@ -36,6 +36,8 @@ if ($Http -or $Url -or $Token) {
     claude mcp remove rad-mcp 2>$null
     claude mcp add --transport http rad-mcp $u --header "Authorization: Bearer $t"
     Write-Host "  mcp   -> http client of $u (read-only)"
+    Show-McpConfigText -Text ("transport = http`nurl       = $u`nheader    = Authorization: Bearer $t") `
+                       -Title 'added MCP configuration (claude mcp, token masked):'
     # Skills still need a client-side install in http mode:
     Copy-SkillsTo "$env:USERPROFILE\.claude\skills"
 } else {
@@ -44,6 +46,9 @@ if ($Http -or $Url -or $Token) {
     claude plugin marketplace add $repoRoot
     claude plugin install rad-mcp@rad-marketplace
     Write-Host "  plugin -> rad-mcp@rad-marketplace (MCP + 3 skills + 4 commands)"
+    $stdioEntry = New-StdioEntry
+    Show-McpConfigText -Text (Format-Json (([pscustomobject]@{ 'rad-mcp' = [pscustomobject]$stdioEntry }) | ConvertTo-Json -Depth 10 -Compress)) `
+                       -Title 'MCP configuration the plugin registers (stdio; the client launches the server):'
 }
 
 Write-Host ""

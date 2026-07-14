@@ -99,6 +99,48 @@ function New-HttpEntry {
     }
 }
 
+function Format-Json {
+    # Re-indent valid JSON with 2 spaces. PS 5.1 ConvertTo-Json (even without
+    # -Compress) emits ugly value-aligned output that mangles a client's config;
+    # we pass its -Compress form here to get clean, git-friendly formatting
+    # matching the Python (json.dump indent=2) side. Input MUST be compact,
+    # already-valid JSON (escaping is preserved verbatim); this only reflows the
+    # structural whitespace, tracking string literals so braces inside strings
+    # are left alone.
+    param([Parameter(Mandatory)][string]$Json)
+    $sb = [System.Text.StringBuilder]::new()
+    $unit = '  '
+    $indent = 0
+    $inStr = $false
+    $esc = $false
+    $chars = $Json.ToCharArray()
+    for ($i = 0; $i -lt $chars.Length; $i++) {
+        $c = $chars[$i]
+        if ($inStr) {
+            [void]$sb.Append($c)
+            if ($esc) { $esc = $false }
+            elseif ($c -eq '\') { $esc = $true }
+            elseif ($c -eq '"') { $inStr = $false }
+            continue
+        }
+        switch ($c) {
+            '"' { $inStr = $true; [void]$sb.Append($c) }
+            '{' { if ($chars[$i + 1] -eq '}') { [void]$sb.Append('{}'); $i++ } else { $indent++; [void]$sb.Append("{`n" + ($unit * $indent)) } }
+            '[' { if ($chars[$i + 1] -eq ']') { [void]$sb.Append('[]'); $i++ } else { $indent++; [void]$sb.Append("[`n" + ($unit * $indent)) } }
+            '}' { $indent--; [void]$sb.Append("`n" + ($unit * $indent) + '}') }
+            ']' { $indent--; [void]$sb.Append("`n" + ($unit * $indent) + ']') }
+            ',' { [void]$sb.Append(",`n" + ($unit * $indent)) }
+            ':' { [void]$sb.Append(': ') }
+            ' ' { }
+            "`t" { }
+            "`n" { }
+            "`r" { }
+            default { [void]$sb.Append($c) }
+        }
+    }
+    return $sb.ToString()
+}
+
 function Set-JsonMcpEntry {
     # Create/merge a JSON config file, replacing any existing rad-mcp entry
     # under the given root key ("mcpServers" or "servers").
@@ -122,9 +164,33 @@ function Set-JsonMcpEntry {
         Write-Host "  replaced existing rad-mcp entry in $Path"
     }
     $root | Add-Member -NotePropertyName 'rad-mcp' -NotePropertyValue ([pscustomobject]$Entry)
-    $json = $cfg | ConvertTo-Json -Depth 10
+    $json = Format-Json ($cfg | ConvertTo-Json -Depth 10 -Compress)
     [System.IO.File]::WriteAllText($Path, $json + "`n")
     Write-Host "  mcp   -> $Path"
+    Show-McpConfigText -Text (Format-Json (([pscustomobject]@{ 'rad-mcp' = [pscustomobject]$Entry }) | ConvertTo-Json -Depth 10 -Compress))
+}
+
+function Hide-BearerToken {
+    # Mask bearer tokens in display text (keep first/last 4 chars of long tokens).
+    param([AllowEmptyString()][string]$Text)
+    return [regex]::Replace($Text, 'Bearer\s+([^\s"''\}]+)', {
+        param($m)
+        $tok = $m.Groups[1].Value
+        $masked = if ($tok.Length -gt 8) { $tok.Substring(0, 4) + '...' + $tok.Substring($tok.Length - 4) } else { '***' }
+        "Bearer $masked"
+    })
+}
+
+function Show-McpConfigText {
+    # Echo the MCP configuration that was just written, tokens masked.
+    param(
+        [Parameter(Mandatory)][string]$Text,
+        [string]$Title = 'added MCP configuration (token masked):'
+    )
+    Write-Host ""
+    Write-Host "  $Title"
+    foreach ($line in ((Hide-BearerToken $Text).Trim() -split "`r?`n")) { Write-Host "    $line" }
+    Write-Host ""
 }
 
 function Backup-JsonConfig {

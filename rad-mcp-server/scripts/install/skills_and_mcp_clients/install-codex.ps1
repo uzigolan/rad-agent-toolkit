@@ -83,6 +83,7 @@ startup_timeout_sec = 20
 New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
 Add-Content -Path $cfgPath -Value $block
 Write-Host "  mcp   -> $cfgPath"
+Show-McpConfigText -Text $block
 Copy-SkillsTo "$env:USERPROFILE\.agents\skills"
 
 Write-Host ""

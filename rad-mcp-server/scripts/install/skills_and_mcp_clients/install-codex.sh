@@ -62,6 +62,7 @@ fi
 mkdir -p "$(dirname "$CFG_PATH")"
 printf '%s\n' "$BLOCK" >> "$CFG_PATH"
 echo "  mcp   -> $CFG_PATH"
+show_mcp_config_text "$BLOCK"
 copy_skills_to "$HOME/.agents/skills"
 
 echo ""
