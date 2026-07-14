@@ -10,8 +10,8 @@ map, expert personas, and hard safety rules — packaged in the cross-vendor
 Agent Skills standard, so the same expertise loads in Claude, Copilot, and
 Codex unmodified. The **MCP server is the execution arm** — essential, but
 second fiddle: it gives the knowledge hands (staged-commit writes,
-whitelisted reads, live `?`-help relay). SecFlow, ETX-1p, ETX-2, and
-Megaplex-4100 verified live; the full RAD portfolio by design.
+whitelisted reads, live `?`-help relay). SecFlow, ETX-1p, ETX-2,
+Megaplex-4100, and MP-1 verified live; the full RAD portfolio by design.
 
 > **Status: internal RAD pilot.** Private repository. Do not point at
 > production equipment.
@@ -72,7 +72,7 @@ automatically when the conversation matches their trigger:
 | Skill | What it does | Loads when you say things like |
 |---|---|---|
 | [`rad-core`](rad-mcp-server/skills/rad-core/SKILL.md) | The safety contract: look-before-touch, the staged-commit flow (backup → stage → preview → explicit approval → commit → verify), inventory conventions | any RAD/ETX device work |
-| [`rad-cli-operations`](rad-mcp-server/skills/rad-cli-operations/SKILL.md) | The CLI expert: context-based CLI model + firmware-exact command knowledge for `etx2`, `etx1p`, `secflow`; expert personas; response/verification modes | *"how do I configure X on the ETX"*, *"what's the command for…"*, *"abayev, …"* / *"noam, …"* / *"rad agent, …"* — any CLI/syntax question |
+| [`rad-cli-operations`](rad-mcp-server/skills/rad-cli-operations/SKILL.md) | The CLI expert: context-based CLI model + firmware-exact command knowledge for `etx2`, `etx1p`, `secflow`, `mp4100`, `mp1`; expert personas; response/verification modes | *"how do I configure X on the ETX"*, *"what's the command for…"*, *"abayev, …"* / *"noam, …"* / *"rad agent, …"* — any CLI/syntax question |
 | [`rad-device-mng`](rad-mcp-server/skills/rad-device-mng/SKILL.md) | Inventory CRUD so you can point the toolkit at your own equipment (`list/add/update/remove_device`), including the credentials-go-in-`.env`-then-restart workflow | *"add my device"*, *"register a new unit"*, *"remove that device"* |
 
 ### What you can ask `rad-cli-operations` — five categories of operations
@@ -200,6 +200,7 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
 | `etx1p` | ETX-1p demarcation units | ✅ verified live (Sw 6.5.0.43 and 6.4.0.165) — modern context-based CLI + manual layer; **not** the legacy `etx1` |
 | `etx2` | ETX-203AX / 205A / 220A / ETX-2I | ✅ verified live (ETX-2I, Sw 6.8.5(1.116)) — no `show resources`; slot/port naming (`Ethernet 0/2`); CLI reference + manual harvested |
 | `mp4100` | Megaplex-4100 multiservice access nodes | ✅ verified live (marks-mp4, Mn 4.91) — shared dialect + candidate-DB `commit` model; CLI reference + manual harvested |
+| `mp1` | MP-1 | ✅ verified live (mp-one, SW 2.20(0.61)) — shared dialect + candidate-DB `commit` model; CLI reference + manual harvested |
 | `etx1` | legacy ETX-1 | planned — separate (menu) CLI dialect, own driver |
 
 ## Roadmap
@@ -211,8 +212,8 @@ Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
   create/rollback too (`scripts/harvest_cli.py`).
 - `rad://cli-reference/{family}/{context}` keyed-lookup resource for Desktop.
 - RADview northbound API backend alongside SSH.
-- Manuals knowledge layer: lexical retrieval ✅ done (all 3 families);
-  semantic RAG over the corpus — not started.
+- Manuals knowledge layer: lexical retrieval ✅ done (all verified families —
+  secflow, etx1p, etx2, mp4100, mp1); semantic RAG over the corpus — not started.
 - Distribution: `.mcpb` Desktop Extension + Claude Code plugin marketplace.
 - ~~New integration targets: GitHub Copilot (VS Code + CLI) and OpenAI
   Codex (CLI/IDE/desktop).~~ ✅ [install scripts + guide](rad-mcp-server/scripts/install/skills_and_mcp/README.md)
