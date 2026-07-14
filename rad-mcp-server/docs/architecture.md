@@ -33,17 +33,19 @@ into the MCP ecosystem.
         │
  drivers (CLI dialect)    radcli.py — shared context-CLI dialect
         │                   ├── secflow  (SF-1p — verified live)
-        │                   └── etx2     (ETX-203AX/205A/220A — pending live check)
-        │                 etx1, mp4100/Megaplex — different CLIs, own drivers [planned]
+        │                   ├── etx1p    (ETX-1p — verified live)
+        │                   ├── etx2     (ETX-203AX/205A/220A/ETX-2I — verified live)
+        │                   └── mp4100   (Megaplex-4100 — verified live; candidate-DB commit)
+        │                 etx1 (legacy) — different CLI, own driver base [planned]
         │
  devices                  inventory.yaml (name/host/family/groups; creds in server/.env)
 ```
 
 **Why backend × driver?** Transport and dialect vary independently across the
 RAD portfolio. SSH now and RADview later must both drive a SecFlow; one SSH
-session must be able to drive both a SecFlow and (different dialect) a
-Megaplex. Tools stay product-agnostic verbs; the device's `family` field
-picks the driver, config picks the backend.
+session must be able to drive both a SecFlow and (different dialect) a legacy
+ETX-1. Tools stay product-agnostic verbs; the device's `family` field picks
+the driver, config picks the backend.
 
 ## Safety model (the core design constraint)
 

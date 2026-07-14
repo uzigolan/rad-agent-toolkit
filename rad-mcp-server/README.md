@@ -2,8 +2,8 @@
 
 Agent expertise + MCP server for operating RAD Data Communications devices
 through their CLI in natural language — the **full RAD portfolio** by design:
-SecFlow (SF-1p), ETX-1p, and ETX-2 (ETX-2I) verified live, and planned legacy
-ETX-1 and MP-4100/Megaplex.
+SecFlow (SF-1p), ETX-1p, ETX-2 (ETX-2I), and Megaplex-4100 verified live, with
+legacy ETX-1 planned.
 
 The center of gravity is the **skill layer** — live-harvested CLI knowledge,
 ingested user manuals, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
