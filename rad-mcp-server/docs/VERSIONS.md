@@ -14,7 +14,7 @@ component.
 | Skill | Version |
 |---|---|
 | `rad-core` | 1.0.0 |
-| `rad-cli-operations` | 1.0.0 |
+| `rad-cli-operations` | 1.1.0 |
 | `rad-device-mng` | 1.0.0 |
 
 | Driver (family) | Version | Product |

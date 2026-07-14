@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow and Megaplex-4100 families (device families "etx2", "etx1p", "secflow", "mp4100"; units like SF-1p / lab-sf1p / Device3 / marks-mp4). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
-version: 1.0.0
+version: 1.1.0
 ---
 
-> **Skill version:** 1.0.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.1.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
 
@@ -134,6 +134,19 @@ rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
   `trusted-ca`, *how many* MQTT servers/keys the box allows, *what* an alarm
   string means, and multi-step enrollment procedures. Syntax still comes from
   the CLI reference — cite the manual for concepts, the reference for commands.
+- **Capability questions ("does family X support / have Y?") — ground per
+  family, never generalize.** Answer only from the TARGET family's own sources:
+  grep `cli-reference-<family>.md` (+ `command-tree-<family>.md`) and
+  `manual-<family>/`. If the feature is absent from BOTH the family's CLI
+  reference and its manual, the answer is **not supported** — say so plainly.
+  Do NOT infer support from another family's reference, from the shared-dialect
+  description, or from general/training knowledge: families genuinely differ (a
+  feature present on one can be entirely absent on another). A bare keyword hit
+  in the manual is not proof — read it in context; it may state the opposite
+  (a peer's behavior, or an explicit "no X"). Only when the family's data is
+  genuinely inconclusive — a relevant `*(not entered)*` context, or a
+  reference that predates the firmware — say so and offer a live `cli_help` on
+  the specific context instead of guessing "yes."
 - **`NAME` placeholder:** parameterized (named/indexed) contexts are harvested
   from inside a real instance — an existing object from the running config, a
   `zzz-hrvst` string-named temp object, or (for `mep`/`lag`/`pw`/`test`
