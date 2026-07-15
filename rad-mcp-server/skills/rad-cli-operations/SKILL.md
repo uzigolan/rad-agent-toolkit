@@ -1,6 +1,6 @@
 ---
 name: rad-cli-operations
-description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow and Megaplex-4100 families (device families "etx2", "etx1p", "secflow", "mp4100"; units like SF-1p / lab-sf1p / Device3 / marks-mp4). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
+description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
 version: 1.1.0
 ---
 
@@ -70,7 +70,16 @@ change nothing; and NEVER send `discard-changes` casually — its help text
 ("Resets to last-saved parameter profile") is ambiguous enough to be
 running-config-destructive; check the manual before ever using it.
 MP-specific contexts: chassis, cross-connect, pwe (mp4100 also adds peer,
-slot; mp1 is a subset — no fault/oam/peer/slot/test). Each family has its
+slot; mp1 is a subset — no fault/oam/peer/slot/test). **minid (MiNID sleeve
+NID, minid-1, SW 2.6, prompt `MiNID#`)** also speaks this dialect but is a
+**direct-write** model (NOT candidate-DB — its globals are `info`/`save`, no
+`commit`), and is a **compact subset**: expect far fewer contexts than the
+larger families, so grep `cli-reference-minid.md` and don't assume an `all`
+row exists on it. Its SSH is fragile/unique — the connect profile lives in
+`drivers/minid.py`, not in anything you type. **etx2v (ETX-2V, etx2v-1, prompt
+`uCPE-OS#`)** is RAD's uCPE-OS platform: same shared dialect, direct-write save,
+standard SSH, with a distinctive top-level `virtualization` (VNF) context not on
+any other family — grep `cli-reference-etx2v.md`. Each family has its
 own `references/` file set — grep the one matching the device's inventory
 family. Legacy ETX-1 uses a different (menu) CLI and will get its own
 skill. SecFlow-1p manual: https://www.rad.com/docs/965

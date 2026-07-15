@@ -8,6 +8,12 @@ configure any client; run the matching install-*.ps1 in http mode for that.
   .\install-and-start-http-mcp-server.ps1 -BindHost 0.0.0.0 -Port 8080 -WriteToken <t>
   .\install-and-start-http-mcp-server.ps1 -ReadToken <t> -WriteToken <t> -TlsCert c.pem -TlsKey k.pem
 
+CONFIG REUSE: the full configuration (bind host, port, name, TLS) is saved to
+server\.rad-mcp-http-config (tokens to server\.rad-mcp-tokens), both gitignored.
+On the next run with no flags, it shows that saved config and asks "Keep this
+configuration? [Y/n]" — Yes starts immediately with everything reused; No runs
+the full interactive setup. Passing any flag skips the prompt and reconfigures.
+
 At least one token is required (http refuses to start unauthenticated).
   -ReadToken  -> RAD_MCP_TOKENS        (read-only clients)
   -WriteToken -> RAD_MCP_WRITE_TOKENS  (read-write clients: manage devices + config)
@@ -37,6 +43,48 @@ Assert-CommonSetup
 # regenerate.
 $TokenStore = Join-Path $RadRoot 'server\.rad-mcp-tokens'
 
+# Full HTTP configuration (bind host / port / name / TLS paths) persists here so
+# a restart can reuse everything without re-answering any prompt. Tokens stay in
+# $TokenStore (above). Both files live in server\ and are gitignored.
+$ConfigStore = Join-Path $RadRoot 'server\.rad-mcp-http-config'
+$KeepConfig = $false
+
+# Offer to keep a prior configuration only when the user overrode nothing on the
+# command line and a saved config exists. "Yes" reuses it all and skips every
+# prompt below; "No" falls through to the full interactive setup (today's flow).
+$explicitParams = $BindHost -or $ReadToken -or $WriteToken -or $TlsCert -or $TlsKey -or $NewTokens -or `
+                  $PSBoundParameters.ContainsKey('Port') -or $PSBoundParameters.ContainsKey('Name')
+if (-not $explicitParams -and (Test-Path $ConfigStore)) {
+    $saved = @{}
+    Get-Content $ConfigStore | ForEach-Object {
+        if ($_ -match "^\s*([A-Z_]+)\s*=\s*'?([^']*)'?\s*$") { $saved[$matches[1]] = $matches[2] }
+    }
+    Write-Host "Found a saved configuration from a previous run ($ConfigStore):"
+    Write-Host "    bind host : $($saved['RAD_MCP_HOST'])"
+    Write-Host "    port      : $($saved['RAD_MCP_PORT'])"
+    Write-Host "    name      : $($saved['RAD_MCP_SERVER_NAME'])"
+    if ($saved['RAD_MCP_TLS_CERT']) { Write-Host "    TLS       : HTTPS ($($saved['RAD_MCP_TLS_CERT']))" }
+    else                            { Write-Host "    TLS       : none (plain HTTP)" }
+    Write-Host "    tokens    : reused from .rad-mcp-tokens"
+    $keepAns = Read-Host "Keep this configuration? [Y/n]"
+    if ($keepAns -notmatch '^[nN]') {
+        $KeepConfig = $true
+        $BindHost = $saved['RAD_MCP_HOST']
+        if ($saved['RAD_MCP_PORT'])        { $Port = [int]$saved['RAD_MCP_PORT'] }
+        if ($saved['RAD_MCP_SERVER_NAME']) { $Name = $saved['RAD_MCP_SERVER_NAME'] }
+        $TlsCert = $saved['RAD_MCP_TLS_CERT']
+        $TlsKey  = $saved['RAD_MCP_TLS_KEY']
+        if ($TlsCert -and -not (Test-Path $TlsCert)) {
+            Write-Host "  WARNING: saved TLS cert not found ($TlsCert) - starting without TLS."
+            $TlsCert = ''; $TlsKey = ''
+        }
+        Write-Host "Keeping saved configuration (tokens still loaded below)."
+    } else {
+        Write-Host "Reconfiguring from scratch."
+    }
+    Write-Host ""
+}
+
 function Get-FirstIPv4 {
     try {
         return (Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
@@ -46,7 +94,7 @@ function Get-FirstIPv4 {
 }
 
 # Bind address — offer loopback, this host's LAN IP, or all interfaces.
-if (-not $BindHost) {
+if (-not $KeepConfig -and -not $BindHost) {
     $ip = Get-FirstIPv4
     Write-Host "Bind address (RAD_MCP_HOST):"
     Write-Host "  1) 127.0.0.1     (this machine only)"
@@ -116,7 +164,7 @@ if (-not $fromStore -and ($WriteToken -or $ReadToken)) {
 
 # TLS — prompt interactively when not supplied as flags.
 # Required for Claude Desktop and other HTTPS-only clients.
-if (-not $TlsCert -and -not $TlsKey) {
+if (-not $KeepConfig -and -not $TlsCert -and -not $TlsKey) {
     $tlsDir  = Join-Path $RadRoot 'server\tls'
     $defaultCert = Join-Path $tlsDir 'rad-mcp.crt'
     $defaultKey  = Join-Path $tlsDir 'rad-mcp.key'
@@ -234,6 +282,17 @@ print(f"  key  -> {key_path}")
 if (($TlsCert -or $TlsKey) -and -not ($TlsCert -and $TlsKey)) {
     throw "-TlsCert and -TlsKey must be given together."
 }
+
+# Persist the full resolved configuration so the next start can offer to reuse
+# it with a single "keep?" prompt (tokens are saved separately in $TokenStore).
+Set-Content -Path $ConfigStore -Value @(
+    "RAD_MCP_HOST='$BindHost'",
+    "RAD_MCP_PORT='$Port'",
+    "RAD_MCP_SERVER_NAME='$Name'",
+    "RAD_MCP_TLS_CERT='$TlsCert'",
+    "RAD_MCP_TLS_KEY='$TlsKey'"
+)
+if (-not $KeepConfig) { Write-Host "Saved configuration to $ConfigStore (reused on next start)."; Write-Host "" }
 
 $env:RAD_MCP_TRANSPORT   = "http"
 $env:RAD_MCP_SERVER_NAME = $Name

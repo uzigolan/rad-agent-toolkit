@@ -10,6 +10,12 @@
 #   ./install-and-start-http-mcp-server.sh --host 0.0.0.0 --port 8080 --write-token <t>
 #   ./install-and-start-http-mcp-server.sh --read-token <t> --write-token <t> --tls-cert c.pem --tls-key k.pem
 #
+# CONFIG REUSE: the full configuration (bind host, port, name, TLS) is saved to
+# server/.rad-mcp-http-config (tokens to server/.rad-mcp-tokens), both
+# gitignored. On the next run with no flags it shows that saved config and asks
+# "Keep this configuration? [Y/n]" — Yes starts immediately with everything
+# reused; No runs the full interactive setup. Any flag skips the prompt.
+#
 # At least one token is required (http refuses to start unauthenticated). With
 # no token flags, the interactive prompt offers read-write, read-only, or BOTH
 # (one of each), so you can hand out whichever role to each client.
@@ -48,8 +54,53 @@ assert_common_setup
 # to regenerate.
 TOKEN_STORE="$RAD_ROOT/server/.rad-mcp-tokens"
 
+# Full HTTP configuration (bind host / port / name / TLS paths) persists here so
+# a restart can reuse everything without re-answering any prompt. Tokens stay in
+# $TOKEN_STORE (above). Both files live in server/ and are gitignored.
+CONFIG_STORE="$RAD_ROOT/server/.rad-mcp-http-config"
+KEEP_CONFIG=""
+
+# Did the user override anything on the command line? (PORT/NAME have defaults,
+# so compare against them.)
+EXPLICIT=""
+[ -n "$HOST$READ_TOKEN$WRITE_TOKEN$TLS_CERT$TLS_KEY$NEW_TOKENS" ] && EXPLICIT=1
+[ "$PORT" != "8080" ] && EXPLICIT=1
+[ "$NAME" != "rad-mcp" ] && EXPLICIT=1
+
+# Offer to keep a prior configuration only when nothing was overridden and a
+# saved config exists. "Yes" reuses it all and skips every prompt below; "No"
+# falls through to the full interactive setup (today's flow).
+if [ -z "$EXPLICIT" ] && [ -f "$CONFIG_STORE" ]; then
+    # shellcheck disable=SC1090
+    . "$CONFIG_STORE"
+    saved_host="${RAD_MCP_HOST:-}"; saved_port="${RAD_MCP_PORT:-}"
+    saved_name="${RAD_MCP_SERVER_NAME:-}"
+    saved_cert="${RAD_MCP_TLS_CERT:-}"; saved_key="${RAD_MCP_TLS_KEY:-}"
+    echo "Found a saved configuration from a previous run ($CONFIG_STORE):"
+    echo "    bind host : $saved_host"
+    echo "    port      : $saved_port"
+    echo "    name      : $saved_name"
+    if [ -n "$saved_cert" ]; then echo "    TLS       : HTTPS ($saved_cert)"; else echo "    TLS       : none (plain HTTP)"; fi
+    echo "    tokens    : reused from .rad-mcp-tokens"
+    read -r -p "Keep this configuration? [Y/n]: " keep_ans || keep_ans=""
+    case "$keep_ans" in
+        n|N|no|No) echo "Reconfiguring from scratch." ;;
+        *)
+            KEEP_CONFIG=1
+            HOST="$saved_host"; PORT="${saved_port:-$PORT}"; NAME="${saved_name:-$NAME}"
+            TLS_CERT="$saved_cert"; TLS_KEY="$saved_key"
+            if [ -n "$TLS_CERT" ] && [ ! -f "$TLS_CERT" ]; then
+                echo "  WARNING: saved TLS cert not found ($TLS_CERT) — starting without TLS."
+                TLS_CERT="" TLS_KEY=""
+            fi
+            echo "Keeping saved configuration (tokens still loaded below)."
+            ;;
+    esac
+    echo ""
+fi
+
 # Bind address — offer loopback, this host's LAN IP, or all interfaces.
-if [ -z "$HOST" ]; then
+if [ -z "$KEEP_CONFIG" ] && [ -z "$HOST" ]; then
     ip="$(_first_ipv4)"
     echo "Bind address (RAD_MCP_HOST):"
     echo "  1) 127.0.0.1     (this machine only)"
@@ -120,7 +171,7 @@ fi
 
 # TLS — prompt interactively when not supplied as flags.
 # Required for Claude Desktop and other HTTPS-only clients.
-if [ -z "$TLS_CERT" ] && [ -z "$TLS_KEY" ]; then
+if [ -z "$KEEP_CONFIG" ] && [ -z "$TLS_CERT" ] && [ -z "$TLS_KEY" ]; then
     TLS_DIR="$RAD_ROOT/server/tls"
     DEFAULT_CERT="$TLS_DIR/rad-mcp.crt"
     DEFAULT_KEY="$TLS_DIR/rad-mcp.key"
@@ -242,6 +293,18 @@ if [ -n "$TLS_CERT$TLS_KEY" ] && { [ -z "$TLS_CERT" ] || [ -z "$TLS_KEY" ]; }; t
     echo "--tls-cert and --tls-key must be given together." >&2
     exit 1
 fi
+
+# Persist the full resolved configuration so the next start can offer to reuse
+# it with a single "keep?" prompt (tokens are saved separately in $TOKEN_STORE).
+( umask 077
+  {
+    echo "RAD_MCP_HOST='$HOST'"
+    echo "RAD_MCP_PORT='$PORT'"
+    echo "RAD_MCP_SERVER_NAME='$NAME'"
+    echo "RAD_MCP_TLS_CERT='$TLS_CERT'"
+    echo "RAD_MCP_TLS_KEY='$TLS_KEY'"
+  } > "$CONFIG_STORE" )
+[ -z "$KEEP_CONFIG" ] && { echo "Saved configuration to $CONFIG_STORE (reused on next start)."; echo ""; }
 
 export RAD_MCP_TRANSPORT="http"
 export RAD_MCP_SERVER_NAME="$NAME"

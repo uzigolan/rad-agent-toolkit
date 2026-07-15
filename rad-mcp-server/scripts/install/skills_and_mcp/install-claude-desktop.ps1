@@ -12,8 +12,12 @@ Prompts for transport:
   stdio only — Desktop launches the server itself (full toolset incl. staged writes).
 
   .\install-claude-desktop.ps1 -Name my-rad   # register under a custom name (default rad-mcp)
+  .\install-claude-desktop.ps1 -Reconfigure   # replace an existing rad-mcp entry (default keeps it)
+
+By default, if rad-mcp is already in the Desktop config it is KEPT untouched;
+the skill zips are rebuilt either way. Pass -Reconfigure to replace the entry.
 #>
-param([string]$Name = 'rad-mcp')
+param([string]$Name = 'rad-mcp', [switch]$Reconfigure)
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 
 Assert-CommonSetup
@@ -24,12 +28,16 @@ if (-not (Test-Path (Split-Path $cfgPath))) {
     $cfgPath = "$env:APPDATA\Claude\claude_desktop_config.json"
 }
 
-Backup-JsonConfig -Path $cfgPath
+# Keep an existing MCP entry unless -Reconfigure. Skills are rebuilt regardless.
+if ((-not $Reconfigure) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name)) {
+    Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
+} else {
+    Backup-JsonConfig -Path $cfgPath
+    $entry = New-StdioEntry
+    Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry -Name $Name
+}
 
-$entry = New-StdioEntry
-
-Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry -Name $Name
-
+# Skills are rebuilt no matter what (kept or reconfigured MCP).
 & $VenvPython (Join-Path $RadRoot 'scripts\build_desktop_skills.py')
 $zipDir = Join-Path $RadRoot 'dist\claude-desktop-skills'
 

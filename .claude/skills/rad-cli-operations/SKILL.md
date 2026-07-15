@@ -1,7 +1,10 @@
 ---
 name: rad-cli-operations
-description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow and Megaplex-4100 families (device families "etx2", "etx1p", "secflow", "mp4100"; units like SF-1p / lab-sf1p / Device3 / marks-mp4). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, or SecFlow device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
+description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
+version: 1.1.0
 ---
+
+> **Skill version:** 1.1.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
 
@@ -54,21 +57,32 @@ Revert either or both: *"back to concise"* / *"back to trusting the
 reference"* / *"revert to default behavior"*.
 
 Verified live against a SecFlow-1p (SF-1p, Sw 6.5.0.35), an ETX-1p
-(Device3, Sw 6.5.0.43), and an MP-4100 (marks-mp4, Mn 4.91) lab unit. The
-ETX-2 family shares this dialect (per-family differences: ETX-2 adds
-flows/EVC contexts; ETX-1p is the modern context-based CLI, NOT the legacy
-ETX-1 menu CLI). **mp4100 (Megaplex-4100) speaks the same dialect with one
-structural difference — a candidate-database config model:** config edits
-land in a candidate DB and apply to the running config ONLY when the
-device's own `commit` global is issued. Consequences: staged sequences for
-mp4100 MUST end with `commit` (before the final `exit all`) or they
-silently change nothing; and NEVER send `discard-changes` casually — its
-help text ("Resets to last-saved parameter profile") is ambiguous enough
-to be running-config-destructive; check the manual before ever using it.
-MP-specific contexts: chassis, cross-connect, peer, pwe, slot. Each family
-has its own `references/` file set — grep the one matching the device's
-inventory family. Legacy ETX-1 uses a different (menu) CLI and will get
-its own skill. SecFlow-1p manual: https://www.rad.com/docs/965
+(Device3, Sw 6.5.0.43), an MP-4100 (marks-mp4, Mn 4.91), and an MP-1
+(mp-one, SW 2.20(0.61)) lab unit. The ETX-2 family shares this dialect
+(per-family differences: ETX-2 adds flows/EVC contexts; ETX-1p is the
+modern context-based CLI, NOT the legacy ETX-1 menu CLI). **mp4100
+(Megaplex-4100) AND mp1 (MP-1) speak the same dialect with one structural
+difference — a candidate-database config model:** config edits land in a
+candidate DB and apply to the running config ONLY when the device's own
+`commit` global is issued. Consequences: staged sequences for mp4100/mp1
+MUST end with `commit` (before the final `exit all`) or they silently
+change nothing; and NEVER send `discard-changes` casually — its help text
+("Resets to last-saved parameter profile") is ambiguous enough to be
+running-config-destructive; check the manual before ever using it.
+MP-specific contexts: chassis, cross-connect, pwe (mp4100 also adds peer,
+slot; mp1 is a subset — no fault/oam/peer/slot/test). **minid (MiNID sleeve
+NID, minid-1, SW 2.6, prompt `MiNID#`)** also speaks this dialect but is a
+**direct-write** model (NOT candidate-DB — its globals are `info`/`save`, no
+`commit`), and is a **compact subset**: expect far fewer contexts than the
+larger families, so grep `cli-reference-minid.md` and don't assume an `all`
+row exists on it. Its SSH is fragile/unique — the connect profile lives in
+`drivers/minid.py`, not in anything you type. **etx2v (ETX-2V, etx2v-1, prompt
+`uCPE-OS#`)** is RAD's uCPE-OS platform: same shared dialect, direct-write save,
+standard SSH, with a distinctive top-level `virtualization` (VNF) context not on
+any other family — grep `cli-reference-etx2v.md`. Each family has its
+own `references/` file set — grep the one matching the device's inventory
+family. Legacy ETX-1 uses a different (menu) CLI and will get its own
+skill. SecFlow-1p manual: https://www.rad.com/docs/965
 
 **Harvested knowledge in `references/` (per family):**
 
@@ -129,6 +143,19 @@ rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
   `trusted-ca`, *how many* MQTT servers/keys the box allows, *what* an alarm
   string means, and multi-step enrollment procedures. Syntax still comes from
   the CLI reference — cite the manual for concepts, the reference for commands.
+- **Capability questions ("does family X support / have Y?") — ground per
+  family, never generalize.** Answer only from the TARGET family's own sources:
+  grep `cli-reference-<family>.md` (+ `command-tree-<family>.md`) and
+  `manual-<family>/`. If the feature is absent from BOTH the family's CLI
+  reference and its manual, the answer is **not supported** — say so plainly.
+  Do NOT infer support from another family's reference, from the shared-dialect
+  description, or from general/training knowledge: families genuinely differ (a
+  feature present on one can be entirely absent on another). A bare keyword hit
+  in the manual is not proof — read it in context; it may state the opposite
+  (a peer's behavior, or an explicit "no X"). Only when the family's data is
+  genuinely inconclusive — a relevant `*(not entered)*` context, or a
+  reference that predates the firmware — say so and offer a live `cli_help` on
+  the specific context instead of guessing "yes."
 - **`NAME` placeholder:** parameterized (named/indexed) contexts are harvested
   from inside a real instance — an existing object from the running config, a
   `zzz-hrvst` string-named temp object, or (for `mep`/`lag`/`pw`/`test`
@@ -414,9 +441,9 @@ location "site-A rack 3"
 exit all
 ```
 
-Always end with `exit all`. **On `mp4100` the sequence must include the
-device's `commit` global as the last command before the final `exit all`** —
-the MP's candidate-DB model applies nothing to the running config until
+Always end with `exit all`. **On `mp4100` and `mp1` the sequence must include
+the device's `commit` global as the last command before the final `exit all`** —
+the MP candidate-DB model applies nothing to the running config until
 `commit` (and never send `discard-changes` casually; see the family notes
 above). On the other families, changes affect the **running** config
 immediately; on all families nothing survives reboot until `save_startup` —

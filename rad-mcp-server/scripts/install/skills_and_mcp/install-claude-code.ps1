@@ -14,12 +14,39 @@ param(
     [switch]$Http,
     [string]$Url,
     [string]$Token,
-    [string]$Name = 'rad-mcp'   # http mode only; plugin/stdio mode uses the plugin's bundled name
+    [string]$Name = 'rad-mcp',   # http mode only; plugin/stdio mode uses the plugin's bundled name
+    [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 
 if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
     throw "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)"
+}
+
+# Keep an existing MCP registration unless flags/-Reconfigure force a change.
+# Skills are refreshed either way: for http, re-copy client-side; for stdio, the
+# plugin re-install refreshes bundled skills + commands (same MCP registration,
+# not a reconfiguration).
+$explicit = $Http -or $Url -or $Token -or $Reconfigure
+if (-not $explicit) {
+    $mcpGet = (claude mcp get $Name 2>$null | Out-String)
+    $mcpOk  = ($LASTEXITCODE -eq 0 -and $mcpGet.Trim())
+    $pluginOk = ((claude plugin list 2>$null | Out-String) -match 'rad-mcp')
+    if ($mcpOk -or $pluginOk) {
+        Write-Host "$Name is already configured with Claude Code - keeping the MCP config."
+        if ($mcpOk -and $mcpGet -match 'http') {
+            Copy-SkillsTo "$env:USERPROFILE\.claude\skills"
+        } else {
+            Assert-CommonSetup
+            $repoRoot = (Resolve-Path (Join-Path $RadRoot '..')).Path
+            claude plugin marketplace add $repoRoot
+            claude plugin install rad-mcp@rad-marketplace
+            Write-Host "  plugin -> refreshed rad-mcp@rad-marketplace (skills + commands; MCP unchanged)"
+        }
+        Write-Host ""
+        Write-Host "Done - kept MCP config, refreshed skills. Reload the VS Code window / start a new claude session."
+        return
+    }
 }
 
 if (-not ($Http -or $Url -or $Token)) {

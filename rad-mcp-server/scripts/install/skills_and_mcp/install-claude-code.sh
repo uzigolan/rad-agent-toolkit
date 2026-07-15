@@ -20,6 +20,7 @@ while [ $# -gt 0 ]; do
         --url) HTTP_URL="$2"; shift 2 ;;
         --token) HTTP_TOKEN="$2"; shift 2 ;;
         --name) NAME="$2"; shift 2 ;;   # http mode only; plugin/stdio uses the plugin's bundled name
+        --reconfigure) RAD_RECONFIGURE=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
@@ -28,6 +29,28 @@ NAME="${NAME:-rad-mcp}"
 if ! command -v claude >/dev/null 2>&1; then
     echo "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)" >&2
     exit 1
+fi
+
+# Keep an existing MCP registration unless flags/--reconfigure force a change.
+# Skills refresh either way: http re-copies client-side; stdio re-installs the
+# plugin (refreshes bundled skills + commands; same MCP registration).
+if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECONFIGURE:-}" != "1" ]; then
+    MCP_GET="$(claude mcp get "$NAME" 2>/dev/null || true)"
+    if [ -n "$MCP_GET" ] || claude plugin list 2>/dev/null | grep -q 'rad-mcp'; then
+        echo "$NAME is already configured with Claude Code - keeping the MCP config."
+        if printf '%s' "$MCP_GET" | grep -qi 'http'; then
+            copy_skills_to "$HOME/.claude/skills"
+        else
+            assert_common_setup
+            REPO_ROOT="$(cd "$RAD_ROOT/.." && pwd)"
+            claude plugin marketplace add "$REPO_ROOT"
+            claude plugin install rad-mcp@rad-marketplace
+            echo "  plugin -> refreshed rad-mcp@rad-marketplace (skills + commands; MCP unchanged)"
+        fi
+        echo ""
+        echo "Done - kept MCP config, refreshed skills. Reload the VS Code window / start a new claude session."
+        exit 0
+    fi
 fi
 
 prompt_transport

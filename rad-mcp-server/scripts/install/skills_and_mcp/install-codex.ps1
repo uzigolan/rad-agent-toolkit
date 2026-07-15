@@ -4,24 +4,36 @@ desktop — all three share ~\.codex\config.toml).
 
   .\install-codex.ps1                                   # interactive prompts
   .\install-codex.ps1 -Http [-Url <url>] -Token <token> # http client
+  .\install-codex.ps1 -Reconfigure                      # replace an existing entry (default keeps it)
 
-Appends a [mcp_servers.rad-mcp] section to ~\.codex\config.toml (refuses if
-one already exists — TOML is edited as text, remove the old section first)
-and copies the skills to ~\.agents\skills. Afterwards: restart Codex.
+By default, if a [mcp_servers.rad-mcp] section already exists it is KEPT and
+only the skills are refreshed. Pass -Reconfigure to replace it (TOML is edited
+as text, so remove the old section by hand first, then rerun with -Reconfigure).
 #>
 param(
     [switch]$Http,
     [string]$Url,
     [string]$Token,
-    [string]$Name = 'rad-mcp'
+    [string]$Name = 'rad-mcp',
+    [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 
 $cfgPath = "$env:USERPROFILE\.codex\config.toml"
 $sectionRe = "\[mcp_servers\.$([regex]::Escape($Name))\]"
-if ((Test-Path $cfgPath) -and ((Get-Content $cfgPath -Raw) -match $sectionRe)) {
-    throw ("$cfgPath already has a [mcp_servers.$Name] section - remove or " +
-           "edit that section first (disable-previous rule), then rerun.")
+$exists = (Test-Path $cfgPath) -and ((Get-Content $cfgPath -Raw) -match $sectionRe)
+$explicit = $Http -or $Url -or $Token -or $Reconfigure
+if ($exists -and -not $explicit) {
+    # Keep the existing MCP config untouched; still refresh the skills.
+    Write-Host "$Name is already configured in ${cfgPath}: keeping it (pass -Reconfigure to replace)."
+    Copy-SkillsTo "$env:USERPROFILE\.agents\skills"
+    Write-Host ""
+    Write-Host "Done - kept existing MCP config, refreshed skills. Restart Codex."
+    return
+}
+if ($exists) {
+    throw ("$cfgPath already has a [mcp_servers.$Name] section - TOML is edited " +
+           "as text, so remove that section by hand first, then rerun.")
 }
 
 # Backup before changes

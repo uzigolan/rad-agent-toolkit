@@ -18,6 +18,7 @@ NAME="rad-mcp"
 while [ $# -gt 0 ]; do
     case "$1" in
         --name) NAME="$2"; shift 2 ;;
+        --reconfigure) RAD_RECONFIGURE=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
@@ -39,10 +40,16 @@ case "$(uname -s)" in
             OPEN_CMD=xdg-open ;;
 esac
 
-backup_json_config "$CFG_PATH"
+# Keep an existing MCP entry unless --reconfigure. Skills are rebuilt regardless.
+maybe_keep_existing "$CFG_PATH" mcpServers "$NAME"
+if [ -n "$KEEP_EXISTING" ]; then
+    echo "  mcp   -> kept existing $NAME entry in $CFG_PATH"
+else
+    backup_json_config "$CFG_PATH"
+    set_json_mcp_entry "$CFG_PATH" mcpServers "$(new_stdio_entry)" "$NAME"
+fi
 
-set_json_mcp_entry "$CFG_PATH" mcpServers "$(new_stdio_entry)" "$NAME"
-
+# Skills are rebuilt no matter what (kept or reconfigured MCP).
 "$VENV_PYTHON" "$RAD_ROOT/scripts/build_desktop_skills.py"
 ZIP_DIR="$RAD_ROOT/dist/claude-desktop-skills"
 

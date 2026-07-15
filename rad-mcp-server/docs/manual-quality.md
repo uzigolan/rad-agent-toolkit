@@ -9,14 +9,18 @@ RAG chunking. Companion to `docs/performance.md` (which covers ingestion
 
 ## Comparative verdict
 
-| | etx1p | secflow | etx2 | mp4100 | mp1 |
-|---|---|---|---|---|---|
-| Source structure | Flat, per-topic chapters (22 TOC entries) | Same shape as etx1p (23 entries) | 5 giant "Parts," real topics nested 3-6 levels deep | Hybrid: topic chapters + one 259-page "Cards and Ports" holding 26 port types + module annexes (1,202 pages total) | Topic chapters + a 74-page "Ports" chapter (5.x) + 3 appendices; 517 pages |
-| Out of the box | **Good immediately** — no fixes needed | **Good immediately** — no fixes needed | **Bad initially** — 1 cross-link hit, one 1,079-page unusable "chapter" | **Good immediately** — the etx2-built adaptive splitter fired automatically, zero code changes | **Good immediately** — same adaptive splitter, zero code changes |
-| Final chapters | 14 | 17 | 44 | 38 | 17 |
-| Avg file size | 65.4 KB | 59.2 KB | 51.9 KB | 42.6 KB | 37.2 KB |
-| Cross-link rows | 21 | 21 | 17 (3 topics genuinely absent — see below) | 12 (matcher vocabulary gap for MP-specific areas — see below) | 9 (MP-1 is a compact subset — fewer feature areas) |
-| Extraction (mojibake) | Clean | Clean | Clean | Clean | Clean |
+One row per family (append a new row as each family is onboarded — the old
+column-per-family layout forced editing every row on each addition).
+
+| Family | Quality | Chapters | Avg file | Cross-link rows | Extraction | Source structure | Out of the box |
+|---|---|---|---|---|---|---|---|
+| `etx1p` | ✅ Excellent | 14 | 65.4 KB | 21 | Clean | Flat, per-topic chapters (22 TOC entries) | **Good immediately** — no fixes needed |
+| `secflow` | ✅ Excellent | 17 | 59.2 KB | 21 | Clean | Same shape as etx1p (23 entries) | **Good immediately** — no fixes needed |
+| `etx2` | ✅ Good (needed splitter work) | 44 | 51.9 KB | 17 (3 topics genuinely absent — see below) | Clean | 5 giant "Parts," real topics nested 3-6 levels deep | **Bad initially** — 1 cross-link hit, one 1,079-page unusable "chapter" |
+| `mp4100` | ✅ Good | 38 | 42.6 KB | 12 (matcher vocabulary gap for MP-specific areas — see below) | Clean | Hybrid: topic chapters + one 259-page "Cards and Ports" holding 26 port types + module annexes (1,202 pages total) | **Good immediately** — the etx2-built adaptive splitter fired automatically, zero code changes |
+| `mp1` | ✅ Good | 17 | 37.2 KB | 9 (MP-1 is a compact subset — fewer feature areas) | Clean | Topic chapters + a 74-page "Ports" chapter (5.x) + 3 appendices; 517 pages | **Good immediately** — same adaptive splitter, zero code changes |
+| `minid` | 🟡 Mixed (core good, supplement over-split) | 95 (15 core + 80 supplement fragments) | 10.9 KB (skewed low by the tiny supplement fragments) | ~12 (mapped to the real core chapters; a few leak into supplement fragments) | Clean | Core topic chapters (15) + an appended **"Supplement 2 (SFP-CA-2 tool)"** with its OWN restarted page numbering; 402 pages | **Mixed** — core chapters (01–15) split cleanly and cross-link well; the appended Supplement 2 over-fragmented into ~80 tiny files (its restarted page numbering confuses the TOC-boundary logic — see below) |
+| `etx2v` | ✅ Good (HW manual) | 6 | ~3.8 KB (short hardware manual) | few (hardware manual — little CLI-topic surface; CLI answers come from the harvest) | Clean | **Hardware/BIOS** manual (quick-start, install/dismantling, BIOS) — 80 pages; the CLI/software lives in the uCPE-OS harvest, not this PDF | **Good immediately** — clean split, no fixes needed |
 
 **etx1p and secflow were naturally excellent for lexical retrieval from the
 first ingest.** Their source PDFs already segment by topic at exactly the

@@ -56,6 +56,19 @@ The plugin targets the full RAD portfolio; each family maps to a driver under
   staged sequences must end with the device's `commit` global or nothing
   applies (never send `discard-changes` casually). CLI reference + manual
   harvested; `configure_contexts` grounded from the live tree (`drivers/mp1.py`).
+- `minid` — MiNID miniature NID / SFP sleeve device, verified live (minid-1,
+  172.17.166.55, prompt `MiNID#`, SW 2.6). Shared context-CLI dialect — probe
+  confirmed `MiNID#` → `MiNID>config>system#` navigation and `info`/`save`
+  globals (**direct-write save**, NOT candidate-DB like mp4100/mp1). Its SSH is
+  **fragile/unique**, so `drivers/minid.py` ships a patient per-family connect
+  profile (long timeouts, keepalive, slow pacing, extra retries). Manual
+  ingested; CLI reference harvested from the live tree (`drivers/minid.py`).
+- `etx2v` — ETX-2V, verified live (etx2v-1, 172.17.240.100, prompt `uCPE-OS#`).
+  RAD's uCPE-OS platform on ETX-2V chassis hardware; shared context-CLI dialect
+  over **standard SSH** (not fragile), direct-write save. Distinctive top-level
+  `virtualization` context (VNF hosting) plus crypto/ipsec, oam twamp, ldap.
+  719-node tree / 527 captures harvested; hardware+BIOS manual ingested
+  (`drivers/etx2v.py`).
 - Planned: `etx1` (legacy ETX-1) — different (menu) CLI dialect, own driver
   and skill to come.
 

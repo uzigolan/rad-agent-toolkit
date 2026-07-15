@@ -36,7 +36,9 @@ into the MCP ecosystem.
         │                   ├── etx1p    (ETX-1p — verified live)
         │                   ├── etx2     (ETX-203AX/205A/220A/ETX-2I — verified live)
         │                   ├── mp4100   (Megaplex-4100 — verified live; candidate-DB commit)
-        │                   └── mp1      (MP-1 — verified live; shared dialect + candidate-DB commit)
+        │                   ├── mp1      (MP-1 — verified live; shared dialect + candidate-DB commit)
+        │                   ├── minid    (MiNID sleeve NID — verified live; direct-write save; fragile-SSH profile)
+        │                   └── etx2v    (ETX-2V uCPE-OS — verified live; standard SSH; virtualization/VNF context)
         │                 etx1 (legacy) — different CLI, own driver base [planned]
         │
  devices                  inventory.yaml (name/host/family/groups; creds in server/.env)

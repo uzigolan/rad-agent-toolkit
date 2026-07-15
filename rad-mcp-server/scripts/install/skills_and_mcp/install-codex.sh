@@ -19,6 +19,7 @@ while [ $# -gt 0 ]; do
         --url) HTTP_URL="$2"; shift 2 ;;
         --token) HTTP_TOKEN="$2"; shift 2 ;;
         --name) NAME="$2"; shift 2 ;;
+        --reconfigure) RAD_RECONFIGURE=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
@@ -26,8 +27,17 @@ NAME="${NAME:-rad-mcp}"
 
 CFG_PATH="$HOME/.codex/config.toml"
 if [ -f "$CFG_PATH" ] && grep -q "\[mcp_servers\.${NAME}\]" "$CFG_PATH"; then
-    echo "$CFG_PATH already has a [mcp_servers.$NAME] section - remove or edit" >&2
-    echo "that section first (disable-previous rule), then rerun." >&2
+    # By default keep the existing MCP config and just refresh the skills.
+    if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECONFIGURE:-}" != "1" ]; then
+        echo "$NAME is already configured in $CFG_PATH: keeping it (pass --reconfigure to replace)."
+        copy_skills_to "$HOME/.agents/skills"
+        echo ""
+        echo "Done - kept existing MCP config, refreshed skills. Restart Codex."
+        exit 0
+    fi
+    # Reconfigure requested, but TOML sections are text: remove the old one first.
+    echo "$CFG_PATH already has a [mcp_servers.$NAME] section - TOML is edited as" >&2
+    echo "text, so remove that section by hand first, then rerun." >&2
     exit 1
 fi
 

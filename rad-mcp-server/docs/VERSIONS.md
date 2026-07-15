@@ -24,6 +24,8 @@ component.
 | `etx2` | 1.0 | ETX-2 (203AX / 205A / 220A / 2I) |
 | `mp4100` | 1.0 | Megaplex-4100 |
 | `mp1` | 1.0 | MP-1 |
+| `minid` | 1.0 | MiNID (miniature NID / SFP sleeve) |
+| `etx2v` | 1.0 | ETX-2V (uCPE-OS chassis platform) |
 
 ## Where each version lives (what to bump)
 

@@ -65,7 +65,17 @@ DANGEROUS_PREFIXES = ("clear-", "blacklist-clear")
 CREATE_EXCLUDE = {"login-user", "user", "community", "isakmp-key", "access-list"}
 
 # A string-named instance parameter, e.g. "[1..20 chars]" or "[string]".
-PARAM_STR_RE = re.compile(r"\[1\.\.(\d+) chars|\[string\]")
+# String-name instance parameter. Two help conventions:
+#   [1..N chars] / [string]   — ETX / SecFlow / ETX-2V (uCPE-OS) / MP families
+#   <flow-name> / <profile-name> / <name>  — MiNID (SW 2.6) writes it this way
+# The third alt (angle-bracket name) has no capture group, so m.group(1) is None
+# and the temp name defaults to the full TMP_NAME. Only [no]-removable
+# parameterized contexts reach the create path (gated in
+# try_enter_parameterized), so a matched <name> there is the instance name; a
+# context that really needs a numeric index or a second mandatory token just
+# gets its refusal captured, exactly as before. A pure `[number]` index stays on
+# the numeric path — its bracket form never matches these string patterns.
+PARAM_STR_RE = re.compile(r"\[1\.\.(\d+) chars|\[string\]|<[A-Za-z][\w-]*>")
 TMP_NAME = "zzz-hrvst"
 
 # A numeric instance parameter, e.g. "[number]", optionally with an explicit
@@ -118,7 +128,11 @@ NUMERIC_CREATE_ALLOW = {"mep", "lag", "pw", "test",
                         "bridge", "mirroring-session", "isakmp-policy",
                         "trap-sync-group", "ppp", "tunnel-interface"}
 
-MORE_RE = re.compile(r"-+\s*more\s*-+\s*$", re.IGNORECASE)
+# Pager prompt at the tail of a page, advanced with SPACE. Two known firmware
+# spellings: the dashed `--More--` (ETX/SecFlow/MP) and the bare `more...`
+# (MiNID SW 2.6 — lowercase, trailing dots, NO dashes). Both are matched so a
+# single space-advance loop drains either pager to completion.
+MORE_RE = re.compile(r"(?:-{2,}\s*more\s*-{2,}|more\.{2,})\s*$", re.IGNORECASE)
 
 Key = tuple[str, str]  # (context, prefix); prefix "" = the level `?` capture
 
@@ -157,10 +171,51 @@ def parse_tree_text(text: str) -> Node:
 
 
 def capture_tree(conn) -> str:
-    """Run root `tree` and return the raw hierarchy text."""
+    """Run root `tree` and return the raw hierarchy text.
+
+    Pager-aware: some firmware paginates `tree` and blocks until advanced.
+    MiNID SW 2.6 does this with a bare `more...` prompt (lowercase, trailing
+    dots, no dashes — distinct from the dashed `--More--` on ETX/SecFlow/MP).
+    A plain timed read grabs only the first page (the tail is the pager line),
+    silently truncating the whole tree — and a dropped context takes its entire
+    subtree with it. So we drive the read directly and press space on every
+    pager prompt (MORE_RE matches both spellings), exactly like capture_help,
+    accumulating all pages until the device prompt returns.
+    """
     nav(conn, "exit all")
-    out = conn.send_command_timing("tree", last_read=2.0, read_timeout=180)
-    lines = out.splitlines()
+    conn.write_channel("tree\n")
+    output = ""
+    deadline = time.monotonic() + 180
+    quiet = 0.0
+    prompt_re = re.compile(re.escape(BASE_PROMPT) + r"[^\n]*[#\$] ?$") if BASE_PROMPT else None
+    while time.monotonic() < deadline:
+        time.sleep(0.1)
+        chunk = conn.read_channel()
+        if chunk:
+            output += chunk
+            quiet = 0.0
+            last = output.strip().splitlines()[-1] if output.strip() else ""
+            if MORE_RE.search(last):
+                conn.write_channel(" ")  # advance pager to the next page
+            elif prompt_re and prompt_re.search(last):
+                break
+        elif output:
+            quiet += 0.1
+            if quiet >= 2.0:  # fallback: prompt signature never matched
+                break
+    # Strip pager artifacts so the rendered tree is clean:
+    #  1) backspace/space erase sequences the pager emits to redraw,
+    #  2) the pager token itself (`--More--` / `more...`) anywhere it survived
+    #     the redraw — not just on its own line, in case it glued to content.
+    out = re.sub(r"\x08+ *\x08*", "", output)                      # erase seqs
+    out = re.sub(r"(?:-{2,}\s*more\s*-{2,}|more\.{2,})", "", out, flags=re.IGNORECASE)
+    # Normalize whitespace to match the single-spaced tree the other families
+    # render: MiNID double-spaces its `tree` (a blank line after every row) and
+    # pads rows with trailing spaces. rstrip each row and drop the fully-blank
+    # ones — the `|   |` indent-guide rows survive (non-empty), so structure is
+    # preserved; only the device's cosmetic double-spacing goes.
+    lines = [ln.rstrip() for ln in out.splitlines()]
+    lines = [ln for ln in lines if ln and not MORE_RE.search(ln.strip())]
     if lines and lines[0].strip() == "tree":
         lines = lines[1:]
     while lines and (not lines[-1].strip() or lines[-1].rstrip().endswith("#")):
@@ -623,6 +678,13 @@ def main():
     ap.add_argument("--branch", default="",
                     help="only re-crawl this subtree, top-level or nested "
                          "(e.g. configure, or \"configure crypto\")")
+    ap.add_argument("--tree-cache", default="",
+                    help="raw-tree cache file. If it exists, reuse it instead "
+                         "of re-capturing the live `tree` — a big win for "
+                         "branch-by-branch harvesting on a fragile/slow device, "
+                         "where each full-tree pager crawl is itself ~2.5 min and "
+                         "its own drop risk. If it doesn't exist, capture live "
+                         "once and write it here for the following branch runs.")
     args = ap.parse_args()
 
     dev = get_device(args.device)
@@ -653,11 +715,19 @@ def main():
     _, conn = connect(args.device)
     scratch = jsonl_path_for(family).with_suffix(".jsonl.partial")
     try:
-        print("Capturing live `tree` ...", flush=True)
-        tree_text = capture_tree(conn)
+        cache = Path(args.tree_cache) if args.tree_cache else None
+        if cache and cache.exists():
+            print(f"Reusing cached raw tree from {cache} (skipping live `tree`).", flush=True)
+            tree_text = cache.read_text(encoding="utf-8")
+        else:
+            print("Capturing live `tree` ...", flush=True)
+            tree_text = capture_tree(conn)
         tree = parse_tree_text(tree_text)
         if not tree.children:
             raise SystemExit("Live `tree` capture came back empty — aborting, nothing overwritten.")
+        if cache and not cache.exists():
+            cache.write_text(tree_text, encoding="utf-8")
+            print(f"Cached raw tree to {cache} for subsequent branch runs.", flush=True)
         write_tree_md(family, label, tree_text)
         print(f"Tree: {sum(1 for _ in iter_nodes(tree))} nodes.", flush=True)
 
