@@ -11,8 +11,12 @@ target: unit at 172.17.166.55 (SW 2.6 per manual "MiNID_ver_2_6_mn").
 VERIFIED live (2026-07-15, minid-1 @ 172.17.166.55, prompt `MiNID#`, SW 2.6):
 the modern shared RAD context CLI (netmiko rad_etx) — probe confirmed
 `MiNID#` → `MiNID>config>system#` navigation with `info`/`save` globals
-(**direct-write save**, NOT candidate-DB). 401-node `tree`, 225 captures.
-Manual + CLI reference harvested (cli-reference-minid.md, manual-minid/).
+(**direct-write save**, NOT candidate-DB). 401-node `tree`; parameterized
+sub-contexts (l2cp-profile, tacacsplus group, oam/qos profiles, l3sat
+peer-profile) entered via temp-object create+`no`-rollback where the device
+allows — MiNID writes instance names as `<name>` (angle brackets), which the
+harvester's PARAM_STR_RE now recognizes. Manual + CLI reference harvested
+(cli-reference-minid.md, manual-minid/).
 
 Two MiNID-specific traits the harvester had to handle (now general fixes in
 scripts/harvest_cli.py): (1) `tree`/help paginate with a bare `more...` prompt

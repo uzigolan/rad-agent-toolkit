@@ -1,0 +1,208 @@
+{"kind": "level", "context": "<root>", "prefix": "", "text": "admin\nconfigure\ninventory\nfactory\nlogon\nfile\n\n-- Global Commands --\nexit\ninfo\nlogout\nhelp\ntree\nping\nsave"}
+{"kind": "level", "context": "admin", "prefix": "", "text": "factory-default\nuser-default\nreboot\nsoftware"}
+{"kind": "args", "context": "admin", "prefix": "factory-default", "text": ""}
+{"kind": "args", "context": "admin", "prefix": "reboot", "text": ""}
+{"kind": "args", "context": "admin", "prefix": "user-default", "text": ""}
+{"kind": "level", "context": "admin software", "prefix": "", "text": "install"}
+{"kind": "args", "context": "admin software", "prefix": "install", "text": ""}
+{"kind": "level", "context": "configure", "prefix": "", "text": "access-control\nmanagement\nrouter\noam\nqos\nflows\nport\nreporting\nservice\nsystem\ntest\npacket-capture"}
+{"kind": "level", "context": "configure access-control", "prefix": "", "text": "[no] access-list"}
+{"kind": "args-noenter", "context": "configure access-control", "prefix": "access-list", "text": "- access-list <acl-name>\n\nMiNID>config>access-control# access-list"}
+{"kind": "level", "context": "configure flows", "prefix": "", "text": "classification\ndscp-marking\nfallback-action\nin-service-mac\nin-service-l3-l4\ninner-vlan-marking\nport-mode-action\n[no] l2cp-mac\nl2cp-protocol\n[no] l2cp-profile\n[no] fallback-l2cp\n[no] tpid-outer-vlan\n[no] tpid-inner-vlan\n[no] flow\nrename-flow\nlbm-reflector\nclear-statistics\n[no] fallback-policer\n[no] fallback-pm-collection\n[no] port-mode-policer\n[no] port-mode-pm-collection"}
+{"kind": "args", "context": "configure flows", "prefix": "classification", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "dscp-marking", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "fallback-action", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "fallback-l2cp", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "fallback-pm-collection", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "fallback-policer", "text": ""}
+{"kind": "args-noenter", "context": "configure flows", "prefix": "flow", "text": "- flow <flow-name>\n\nMiNID>config>flows# flow\n\nauto-create probe 'flow zzz-hrvst' refused.\ndevice response: flow zzz-hrvst\n#CLI Error, Unknown Command\nMiNID>config>flows#"}
+{"kind": "args-noenter", "context": "configure flows", "prefix": "in-service-loops-l3-l4", "text": ""}
+{"kind": "args-noenter", "context": "configure flows", "prefix": "in-service-loops-mac", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "in-service-mac", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "inner-vlan-marking", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking"}
+{"kind": "args", "context": "configure flows", "prefix": "ip-agnostic-loop", "text": "- lbm-reflector {sfp|msa}\n\nMiNID>config>flows# lbm-reflector \u0015ip-agnostic-loop"}
+{"kind": "args", "context": "configure flows", "prefix": "l2cp-mac", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking \u0015port-mode-action \u0015l2cp-mac"}
+{"kind": "args-param", "context": "configure flows", "prefix": "l2cp-profile", "text": "- l2cp-profile <profile-name>\n\nMiNID>config>flows# l2cp-profile"}
+{"kind": "args", "context": "configure flows", "prefix": "l2cp-protocol", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking \u0015port-mode-action \u0015l2cp-mac \u0015l2cp-protocol"}
+{"kind": "args-noenter", "context": "configure flows", "prefix": "lbm-reflector", "text": "- lbm-reflector {sfp|msa}\n\nMiNID>config>flows# lbm-reflector"}
+{"kind": "args", "context": "configure flows", "prefix": "port-l2cp", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "port-mode-action", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking \u0015port-mode-action"}
+{"kind": "args", "context": "configure flows", "prefix": "port-mode-pm-collection", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "port-mode-policer", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "rename-flow", "text": "- rename-flow <current-flow-name> <new-flow-name>\n\nMiNID>config>flows# rename-flow"}
+{"kind": "args", "context": "configure flows", "prefix": "show port-mode-statistics", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "show summary", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "show unclassified-statistics", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "tpid-inner-vlan", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "tpid-outer-vlan", "text": ""}
+{"kind": "args", "context": "configure flows", "prefix": "tpid-pushed-replaced-vlan", "text": ""}
+{"kind": "level", "context": "configure flows in-service-l3-l4", "prefix": "", "text": "ip-loop\nudp-loop\nudp-echo"}
+{"kind": "level", "context": "configure flows in-service-l3-l4 ip-loop", "prefix": "", "text": "ip-address"}
+{"kind": "args", "context": "configure flows in-service-l3-l4 ip-loop", "prefix": "ip-address", "text": ""}
+{"kind": "level", "context": "configure flows in-service-l3-l4 udp-echo", "prefix": "", "text": "ip-address\nudp-port"}
+{"kind": "args", "context": "configure flows in-service-l3-l4 udp-echo", "prefix": "ip-address", "text": ""}
+{"kind": "args", "context": "configure flows in-service-l3-l4 udp-echo", "prefix": "udp-port", "text": ""}
+{"kind": "level", "context": "configure flows in-service-l3-l4 udp-loop", "prefix": "", "text": "ip-address\nudp-port"}
+{"kind": "args", "context": "configure flows in-service-l3-l4 udp-loop", "prefix": "ip-address", "text": ""}
+{"kind": "args", "context": "configure flows in-service-l3-l4 udp-loop", "prefix": "udp-port", "text": ""}
+{"kind": "level", "context": "configure flows l2cp-profile NAME", "prefix": "", "text": "mac\nprotocol"}
+{"kind": "args", "context": "configure flows l2cp-profile NAME", "prefix": "mac", "text": ""}
+{"kind": "args", "context": "configure flows l2cp-profile NAME", "prefix": "protocol", "text": ""}
+{"kind": "level", "context": "configure management", "prefix": "", "text": "timeout\nuser\n[no] manager\n[no] zero-touch\naccess\nsnmp\ntacacsplus"}
+{"kind": "args-noenter", "context": "configure management", "prefix": "host", "text": ""}
+{"kind": "args", "context": "configure management", "prefix": "manager", "text": ""}
+{"kind": "args", "context": "configure management", "prefix": "show access", "text": ""}
+{"kind": "args", "context": "configure management", "prefix": "show users", "text": ""}
+{"kind": "args", "context": "configure management", "prefix": "snmp", "text": "- snmp {community} {rw|ronly|trap} <name>\n\nMiNID>config>mngmnt# snmp"}
+{"kind": "args", "context": "configure management", "prefix": "timeout", "text": ""}
+{"kind": "args", "context": "configure management", "prefix": "user", "text": ""}
+{"kind": "args", "context": "configure management", "prefix": "zero-touch", "text": ""}
+{"kind": "level", "context": "configure management access", "prefix": "", "text": "auth-policy\n[no] wait-to-restore-auth-method\n[no] sfp\n[no] msa\n[no] snmp-read-only\nstatic-ip-access\nloaned-ip-access\n[no] access-group"}
+{"kind": "args", "context": "configure management access", "prefix": "access-group", "text": "- access-group <acl-name>\n\nMiNID>config>mngmnt>access# access-group"}
+{"kind": "args", "context": "configure management access", "prefix": "auth-policy", "text": ""}
+{"kind": "args", "context": "configure management access", "prefix": "msa", "text": ""}
+{"kind": "args", "context": "configure management access", "prefix": "sfp", "text": ""}
+{"kind": "args", "context": "configure management access", "prefix": "snmp-read-only", "text": ""}
+{"kind": "args", "context": "configure management access", "prefix": "wait-to-restore-auth-method", "text": ""}
+{"kind": "level", "context": "configure management access loaned-ip-access", "prefix": "", "text": "[no] snmp\n[no] tftp/sftp\n[no] ssh\n[no] telnet\n[no] http\n[no] rpcap"}
+{"kind": "args", "context": "configure management access loaned-ip-access", "prefix": "http", "text": ""}
+{"kind": "args", "context": "configure management access loaned-ip-access", "prefix": "rpcap", "text": ""}
+{"kind": "args", "context": "configure management access loaned-ip-access", "prefix": "snmp", "text": ""}
+{"kind": "args", "context": "configure management access loaned-ip-access", "prefix": "ssh", "text": ""}
+{"kind": "args", "context": "configure management access loaned-ip-access", "prefix": "telnet", "text": ""}
+{"kind": "args", "context": "configure management access loaned-ip-access", "prefix": "tftp/sftp", "text": ""}
+{"kind": "level", "context": "configure management access static-ip-access", "prefix": "", "text": "[no] snmp\n[no] tftp/sftp\n[no] ssh\n[no] telnet\n[no] http"}
+{"kind": "args", "context": "configure management access static-ip-access", "prefix": "http", "text": ""}
+{"kind": "args", "context": "configure management access static-ip-access", "prefix": "snmp", "text": ""}
+{"kind": "args", "context": "configure management access static-ip-access", "prefix": "ssh", "text": ""}
+{"kind": "args", "context": "configure management access static-ip-access", "prefix": "telnet", "text": ""}
+{"kind": "args", "context": "configure management access static-ip-access", "prefix": "tftp/sftp", "text": ""}
+{"kind": "level", "context": "configure management tacacsplus", "prefix": "", "text": "[no] privilege-level\n[no] group\n[no] server\n[no] wait-to-restore-server"}
+{"kind": "args-param", "context": "configure management tacacsplus", "prefix": "group", "text": "- group <group-name>\n\nMiNID>config>mngmnt>tacacsplus# group"}
+{"kind": "args", "context": "configure management tacacsplus", "prefix": "privilege-level", "text": ""}
+{"kind": "args-noenter", "context": "configure management tacacsplus", "prefix": "server", "text": "- server <ip>\n\nMiNID>config>mngmnt>tacacsplus# server\n\nauto-create probe 'server zzz-hrvst' refused.\ndevice response: server zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>mngmnt>tacacsplus#"}
+{"kind": "args", "context": "configure management tacacsplus", "prefix": "wait-to-restore-server", "text": "- wait-to-restore-server <seconds>\n\nMiNID>config>mngmnt>tacacsplus# wait-to-restore-server"}
+{"kind": "level", "context": "configure management tacacsplus group NAME", "prefix": "", "text": "[no] accounting"}
+{"kind": "args", "context": "configure management tacacsplus group NAME", "prefix": "accounting", "text": ""}
+{"kind": "level", "context": "configure oam", "prefix": "", "text": "cfm\nefm\ntwamp"}
+{"kind": "level", "context": "configure oam cfm", "prefix": "", "text": "alarm-type\navailability\n[no] measurement-bin-profile\n[no] maintenance-domain"}
+{"kind": "args", "context": "configure oam cfm", "prefix": "alarm-type", "text": ""}
+{"kind": "args", "context": "configure oam cfm", "prefix": "availability", "text": ""}
+{"kind": "args-noenter", "context": "configure oam cfm", "prefix": "maintenance-domain", "text": "- maintenance-domain <md-index>\n\nMiNID>config>oam>cfm# maintenance-domain\n\nauto-create probe 'maintenance-domain zzz-hrvst' refused.\ndevice response: maintenance-domain zzz-hrvst\n#CLI Error, MD Index Exceeds Range [1-8]\nMiNID>config>oam>cfm#"}
+{"kind": "args-param", "context": "configure oam cfm", "prefix": "measurement-bin-profile", "text": "- measurement-bin-profile <name>\n\nMiNID>config>oam>cfm# measurement-bin-profile"}
+{"kind": "args", "context": "configure oam cfm", "prefix": "show mips", "text": ""}
+{"kind": "args", "context": "configure oam cfm", "prefix": "show summary", "text": ""}
+{"kind": "level", "context": "configure oam cfm measurement-bin-profile NAME", "prefix": "", "text": "[no] thresholds"}
+{"kind": "args", "context": "configure oam cfm measurement-bin-profile NAME", "prefix": "thresholds", "text": ""}
+{"kind": "level", "context": "configure oam efm", "prefix": "", "text": "mode\nbind\n[no] shutdown\nclear-statistics"}
+{"kind": "args", "context": "configure oam efm", "prefix": "bind", "text": ""}
+{"kind": "args", "context": "configure oam efm", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "configure oam efm", "prefix": "loopback", "text": ""}
+{"kind": "args", "context": "configure oam efm", "prefix": "mode", "text": ""}
+{"kind": "args", "context": "configure oam efm", "prefix": "show statistics", "text": ""}
+{"kind": "args", "context": "configure oam efm", "prefix": "show status", "text": ""}
+{"kind": "args", "context": "configure oam efm", "prefix": "shutdown", "text": ""}
+{"kind": "level", "context": "configure oam twamp", "prefix": "", "text": "[no] profile\n[no] responder\n[no] controller"}
+{"kind": "args-noenter", "context": "configure oam twamp", "prefix": "controller", "text": "- controller <controller-name> [<number>]\n\nMiNID>config>oam>twamp# controller\n\nauto-create probe 'controller zzz-hrvst' refused.\ndevice response: controller zzz-hrvst\n#CLI Error, Invalid Parameter\nMiNID>config>oam>twamp#"}
+{"kind": "args-param", "context": "configure oam twamp", "prefix": "profile", "text": "- profile <profile-name> [<number>]\n\nMiNID>config>oam>twamp# profile"}
+{"kind": "args-noenter", "context": "configure oam twamp", "prefix": "responder", "text": "- responder <responder-name>\n\nMiNID>config>oam>twamp# responder\n\nauto-create probe 'responder zzz-hrvst' refused.\ndevice response: responder zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>oam>twamp#"}
+{"kind": "level", "context": "configure oam twamp profile NAME", "prefix": "", "text": "payload-length\ntransmit-rate\nloss-timeout\nloss-ratio-threshold\ndelay-variation-threshold\ndelay-threshold\ndelay-variation-event-type"}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "delay-threshold", "text": ""}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "delay-variation-event-type", "text": ""}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "delay-variation-threshold", "text": ""}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "loss-ratio-threshold", "text": ""}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "loss-timeout", "text": ""}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "payload-length", "text": ""}
+{"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "transmit-rate", "text": ""}
+{"kind": "level", "context": "configure packet-capture", "prefix": "", "text": "capture-dscp\nlocal-ip-address\nrpcap-tcp-port\n[no] inactive-timeout\ntimestamp-source\n[no] capture"}
+{"kind": "args", "context": "configure packet-capture", "prefix": "capture", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "capture-dscp", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "inactive-timeout", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "local-ip-address", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "rpcap-tcp-port", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "show status", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "timestamp-source", "text": ""}
+{"kind": "level", "context": "configure port", "prefix": "", "text": "ethernet"}
+{"kind": "args-noenter", "context": "configure port", "prefix": "ethernet", "text": "- ethernet {sfp|msa}\n\nMiNID>config>port# ethernet"}
+{"kind": "level", "context": "configure qos", "prefix": "", "text": "[no] policer-profile\n[no] envelope-profile\n[no] cos-map-profile"}
+{"kind": "args-noenter", "context": "configure qos", "prefix": "cos-map-profile", "text": "- cos-map-profile <profile-name> classification {p-bit|ip-dscp}\n\nMiNID>config>qos# cos-map-profile\n\nauto-create probe 'cos-map-profile zzz-hrvst' refused.\ndevice response: cos-map-profile zzz-hrvst\n#CLI Error, Profile Name Too Long, Max Name Length Is 10 Chars\nMiNID>config>qos#"}
+{"kind": "args-noenter", "context": "configure qos", "prefix": "envelope-profile", "text": "- envelope-profile <profile-name>\n\nMiNID>config>qos# envelope-profile\n\nauto-create probe 'envelope-profile zzz-hrvst' refused.\ndevice response: envelope-profile zzz-hrvst\n#CLI Error, Profile Name Too Long, Max Name Length Is 10 Chars\nMiNID>config>qos#"}
+{"kind": "args-param", "context": "configure qos", "prefix": "policer-profile", "text": "- policer-profile <profile-name>\n\nMiNID>config>qos# policer-profile"}
+{"kind": "level", "context": "configure qos policer-profile NAME", "prefix": "", "text": "bandwidth\n[no] color_aware\ncompensation\n[no] coupling-flag"}
+{"kind": "args", "context": "configure qos policer-profile NAME", "prefix": "bandwidth", "text": ""}
+{"kind": "args", "context": "configure qos policer-profile NAME", "prefix": "color_aware", "text": ""}
+{"kind": "args", "context": "configure qos policer-profile NAME", "prefix": "compensation", "text": ""}
+{"kind": "args", "context": "configure qos policer-profile NAME", "prefix": "coupling-flag", "text": ""}
+{"kind": "level", "context": "configure reporting", "prefix": "", "text": "[no] pm\nclear-log\nfile-interval-duration\ninterval-duration"}
+{"kind": "args", "context": "configure reporting", "prefix": "clear-log", "text": ""}
+{"kind": "args", "context": "configure reporting", "prefix": "file-interval-duration", "text": ""}
+{"kind": "args", "context": "configure reporting", "prefix": "interval-duration", "text": ""}
+{"kind": "args", "context": "configure reporting", "prefix": "pm", "text": ""}
+{"kind": "args", "context": "configure reporting", "prefix": "show log", "text": ""}
+{"kind": "level", "context": "configure router", "prefix": "", "text": "[no] interface\n[no] static-route\nmanagement-cfg"}
+{"kind": "args-noenter", "context": "configure router", "prefix": "interface", "text": "- interface <number>\n\nMiNID>config>router# interface\n\nauto-create probe 'interface zzz-hrvst' refused.\ndevice response: interface zzz-hrvst\n#CLI Error, Invalid Parameter\nMiNID>config>router#"}
+{"kind": "args", "context": "configure router", "prefix": "management-cfg", "text": "- static-route <ip-address/mask> address <next-hop-ip-address>\n\nMiNID>config>router# static-route \u0015management-cfg"}
+{"kind": "args", "context": "configure router", "prefix": "static-route", "text": "- static-route <ip-address/mask> address <next-hop-ip-address>\n\nMiNID>config>router# static-route"}
+{"kind": "level", "context": "configure service", "prefix": "", "text": ""}
+{"kind": "args", "context": "configure service", "prefix": "show summary", "text": ""}
+{"kind": "level", "context": "configure system", "prefix": "", "text": "[no] device-name\n[no] location\n[no] contact\ndate-and-time\nclock\nfault-propagation\nsyslog"}
+{"kind": "args", "context": "configure system", "prefix": "contact", "text": ""}
+{"kind": "args", "context": "configure system", "prefix": "device-name", "text": ""}
+{"kind": "args", "context": "configure system", "prefix": "location", "text": ""}
+{"kind": "args", "context": "configure system", "prefix": "show status", "text": ""}
+{"kind": "args-noenter", "context": "configure system", "prefix": "syslog", "text": "- syslog {device|server}  <server number>\n\nMiNID>config>system# syslog"}
+{"kind": "level", "context": "configure system clock", "prefix": "", "text": "sync-e-src"}
+{"kind": "args", "context": "configure system clock", "prefix": "sync-e-src", "text": ""}
+{"kind": "level", "context": "configure system date-and-time", "prefix": "", "text": "date-format\ndate\nntp\n[no] summer-time\ntime\nzone"}
+{"kind": "args", "context": "configure system date-and-time", "prefix": "date", "text": ""}
+{"kind": "args", "context": "configure system date-and-time", "prefix": "date-format", "text": ""}
+{"kind": "args", "context": "configure system date-and-time", "prefix": "show summer-time", "text": "- time time [hh:mm[:ss]]\n\nMiNID>config>system>date-time# time \u0015zone \u0015show summer-time"}
+{"kind": "args", "context": "configure system date-and-time", "prefix": "time", "text": "- time time [hh:mm[:ss]]\n\nMiNID>config>system>date-time# time"}
+{"kind": "args", "context": "configure system date-and-time", "prefix": "zone", "text": "- time time [hh:mm[:ss]]\n\nMiNID>config>system>date-time# time \u0015zone"}
+{"kind": "level", "context": "configure system date-and-time ntp", "prefix": "", "text": "poll-interval\n[no] server"}
+{"kind": "args", "context": "configure system date-and-time ntp", "prefix": "poll-interval", "text": ""}
+{"kind": "args-noenter", "context": "configure system date-and-time ntp", "prefix": "server", "text": "- server <server-id>\n\nMiNID>config>system>date-time>ntp# server\n\nauto-create probe 'server zzz-hrvst' refused.\ndevice response: server zzz-hrvst\n#CLI Error, Invalid Parameter\nMiNID>config>system>date-time>ntp#"}
+{"kind": "args", "context": "configure system date-and-time ntp", "prefix": "show status", "text": ""}
+{"kind": "level", "context": "configure system date-and-time summer-time", "prefix": "", "text": "recurring\ndate"}
+{"kind": "args", "context": "configure system date-and-time summer-time", "prefix": "date", "text": ""}
+{"kind": "args", "context": "configure system date-and-time summer-time", "prefix": "recurring", "text": ""}
+{"kind": "level", "context": "configure system fault-propagation", "prefix": "", "text": "[no] ais\n[no] phy-disable\n[no] los-propagation\n[no] tx-disable\n[no] tx-fault\n[no] cfm-fault\n[no] if-status-tlv"}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "ais", "text": ""}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "cfm-fault", "text": ""}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "if-status-tlv", "text": ""}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "los-propagation", "text": ""}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "phy-disable", "text": ""}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "tx-disable", "text": ""}
+{"kind": "args", "context": "configure system fault-propagation", "prefix": "tx-fault", "text": ""}
+{"kind": "level", "context": "configure test", "prefix": "", "text": "l3sat"}
+{"kind": "level", "context": "configure test l3sat", "prefix": "", "text": "[no] peer-profile\n[no] session-profile\n[no] generator"}
+{"kind": "args-noenter", "context": "configure test l3sat", "prefix": "generator", "text": "- generator <name>\n\nMiNID>config>test>l3sat# generator\n\nauto-create probe 'generator zzz-hrvst' refused.\ndevice response: generator zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>test>l3sat#"}
+{"kind": "args-param", "context": "configure test l3sat", "prefix": "peer-profile", "text": "- peer-profile <name>\n\nMiNID>config>test>l3sat# peer-profile"}
+{"kind": "args-noenter", "context": "configure test l3sat", "prefix": "session-profile", "text": "- session-profile <name>\n\nMiNID>config>test>l3sat# session-profile\n\nauto-create probe 'session-profile zzz-hrvst' refused.\ndevice response: session-profile zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>test>l3sat#"}
+{"kind": "level", "context": "configure test l3sat peer-profile NAME", "prefix": "", "text": "performance-duration\nudp-port\nresponder-type"}
+{"kind": "args", "context": "configure test l3sat peer-profile NAME", "prefix": "performance-duration", "text": ""}
+{"kind": "args", "context": "configure test l3sat peer-profile NAME", "prefix": "responder-type", "text": ""}
+{"kind": "args", "context": "configure test l3sat peer-profile NAME", "prefix": "udp-port", "text": ""}
+{"kind": "level", "context": "factory", "prefix": "", "text": "eprom_ins\neprom_set\ncfg_set\nerase\ncfg_ins\nfpga\nprint-arp-table"}
+{"kind": "args", "context": "factory", "prefix": "cfg_ins", "text": ""}
+{"kind": "args", "context": "factory", "prefix": "cfg_set", "text": ""}
+{"kind": "args", "context": "factory", "prefix": "eprom_ins", "text": ""}
+{"kind": "args", "context": "factory", "prefix": "eprom_set", "text": ""}
+{"kind": "args", "context": "factory", "prefix": "erase", "text": ""}
+{"kind": "args", "context": "factory", "prefix": "print-arp-table", "text": "MiNID>factory# print-arp-table"}
+{"kind": "args", "context": "factory", "prefix": "show cfg", "text": "MiNID>factory# print-arp-table \u0015show eprom \u0015show cfg"}
+{"kind": "args", "context": "factory", "prefix": "show eprom", "text": "MiNID>factory# print-arp-table \u0015show eprom"}
+{"kind": "level", "context": "factory fpga", "prefix": "", "text": "read\nwrite\nshow-statistics\nclear-statistics\nread_l2cp_table\nread_flows_table"}
+{"kind": "args", "context": "factory fpga", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "factory fpga", "prefix": "read", "text": ""}
+{"kind": "args", "context": "factory fpga", "prefix": "read_flows_table", "text": ""}
+{"kind": "args", "context": "factory fpga", "prefix": "read_l2cp_table", "text": ""}
+{"kind": "args", "context": "factory fpga", "prefix": "show-statistics", "text": ""}
+{"kind": "args", "context": "factory fpga", "prefix": "write", "text": ""}
+{"kind": "level", "context": "file", "prefix": "", "text": "copy\ndelete"}
+{"kind": "args", "context": "file", "prefix": "copy", "text": ""}
+{"kind": "args", "context": "file", "prefix": "delete", "text": ""}
+{"kind": "args", "context": "file", "prefix": "show startup-config", "text": ""}
+{"kind": "args", "context": "file", "prefix": "show sw-pack", "text": ""}
+{"kind": "args", "context": "file", "prefix": "show user-default-config", "text": ""}
