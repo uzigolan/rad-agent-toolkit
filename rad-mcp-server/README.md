@@ -3,7 +3,7 @@
 Agent expertise + MCP server for operating RAD Data Communications devices
 through their CLI in natural language — the **full RAD portfolio** by design:
 SecFlow (SF-1p), ETX-1p, ETX-2 (ETX-2I), Megaplex-4100, MP-1, MiNID and ETX-2V
-(uCPE-OS) verified live, with legacy ETX-1 planned.
+(uCPE-OS) verified live.
 
 The center of gravity is the **skill layer** — live-harvested CLI knowledge,
 ingested user manuals, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
@@ -23,7 +23,6 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 | `secflow` | SF-1p and SecFlow gateways | 6.5.0 | `drivers/secflow.py` | ✅ verified live (SF-1p) |
 | `etx1p` | ETX-1p demarcation units | 6.5.0 | `drivers/etx1p.py` | ✅ verified live (Device3 + a 6.4 unit) — modern context CLI, harvested references + manual; NOT legacy `etx1` |
 | `etx2` | ETX-203AX / 205A / 220A / ETX-2I | 6.8.5 | `drivers/etx2.py` | ✅ verified live (ETX-2I) — `show resources` unsupported, slot/port naming; CLI reference + manual harvested |
-| `etx1` | legacy ETX-1 line | — | planned | different CLI — own driver base |
 | `mp4100` | Megaplex-4100 multiservice access nodes | 4.91 | `drivers/mp4100.py` | ✅ verified live (marks-mp4) — same shared dialect + candidate-DB `commit` model; CLI reference + 1,202-page manual harvested |
 | `mp1` | MP-1 | 2.20 | `drivers/mp1.py` | ✅ verified live (mp-one) — shared dialect + candidate-DB `commit` model; standard SSH; CLI reference + manual harvested |
 | `minid` | MiNID miniature NID (sleeve device) | 2.6 | `drivers/minid.py` | ✅ verified live (minid-1, prompt `MiNID#`) — shared context CLI, direct-write save; **fragile/unique SSH** → patient per-family connect profile; `tree` paginates with a bare `more...` pager; harvested branch-by-branch (fragile link can't sustain a full-tree session) + manual |

@@ -39,7 +39,6 @@ into the MCP ecosystem.
         │                   ├── mp1      (MP-1 — verified live; shared dialect + candidate-DB commit)
         │                   ├── minid    (MiNID sleeve NID — verified live; direct-write save; fragile-SSH profile)
         │                   └── etx2v    (ETX-2V uCPE-OS — verified live; standard SSH; virtualization/VNF context)
-        │                 etx1 (legacy) — different CLI, own driver base [planned]
         │
  devices                  inventory.yaml (name/host/family/groups; creds in server/.env)
 ```

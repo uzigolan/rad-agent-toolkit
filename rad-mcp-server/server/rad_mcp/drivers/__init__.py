@@ -15,8 +15,6 @@ _DRIVERS: dict[str, RadDriver] = {
     "mp1": Mp1Driver(),  # verified live (MP-1 SW 2.20; shared dialect, standard SSH)
     "mp4100": Mp4100Driver(),  # shared dialect + candidate-DB commit (see driver docstring)
     "secflow": SecFlowDriver(),
-    # Planned families (different CLI dialects — need their own driver base):
-    #   "etx1"    — legacy ETX-1 line (menu CLI; ETX-1p is NOT this — it's context-based)
 }
 
 
