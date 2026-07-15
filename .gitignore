@@ -1,6 +1,12 @@
 # Workspace-local Claude settings (per-machine permissions)
 .claude/settings.local.json
 
+# Local agent/editor integration folders: keep local, not in git
+.claude/
+rad-mcp-server/.claude-plugin/
+.vscode/
+rad-mcp-server/.vscode/
+
 # Python
 __pycache__/
 *.pyc

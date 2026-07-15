@@ -1,9 +1,0 @@
-{
-  "name": "rad-mcp",
-  "version": "0.1.0",
-  "description": "Operate RAD Data Communications devices (SecFlow, ETX-2, and the wider RAD portfolio) via MCP tools and operational skills — health checks, config backup, guarded provisioning.",
-  "author": {
-    "name": "RAD Data Communications"
-  },
-  "keywords": ["rad", "etx", "carrier-ethernet", "network-automation", "mcp"]
-}
