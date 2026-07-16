@@ -239,6 +239,20 @@ duplicating it; each ends by printing its client's restart/verify step):
 remain the reference for trust dialogs, org-policy gates, and
 troubleshooting.
 
+## Windows: ChatGPT Codex app (HTTPS MCP + project skills plugin)
+
+For Codex desktop app on Windows, use the dedicated guide:
+
+- [scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md](scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md)
+
+That guide covers:
+
+- HTTPS MCP registration in Codex
+- TLS trust requirements for localhost certificates
+- project plugin marketplace and skills install
+- restart/validation flow in a new task
+- listener ownership (Codex does not start your external MCP listener)
+
 ## Troubleshooting (all targets)
 
 Target-specific tables live in the per-client sections of

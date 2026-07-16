@@ -44,3 +44,10 @@ inventory_bck.yaml
 # One-off proposal drafts at the repo root — personal working files
 /etx1p-l2tpv3-proposal.md
 /etx1p-l2tpv3-proposal.html
+
+# Local Codex setup notes (workspace-private)
+/README-codex-mcp-skills.md
+
+# TLS artifacts (local-only)
+*.crt
+*.key
