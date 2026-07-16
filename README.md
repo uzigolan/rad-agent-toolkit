@@ -43,27 +43,47 @@ Megaplex-4100, and MP-1 verified live; the full RAD portfolio by design.
 
 ## What this repo demonstrates
 
-Beyond operating RAD gear, this repo is a **working showcase of the ways AI
-capability can be "plugged into" AI applications** — the same device-operations
-use case implemented across every integration surface, so each technology can
-be evaluated in a real context rather than a toy demo. It is built to plug into
-**any AI application, not just one**:
+Less theory, more concrete examples. One prompt from each section in
+[examples.md](rad-mcp-server/docs/examples.md), and what this app does with it:
 
-| AI integration technology | What it demonstrates | Plugs into |
-|---|---|---|
-| **Skills** (`SKILL.md` + harvested knowledge + personas) | **The main asset:** live-harvested CLI truth, ingested manuals, safety rules, and expert personas (Abayev/Noam) as loadable expertise — the cross-vendor **Agent Skills** open standard | Claude Code / Desktop, GitHub Copilot (VS Code + CLI), OpenAI Codex |
-| **MCP server** (tools + `rad://` resources) | The execution arm: device verbs + knowledge served over the open Model Context Protocol to any MCP client | Claude Desktop, Claude Code, GitHub Copilot (VS Code + CLI), OpenAI Codex (CLI/IDE), Cursor, Zed, Gemini CLI, … |
-| **Plugin bundle** | One uploadable unit combining MCP + skills + commands | Claude Desktop "Upload local plugin" |
-| **Remote MCP** (HTTPS + bearer auth, read-only) | One shared server many clients reach by URL — auth, read-only, and native TLS enforced in code; one of [three deployment modes](rad-mcp-server/INSTALL.md) | any MCP client on the network |
-| **Portable bundle** | The knowledge + wiring guide re-packaged for non-Claude clients (Custom GPT, Cursor rules, RAG corpus) | ChatGPT/OpenAI, others |
-| **Knowledge layers** | Live-harvested CLI reference + ingested device manuals as lexical retrieval (RAG-adjacent), served as files and resources | client-agnostic |
-| **Automation hooks** | Duration/token metrics per skill run via lifecycle hooks + statusline | Claude Code |
+1. Device management
+- Prompt:
+  "rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234"
+- What this app does:
+  validates required fields, writes inventory facts, keeps credentials in env,
+  then lets the same device be used by all supported clients.
 
-The through-line: **capture the expertise once (harvest + manuals + rules),
-then surface it through whichever integration a given AI app supports** —
-with the MCP server as the shared execution arm. Knowledge and server are
-portable; only the thin wrappers (plugin, zips, connector config) differ
-per app.
+2. Device operations
+- Prompt:
+  "abayev, show the active alarms on sf-163-187"
+- What this app does:
+  runs a guarded read workflow (confirmation + read-only tool call), collects
+  live alarm output, and returns an operator-ready summary.
+
+3. Network engineering
+- Prompt:
+  "abayev, I have three ETX-2 units in a ring running ERP — give me the configuration for all three"
+- What this app does:
+  uses harvested CLI references + manuals to produce per-device config blocks
+  and verification steps, with staged commit flow when execution is requested.
+
+4. Advanced
+- Prompt:
+  "rad agent, compare the ETX-2 and the ETX-2V on QoS capabilities"
+- What this app does:
+  builds a family-by-family comparison grounded in each family's own harvested
+  references/manuals, avoiding unsupported cross-family assumptions.
+
+5. Onboarding a new device type
+- Prompt:
+  "rad agent, harvest the CLI of the new device I just added"
+- What this app does:
+  runs CLI harvesting into reusable references (command tree + syntax corpus),
+  so future answers become firmware-exact instead of generic.
+
+In short: this repo turns those prompts into repeatable workflows by combining
+skills (knowledge), MCP tools (execution), and harvested/manual evidence
+that can be reused across clients.
 
 ## What's in the box
 
