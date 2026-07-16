@@ -312,6 +312,74 @@ def _take_backup(dev) -> Path:
     return path
 
 
+# ------------------------------------------------------------- SNMP (reads)
+# Read-only by construction (GET / GETNEXT only — this toolkit never sends
+# SET; config writes stay on the CLI's staged-commit flow). Registered
+# unconditionally, like the other read tools. Credentials come from
+# server/.env (RAD_MCP_<NAME>_SNMP_COMMUNITY / _SNMP_V3_USER); see
+# backends/snmp.py for the RAD-agent quirks these tools encode.
+
+def _snmp():
+    try:
+        from .backends import snmp as _mod
+        import pysnmp  # noqa: F401 — surface a clean error if absent
+        return _mod
+    except ImportError as exc:
+        raise ToolError(
+            "SNMP support needs the 'pysnmp' package in the server venv: "
+            "pip install pysnmp  (then retry)"
+        ) from exc
+
+
+@mcp.tool()
+def snmp_probe(device: str) -> dict[str, str]:
+    """SNMP identity probe (read-only): MIB-II system group — exact firmware
+    via sysDescr, plus a sysObjectID -> family hint. Works without any CLI/SSH
+    session, so it is the safe first contact for fragile-SSH units."""
+    s = _snmp()
+    dev = get_device(device)
+    out = s.snmp_probe(dev)
+    audit("snmp_probe", device)
+    return out
+
+
+@mcp.tool()
+def snmp_get(device: str, oids: list[str]) -> dict[str, str]:
+    """SNMP GET of explicit OIDs (read-only), values keyed by OID with the
+    symbolic name appended. This — not snmp_walk — is the reliable way to poll
+    families whose agent has a sparse GETNEXT chain (minid)."""
+    s = _snmp()
+    dev = get_device(device)
+    if not oids:
+        raise ToolError("pass at least one OID, e.g. ['1.3.6.1.2.1.1.1.0']")
+    if len(oids) > 64:
+        raise ToolError("max 64 OIDs per call — split larger polls")
+    raw = s.snmp_get(dev, oids)
+    audit("snmp_get", device, detail=f"{len(oids)} oids")
+    return {f"{oid}  ({s.resolve_name(oid)})": val for oid, val in raw.items()}
+
+
+@mcp.tool()
+def snmp_walk(device: str, oid: str, max_rows: int = 200) -> dict:
+    """SNMP GETNEXT walk within a subtree (read-only), row-capped. Returns
+    symbolic rows plus explicit completeness flags — `capped` means MORE data
+    exists beyond max_rows, and RAD agents signal end-of-view by silence
+    (reported in `note`, not an error). On minid prefer snmp_get: its agent's
+    NEXT chain is sparse and walks under-report."""
+    s = _snmp()
+    dev = get_device(device)
+    max_rows = max(1, min(int(max_rows), 2000))
+    rows, capped, note = s.snmp_walk(dev, oid, max_rows)
+    audit("snmp_walk", device, detail=f"{oid} ({len(rows)} rows)")
+    return {
+        "root": f"{oid}  ({s.resolve_name(oid)})",
+        "rows": {f"{o}  ({s.resolve_name(o)})": v for o, v in rows},
+        "row_count": len(rows),
+        "capped": capped,
+        "note": note or ("complete" if not capped else ""),
+    }
+
+
 # ---------------------------------------------------------------- resources
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -562,6 +630,30 @@ if WRITE_TOOLS_ENABLED:
         """
         _require_write_scope()
         dev = get_device(device)  # validates the device exists
+        # MP candidate-DB families (mp1/mp4100): enforce the verified write
+        # recipe — discard-changes FIRST (clears stale candidate edits from
+        # earlier sessions, which otherwise fail sanity/commit on config that
+        # isn't yours), then sanity-check before commit, commit from root.
+        # Verified live on mp-one 2026-07-16; requested as a hard rule.
+        if dev.family in ("mp1", "mp4100"):
+            toks = [l.strip().lower() for l in lines if l.strip()]
+            first_real = next((t for t in toks if t != "exit all"), "")
+            problems = []
+            if first_real != "discard-changes":
+                problems.append("BEGIN with 'discard-changes' (after an optional leading 'exit all')")
+            if "sanity-check" not in toks:
+                problems.append("include 'sanity-check' after the config lines (must report OK)")
+            if "commit" not in toks:
+                problems.append("include 'commit' (run from root — after an 'exit all', never inside a new object's $ context)")
+            elif "sanity-check" in toks and toks.index("sanity-check") > toks.index("commit"):
+                problems.append("put 'sanity-check' BEFORE 'commit'")
+            if problems:
+                raise ToolError(
+                    f"REFUSED: {dev.family} uses the candidate-DB model; every staged "
+                    "sequence must follow the verified MP write recipe — "
+                    "discard-changes -> <config lines> -> exit all -> sanity-check -> "
+                    "commit -> save. This sequence must: " + "; ".join(problems)
+                )
         stage_id = secrets.token_hex(4)
         _STAGES[stage_id] = {
             "device": dev.name,

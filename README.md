@@ -28,6 +28,19 @@ Megaplex-4100, and MP-1 verified live; the full RAD portfolio by design.
 - OpenAI Codex — Codex IDE extension (VS Code / JetBrains)
 - OpenAI Codex — Codex in the ChatGPT desktop app
 
+## Device support
+
+| Family | Products | Version | Driver | Status |
+|---|---|---|---|---|
+| `secflow` | SF-1p and SecFlow gateways | 6.5.0 | `drivers/secflow.py` | ✅ verified live (SF-1p) |
+| `etx1p` | ETX-1p demarcation units | 6.5.0 | `drivers/etx1p.py` | ✅ verified live (Device3 + a 6.4 unit) — modern context CLI, harvested references + manual; NOT legacy `etx1` |
+| `etx2` | ETX-203AX / 205A / 220A / ETX-2I | 6.8.5 | `drivers/etx2.py` | ✅ verified live (ETX-2I) — `show resources` unsupported, slot/port naming; CLI reference + manual harvested |
+| `mp4100` | Megaplex-4100 multiservice access nodes | 4.91 | `drivers/mp4100.py` | ✅ verified live (marks-mp4) — same shared dialect + candidate-DB `commit` model; CLI reference + 1,202-page manual harvested |
+| `mp1` | MP-1 | 2.20 | `drivers/mp1.py` | ✅ verified live (mp-one) — shared dialect + candidate-DB `commit` model; standard SSH; CLI reference + manual harvested |
+| `minid` | MiNID miniature NID (sleeve device) | 2.6 | `drivers/minid.py` | ✅ verified live (minid-1, prompt `MiNID#`) — shared context CLI, direct-write save; fragile/unique SSH profile; CLI reference + manual harvested |
+| `etx2v` | ETX-2V (uCPE-OS chassis platform) | 5.0.0 | `drivers/etx2v.py` | ✅ verified live (etx2v-1, prompt `uCPE-OS#`) — shared context CLI, standard SSH; top-level `virtualization` (VNF) context; 719-node tree / 527 captures harvested + hardware/BIOS manual |
+| `etx1` | legacy ETX-1 | - | - | planned — separate (menu) CLI dialect, own driver |
+
 ## What this repo demonstrates
 
 Beyond operating RAD gear, this repo is a **working showcase of the ways AI
@@ -191,17 +204,6 @@ README.md (this file)
   with secrets redacted.
 
 Full model: [architecture.md](rad-mcp-server/docs/architecture.md).
-
-## Product coverage
-
-| Family | Products | Status |
-|---|---|---|
-| `secflow` | SF-1p / SecFlow gateways | ✅ verified live (SF-1p, Sw 6.5.0.35) |
-| `etx1p` | ETX-1p demarcation units | ✅ verified live (Sw 6.5.0.43 and 6.4.0.165) — modern context-based CLI + manual layer; **not** the legacy `etx1` |
-| `etx2` | ETX-203AX / 205A / 220A / ETX-2I | ✅ verified live (ETX-2I, Sw 6.8.5(1.116)) — no `show resources`; slot/port naming (`Ethernet 0/2`); CLI reference + manual harvested |
-| `mp4100` | Megaplex-4100 multiservice access nodes | ✅ verified live (marks-mp4, Mn 4.91) — shared dialect + candidate-DB `commit` model; CLI reference + manual harvested |
-| `mp1` | MP-1 | ✅ verified live (mp-one, SW 2.20(0.61)) — shared dialect + candidate-DB `commit` model; CLI reference + manual harvested |
-| `etx1` | legacy ETX-1 | planned — separate (menu) CLI dialect, own driver |
 
 ## Roadmap
 

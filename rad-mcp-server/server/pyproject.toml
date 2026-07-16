@@ -1,6 +1,6 @@
 [project]
 name = "rad-mcp"
-version = "0.1.0"
+version = "0.2.0"
 description = "MCP server for RAD Data Communications devices (ETX-2 family and beyond)"
 requires-python = ">=3.10"
 dependencies = [
@@ -8,6 +8,7 @@ dependencies = [
     "netmiko>=4.3",
     "pyyaml>=6.0",
     "python-dotenv>=1.0",
+    "pysnmp>=7.1",
 ]
 
 # Tooling-only extras (scripts/, not the server runtime). Install with:

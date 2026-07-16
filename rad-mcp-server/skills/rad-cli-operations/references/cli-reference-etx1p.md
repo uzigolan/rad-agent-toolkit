@@ -1,6 +1,6 @@
 # etx1p CLI reference (harvested `?` help)
 
-Captured live from etx1p (Device3 (ETX-1p, Hw 0.4, Sw 6.5.0.43) - lab unit, verified context-based CLI) on 2026-07-09 by scripts/harvest_cli.py
+Captured live from ehud1p (Ehud ETX-1p lab device) on 2026-07-15 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -460,7 +460,7 @@ Level help (`?`):
       resequence                     - Resequence ACL
 ```
 
-### access-list *(not entered — parameterized context)*
+### access-list *(parameterized — inner help harvested under "configure access-control access-list NAME")*
 ```text
 <ipv4>               : IPv4
  <ipv6>               : IPv6
@@ -482,6 +482,54 @@ Device3>config>access-control# logging
 access-list
 
 Device3>config>access-control# resequence
+```
+
+## configure access-control access-list NAME
+
+Level help (`?`):
+```text
+delete                         - Remove statement by sequence number
+      deny                           - Add Deny statement to ACL
+      permit                         - Add Permit statement to ACL
+      remark                         - Add comment to ACL
+```
+
+### delete
+```text
+<sequence-number>    : Statement sequence number [1..2147483648]
+
+
+Device3>config>access-control>access-list(data-acl)# delete
+```
+
+### deny
+```text
+<udp>                : UDP
+ <tcp>                : TCP
+ <icmp>               : ICMP
+ <ip>                 : IP
+
+
+Device3>config>access-control>access-list(data-acl)# deny
+```
+
+### permit
+```text
+<udp>                : UDP
+ <tcp>                : TCP
+ <icmp>               : ICMP
+ <ip>                 : IP
+
+
+Device3>config>access-control>access-list(data-acl)# permit
+```
+
+### remark
+```text
+<description>        : Free text comment [1..252 chars]
+
+
+Device3>config>access-control>access-list(data-acl)# remark
 ```
 
 ## configure access-control firewall
@@ -1561,7 +1609,7 @@ Device3>config>mngmnt>access# clear-statistics
 Device3>config>mngmnt>access# command-authorization
 ```
 
-### enrollment-notification-nms *(not entered — parameterized context)*
+### enrollment-notification-nms *(parameterized — inner help harvested under "configure management access enrollment-notification-nms NAME")*
 ```text
 <ip-address>         : IP address or NMS name to send notifications to [0.0.0.0
                         |0:0:0:0::0]
@@ -1777,6 +1825,50 @@ Device3>config>mngmnt>access# ztc-bootstrap
 Device3>config>mngmnt>access# ztc-tftp-disable
 ```
 
+## configure management access enrollment-notification-nms NAME
+
+Level help (`?`):
+```text
+[no] nms-username                   - Configure NMS username and password
+ [no] shutdown                       - Disable enrollment notification
+ [no] snmp-profile                   - Configure SNMP profile
+ [no] ssh-username                   - Configure SSH username and password
+
+
+Device3>config>mngmnt>access>enrollment(1.1.1.1)$
+```
+
+### nms-username
+```text
+<name>               : Username for NMS authentication [1..80 chars]
+
+
+Device3>config>mngmnt>access>enrollment(1.1.1.1)$ nms-username
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>mngmnt>access>enrollment(1.1.1.1)$ shutdown
+```
+
+### snmp-profile
+```text
+<name>               : SNMP profile name [1..80 chars]
+
+
+Device3>config>mngmnt>access>enrollment(1.1.1.1)$ snmp-profile
+```
+
+### ssh-username
+```text
+<name>               : SSH username [1..80 chars]
+
+
+Device3>config>mngmnt>access>enrollment(1.1.1.1)$ ssh-username
+```
+
 ## configure management access sms
 
 Level help (`?`):
@@ -1961,9 +2053,9 @@ Level help (`?`):
 
 Device3>config>mngmnt>snmp# access-group
 
-auto-create probe 'access-group zzz-hrvst' refused.
-device response: access-group zzz-hrvst
-#                                                  ^
+auto-create tried [access-group zzz-hrvst, access-group hrvst, access-group z], all refused.
+last device response ('access-group z'): access-group z
+#                                          ^
 # cli error: parameter or keyword missing or wrong
  - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
    auth-no-priv|auth-priv}
@@ -2017,9 +2109,9 @@ Device3>config>mngmnt>snmp# notify
 
 Device3>config>mngmnt>snmp# notify-filter
 
-auto-create probe 'notify-filter zzz-hrvst' refused.
-device response: notify-filter zzz-hrvst
-#                                                   ^
+auto-create tried [notify-filter zzz-hrvst, notify-filter hrvst, notify-filter z], all refused.
+last device response ('notify-filter z'): notify-filter z
+#                                           ^
 # cli error: parameter or keyword missing or wrong
  - notify-filter <name> <sub-tree-oid>
  - no notify-filter <name> <sub-tree-oid>
@@ -2045,6 +2137,19 @@ Device3>config>mngmnt>snmp# notify-filter-profile
 
 
 Device3>config>mngmnt>snmp# security-to-group
+
+auto-create tried [security-to-group zzz-hrvst, security-to-group hrvst, security-to-group z], all refused.
+last device response ('security-to-group z'): security-to-group z
+#                                             ^
+# cli error: invalid parameter value
+ - security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ - no security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ <snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+ <security-name>      : Security name [string]
+
+Device3>config>mngmnt>snmp#
 ```
 
 ### show snmpv3
@@ -2111,9 +2216,9 @@ Device3>config>mngmnt>snmp# user
 
 Device3>config>mngmnt>snmp# view
 
-auto-create probe 'view zzz-hrvst' refused.
-device response: view zzz-hrvst
-#                                          ^
+auto-create tried [view zzz-hrvst, view hrvst, view z], all refused.
+last device response ('view z'): view z
+#                                  ^
 # cli error: parameter or keyword missing or wrong
  - view <view-name> <sub-tree-oid>
  - no view <view-name> <sub-tree-oid>
@@ -2311,7 +2416,7 @@ Device3>config>mngmnt>tacacsplus# group
 Device3>config>mngmnt>tacacsplus# privilege-level
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure management tacacsplus server NAME")*
 ```text
 <ip>                 : TACACS+ server IP address [0.0.0.0|0:0:0:0::0]
 
@@ -2337,6 +2442,94 @@ Device3>config>mngmnt>tacacsplus>group(zzz-hrvst)$
 
 
 Device3>config>mngmnt>tacacsplus>group(zzz-hrvst)$ accounting
+```
+
+## configure management tacacsplus server NAME
+
+Level help (`?`):
+```text
+accounting-port                - Set TACACS+ server accounting TCP port
+      authentication-port            - Set TACACS+ server authentication TCP 
+                                       port
+      clear-statistics               - Clear TACACS+ statistics
+ [no] group                          - Bind TACACS+ server to group
+      key                            - TACACS+ server shared secret
+      retry                          - Number of authentication retries
+ [no] shutdown                       - Disable TACACS+ server
+      timeout                        - Timeout
+
+ show statistics                     - Show TACACS+ statistics
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$
+```
+
+### accounting-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ accounting-port
+```
+
+### authentication-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ authentication-port
+```
+
+### clear-statistics
+```text
+<CR>
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ clear-statistics
+```
+
+### group
+```text
+<group-name>         : TACACS+ server group name [1..32 chars]
+
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ group
+```
+
+### key
+```text
+<string>             : TACACS+ server shared secret [1..80 chars]
+
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ key
+```
+
+### retry
+```text
+<number-of-retries>  : Number of authentication retries [1..1, default 1]
+
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ retry
+```
+
+### show statistics
+```text
+<CR>
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ show statistics
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ shutdown
+```
+
+### timeout
+```text
+<seconds>            : Timeout in seconds [1..30, default 5]
+
+
+Device3>config>mngmnt>tacacsplus>server(1.1.1.1)$ timeout
 ```
 
 ## configure monitor
@@ -2527,7 +2720,7 @@ Device3>config>port# ppp
 Device3>config>port# show summary
 ```
 
-### virtual *(not entered — parameterized context)*
+### virtual *(parameterized — inner help harvested under "configure port virtual NAME")*
 ```text
 <port-number>        : Virtual port level [1..10]
 
@@ -2578,6 +2771,15 @@ Device3>config>port>eth(lan1)# access-group
 
 
 Device3>config>port>eth(lan1)# classifier
+
+auto-create tried [classifier zzz-hrvst, classifier hrvst, classifier z], all refused.
+last device response ('classifier z'): classifier z
+#                                         ^
+# cli error: invalid parameter value
+ - classifier ingress
+ - no classifier ingress
+
+Device3>config>port>eth(lan1)#
 ```
 
 ### clear-access-list-statistics
@@ -2699,6 +2901,16 @@ Device3>config>port>eth(lan1)# traffic-class
 
 
 Device3>config>port>eth(lan1)# vlan
+
+auto-create tried [vlan zzz-hrvst, vlan hrvst, vlan z], all refused.
+last device response ('vlan z'): vlan z
+#                                   ^
+# cli error: invalid parameter value
+ - vlan <vlan-id>
+ - no vlan <vlan-id>
+ <vlan-id>            : Vlan id [1..4094]
+
+Device3>config>port>eth(lan1)#
 ```
 
 ## configure port ethernet NAME dot1x
@@ -3009,6 +3221,103 @@ Device3>config>port>ppp(1)>pppoe$ service-name
 Device3>config>port>ppp(1)>pppoe$ show status
 ```
 
+## configure port virtual NAME
+
+Level help (`?`):
+```text
+clear-statistics               - Clear port statistics
+      egress-mtu                     - Defines the max frame size to transmit
+ [no] force-next-hop                 - Map traffic originated by a router 
+                                       interface to its egress port
+ [no] name                           - Assigns/removes a port name
+ [no] policy-based-route             - Bind PBR rule to this entity
+ [no] shutdown                       - Administratively disables/enables the 
+                                       port
+ [no] vlan                           + Configure vlan port
+
+ show statistics                     - Displays the Virtual port statistics
+ show status                         - Displays the Virtual port status
+```
+
+### clear-statistics
+```text
+<CR>
+
+Device3>config>port>virtual(1)# clear-statistics
+```
+
+### egress-mtu
+```text
+<size>               : Specifies the Max Transition Unit size (bytes) [number, 
+                        default 1500] [68..12288]
+
+
+Device3>config>port>virtual(1)# egress-mtu
+```
+
+### force-next-hop
+```text
+<CR>
+ next-hop
+
+Device3>config>port>virtual(1)# force-next-hop
+```
+
+### name
+```text
+<string>             : Adds free text to assign a name to the port [0..64 
+                        chars]
+
+
+Device3>config>port>virtual(1)# name
+```
+
+### policy-based-route
+```text
+priority
+
+Device3>config>port>virtual(1)# policy-based-route
+```
+
+### show statistics
+```text
+<CR>
+
+Device3>config>port>virtual(1)# show statistics
+```
+
+### show status
+```text
+<CR>
+
+Device3>config>port>virtual(1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>port>virtual(1)# shutdown
+```
+
+### vlan *(not entered — parameterized context)*
+```text
+<vlan-id>            : Vlan id [1..4094]
+
+
+Device3>config>port>virtual(1)# vlan
+
+auto-create tried [vlan zzz-hrvst, vlan hrvst, vlan z], all refused.
+last device response ('vlan z'): vlan z
+#                                    ^
+# cli error: invalid parameter value
+ - vlan <vlan-id>
+ - no vlan <vlan-id>
+ <vlan-id>            : Vlan id [1..4094]
+
+Device3>config>port>virtual(1)#
+```
+
 ## configure protection
 
 Level help (`?`):
@@ -3022,6 +3331,16 @@ Level help (`?`):
 
 
 Device3>config>protection# erp
+
+auto-create tried [erp zzz-hrvst, erp hrvst, erp z], all refused.
+last device response ('erp z'): erp z
+#                              ^
+# cli error: invalid parameter value
+ - erp <number>
+ - no erp <number>
+ <number>             : Ring ID [1..239, default Index, no default]
+
+Device3>config>protection#
 ```
 
 ## configure qos
@@ -5234,6 +5553,8 @@ authentication-method          - Configure sd-iot authentication-method
 
  show statistics                     - Display sd-iot entity statistics
  show status                         - Display sd-iot entity status
+
+Device3>config>sd-iot$
 ```
 
 ### authentication-method
@@ -5242,7 +5563,7 @@ authentication-method          - Configure sd-iot authentication-method
  <certificate>        : Certificate-based authentication
 
 
-Device3>config>sd-iot# authentication-method
+Device3>config>sd-iot$ authentication-method
 ```
 
 ### certificate
@@ -5250,14 +5571,14 @@ Device3>config>sd-iot# authentication-method
 <certificate-name>   : Sd-iot certificate name [1..64 chars]
 
 
-Device3>config>sd-iot# certificate
+Device3>config>sd-iot$ certificate
 ```
 
 ### clear-statistics
 ```text
 <CR>
 
-Device3>config>sd-iot# clear-statistics
+Device3>config>sd-iot$ clear-statistics
 ```
 
 ### client-number
@@ -5265,7 +5586,7 @@ Device3>config>sd-iot# clear-statistics
 <number>             : Sd-iot client number [1..1000]
 
 
-Device3>config>sd-iot# client-number
+Device3>config>sd-iot$ client-number
 ```
 
 ### duplication
@@ -5273,7 +5594,7 @@ Device3>config>sd-iot# client-number
 <ethernet>           : Ethernet
 
 
-Device3>config>sd-iot# duplication
+Device3>config>sd-iot$ duplication
 ```
 
 ### ingress-port
@@ -5281,7 +5602,7 @@ Device3>config>sd-iot# duplication
 <ethernet>           : Ethernet
 
 
-Device3>config>sd-iot# ingress-port
+Device3>config>sd-iot$ ingress-port
 ```
 
 ### keep-alive
@@ -5289,7 +5610,7 @@ Device3>config>sd-iot# ingress-port
 interval
  retries
 
-Device3>config>sd-iot# keep-alive
+Device3>config>sd-iot$ keep-alive
 ```
 
 ### show statistics
@@ -5310,15 +5631,7 @@ Device3>config>sd-iot# show status
 ```text
 <CR>
 
-Device3>config>sd-iot# shutdown
-```
-
-### tunnel *(not entered — parameterized context)*
-```text
-<number>             : Sd-iot tunnel number [1..2]
-
-
-Device3>config>sd-iot# tunnel
+Device3>config>sd-iot$ shutdown
 ```
 
 ### username
@@ -5327,6 +5640,51 @@ Device3>config>sd-iot# tunnel
 
 
 Device3>config>sd-iot# username
+```
+
+## configure sd-iot tunnel
+
+Level help (`?`):
+```text
+authentication-method          - Configure sd-iot authentication-method
+ [no] certificate                    - Configure sd-iot certification
+      clear-statistics               - Clear sd-iot statistics
+ [no] client-number                  - Configure sd-iot client number
+ [no] duplication                    - Configure sd-iot duplication function
+ [no] ingress-port                   - Configure sd-iot ingress port
+      keep-alive                     - Configure sd-iot tunnels keep alive 
+                                       interval and retries
+ [no] shutdown                       - Configure sd-iot entity activity
+ [no] tunnel                         + Configure sd-iot tunnel
+ [no] username                       - Configure sd-iot username and password
+
+ show statistics                     - Display sd-iot entity statistics
+ show status                         - Display sd-iot entity status
+```
+
+### peer-address
+```text
+# cli error: Invalid Command
+Device3>config>sd-iot# peer-address
+```
+
+### priority
+```text
+# cli error: Invalid Command
+Device3>config>sd-iot# priority
+```
+
+### secondary-peer-address
+```text
+# cli error: Invalid Command
+Device3>config>sd-iot# secondary-peer-address
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>sd-iot# shutdown
 ```
 
 ## configure system
@@ -5386,6 +5744,16 @@ Device3>config>system# contact
 
 
 Device3>config>system# dhcp-server
+
+auto-create tried [dhcp-server zzz-hrvst, dhcp-server hrvst, dhcp-server z], all refused.
+last device response ('dhcp-server z'): dhcp-server z
+#                                  ^
+# cli error: invalid parameter value
+ - dhcp-server <number>
+ - no dhcp-server <number>
+ <number>             : [1..1, default 1]
+
+Device3>config>system#
 ```
 
 ### dhcpv6-server *(not entered — parameterized context)*
@@ -5394,6 +5762,16 @@ Device3>config>system# dhcp-server
 
 
 Device3>config>system# dhcpv6-server
+
+auto-create tried [dhcpv6-server zzz-hrvst, dhcpv6-server hrvst, dhcpv6-server z], all refused.
+last device response ('dhcpv6-server z'): dhcpv6-server z
+#                                    ^
+# cli error: invalid parameter value
+ - dhcpv6-server <number>
+ - no dhcpv6-server <number>
+ <number>             : [1..1, default 1]
+
+Device3>config>system#
 ```
 
 ### generate-log-report
@@ -5543,7 +5921,7 @@ Device3>config>system# syslog
 Level help (`?`):
 ```text
 date-format                    - Date format
-      date                           - Set  date (yyyy-mm-dd) 
+      date                           - Set date (dd-mm-yyyy)
       ntp                            + Configure NTP client
  [no] summer-time                    - Configure summer time begin and end
       time                           - Set time
@@ -5554,7 +5932,7 @@ date-format                    - Date format
 
 ### date
 ```text
-<date>               : Set  date (yyyy-mm-dd) [yyyy-mm-dd]
+<date>               : Set date (dd-mm-yyyy) [dd-mm-yyyy]
 
 
 Device3>config>system>date-time# date
@@ -5614,7 +5992,7 @@ Level help (`?`):
  show status                         - NTP status
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure system date-and-time ntp server NAME")*
 ```text
 <server-id>          : NTP server number [1..10]
 
@@ -5635,6 +6013,45 @@ Device3>config>system>date-time>ntp# show status
 
 
 Device3>config>system>date-time>ntp# source-address
+```
+
+## configure system date-and-time ntp server NAME
+
+Level help (`?`):
+```text
+address                        - Configure NTP server IP address
+ [no] prefer                         - Preferred server
+      query-server                   - Send server an NTP polling request
+ [no] shutdown                       - Enable SNTP server connection
+```
+
+### address
+```text
+<ip-address>         : NTP server IP address [0.0.0.0|0:0:0:0::0|host-name]
+
+
+Device3>config>system>date-time>ntp>server(1)# address
+```
+
+### prefer
+```text
+<CR>
+
+Device3>config>system>date-time>ntp>server(1)# prefer
+```
+
+### query-server
+```text
+<CR>
+
+Device3>config>system>date-time>ntp>server(1)# query-server
+```
+
+### shutdown
+```text
+<CR>
+
+Device3>config>system>date-time>ntp>server(1)# shutdown
 ```
 
 ## configure system dhcp-relay

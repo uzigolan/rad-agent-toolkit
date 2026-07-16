@@ -1,4 +1,6 @@
 {"kind": "level", "context": "<root>", "prefix": "", "text": "admin\nconfigure\ninventory\nfactory\nlogon\nfile\n\n-- Global Commands --\nexit\ninfo\nlogout\nhelp\ntree\nping\nsave"}
+{"kind": "args", "context": "<root>", "prefix": "inventory", "text": "MiNID# inventory"}
+{"kind": "args", "context": "<root>", "prefix": "logon", "text": "MiNID# logon"}
 {"kind": "level", "context": "admin", "prefix": "", "text": "factory-default\nuser-default\nreboot\nsoftware"}
 {"kind": "args", "context": "admin", "prefix": "factory-default", "text": ""}
 {"kind": "args", "context": "admin", "prefix": "reboot", "text": ""}
@@ -16,16 +18,16 @@
 {"kind": "args", "context": "configure flows", "prefix": "fallback-l2cp", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "fallback-pm-collection", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "fallback-policer", "text": ""}
-{"kind": "args-noenter", "context": "configure flows", "prefix": "flow", "text": "- flow <flow-name>\n\nMiNID>config>flows# flow\n\nauto-create probe 'flow zzz-hrvst' refused.\ndevice response: flow zzz-hrvst\n#CLI Error, Unknown Command\nMiNID>config>flows#"}
+{"kind": "args-param", "context": "configure flows", "prefix": "flow", "text": "- flow <flow-name>\n\nMiNID>config>flows# flow"}
 {"kind": "args-noenter", "context": "configure flows", "prefix": "in-service-loops-l3-l4", "text": ""}
 {"kind": "args-noenter", "context": "configure flows", "prefix": "in-service-loops-mac", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "in-service-mac", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "inner-vlan-marking", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking"}
-{"kind": "args", "context": "configure flows", "prefix": "ip-agnostic-loop", "text": "- lbm-reflector {sfp|msa}\n\nMiNID>config>flows# lbm-reflector \u0015ip-agnostic-loop"}
+{"kind": "args", "context": "configure flows", "prefix": "ip-agnostic-loop", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "l2cp-mac", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking \u0015port-mode-action \u0015l2cp-mac"}
 {"kind": "args-param", "context": "configure flows", "prefix": "l2cp-profile", "text": "- l2cp-profile <profile-name>\n\nMiNID>config>flows# l2cp-profile"}
 {"kind": "args", "context": "configure flows", "prefix": "l2cp-protocol", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking \u0015port-mode-action \u0015l2cp-mac \u0015l2cp-protocol"}
-{"kind": "args-noenter", "context": "configure flows", "prefix": "lbm-reflector", "text": "- lbm-reflector {sfp|msa}\n\nMiNID>config>flows# lbm-reflector"}
+{"kind": "args-param", "context": "configure flows", "prefix": "lbm-reflector", "text": "- lbm-reflector {sfp|msa}\n\nMiNID>config>flows# lbm-reflector"}
 {"kind": "args", "context": "configure flows", "prefix": "port-l2cp", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "port-mode-action", "text": "- inner-vlan-marking c-pbit <p-bit> s-pbit <p-bit>\n\nMiNID>config>flows# inner-vlan-marking \u0015port-mode-action"}
 {"kind": "args", "context": "configure flows", "prefix": "port-mode-pm-collection", "text": ""}
@@ -37,6 +39,29 @@
 {"kind": "args", "context": "configure flows", "prefix": "tpid-inner-vlan", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "tpid-outer-vlan", "text": ""}
 {"kind": "args", "context": "configure flows", "prefix": "tpid-pushed-replaced-vlan", "text": ""}
+{"kind": "level", "context": "configure flows flow NAME", "prefix": "", "text": "[no] pm-collection\nflow-action\n[no] policer\n[no] cos-mapping\nclassifier\n[no] service-name\n[no] l2cp\n[no] shutdown\nin-service-loops\nin-service-l3-l4-loops\n[no] test\nclear-statistics"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "classifier", "text": "- cos-mapping profile <cos-mapping-profile-name>\n\nMiNID>config>flows>flow(hrvst)# cos-mapping \u0015classifier \u0015classifier"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "clear-statistics", "text": "- test {loop-mac-ip-swap|discard}\n\nMiNID>config>flows>flow(hrvst)# test \u0015clear-statistics"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "cos-mapping", "text": "- cos-mapping profile <cos-mapping-profile-name>\n\nMiNID>config>flows>flow(hrvst)# cos-mapping"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "flow-action", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "l2cp", "text": "- cos-mapping profile <cos-mapping-profile-name>\n\nMiNID>config>flows>flow(hrvst)# cos-mapping \u0015classifier \u0015classifier \u0015service-name \u0015l2cp"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "pm-collection", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "service-name", "text": "- cos-mapping profile <cos-mapping-profile-name>\n\nMiNID>config>flows>flow(hrvst)# cos-mapping \u0015classifier \u0015classifier \u0015service-name"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "show statistics", "text": "- test {loop-mac-ip-swap|discard}\n\nMiNID>config>flows>flow(hrvst)# test \u0015clear-statistics \u0015show statistics"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "shutdown", "text": "- cos-mapping profile <cos-mapping-profile-name>\n\nMiNID>config>flows>flow(hrvst)# cos-mapping \u0015classifier \u0015classifier \u0015service-name \u0015l2cp \u0015shutdown"}
+{"kind": "args", "context": "configure flows flow NAME", "prefix": "test", "text": "- test {loop-mac-ip-swap|discard}\n\nMiNID>config>flows>flow(hrvst)# test"}
+{"kind": "level", "context": "configure flows flow NAME in-service-l3-l4-loops", "prefix": "", "text": "[no] in-serv-l3-l4"}
+{"kind": "args", "context": "configure flows flow NAME in-service-l3-l4-loops", "prefix": "in-serv-l3-l4", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME in-service-l3-l4-loops", "prefix": "responder", "text": ""}
+{"kind": "level", "context": "configure flows flow NAME in-service-loops", "prefix": "", "text": "in-serv-mode\nin-serv-action\n[no] in-serv-src-mac\n[no] in-serv-dst-mac"}
+{"kind": "args", "context": "configure flows flow NAME in-service-loops", "prefix": "in-serv-action", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME in-service-loops", "prefix": "in-serv-dst-mac", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME in-service-loops", "prefix": "in-serv-mode", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME in-service-loops", "prefix": "in-serv-src-mac", "text": ""}
+{"kind": "level", "context": "configure flows flow NAME policer", "prefix": "", "text": "profile\nregular-accounting-only\nenvelope"}
+{"kind": "args", "context": "configure flows flow NAME policer", "prefix": "envelope", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME policer", "prefix": "profile", "text": ""}
+{"kind": "args", "context": "configure flows flow NAME policer", "prefix": "regular-accounting-only", "text": ""}
 {"kind": "level", "context": "configure flows in-service-l3-l4", "prefix": "", "text": "ip-loop\nudp-loop\nudp-echo"}
 {"kind": "level", "context": "configure flows in-service-l3-l4 ip-loop", "prefix": "", "text": "ip-address"}
 {"kind": "args", "context": "configure flows in-service-l3-l4 ip-loop", "prefix": "ip-address", "text": ""}
@@ -49,6 +74,9 @@
 {"kind": "level", "context": "configure flows l2cp-profile NAME", "prefix": "", "text": "mac\nprotocol"}
 {"kind": "args", "context": "configure flows l2cp-profile NAME", "prefix": "mac", "text": ""}
 {"kind": "args", "context": "configure flows l2cp-profile NAME", "prefix": "protocol", "text": ""}
+{"kind": "level", "context": "configure flows lbm-reflector NAME", "prefix": "", "text": "[no] md-level\n[no] shutdown"}
+{"kind": "args", "context": "configure flows lbm-reflector NAME", "prefix": "md-level", "text": ""}
+{"kind": "args", "context": "configure flows lbm-reflector NAME", "prefix": "shutdown", "text": ""}
 {"kind": "level", "context": "configure management", "prefix": "", "text": "timeout\nuser\n[no] manager\n[no] zero-touch\naccess\nsnmp\ntacacsplus"}
 {"kind": "args-noenter", "context": "configure management", "prefix": "host", "text": ""}
 {"kind": "args", "context": "configure management", "prefix": "manager", "text": ""}
@@ -76,23 +104,103 @@
 {"kind": "args", "context": "configure management access static-ip-access", "prefix": "http", "text": ""}
 {"kind": "args", "context": "configure management access static-ip-access", "prefix": "snmp", "text": ""}
 {"kind": "args", "context": "configure management access static-ip-access", "prefix": "ssh", "text": ""}
-{"kind": "args", "context": "configure management access static-ip-access", "prefix": "telnet", "text": ""}
+{"kind": "args", "context": "configure management access static-ip-access", "prefix": "telnet", "text": "\u0015"}
 {"kind": "args", "context": "configure management access static-ip-access", "prefix": "tftp/sftp", "text": ""}
 {"kind": "level", "context": "configure management tacacsplus", "prefix": "", "text": "[no] privilege-level\n[no] group\n[no] server\n[no] wait-to-restore-server"}
 {"kind": "args-param", "context": "configure management tacacsplus", "prefix": "group", "text": "- group <group-name>\n\nMiNID>config>mngmnt>tacacsplus# group"}
 {"kind": "args", "context": "configure management tacacsplus", "prefix": "privilege-level", "text": ""}
-{"kind": "args-noenter", "context": "configure management tacacsplus", "prefix": "server", "text": "- server <ip>\n\nMiNID>config>mngmnt>tacacsplus# server\n\nauto-create probe 'server zzz-hrvst' refused.\ndevice response: server zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>mngmnt>tacacsplus#"}
+{"kind": "args-param", "context": "configure management tacacsplus", "prefix": "server", "text": "- server <ip>\n\nMiNID>config>mngmnt>tacacsplus# server"}
 {"kind": "args", "context": "configure management tacacsplus", "prefix": "wait-to-restore-server", "text": "- wait-to-restore-server <seconds>\n\nMiNID>config>mngmnt>tacacsplus# wait-to-restore-server"}
 {"kind": "level", "context": "configure management tacacsplus group NAME", "prefix": "", "text": "[no] accounting"}
 {"kind": "args", "context": "configure management tacacsplus group NAME", "prefix": "accounting", "text": ""}
+{"kind": "level", "context": "configure management tacacsplus server NAME", "prefix": "", "text": "accounting-port\nauthentication-port\nclear-statistics\n[no] group\n[no] key\nretry\ntimeout\n[no] shutdown"}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "accounting-port", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "authentication-port", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "group", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "key", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "retry", "text": "\u0015"}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "show statistics", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "shutdown", "text": ""}
+{"kind": "args", "context": "configure management tacacsplus server NAME", "prefix": "timeout", "text": ""}
 {"kind": "level", "context": "configure oam", "prefix": "", "text": "cfm\nefm\ntwamp"}
 {"kind": "level", "context": "configure oam cfm", "prefix": "", "text": "alarm-type\navailability\n[no] measurement-bin-profile\n[no] maintenance-domain"}
 {"kind": "args", "context": "configure oam cfm", "prefix": "alarm-type", "text": ""}
 {"kind": "args", "context": "configure oam cfm", "prefix": "availability", "text": ""}
-{"kind": "args-noenter", "context": "configure oam cfm", "prefix": "maintenance-domain", "text": "- maintenance-domain <md-index>\n\nMiNID>config>oam>cfm# maintenance-domain\n\nauto-create probe 'maintenance-domain zzz-hrvst' refused.\ndevice response: maintenance-domain zzz-hrvst\n#CLI Error, MD Index Exceeds Range [1-8]\nMiNID>config>oam>cfm#"}
+{"kind": "args-param", "context": "configure oam cfm", "prefix": "maintenance-domain", "text": "- maintenance-domain <md-index>\n\nMiNID>config>oam>cfm# maintenance-domain"}
 {"kind": "args-param", "context": "configure oam cfm", "prefix": "measurement-bin-profile", "text": "- measurement-bin-profile <name>\n\nMiNID>config>oam>cfm# measurement-bin-profile"}
 {"kind": "args", "context": "configure oam cfm", "prefix": "show mips", "text": ""}
 {"kind": "args", "context": "configure oam cfm", "prefix": "show summary", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME", "prefix": "", "text": "md-level\n[no] name\n[no] maintenance-association"}
+{"kind": "args-param", "context": "configure oam cfm maintenance-domain NAME", "prefix": "maintenance-association", "text": "- maintenance-association <ma-idx>\n\nMiNID>config>oam>cfm>md(2)# maintenance-association"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME", "prefix": "md-level", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME", "prefix": "name", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "", "text": "ccm-interval\n[no] interface-status-tlv\nname\ntag-mode\n[no] service-name\n[no] mep\n[no] mip"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "ccm-interval", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "interface-status-tlv", "text": ""}
+{"kind": "args-param", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "mep", "text": "- mep <mep-id>\n\nMiNID>config>oam>cfm>md(2)>ma(1)# mep"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "name", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "service-name", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME", "prefix": "tag-mode", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "", "text": "[no] ais\nbind\nclient-md-level\nlbm\nlinktrace\ndest-addr-type\npriority\nvlan\n[no] remote-mep\n[no] ccm-initiate\n[no] shutdown\n[no] service"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "ais", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "bind", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "ccm-initiate", "text": "- remote-mep <remote-mep-id>\nshow\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6 \u0015dest-mac-addr \u0015ccm-initiate"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "client-md-level", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "dest-addr-type", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "dest-mac-addr", "text": "- remote-mep <remote-mep-id>\nshow\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6 \u0015dest-mac-addr"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "inner-priority", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "lbm", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "linktrace", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "outer-priority", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "outer-vlan", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "priority", "text": ""}
+{"kind": "args-noenter", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "remote-mep", "text": "- remote-mep <remote-mep-id>\nshow\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep\n\nauto-create tried indices [1, 2, 3, 4, 5, 6], all refused.\nlast device response ('remote-mep 6'): remote-mep 6\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)#\nnext-arg help: - remote-mep <remote-mep-id>\nshow\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6"}
+{"kind": "args-param", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "service", "text": "- service <service-idx>\n\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# service"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "show lbm-results", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "show linktrace-results", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "show status", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "shutdown", "text": "- remote-mep <remote-mep-id>\nshow\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6 \u0015dest-mac-addr \u0015ccm-initiate \u0015shutdown"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME", "prefix": "vlan", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "", "text": "delay-threshold\ndelay-var-threshold\nlmm-interval\ndmm-interval\nloss-threshold\nloss-dei-bit-color\npriority\n[no] shutdown\n[no] dest-ne\nclear-statistics"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "clear-statistics", "text": "MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)>service(2)# clear-statistics"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "delay-threshold", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "delay-var-threshold", "text": ""}
+{"kind": "args-param", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "dest-ne", "text": "- dest-ne <dest-ne-id>\n\nMiNID>config>oam>cfm>md(2)>ma(1)>mep(1)>service(2)# dest-ne"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "dmm-interval", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "interval", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "lmm-interval", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "loss-dei-bit-color", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "loss-threshold", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "priority", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME", "prefix": "shutdown", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "", "text": "[no] delay\n[no] bind-delay-measurement-bin\n[no] bind-delay-var-measurement-bin\n[no] loss\nremote-mep\nclear-statistics\n[no] shutdown\nshow-statistics\nshow-delay-measurement-bins"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "bind-delay-measurement-bin", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "bind-delay-var-measurement-bin", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "delay", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "loss", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "remote-mep", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME", "prefix": "shutdown", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins", "prefix": "", "text": "running\ncurrent\ninterval\nall-intervals\ntotal-intervals"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins", "prefix": "all-intervals", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins", "prefix": "current", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins", "prefix": "interval", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins", "prefix": "running", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins", "prefix": "total-intervals", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics", "prefix": "", "text": "running\ncurrent\ninterval\ntotal-intervals\nall-intervals"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics", "prefix": "all-intervals", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics", "prefix": "current", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics", "prefix": "interval", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics", "prefix": "running", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics", "prefix": "total-intervals", "text": ""}
+{"kind": "level", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "", "text": "priority\nvlan\n[no] shutdown"}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "inner-priority", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "outer-priority", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "outer-vlan", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "priority", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "shutdown", "text": ""}
+{"kind": "args", "context": "configure oam cfm maintenance-domain NAME maintenance-association NAME mip", "prefix": "vlan", "text": ""}
 {"kind": "level", "context": "configure oam cfm measurement-bin-profile NAME", "prefix": "", "text": "[no] thresholds"}
 {"kind": "args", "context": "configure oam cfm measurement-bin-profile NAME", "prefix": "thresholds", "text": ""}
 {"kind": "level", "context": "configure oam efm", "prefix": "", "text": "mode\nbind\n[no] shutdown\nclear-statistics"}
@@ -104,9 +212,22 @@
 {"kind": "args", "context": "configure oam efm", "prefix": "show status", "text": ""}
 {"kind": "args", "context": "configure oam efm", "prefix": "shutdown", "text": ""}
 {"kind": "level", "context": "configure oam twamp", "prefix": "", "text": "[no] profile\n[no] responder\n[no] controller"}
-{"kind": "args-noenter", "context": "configure oam twamp", "prefix": "controller", "text": "- controller <controller-name> [<number>]\n\nMiNID>config>oam>twamp# controller\n\nauto-create probe 'controller zzz-hrvst' refused.\ndevice response: controller zzz-hrvst\n#CLI Error, Invalid Parameter\nMiNID>config>oam>twamp#"}
+{"kind": "args-param", "context": "configure oam twamp", "prefix": "controller", "text": "- controller <controller-name> [<number>]\n\nMiNID>config>oam>twamp# controller"}
 {"kind": "args-param", "context": "configure oam twamp", "prefix": "profile", "text": "- profile <profile-name> [<number>]\n\nMiNID>config>oam>twamp# profile"}
-{"kind": "args-noenter", "context": "configure oam twamp", "prefix": "responder", "text": "- responder <responder-name>\n\nMiNID>config>oam>twamp# responder\n\nauto-create probe 'responder zzz-hrvst' refused.\ndevice response: responder zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>oam>twamp#"}
+{"kind": "args-param", "context": "configure oam twamp", "prefix": "responder", "text": "- responder <responder-name>\n\nMiNID>config>oam>twamp# responder"}
+{"kind": "level", "context": "configure oam twamp controller NAME", "prefix": "", "text": "local-ip-address\n[no] shutdown\n[no] peer"}
+{"kind": "args", "context": "configure oam twamp controller NAME", "prefix": "local-ip-address", "text": ""}
+{"kind": "args-param", "context": "configure oam twamp controller NAME", "prefix": "peer", "text": "- peer <ip-address> [twamp-light]\n\nMiNID>config>oam>twamp>controller(hrvst)# peer"}
+{"kind": "args", "context": "configure oam twamp controller NAME", "prefix": "show status", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME", "prefix": "shutdown", "text": ""}
+{"kind": "level", "context": "configure oam twamp controller NAME peer NAME", "prefix": "", "text": "calculation-mode\n[no] responder-seq-num\n[no] test-session\n[no] activate\nshow-status\nshow-summary-report\nshow-report"}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "activate", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "calculation-mode", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "responder-seq-num", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "show-report", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "show-status", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "show-summary-report", "text": ""}
+{"kind": "args", "context": "configure oam twamp controller NAME peer NAME", "prefix": "test-session", "text": ""}
 {"kind": "level", "context": "configure oam twamp profile NAME", "prefix": "", "text": "payload-length\ntransmit-rate\nloss-timeout\nloss-ratio-threshold\ndelay-variation-threshold\ndelay-threshold\ndelay-variation-event-type"}
 {"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "delay-threshold", "text": ""}
 {"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "delay-variation-event-type", "text": ""}
@@ -115,20 +236,47 @@
 {"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "loss-timeout", "text": ""}
 {"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "payload-length", "text": ""}
 {"kind": "args", "context": "configure oam twamp profile NAME", "prefix": "transmit-rate", "text": ""}
+{"kind": "level", "context": "configure oam twamp responder NAME", "prefix": "", "text": "ip-address\nudp-port\n[no] tx-seq-num\n[no] ip-loan\n[no] shutdown\nunbind-all-flows"}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "ip-address", "text": ""}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "ip-loan", "text": ""}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "show status", "text": ""}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "shutdown", "text": ""}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "tx-seq-num", "text": ""}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "udp-port", "text": ""}
+{"kind": "args", "context": "configure oam twamp responder NAME", "prefix": "unbind-all-flows", "text": ""}
 {"kind": "level", "context": "configure packet-capture", "prefix": "", "text": "capture-dscp\nlocal-ip-address\nrpcap-tcp-port\n[no] inactive-timeout\ntimestamp-source\n[no] capture"}
 {"kind": "args", "context": "configure packet-capture", "prefix": "capture", "text": ""}
 {"kind": "args", "context": "configure packet-capture", "prefix": "capture-dscp", "text": ""}
 {"kind": "args", "context": "configure packet-capture", "prefix": "inactive-timeout", "text": ""}
 {"kind": "args", "context": "configure packet-capture", "prefix": "local-ip-address", "text": ""}
-{"kind": "args", "context": "configure packet-capture", "prefix": "rpcap-tcp-port", "text": ""}
+{"kind": "args", "context": "configure packet-capture", "prefix": "rpcap-tcp-port", "text": "\u0015"}
 {"kind": "args", "context": "configure packet-capture", "prefix": "show status", "text": ""}
 {"kind": "args", "context": "configure packet-capture", "prefix": "timestamp-source", "text": ""}
 {"kind": "level", "context": "configure port", "prefix": "", "text": "ethernet"}
-{"kind": "args-noenter", "context": "configure port", "prefix": "ethernet", "text": "- ethernet {sfp|msa}\n\nMiNID>config>port# ethernet"}
+{"kind": "args-param", "context": "configure port", "prefix": "ethernet", "text": "- ethernet {sfp|msa}\n\nMiNID>config>port# ethernet"}
+{"kind": "level", "context": "configure port ethernet NAME", "prefix": "", "text": "[no] auto-negotiation\nmtu\nclear-statistics"}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "auto-negotiation", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "force-direct-i2c", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "force-speed", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "i2c-stretching-clock", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "mtu", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "show statistics", "text": ""}
+{"kind": "args", "context": "configure port ethernet NAME", "prefix": "show status", "text": ""}
 {"kind": "level", "context": "configure qos", "prefix": "", "text": "[no] policer-profile\n[no] envelope-profile\n[no] cos-map-profile"}
-{"kind": "args-noenter", "context": "configure qos", "prefix": "cos-map-profile", "text": "- cos-map-profile <profile-name> classification {p-bit|ip-dscp}\n\nMiNID>config>qos# cos-map-profile\n\nauto-create probe 'cos-map-profile zzz-hrvst' refused.\ndevice response: cos-map-profile zzz-hrvst\n#CLI Error, Profile Name Too Long, Max Name Length Is 10 Chars\nMiNID>config>qos#"}
-{"kind": "args-noenter", "context": "configure qos", "prefix": "envelope-profile", "text": "- envelope-profile <profile-name>\n\nMiNID>config>qos# envelope-profile\n\nauto-create probe 'envelope-profile zzz-hrvst' refused.\ndevice response: envelope-profile zzz-hrvst\n#CLI Error, Profile Name Too Long, Max Name Length Is 10 Chars\nMiNID>config>qos#"}
+{"kind": "args-param", "context": "configure qos", "prefix": "cos-map-profile", "text": "- cos-map-profile <profile-name> classification {p-bit|ip-dscp}\n\nMiNID>config>qos# cos-map-profile"}
+{"kind": "args-param", "context": "configure qos", "prefix": "envelope-profile", "text": "- envelope-profile <profile-name>\n\nMiNID>config>qos# envelope-profile"}
 {"kind": "args-param", "context": "configure qos", "prefix": "policer-profile", "text": "- policer-profile <profile-name>\n\nMiNID>config>qos# policer-profile"}
+{"kind": "level", "context": "configure qos cos-map-profile NAME", "prefix": "", "text": "map"}
+{"kind": "args", "context": "configure qos cos-map-profile NAME", "prefix": "map", "text": ""}
+{"kind": "level", "context": "configure qos envelope-profile NAME", "prefix": "", "text": "[no] cf-policy\n[no] color_aware\ncompensation\n[no] cos"}
+{"kind": "args", "context": "configure qos envelope-profile NAME", "prefix": "cf-policy", "text": ""}
+{"kind": "args", "context": "configure qos envelope-profile NAME", "prefix": "color_aware", "text": ""}
+{"kind": "args", "context": "configure qos envelope-profile NAME", "prefix": "compensation", "text": ""}
+{"kind": "args-param", "context": "configure qos envelope-profile NAME", "prefix": "cos", "text": "- cos [<value>]\n\nMiNID>config>qos>envelope-profile(hrvst)# cos"}
+{"kind": "args", "context": "configure qos envelope-profile NAME", "prefix": "coupling-flag-0", "text": ""}
+{"kind": "level", "context": "configure qos envelope-profile NAME cos NAME", "prefix": "", "text": "bandwidth"}
+{"kind": "args", "context": "configure qos envelope-profile NAME cos NAME", "prefix": "bandwidth", "text": ""}
 {"kind": "level", "context": "configure qos policer-profile NAME", "prefix": "", "text": "bandwidth\n[no] color_aware\ncompensation\n[no] coupling-flag"}
 {"kind": "args", "context": "configure qos policer-profile NAME", "prefix": "bandwidth", "text": ""}
 {"kind": "args", "context": "configure qos policer-profile NAME", "prefix": "color_aware", "text": ""}
@@ -141,9 +289,20 @@
 {"kind": "args", "context": "configure reporting", "prefix": "pm", "text": ""}
 {"kind": "args", "context": "configure reporting", "prefix": "show log", "text": ""}
 {"kind": "level", "context": "configure router", "prefix": "", "text": "[no] interface\n[no] static-route\nmanagement-cfg"}
-{"kind": "args-noenter", "context": "configure router", "prefix": "interface", "text": "- interface <number>\n\nMiNID>config>router# interface\n\nauto-create probe 'interface zzz-hrvst' refused.\ndevice response: interface zzz-hrvst\n#CLI Error, Invalid Parameter\nMiNID>config>router#"}
+{"kind": "args-param", "context": "configure router", "prefix": "interface", "text": "- interface <number>\n\nMiNID>config>router# interface"}
 {"kind": "args", "context": "configure router", "prefix": "management-cfg", "text": "- static-route <ip-address/mask> address <next-hop-ip-address>\n\nMiNID>config>router# static-route \u0015management-cfg"}
 {"kind": "args", "context": "configure router", "prefix": "static-route", "text": "- static-route <ip-address/mask> address <next-hop-ip-address>\n\nMiNID>config>router# static-route"}
+{"kind": "level", "context": "configure router interface NAME", "prefix": "", "text": "[no] ipv6-autoconfig\n[no] address\n[no] vlan\nbind\n[no] dhcp\n[no] loaned-ip\n[no] dhcpv6-client"}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "address", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "bind", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "dhcp", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "dhcpv6-client", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "ipv6-autoconfig", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "loaned-ip", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "show status", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "shutdown", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "vlan", "text": ""}
+{"kind": "args", "context": "configure router interface NAME", "prefix": "vlan-tpid", "text": ""}
 {"kind": "level", "context": "configure service", "prefix": "", "text": ""}
 {"kind": "args", "context": "configure service", "prefix": "show summary", "text": ""}
 {"kind": "level", "context": "configure system", "prefix": "", "text": "[no] device-name\n[no] location\n[no] contact\ndate-and-time\nclock\nfault-propagation\nsyslog"}
@@ -151,7 +310,7 @@
 {"kind": "args", "context": "configure system", "prefix": "device-name", "text": ""}
 {"kind": "args", "context": "configure system", "prefix": "location", "text": ""}
 {"kind": "args", "context": "configure system", "prefix": "show status", "text": ""}
-{"kind": "args-noenter", "context": "configure system", "prefix": "syslog", "text": "- syslog {device|server}  <server number>\n\nMiNID>config>system# syslog"}
+{"kind": "args-param", "context": "configure system", "prefix": "syslog", "text": "- syslog {device|server}  <server number>\n\nMiNID>config>system# syslog"}
 {"kind": "level", "context": "configure system clock", "prefix": "", "text": "sync-e-src"}
 {"kind": "args", "context": "configure system clock", "prefix": "sync-e-src", "text": ""}
 {"kind": "level", "context": "configure system date-and-time", "prefix": "", "text": "date-format\ndate\nntp\n[no] summer-time\ntime\nzone"}
@@ -162,8 +321,13 @@
 {"kind": "args", "context": "configure system date-and-time", "prefix": "zone", "text": "- time time [hh:mm[:ss]]\n\nMiNID>config>system>date-time# time \u0015zone"}
 {"kind": "level", "context": "configure system date-and-time ntp", "prefix": "", "text": "poll-interval\n[no] server"}
 {"kind": "args", "context": "configure system date-and-time ntp", "prefix": "poll-interval", "text": ""}
-{"kind": "args-noenter", "context": "configure system date-and-time ntp", "prefix": "server", "text": "- server <server-id>\n\nMiNID>config>system>date-time>ntp# server\n\nauto-create probe 'server zzz-hrvst' refused.\ndevice response: server zzz-hrvst\n#CLI Error, Invalid Parameter\nMiNID>config>system>date-time>ntp#"}
+{"kind": "args-param", "context": "configure system date-and-time ntp", "prefix": "server", "text": "- server <server-id>\n\nMiNID>config>system>date-time>ntp# server"}
 {"kind": "args", "context": "configure system date-and-time ntp", "prefix": "show status", "text": ""}
+{"kind": "level", "context": "configure system date-and-time ntp server NAME", "prefix": "", "text": "address\nquery-server\n[no] shutdown\nudp"}
+{"kind": "args", "context": "configure system date-and-time ntp server NAME", "prefix": "address", "text": ""}
+{"kind": "args", "context": "configure system date-and-time ntp server NAME", "prefix": "query-server", "text": ""}
+{"kind": "args", "context": "configure system date-and-time ntp server NAME", "prefix": "shutdown", "text": ""}
+{"kind": "args", "context": "configure system date-and-time ntp server NAME", "prefix": "udp", "text": ""}
 {"kind": "level", "context": "configure system date-and-time summer-time", "prefix": "", "text": "recurring\ndate"}
 {"kind": "args", "context": "configure system date-and-time summer-time", "prefix": "date", "text": ""}
 {"kind": "args", "context": "configure system date-and-time summer-time", "prefix": "recurring", "text": ""}
@@ -175,15 +339,30 @@
 {"kind": "args", "context": "configure system fault-propagation", "prefix": "phy-disable", "text": ""}
 {"kind": "args", "context": "configure system fault-propagation", "prefix": "tx-disable", "text": ""}
 {"kind": "args", "context": "configure system fault-propagation", "prefix": "tx-fault", "text": ""}
+{"kind": "level", "context": "configure system syslog NAME", "prefix": "", "text": "facility\nport\nseverity-level\n[no] shutdown\nclear-statistics\nshow-statistics"}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "accounting", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "address", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "clear-statistics", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "facility", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "port", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "severity-level", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "show-statistics", "text": ""}
+{"kind": "args", "context": "configure system syslog NAME", "prefix": "shutdown", "text": ""}
 {"kind": "level", "context": "configure test", "prefix": "", "text": "l3sat"}
 {"kind": "level", "context": "configure test l3sat", "prefix": "", "text": "[no] peer-profile\n[no] session-profile\n[no] generator"}
-{"kind": "args-noenter", "context": "configure test l3sat", "prefix": "generator", "text": "- generator <name>\n\nMiNID>config>test>l3sat# generator\n\nauto-create probe 'generator zzz-hrvst' refused.\ndevice response: generator zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>test>l3sat#"}
+{"kind": "args-noenter", "context": "configure test l3sat", "prefix": "generator", "text": "- generator <name>\n\nMiNID>config>test>l3sat# generator\n\nauto-create tried [generator zzz-hrvst, generator hrvst, generator z], all refused.\nlast device response ('generator z'): generator z\n#CLI Error, Maximum Number Of Generator Profile Reached\nMiNID>config>test>l3sat#"}
 {"kind": "args-param", "context": "configure test l3sat", "prefix": "peer-profile", "text": "- peer-profile <name>\n\nMiNID>config>test>l3sat# peer-profile"}
-{"kind": "args-noenter", "context": "configure test l3sat", "prefix": "session-profile", "text": "- session-profile <name>\n\nMiNID>config>test>l3sat# session-profile\n\nauto-create probe 'session-profile zzz-hrvst' refused.\ndevice response: session-profile zzz-hrvst\n#CLI Error, Unneeded Parameter\nMiNID>config>test>l3sat#"}
+{"kind": "args-param", "context": "configure test l3sat", "prefix": "session-profile", "text": "- session-profile <name>\n\nMiNID>config>test>l3sat# session-profile"}
 {"kind": "level", "context": "configure test l3sat peer-profile NAME", "prefix": "", "text": "performance-duration\nudp-port\nresponder-type"}
 {"kind": "args", "context": "configure test l3sat peer-profile NAME", "prefix": "performance-duration", "text": ""}
 {"kind": "args", "context": "configure test l3sat peer-profile NAME", "prefix": "responder-type", "text": ""}
 {"kind": "args", "context": "configure test l3sat peer-profile NAME", "prefix": "udp-port", "text": ""}
+{"kind": "level", "context": "configure test l3sat session-profile NAME", "prefix": "", "text": "loss-ratio-threshold\ndelay-threshold\ndelay-variation-threshold\n[no] packet-size\n[no] L1-rate"}
+{"kind": "args", "context": "configure test l3sat session-profile NAME", "prefix": "L1-rate", "text": ""}
+{"kind": "args", "context": "configure test l3sat session-profile NAME", "prefix": "delay-threshold", "text": ""}
+{"kind": "args", "context": "configure test l3sat session-profile NAME", "prefix": "delay-variation-threshold", "text": ""}
+{"kind": "args", "context": "configure test l3sat session-profile NAME", "prefix": "loss-ratio-threshold", "text": ""}
+{"kind": "args", "context": "configure test l3sat session-profile NAME", "prefix": "packet-size", "text": ""}
 {"kind": "level", "context": "factory", "prefix": "", "text": "eprom_ins\neprom_set\ncfg_set\nerase\ncfg_ins\nfpga\nprint-arp-table"}
 {"kind": "args", "context": "factory", "prefix": "cfg_ins", "text": ""}
 {"kind": "args", "context": "factory", "prefix": "cfg_set", "text": ""}

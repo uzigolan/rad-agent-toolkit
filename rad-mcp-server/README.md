@@ -48,6 +48,10 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   or read-write (`RAD_MCP_WRITE_TOKENS`).
   Per-target specifics in
   [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md). Start here.
+- **[docs/examples.md](docs/examples.md)** ([HTML](docs/examples.html)) — 18 ready-to-paste prompts across
+  the five usage categories (device management, operations, network
+  engineering, advanced, onboarding), each addressed to "rad agent" /
+  "abayev" / "noam".
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,
   safety model, knowledge layers, distribution roadmap.
 - **[docs/VERSIONS.md](docs/VERSIONS.md)** — component versions (server, skills,
@@ -90,6 +94,7 @@ by design.
 | `health_check` | Driver-defined health sweep (identity, alarms) |
 | `run_show` / `run_show_in_context` | Whitelisted reads (RAD CLIs scope `show` to contexts) |
 | `cli_help` | Relay the CLI's interactive `?` help — commands, argument types, constraints. Never executes |
+| `snmp_probe` / `snmp_get` / `snmp_walk` | Read-only SNMP window (GET/GETNEXT only, never SET): identity + exact firmware without an SSH session, explicit-OID polls, capped walks — symbolic names from the compiled MIB map. See `references/snmp-support.md` |
 | `get_config` / `backup_config` | Full config export / snapshot to local archive |
 | `stage_config` → `commit_config` | Staged writes: preview, explicit confirm, auto pre-commit backup |
 | `save_startup` | Persist running config (confirm required) |

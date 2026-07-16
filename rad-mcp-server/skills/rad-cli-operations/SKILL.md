@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
-version: 1.1.0
+version: 1.2.1
 ---
 
-> **Skill version:** 1.1.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.2.1 · updated 2026-07-16 (MP write recipe now MANDATORY + enforced by stage_config server-side) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # RAD CLI operations (ETX-2 / SecFlow dialect)
 
@@ -64,11 +64,15 @@ modern context-based CLI, NOT the legacy ETX-1 menu CLI). **mp4100
 (Megaplex-4100) AND mp1 (MP-1) speak the same dialect with one structural
 difference — a candidate-database config model:** config edits land in a
 candidate DB and apply to the running config ONLY when the device's own
-`commit` global is issued. Consequences: staged sequences for mp4100/mp1
-MUST end with `commit` (before the final `exit all`) or they silently
-change nothing; and NEVER send `discard-changes` casually — its help text
-("Resets to last-saved parameter profile") is ambiguous enough to be
-running-config-destructive; check the manual before ever using it.
+`commit` global is issued. **MANDATORY for EVERY mp4100/mp1 config change
+— no exceptions: `discard-changes` → configure → `exit all` → `sanity-check`
+(must be OK) → `commit` → `save`** (verified live, mp-one 2026-07-16; the
+server's `stage_config` REFUSES an MP sequence that doesn't follow this
+shape). discard-changes FIRST clears stale
+candidate edits from earlier sessions (or sanity/commit fail on config that
+isn't yours), and `commit` must run from ROOT, not inside a just-created
+`$` object. Outside this recipe `discard-changes` is still not casual: it
+wipes YOUR uncommitted candidate work too.
 MP-specific contexts: chassis, cross-connect, pwe (mp4100 also adds peer,
 slot; mp1 is a subset — no fault/oam/peer/slot/test). **minid (MiNID sleeve
 NID, minid-1, SW 2.6, prompt `MiNID#`)** also speaks this dialect but is a
@@ -441,11 +445,19 @@ location "site-A rack 3"
 exit all
 ```
 
-Always end with `exit all`. **On `mp4100` and `mp1` the sequence must include
-the device's `commit` global as the last command before the final `exit all`** —
-the MP candidate-DB model applies nothing to the running config until
-`commit` (and never send `discard-changes` casually; see the family notes
-above). On the other families, changes affect the **running** config
+Always end with `exit all`. **On `mp4100` and `mp1` this recipe is MANDATORY
+for every change, first line to last: `discard-changes` → configure →
+`exit all` → `sanity-check` → `commit` → `save`** (confirmed live on mp-one
+2026-07-16; `stage_config` enforces it server-side and refuses
+non-conforming MP sequences). Each step matters:
+`discard-changes` FIRST clears stale candidate edits left by earlier sessions —
+without it, `sanity-check`/`commit` can fail on someone else's leftovers, not
+your change ("Commit failed: DB=0 result=13" / "Sanity test failed" with a
+perfectly valid config). `sanity-check` must report `Result : OK` before
+`commit`; run `commit` from ROOT (after `exit all`), not from inside a
+just-created object's `$` context — it fails there. `discard-changes` outside
+this recipe is still not casual: it resets the whole candidate to running,
+discarding YOUR uncommitted work too. On the other families, changes affect the **running** config
 immediately; on all families nothing survives reboot until `save_startup` —
 a revert is just staging the previous value back.
 Verify after commit by re-running the relevant context `info` or `show`.

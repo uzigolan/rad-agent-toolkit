@@ -1,6 +1,6 @@
 # etx2v CLI reference (harvested `?` help)
 
-Captured live from etx2v-1 (ETX-2V chassis variant (manual ETX-2V-CA_AC_2CMB_4U_D) - FIRST etx2v-family unit; dialect assumed shared context CLI, NOT verified live - harvest before trusting reads) on 2026-07-15 by scripts/harvest_cli.py
+Captured live from etx2v-1 (ETX-2V (uCPE-OS chassis platform, prompt uCPE-OS#); verified live - shared context CLI, standard SSH; distinctive virtualization/VNF context; CLI reference + hardware manual harvested) on 2026-07-15 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -1677,9 +1677,9 @@ Level help (`?`):
 
 uCPE-OS>config>mngmnt>snmp# access-group
 
-auto-create probe 'access-group zzz-hrvst' refused.
-device response: access-group zzz-hrvst
-#                                                  ^
+auto-create tried [access-group zzz-hrvst, access-group hrvst, access-group z], all refused.
+last device response ('access-group z'): access-group z
+#                                          ^
 # cli error: parameter or keyword missing or wrong
  - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
    auth-no-priv|auth-priv}
@@ -1733,9 +1733,9 @@ uCPE-OS>config>mngmnt>snmp# notify
 
 uCPE-OS>config>mngmnt>snmp# notify-filter
 
-auto-create probe 'notify-filter zzz-hrvst' refused.
-device response: notify-filter zzz-hrvst
-#                                                   ^
+auto-create tried [notify-filter zzz-hrvst, notify-filter hrvst, notify-filter z], all refused.
+last device response ('notify-filter z'): notify-filter z
+#                                           ^
 # cli error: parameter or keyword missing or wrong
  - notify-filter <name> <sub-tree-oid>
  - no notify-filter <name> <sub-tree-oid>
@@ -1761,6 +1761,19 @@ uCPE-OS>config>mngmnt>snmp# notify-filter-profile
 
 
 uCPE-OS>config>mngmnt>snmp# security-to-group
+
+auto-create tried [security-to-group zzz-hrvst, security-to-group hrvst, security-to-group z], all refused.
+last device response ('security-to-group z'): security-to-group z
+#                                             ^
+# cli error: invalid parameter value
+ - security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ - no security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ <snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+ <security-name>      : Security name [string]
+
+uCPE-OS>config>mngmnt>snmp#
 ```
 
 ### show snmpv3
@@ -1827,9 +1840,9 @@ uCPE-OS>config>mngmnt>snmp# user
 
 uCPE-OS>config>mngmnt>snmp# view
 
-auto-create probe 'view zzz-hrvst' refused.
-device response: view zzz-hrvst
-#                                          ^
+auto-create tried [view zzz-hrvst, view hrvst, view z], all refused.
+last device response ('view z'): view z
+#                                  ^
 # cli error: parameter or keyword missing or wrong
  - view <view-name> <sub-tree-oid>
  - no view <view-name> <sub-tree-oid>
@@ -1878,9 +1891,8 @@ uCPE-OS>config>mngmnt>snmp>notify(zzz-hrvst)$ tag
 
 Level help (`?`):
 ```text
-profile-name                   - Profile name
- [no] shutdown                       - Disable notification group
-
+*****Could not copy ftps://.../bootstrap_etx2v_00-08-a2-0c-bb-77.tar.gz to artifact*****
+*****Undefined error*****
 
 uCPE-OS>config>mngmnt>snmp>filter-profile$
 ```
@@ -2027,7 +2039,7 @@ uCPE-OS>config>mngmnt>tacacsplus# group
 uCPE-OS>config>mngmnt>tacacsplus# privilege-level
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure management tacacsplus server NAME")*
 ```text
 <ip>                 : TACACS+ server IP address [0.0.0.0|0:0:0:0::0]
 
@@ -2053,6 +2065,94 @@ uCPE-OS>config>mngmnt>tacacsplus>group(zzz-hrvst)$
 
 
 uCPE-OS>config>mngmnt>tacacsplus>group(zzz-hrvst)$ accounting
+```
+
+## configure management tacacsplus server NAME
+
+Level help (`?`):
+```text
+accounting-port                - Set  TACACS+ server accounting TCP port
+      authentication-port            - Set  TACACS+ server authentication TCP 
+                                       port
+      clear-statistics               - Clear TACACS+ statistics
+ [no] group                          - Bind TACACS+ server to group
+      key                            - TACACS+ server shared secret
+      retry                          - Number of authentication retries
+ [no] shutdown                       - Disable TACACS+ server
+      timeout                        - Timeout
+
+ show statistics                     - Show TACACS+ statistics
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$
+```
+
+### accounting-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ accounting-port
+```
+
+### authentication-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ authentication-port
+```
+
+### clear-statistics
+```text
+<CR>
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ clear-statistics
+```
+
+### group
+```text
+<group-name>         : TACACS+ server group name [1..32 chars]
+
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ group
+```
+
+### key
+```text
+<string>             : TACACS+ server shared secret [1..80 chars]
+
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ key
+```
+
+### retry
+```text
+<number-of-retries>  : Number of authentication retries [1..1, default 1]
+
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ retry
+```
+
+### show statistics
+```text
+<CR>
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ show statistics
+```
+
+### shutdown
+```text
+<CR>
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ shutdown
+```
+
+### timeout
+```text
+<seconds>            : Timeout in seconds [1..30, default 5]
+
+
+uCPE-OS>config>mngmnt>tacacsplus>server(1.1.1.1)$ timeout
 ```
 
 ## configure oam
@@ -2534,6 +2634,15 @@ uCPE-OS>config>port>eth(6)# access-group
 
 
 uCPE-OS>config>port>eth(6)# classifier
+
+auto-create tried [classifier zzz-hrvst, classifier hrvst, classifier z], all refused.
+last device response ('classifier z'): classifier z
+#                                      ^
+# cli error: invalid parameter value
+ - classifier ingress
+ - no classifier ingress
+
+uCPE-OS>config>port>eth(6)#
 ```
 
 ### clear-statistics
@@ -2626,6 +2735,16 @@ uCPE-OS>config>port>eth(6)# traffic-class
 
 
 uCPE-OS>config>port>eth(6)# vlan
+
+auto-create tried [vlan zzz-hrvst, vlan hrvst, vlan z], all refused.
+last device response ('vlan z'): vlan z
+#                                ^
+# cli error: invalid parameter value
+ - vlan <vlan-id>
+ - no vlan <vlan-id>
+ <vlan-id>            : Vlan id [1..4094]
+
+uCPE-OS>config>port>eth(6)#
 ```
 
 ## configure port ethernet NAME traffic-class NAME
@@ -4221,6 +4340,16 @@ uCPE-OS>config>system# contact
 
 
 uCPE-OS>config>system# dhcp-server
+
+auto-create tried [dhcp-server zzz-hrvst, dhcp-server hrvst, dhcp-server z], all refused.
+last device response ('dhcp-server z'): dhcp-server z
+#                                  ^
+# cli error: invalid parameter value
+ - dhcp-server <number>
+ - no dhcp-server <number>
+ <number>             : [1..1, default 1]
+
+uCPE-OS>config>system#
 ```
 
 ### dhcpv6-server *(not entered — parameterized context)*
@@ -4229,6 +4358,16 @@ uCPE-OS>config>system# dhcp-server
 
 
 uCPE-OS>config>system# dhcpv6-server
+
+auto-create tried [dhcpv6-server zzz-hrvst, dhcpv6-server hrvst, dhcpv6-server z], all refused.
+last device response ('dhcpv6-server z'): dhcpv6-server z
+#                                    ^
+# cli error: invalid parameter value
+ - dhcpv6-server <number>
+ - no dhcpv6-server <number>
+ <number>             : [1..1, default 1]
+
+uCPE-OS>config>system#
 ```
 
 ### hostname
@@ -4416,6 +4555,16 @@ Level help (`?`):
 
 
 uCPE-OS>config>system>date-time>ntp# server
+
+auto-create tried [server zzz-hrvst, server hrvst, server z], all refused.
+last device response ('server z'): server z
+#                                           ^
+# cli error: invalid parameter value
+ - server <server-id>
+ - no server <server-id>
+ <server-id>          : NTP server number [1..10]
+
+uCPE-OS>config>system>date-time>ntp#
 ```
 
 ### show status

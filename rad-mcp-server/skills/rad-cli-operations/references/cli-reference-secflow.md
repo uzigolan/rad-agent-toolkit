@@ -1,6 +1,6 @@
 # secflow CLI reference (harvested `?` help)
 
-Captured live from lab-sf1p (SF-1p-187 (SecFlow-1p, Sw 6.5.0.35) - pilot lab unit, safe for guarded write tests) on 2026-07-09 by scripts/harvest_cli.py
+Captured live from sf-163-187 (SecFlow-1p lab unit (re-registered via rad-device-mng skill test)) on 2026-07-16 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -1559,7 +1559,7 @@ SF-1p-187>config>mngmnt>access# clear-statistics
 SF-1p-187>config>mngmnt>access# command-authorization
 ```
 
-### enrollment-notification-nms *(not entered — parameterized context)*
+### enrollment-notification-nms *(parameterized — inner help harvested under "configure management access enrollment-notification-nms NAME")*
 ```text
 <ip-address>         : IP address or NMS name to send notifications to [0.0.0.0
                         |0:0:0:0::0]
@@ -1775,6 +1775,50 @@ SF-1p-187>config>mngmnt>access# ztc-bootstrap
 SF-1p-187>config>mngmnt>access# ztc-tftp-disable
 ```
 
+## configure management access enrollment-notification-nms NAME
+
+Level help (`?`):
+```text
+[no] nms-username                   - Configure NMS username and password
+ [no] shutdown                       - Disable enrollment notification
+ [no] snmp-profile                   - Configure SNMP profile
+ [no] ssh-username                   - Configure SSH username and password
+
+
+SF-1p-187>config>mngmnt>access>enrollment(1.1.1.1)$
+```
+
+### nms-username
+```text
+<name>               : Username for NMS authentication [1..80 chars]
+
+
+SF-1p-187>config>mngmnt>access>enrollment(1.1.1.1)$ nms-username
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>access>enrollment(1.1.1.1)$ shutdown
+```
+
+### snmp-profile
+```text
+<name>               : SNMP profile name [1..80 chars]
+
+
+SF-1p-187>config>mngmnt>access>enrollment(1.1.1.1)$ snmp-profile
+```
+
+### ssh-username
+```text
+<name>               : SSH username [1..80 chars]
+
+
+SF-1p-187>config>mngmnt>access>enrollment(1.1.1.1)$ ssh-username
+```
+
 ## configure management access sms
 
 Level help (`?`):
@@ -1959,9 +2003,9 @@ Level help (`?`):
 
 SF-1p-187>config>mngmnt>snmp# access-group
 
-auto-create probe 'access-group zzz-hrvst' refused.
-device response: access-group zzz-hrvst
-#                                                    ^
+auto-create tried [access-group zzz-hrvst, access-group hrvst, access-group z], all refused.
+last device response ('access-group z'): access-group z
+#                                            ^
 # cli error: parameter or keyword missing or wrong
  - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
    auth-no-priv|auth-priv}
@@ -2015,9 +2059,9 @@ SF-1p-187>config>mngmnt>snmp# notify
 
 SF-1p-187>config>mngmnt>snmp# notify-filter
 
-auto-create probe 'notify-filter zzz-hrvst' refused.
-device response: notify-filter zzz-hrvst
-#                                                     ^
+auto-create tried [notify-filter zzz-hrvst, notify-filter hrvst, notify-filter z], all refused.
+last device response ('notify-filter z'): notify-filter z
+#                                             ^
 # cli error: parameter or keyword missing or wrong
  - notify-filter <name> <sub-tree-oid>
  - no notify-filter <name> <sub-tree-oid>
@@ -2043,6 +2087,19 @@ SF-1p-187>config>mngmnt>snmp# notify-filter-profile
 
 
 SF-1p-187>config>mngmnt>snmp# security-to-group
+
+auto-create tried [security-to-group zzz-hrvst, security-to-group hrvst, security-to-group z], all refused.
+last device response ('security-to-group z'): security-to-group z
+#                                               ^
+# cli error: invalid parameter value
+ - security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ - no security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ <snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+ <security-name>      : Security name [string]
+
+SF-1p-187>config>mngmnt>snmp#
 ```
 
 ### show snmpv3
@@ -2109,9 +2166,9 @@ SF-1p-187>config>mngmnt>snmp# user
 
 SF-1p-187>config>mngmnt>snmp# view
 
-auto-create probe 'view zzz-hrvst' refused.
-device response: view zzz-hrvst
-#                                            ^
+auto-create tried [view zzz-hrvst, view hrvst, view z], all refused.
+last device response ('view z'): view z
+#                                    ^
 # cli error: parameter or keyword missing or wrong
  - view <view-name> <sub-tree-oid>
  - no view <view-name> <sub-tree-oid>
@@ -2309,7 +2366,7 @@ SF-1p-187>config>mngmnt>tacacsplus# group
 SF-1p-187>config>mngmnt>tacacsplus# privilege-level
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure management tacacsplus server NAME")*
 ```text
 <ip>                 : TACACS+ server IP address [0.0.0.0|0:0:0:0::0]
 
@@ -2336,6 +2393,94 @@ SF-1p-187>config>mngmnt>tacacsplus>group(zzz-hrvst)$
 
 
 SF-1p-187>config>mngmnt>tacacsplus>group(zzz-hrvst)$ accounting
+```
+
+## configure management tacacsplus server NAME
+
+Level help (`?`):
+```text
+accounting-port                - Set TACACS+ server accounting TCP port
+      authentication-port            - Set TACACS+ server authentication TCP 
+                                       port
+      clear-statistics               - Clear TACACS+ statistics
+ [no] group                          - Bind TACACS+ server to group
+      key                            - TACACS+ server shared secret
+      retry                          - Number of authentication retries
+ [no] shutdown                       - Disable TACACS+ server
+      timeout                        - Timeout
+
+ show statistics                     - Show TACACS+ statistics
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$
+```
+
+### accounting-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ accounting-port
+```
+
+### authentication-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ authentication-port
+```
+
+### clear-statistics
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ clear-statistics
+```
+
+### group
+```text
+<group-name>         : TACACS+ server group name [1..32 chars]
+
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ group
+```
+
+### key
+```text
+<string>             : TACACS+ server shared secret [1..80 chars]
+
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ key
+```
+
+### retry
+```text
+<number-of-retries>  : Number of authentication retries [1..1, default 1]
+
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ retry
+```
+
+### show statistics
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ show statistics
+```
+
+### shutdown
+```text
+<CR>
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ shutdown
+```
+
+### timeout
+```text
+<seconds>            : Timeout in seconds [1..30, default 5]
+
+
+SF-1p-187>config>mngmnt>tacacsplus>server(1.1.1.1)$ timeout
 ```
 
 ## configure monitor
@@ -2862,6 +3007,15 @@ SF-1p-187>config>port>eth(1)# access-group
 
 
 SF-1p-187>config>port>eth(1)# classifier
+
+auto-create tried [classifier zzz-hrvst, classifier hrvst, classifier z], all refused.
+last device response ('classifier z'): classifier z
+#                                        ^
+# cli error: invalid parameter value
+ - classifier ingress
+ - no classifier ingress
+
+SF-1p-187>config>port>eth(1)#
 ```
 
 ### clear-access-list-statistics
@@ -2983,6 +3137,16 @@ SF-1p-187>config>port>eth(1)# traffic-class
 
 
 SF-1p-187>config>port>eth(1)# vlan
+
+auto-create tried [vlan zzz-hrvst, vlan hrvst, vlan z], all refused.
+last device response ('vlan z'): vlan z
+#                                  ^
+# cli error: invalid parameter value
+ - vlan <vlan-id>
+ - no vlan <vlan-id>
+ <vlan-id>            : Vlan id [1..4094]
+
+SF-1p-187>config>port>eth(1)#
 ```
 
 ## configure port ethernet NAME dot1x
@@ -3589,6 +3753,16 @@ SF-1p-187>config>port>virtual(1)# shutdown
 
 
 SF-1p-187>config>port>virtual(1)# vlan
+
+auto-create tried [vlan zzz-hrvst, vlan hrvst, vlan z], all refused.
+last device response ('vlan z'): vlan z
+#                                      ^
+# cli error: invalid parameter value
+ - vlan <vlan-id>
+ - no vlan <vlan-id>
+ <vlan-id>            : Vlan id [1..4094]
+
+SF-1p-187>config>port>virtual(1)#
 ```
 
 ## configure port wifi-client
@@ -6242,6 +6416,16 @@ SF-1p-187>config>sd-iot# shutdown
 
 
 SF-1p-187>config>sd-iot# tunnel
+
+auto-create tried [tunnel zzz-hrvst, tunnel hrvst, tunnel z], all refused.
+last device response ('tunnel z'): tunnel z
+#                               ^
+# cli error: invalid parameter value
+ - tunnel <number> [ssl]
+ - no tunnel <number>
+ <number>             : Sd-iot tunnel number [1..2]
+
+SF-1p-187>config>sd-iot#
 ```
 
 ### username
@@ -6311,6 +6495,16 @@ SF-1p-187>config>system# contact
 
 
 SF-1p-187>config>system# dhcp-server
+
+auto-create tried [dhcp-server zzz-hrvst, dhcp-server hrvst, dhcp-server z], all refused.
+last device response ('dhcp-server z'): dhcp-server z
+#                                    ^
+# cli error: invalid parameter value
+ - dhcp-server <number>
+ - no dhcp-server <number>
+ <number>             : [1..1, default 1]
+
+SF-1p-187>config>system#
 ```
 
 ### dhcpv6-server *(not entered — parameterized context)*
@@ -6319,6 +6513,16 @@ SF-1p-187>config>system# dhcp-server
 
 
 SF-1p-187>config>system# dhcpv6-server
+
+auto-create tried [dhcpv6-server zzz-hrvst, dhcpv6-server hrvst, dhcpv6-server z], all refused.
+last device response ('dhcpv6-server z'): dhcpv6-server z
+#                                      ^
+# cli error: invalid parameter value
+ - dhcpv6-server <number>
+ - no dhcpv6-server <number>
+ <number>             : [1..1, default 1]
+
+SF-1p-187>config>system#
 ```
 
 ### generate-log-report

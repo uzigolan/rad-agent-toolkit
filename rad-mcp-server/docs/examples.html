@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rad-mcp — example prompts</title>
+<style>
+  :root {
+    --bg: #f4f6fa; --bg2: #eaeef5; --card: #ffffff; --ink: #182030; --muted: #5d6activated878;
+  }
+  :root {
+    --bg: #f4f6fa; --card: #ffffff; --ink: #182030; --muted: #5d6878;
+    --line: #e2e7f0; --shadow: 0 1px 2px rgba(16,24,40,.06), 0 8px 24px -12px rgba(16,24,40,.18);
+    --shadow-hover: 0 2px 4px rgba(16,24,40,.08), 0 16px 36px -12px rgba(16,24,40,.28);
+    --prompt-bg: #0e1520; --prompt-ink: #e9eff8;
+    --c1: #0e6fbe; --c2: #0c7d5e; --c3: #b3591b; --c4: #7a3fa8; --c5: #b8236e;
+    --badge-agent: #0e6fbe; --badge-abayev: #7a3fa8; --badge-noam: #0c7d5e;
+    --hero-ink: #eaf2fc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1118; --card: #161c26; --ink: #e7ecf4; --muted: #96a1b3;
+      --line: #242d3b; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+      --shadow-hover: 0 2px 6px rgba(0,0,0,.5), 0 18px 40px -14px rgba(0,0,0,.85);
+      --prompt-bg: #0a0f16; --prompt-ink: #dfe7f2;
+      --c1: #5aa8e0; --c2: #3fb392; --c3: #e09355; --c4: #b07fd6; --c5: #e0679f;
+      --badge-agent: #1f6ca8; --badge-abayev: #6f4396; --badge-noam: #14805f;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif; }
+
+  /* ── hero ─────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative; overflow: hidden; color: var(--hero-ink);
+    background: linear-gradient(135deg, #0b2340 0%, #123a63 45%, #0d5a86 80%, #0c7d5e 130%);
+    padding: 3.2rem 1rem 2.6rem;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: radial-gradient(70% 90% at 50% 10%, #000 40%, transparent 100%);
+  }
+  .hero::after {
+    content: ""; position: absolute; width: 520px; height: 520px; right: -160px; top: -220px;
+    background: radial-gradient(circle, rgba(90,190,255,.28), transparent 65%);
+    pointer-events: none;
+  }
+  .hero-in { max-width: 920px; margin: 0 auto; position: relative; }
+  .kicker { font: 700 12px/1 "Segoe UI", sans-serif; letter-spacing: .18em; text-transform: uppercase;
+            color: #8fd0ff; margin-bottom: .8rem; }
+  h1 { font-size: clamp(1.7rem, 4vw, 2.5rem); margin: 0 0 .55rem; letter-spacing: -.01em; }
+  h1 .grad { background: linear-gradient(90deg, #8fd0ff, #6ef0c2);
+             -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { max-width: 64ch; color: #c3d6ec; margin: 0 0 1.4rem; font-size: 1.02rem; }
+  .tagline b { color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chip {
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.18);
+    backdrop-filter: blur(4px); border-radius: 999px; padding: .38rem .85rem;
+    font-size: .82rem; color: #dce9f7;
+  }
+  .chip b { color: #fff; font-variant-numeric: tabular-nums; }
+
+  /* ── nav + filter bar ─────────────────────────────────────────────── */
+  .bar {
+    position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: .55rem 1rem;
+  }
+  .bar-in { max-width: 920px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; }
+  .bar a, .pfilter {
+    text-decoration: none; color: var(--muted); border: 1px solid var(--line); background: var(--card);
+    border-radius: 999px; padding: .3rem .8rem; font-size: .8rem; cursor: pointer; transition: all .15s;
+  }
+  .bar a:hover { color: var(--ink); border-color: var(--muted); transform: translateY(-1px); }
+  .bar .sep { flex: 1; }
+  .pfilter.active-agent  { background: var(--badge-agent);  color: #fff; border-color: transparent; }
+  .pfilter.active-abayev { background: var(--badge-abayev); color: #fff; border-color: transparent; }
+  .pfilter.active-noam   { background: var(--badge-noam);   color: #fff; border-color: transparent; }
+  .pfilter .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: .4rem; }
+  .d-agent { background: var(--badge-agent); } .d-abayev { background: var(--badge-abayev); } .d-noam { background: var(--badge-noam); }
+  .pfilter.active-agent .dot, .pfilter.active-abayev .dot, .pfilter.active-noam .dot { background: #fff; }
+
+  /* ── sections + cards ─────────────────────────────────────────────── */
+  main { max-width: 920px; margin: 0 auto; padding: 1.6rem 1rem 4rem; }
+  section { margin-top: 2.4rem; }
+  .sec-head { display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem; }
+  .medal {
+    width: 44px; height: 44px; border-radius: 12px; flex: none; display: grid; place-items: center;
+    color: #fff; font: 800 1.15rem/1 "Segoe UI", sans-serif; box-shadow: var(--shadow);
+  }
+  section h2 { font-size: 1.3rem; margin: 0; letter-spacing: -.01em; }
+  .sec-sub { color: var(--muted); font-size: .86rem; margin-top: .1rem; }
+  .s1 .medal { background: linear-gradient(135deg, var(--c1), #0a4f8a); }
+  .s2 .medal { background: linear-gradient(135deg, var(--c2), #075a43); }
+  .s3 .medal { background: linear-gradient(135deg, var(--c3), #8a3f0e); }
+  .s4 .medal { background: linear-gradient(135deg, var(--c4), #5a2b80); }
+  .s5 .medal { background: linear-gradient(135deg, var(--c5), #8a1750); }
+  .s1 .card { border-left-color: var(--c1); } .s2 .card { border-left-color: var(--c2); }
+  .s3 .card { border-left-color: var(--c3); } .s4 .card { border-left-color: var(--c4); }
+  .s5 .card { border-left-color: var(--c5); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c1);
+    border-radius: 14px; padding: 1.05rem 1.15rem; margin: .8rem 0;
+    box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s, opacity .25s, filter .25s;
+    opacity: 0; transform: translateY(14px);
+  }
+  .card.vis { opacity: 1; transform: translateY(0); }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .card.dim { opacity: .22; filter: grayscale(.7); }
+  .card h3 { margin: 0 0 .6rem; font-size: 1rem; display: flex; align-items: baseline; gap: .5rem; }
+  .card h3 .n { color: var(--muted); font-weight: 700; font-size: .82rem; font-variant-numeric: tabular-nums; }
+
+  .prompt {
+    position: relative; background: var(--prompt-bg); color: var(--prompt-ink);
+    border-radius: 10px; padding: 2rem .95rem .75rem; margin: 0 0 .65rem;
+    font: 13.5px/1.55 Consolas, "Cascadia Mono", monospace; overflow-x: auto;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .dots { position: absolute; top: .6rem; left: .8rem; display: flex; gap: 5px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; }
+  .dots i:nth-child(1){ background:#ff5f57; } .dots i:nth-child(2){ background:#febc2e; } .dots i:nth-child(3){ background:#28c840; }
+  .badge {
+    display: inline-block; font: 700 10.5px/1 "Segoe UI", sans-serif; color: #fff;
+    border-radius: 999px; padding: 4px 10px; margin-right: .55rem; letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .b-agent  { background: var(--badge-agent); }
+  .b-abayev { background: var(--badge-abayev); }
+  .b-noam   { background: var(--badge-noam); }
+  .copy {
+    position: absolute; top: .45rem; right: .5rem; border: 1px solid #35415280;
+    background: rgba(255,255,255,.04); color: #9fb2c8; border-radius: 7px; padding: 3px 11px;
+    font: 12px "Segoe UI", sans-serif; cursor: pointer; transition: all .15s;
+  }
+  .copy:hover { color: #fff; border-color: #5a6b82; background: rgba(255,255,255,.09); }
+  .copy.ok { color: #6ef0c2; border-color: #2c8a67; }
+  .what { color: var(--muted); font-size: .9rem; margin: 0; }
+  .what code { background: color-mix(in srgb, var(--line) 70%, transparent); border-radius: 5px; padding: .05em .35em; font-size: .86em; }
+  .what b { color: var(--ink); }
+  .warn { color: #b05a00; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { .warn { color: #e8a04c; } }
+
+  footer { color: var(--muted); font-size: .84rem; max-width: 920px; margin: 0 auto;
+           padding: 0 1rem 3rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  footer code { background: color-mix(in srgb, var(--line) 70%, transparent); border-radius: 4px; padding: 0 .3em; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-in">
+    <div class="kicker">RAD Agent Toolkit · rad-mcp</div>
+    <h1>Talk to your network. <span class="grad">Literally.</span></h1>
+    <p class="tagline">Ready-to-paste prompts for the RAD agent — addressed to <b>rad agent</b>
+    (generic), <b>abayev</b> or <b>noam</b> (the CLI-expert personas). Every device action passes
+    the safety flow: reads wait for your <i>"run it now?"</i>, writes go backup → preview →
+    <b>your explicit approval</b> → commit → verify.</p>
+    <div class="chips">
+      <span class="chip"><b>18</b> prompts</span>
+      <span class="chip"><b>5</b> categories</span>
+      <span class="chip"><b>3</b> trigger names</span>
+      <span class="chip"><b>7</b> device families verified live</span>
+      <span class="chip"><b>CLI + manual + SNMP</b> fused knowledge</span>
+    </div>
+  </div>
+</div>
+
+<div class="bar"><div class="bar-in">
+  <a href="#s1">1 · Management</a><a href="#s2">2 · Operations</a><a href="#s3">3 · Engineering</a>
+  <a href="#s4">4 · Advanced</a><a href="#s5">5 · Onboarding</a>
+  <span class="sep"></span>
+  <button class="pfilter" data-p="agent"><span class="dot d-agent"></span>rad agent</button>
+  <button class="pfilter" data-p="abayev"><span class="dot d-abayev"></span>abayev</button>
+  <button class="pfilter" data-p="noam"><span class="dot d-noam"></span>noam</button>
+</div></div>
+
+<main>
+
+<section class="s1" id="s1">
+  <div class="sec-head"><div class="medal">1</div>
+    <div><h2>Device management</h2><div class="sec-sub">inventory CRUD — facts in yaml, secrets in .env, gates on everything destructive</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">1.1</span>Add a device</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234</span><button class="copy">copy</button></div>
+    <p class="what">The intake gate requires all <b>six facts</b> before anything is written; facts go to
+    <code>inventory.yaml</code>, credentials only to <code>server/.env</code>. Omit a field and the agent asks for
+    all missing ones in one question.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">1.2</span>List devices</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">show the list of devices</span><button class="copy">copy</button></div>
+    <p class="what">Credential-free summaries (name/host/family/groups). Filterable: <i>"noam, list only the mp1 family"</i>.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">1.3</span>Change a device</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">marks-mp4 moved — update its host to 172.17.161.95</span><button class="copy">copy</button></div>
+    <p class="what">Partial update — only the named field changes. Changing <code>family</code> is treated as
+    suspicious (usually a mis-registration) and asked back.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">1.4</span>Remove a device</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">remove lab-etx2 from the list</span><button class="copy">copy</button></div>
+    <p class="what">Requires explicit confirmation; only forgets the inventory entry — never touches the
+    device, its backups, or its audit history.</p></div>
+</section>
+
+<section class="s2" id="s2">
+  <div class="sec-head"><div class="medal">2</div>
+    <div><h2>Device operations</h2><div class="sec-sub">live reads after your confirmation · writes only through the staged flow</div></div></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">2.1</span>Active alarms</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">show the active alarms on sf-163-187</span><button class="copy">copy</button></div>
+    <p class="what">Navigates <code>configure reporting</code> → <code>show active-alarms</code> and interprets severity —
+    a major/critical alarm blocks config work by policy.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">2.2</span>Ports status</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">show the ports status on ehud1p</span><button class="copy">copy</button></div>
+    <p class="what"><code>configure port</code> → <code>show summary</code>. Port naming is family-specific (secflow
+    <code>ethernet 3</code>, etx1p <code>ethernet lan1</code>, etx2 <code>ethernet 0/2</code>) — the agent uses the target
+    family's convention.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">2.3</span>Certificate + MQTT server configuration</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">suggest the CLI configuration for a device certificate and an MQTTS server on the ETX-1p</span><button class="copy">copy</button></div>
+    <p class="what">Answered from the harvested reference + manual with <b>no device contact</b>: key
+    generation (<span class="warn">⚠ the ETX-1p holds max ONE key pair — stated up front</span>), self-signed or
+    CA-enrolled certificate, and the MQTT binding (<code>certificate &lt;name&gt; trusted-ca &lt;ca&gt;</code> — required).</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">2.4</span>Change configuration on a device</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">change the location of sf-163-187 to "TLV lab rack 3"</span><button class="copy">copy</button></div>
+    <p class="what">The staged flow: backup → <code>stage_config</code> preview → your explicit approval → commit →
+    verify. On <b>mp1/mp4100</b> the mandatory MP recipe applies and is <b>server-enforced</b>:
+    <code>discard-changes</code> → configure → <code>sanity-check</code> → <code>commit</code> → <code>save</code>.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">2.5</span>Download (back up) configuration</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">back up the configuration of minid-1 and diff it against the previous backup</span><button class="copy">copy</button></div>
+    <p class="what">Full <code>info</code> export to the local archive (<code>server/backups/</code>), with diffs against
+    any earlier snapshot.</p></div>
+</section>
+
+<section class="s3" id="s3">
+  <div class="sec-head"><div class="medal">3</div>
+    <div><h2>Network engineering</h2><div class="sec-sub">designs grounded in the family's own reference + manual — never generic training answers</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">3.1</span>Inquire about a topic</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">how does zero-touch provisioning work on the MiNID, and what are its limits?</span><button class="copy">copy</button></div>
+    <p class="what">Concepts come from the ingested manual (per-chapter markdown + cross-links), syntax
+    from the CLI reference — cited per layer.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">3.2</span>Design: 3 × ETX-2 ring with ERP</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">I have three ETX-2 units in a ring running ERP — give me the configuration for all three</span><button class="copy">copy</button></div>
+    <p class="what">Grounded in the etx2 reference (<code>configure protection erp</code>) + manual: ring-port roles,
+    RPL owner/neighbor placement, per-unit paste-ready blocks, verification reads — staged per unit
+    only after your approval.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">3.3</span>Observability for QA on 2 × MP-1</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">suggest a way for QA to monitor our two MP-1 units and produce a report that gives observability, not just monitoring</span><button class="copy">copy</button></div>
+    <p class="what">Fuses the layers: SNMPv1 polling (IF-MIB counters — stateless, scriptable), the SNMP
+    <b>alarm dictionary</b> + <code>show active-alarms</code> for events, config-drift via scheduled backup diffs,
+    and <code>health_check</code> sweeps — state + events + trends + drift, with meanings from the manual.</p></div>
+</section>
+
+<section class="s4" id="s4">
+  <div class="sec-head"><div class="medal">4</div>
+    <div><h2>Advanced</h2><div class="sec-sub">cross-family and cross-vendor work — with the evidence trail visible</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">4.1</span>Compare two device types on a topic</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">compare the ETX-2 and the ETX-2V on QoS capabilities</span><button class="copy">copy</button></div>
+    <p class="what">Capability-grounding rule: each family answers ONLY from its own harvested reference +
+    manual — no cross-family inference. Differences arrive as a table with evidence per side.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">4.2</span>Propose a CLI feature from another family</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">the MiNID has no TWAMP responder like the ETX-2 does — draft a feature proposal for adding it to the MiNID CLI, modeled on the ETX-2 implementation</span><button class="copy">copy</button></div>
+    <p class="what">Cross-family reference diff: the ETX-2's harvested <code>configure oam twamp</code> tree becomes
+    the model, mapped onto MiNID's compact context set — what exists / what's missing / suggested syntax.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">4.3</span>Compare competitive devices to RAD ones</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">compare a competitor's carrier-Ethernet demarcation device against the RAD ETX-2 for an ERP-based rollout</span><button class="copy">copy</button></div>
+    <p class="what">RAD's side is grounded in harvested references + manuals; the competitor's side needs
+    public sources — the agent says plainly which claims are verified from our knowledge base and
+    which are external.</p></div>
+</section>
+
+<section class="s5" id="s5">
+  <div class="sec-head"><div class="medal">5</div>
+    <div><h2>Onboarding a new device type</h2><div class="sec-sub">the three knowledge pipelines: CLI harvest · manual ingest · MIB compile</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">5.1</span>Harvest its CLI</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">harvest the CLI of the new device I just added</span><button class="copy">copy</button></div>
+    <p class="what"><code>/rad-harvest</code>: probe first (prompt + dialect + SSH behavior), then the full
+    <code>?</code>-help crawl → CLI reference + command tree. Fragile-SSH units go branch-by-branch; temp
+    objects are rolled back and the device is verified clean afterwards.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">5.2</span>Ingest its user manual</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">here is the user manual PDF for the new family — ingest it</span><button class="copy">copy</button></div>
+    <p class="what">Drop the PDF in <code>manuals/</code>, then <code>/rad-load-manual</code>: per-chapter markdown +
+    CLI-topic cross-links. The PDF stays gitignored; the extracted markdown is the committed knowledge.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">5.3</span>Add its MIBs</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">here are the MIB files for the new family — add them to the SNMP layer</span><button class="copy">copy</button></div>
+    <p class="what">Drop them in the workspace MIB directory and recompile <code>snmp-oid-map.json</code> (the map
+    is portfolio-wide); one <code>snmp_probe</code> captures the family's <code>sysObjectID</code> for auto-detect, and a
+    capped walk produces its <code>snmp-map-&lt;family&gt;.md</code> capability map.</p></div>
+</section>
+
+</main>
+
+<footer>rad-mcp / rad-agent-toolkit — example prompts. Markdown source: <code>docs/examples.md</code> ·
+safety model, personas and knowledge layers: <code>docs/CONCEPTS.md</code> · SNMP layer:
+<code>skills/rad-cli-operations/references/snmp-support.md</code></footer>
+
+<script>
+  // copy button: persona + prompt text
+  document.querySelectorAll(".copy").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const p = btn.closest(".prompt");
+      const text = p.querySelector(".badge").textContent.trim() + ", " +
+                   p.querySelector(".ptext").textContent.trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = "copied ✓"; btn.classList.add("ok");
+        setTimeout(() => { btn.textContent = "copy"; btn.classList.remove("ok"); }, 1300);
+      });
+    });
+  });
+  // persona filter: dim non-matching cards
+  let active = null;
+  document.querySelectorAll(".pfilter").forEach(b => {
+    b.addEventListener("click", () => {
+      const p = b.dataset.p;
+      active = (active === p) ? null : p;
+      document.querySelectorAll(".pfilter").forEach(x =>
+        x.classList.toggle("active-" + x.dataset.p, active === x.dataset.p));
+      document.querySelectorAll(".card").forEach(c =>
+        c.classList.toggle("dim", active !== null && c.dataset.p !== active));
+    });
+  });
+  // scroll-reveal
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("vis"); io.unobserve(e.target); }
+  }), { threshold: .08 });
+  document.querySelectorAll(".card").forEach(c => io.observe(c));
+</script>
+</body>
+</html>

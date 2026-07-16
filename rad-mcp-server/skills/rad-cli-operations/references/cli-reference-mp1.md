@@ -1,6 +1,6 @@
 # mp1 CLI reference (harvested `?` help)
 
-Captured live from mp-one (MP-1 lab unit (provisional mp1 family - shared context-CLI assumed, NOT verified live)) on 2026-07-14 by scripts/harvest_cli.py
+Captured live from mp-one (MP-1 lab unit (provisional mp1 family - shared context-CLI assumed, NOT verified live)) on 2026-07-16 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -713,9 +713,9 @@ Level help (`?`):
 
 MP-1>config>flows# classifier-profile
 
-auto-create probe 'classifier-profile zzz-hrvst' refused.
-device response: classifier-profile zzz-hrvst
-#                                               ^
+auto-create tried [classifier-profile zzz-hrvst, classifier-profile hrvst, classifier-profile z], all refused.
+last device response ('classifier-profile z'): classifier-profile z
+#                                       ^
 # cli error: parameter or keyword missing or wrong
  - classifier-profile <classification-name> match-any
  - no classifier-profile <classification-name>
@@ -1096,9 +1096,9 @@ Level help (`?`):
 
 MP-1>config>mngmnt>snmp# access-group
 
-auto-create probe 'access-group zzz-hrvst' refused.
-device response: access-group zzz-hrvst
-#                                               ^
+auto-create tried [access-group zzz-hrvst, access-group hrvst, access-group z], all refused.
+last device response ('access-group z'): access-group z
+#                                       ^
 # cli error: parameter or keyword missing or wrong
  - access-group <group-name> {snmpv1|snmpv2c|usm} {no-auth-no-priv|
    auth-no-priv|auth-priv}
@@ -1152,9 +1152,9 @@ MP-1>config>mngmnt>snmp# notify
 
 MP-1>config>mngmnt>snmp# notify-filter
 
-auto-create probe 'notify-filter zzz-hrvst' refused.
-device response: notify-filter zzz-hrvst
-#                                                ^
+auto-create tried [notify-filter zzz-hrvst, notify-filter hrvst, notify-filter z], all refused.
+last device response ('notify-filter z'): notify-filter z
+#                                        ^
 # cli error: parameter or keyword missing or wrong
  - notify-filter <name> <sub-tree-oid>
  - no notify-filter <name> <sub-tree-oid>
@@ -1180,6 +1180,19 @@ MP-1>config>mngmnt>snmp# notify-filter-profile
 
 
 MP-1>config>mngmnt>snmp# security-to-group
+
+auto-create tried [security-to-group zzz-hrvst, security-to-group hrvst, security-to-group z], all refused.
+last device response ('security-to-group z'): security-to-group z
+#                                          ^
+# cli error: invalid parameter value
+ - security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ - no security-to-group {snmpv1|snmpv2c|usm} sec-name <security-name>
+ <snmpv1>             : SNMPv1
+ <snmpv2c>            : SNMPv2c
+ <usm>                : USM
+ <security-name>      : Security name [string]
+
+MP-1>config>mngmnt>snmp#
 ```
 
 ### show snmpv3
@@ -1206,12 +1219,17 @@ MP-1>config>mngmnt>snmp# show trap-sync
 MP-1>config>mngmnt>snmp# snmp-engine-id
 ```
 
-### target *(parameterized — inner help harvested under "configure management snmp target NAME")*
+### target *(not entered — parameterized context)*
 ```text
 <name>               : Target name [1..32 chars]
 
 
 MP-1>config>mngmnt>snmp# target
+
+auto-create tried [target zzz-hrvst, target hrvst, target z], all refused.
+last device response ('target z'): target z
+# cli error: Entry instance already exists
+MP-1>config>mngmnt>snmp#
 ```
 
 ### target-params *(parameterized — inner help harvested under "configure management snmp target-params NAME")*
@@ -1245,9 +1263,9 @@ MP-1>config>mngmnt>snmp# user
 
 MP-1>config>mngmnt>snmp# view
 
-auto-create probe 'view zzz-hrvst' refused.
-device response: view zzz-hrvst
-#                                       ^
+auto-create tried [view zzz-hrvst, view hrvst, view z], all refused.
+last device response ('view z'): view z
+#                               ^
 # cli error: parameter or keyword missing or wrong
  - view <view-name> <sub-tree-oid>
  - no view <view-name> <sub-tree-oid>
@@ -1439,61 +1457,6 @@ MP-1>config>mngmnt>snmp>filter-profile$ profile-name
 MP-1>config>mngmnt>snmp>filter-profile$ shutdown
 ```
 
-## configure management snmp target NAME
-
-Level help (`?`):
-```text
-address                        - Target address
- [no] shutdown                       - Disable target
- [no] tag-list                       - Configure tag list
-      target-params                  - Target parameters
- [no] trap-sync-group                - Configure trap synchronization group
-
-
-MP-1>config>mngmnt>snmp>target(zzz-hrvst)$
-```
-
-### address
-```text
-<udp-domain>         : UDP
- <oam-domain>         : OAM
- <udp-ipv4-domain>    : UDP over IPv4
-
-
-MP-1>config>mngmnt>snmp>target(zzz-hrvst)$ address
-```
-
-### shutdown
-```text
-<CR>
-
-MP-1>config>mngmnt>snmp>target(zzz-hrvst)$ shutdown
-```
-
-### tag-list
-```text
-<list>               : Tag list [string]
-
-
-MP-1>config>mngmnt>snmp>target(zzz-hrvst)$ tag-list
-```
-
-### target-params
-```text
-<params-name>        : Parameter [string]
-
-
-MP-1>config>mngmnt>snmp>target(zzz-hrvst)$ target-params
-```
-
-### trap-sync-group
-```text
-<group-id>           : Group ID [number] [1..10]
-
-
-MP-1>config>mngmnt>snmp>target(zzz-hrvst)$ trap-sync-group
-```
-
 ## configure management snmp target-params NAME
 
 Level help (`?`):
@@ -1559,7 +1522,7 @@ Level help (`?`):
 MP-1>config>mngmnt>tacacsplus# group
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure management tacacsplus server NAME")*
 ```text
 <ip>                 : TACACS+ server IP address [0.0.0.0|0:0:0:0::0]
 
@@ -1585,6 +1548,94 @@ MP-1>config>mngmnt>tacacsplus>group(zzz-hrvst)$
 
 
 MP-1>config>mngmnt>tacacsplus>group(zzz-hrvst)$ accounting
+```
+
+## configure management tacacsplus server NAME
+
+Level help (`?`):
+```text
+accounting-port                - Set  TACACS+ server accounting TCP port
+      authentication-port            - Set  TACACS+ server authentication TCP 
+                                       port
+      clear-statistics               - Clear TACACS+ statistics
+ [no] group                          - Bind TACACS+ server to group
+      key                            - TACACS+ server shared secret
+      retry                          - Number of authentication retries
+ [no] shutdown                       - Disable TACACS+ server
+      timeout                        - Timeout
+
+ show statistics                     - Show TACACS+ statistics
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$
+```
+
+### accounting-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ accounting-port
+```
+
+### authentication-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ authentication-port
+```
+
+### clear-statistics
+```text
+<CR>
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ clear-statistics
+```
+
+### group
+```text
+<group-name>         : TACACS+ server group name [1..32 chars]
+
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ group
+```
+
+### key
+```text
+<string>             : TACACS+ server shared secret [1..80 chars]
+
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ key
+```
+
+### retry
+```text
+<number-of-retries>  : Number of authentication retries [1..1, default 1]
+
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ retry
+```
+
+### show statistics
+```text
+<CR>
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ show statistics
+```
+
+### shutdown
+```text
+<CR>
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ shutdown
+```
+
+### timeout
+```text
+<seconds>            : Timeout in seconds [1..30, default 5]
+
+
+MP-1>config>mngmnt>tacacsplus>server(1.1.1.1)$ timeout
 ```
 
 ## configure port
@@ -2396,8 +2447,6 @@ Level help (`?`):
 [no] pw                             + Input/Output pw protection group 
                                        configuration
  [no] tdm-group                      + Define tdm protection group
-
- show summary-tdm-group              - Display the tdm protection group status
 ```
 
 ### pw *(parameterized — inner help harvested under "configure protection pw NAME")*
@@ -2422,6 +2471,16 @@ MP-1>config>protection# show summary-tdm-group
 
 
 MP-1>config>protection# tdm-group
+
+auto-create tried [tdm-group zzz-hrvst, tdm-group hrvst, tdm-group z], all refused.
+last device response ('tdm-group z'): tdm-group z
+#                                 ^
+# cli error: invalid parameter value
+ - tdm-group <group-id>
+ - no tdm-group <group-id>
+ <group-id>           : [number] [1..8]
+
+MP-1>config>protection#
 ```
 
 ## configure protection pw NAME
@@ -3721,6 +3780,58 @@ MP-1>config>system>clock>domain(1)# show status
 
 
 MP-1>config>system>clock>domain(1)# source
+
+auto-create tried [source zzz-hrvst, source hrvst, source z], all refused.
+last device response ('source z'): source z
+#                                          ^
+# cli error: invalid parameter value
+ - source <src-id> [rx-port ethernet  <port-index>]
+ - source <src-id> [rx-port fast-ethernet  <port-index>]
+ - source <src-id> [rx-port giga-ethernet  <port-index>]
+ - source <src-id> [rx-port e1  <port-index>]
+ - source <src-id> [rx-port t1  <port-index>]
+ - source <src-id> [rx-port j1  <port-index>]
+ - source <src-id> [rx-port sdh-sonet  <port-index>]
+ - source <src-id> [rx-port shdsl  <port-index>]
+ - source <src-id> [rx-port ima  <group-index>]
+ - source <src-id> [rx-port serial  <port-index>]
+ - source <src-id> [rx-port serial-bundle  <port-index-trib>]
+ - source <src-id> [rx-port e1  <port-index-trib>]
+ - source <src-id> [rx-port t1  <port-index-trib>]
+ - source <src-id> [rx-port t3  <port-index>]
+ - source <src-id> [rx-port ds1-opt  <port-index>]
+ - source <src-id> [rx-port e1-i  <port-index>]
+ - source <src-id> [station <station-id>]
+ - source <src-id> [recovered <recovered-id>]
+ - source <src-id> [recovered <recovered-id>]
+ - source <src-id> [domain <domain-id>]
+ - source <src-id> [internal-gps <port-index>]
+ - source <src-id> [pw <pw-num>]
+ - no source <src-id>
+
+ <src-id>             : Unique Clock Source Id [number] [1..4]
+ <ethernet>           : Ethernet speed of 10/100/1000 Mbit/s.
+ <port-index>         : Rx-Port IfIndex [slot/port]
+ <fast-ethernet>      : Ethernet at the nominal rate of 100 Mbit/s
+ <giga-ethernet>      : Ethernet frames at a rate of a gigabit per second
+ <e1>                 : Fundamental Rate of European Carriers
+ <t1>                 : Fundamental Rate of Noth American Carriers
+ <j1>                 : Fundamental  Rate of Japanese Carriers
+ <sdh-sonet>          : Synchronous optical networking/Synchronous Digital 
+                        Hierarchy
+ <shdsl>              : Single-Pair High-speed Digital Subscriber Line
+ <ima>                : ATM Inverse Multiplexing group
+ <group-index>        : IMA Group Number [number]
+ <serial-bundle>      : Serial bundle
+ <port-index-trib>    : Rx Port IfIndex [slot/port[/tributary]]
+ <t3>                 : Fundamental Rate of North American Carriers
+ <e1-i>               : Fundamental Rate of European Carriers
+ <station-id>         : Station Clock Source Number [slot/port]
+ <recovered-id>       : Recovered Clock Source Number [slot/port]
+ <domain-id>          : Domain where this Clock Source is defined [number]
+ <pw-num>             : Pw where this Clock Source is defined [number] [1..32]
+
+MP-1>config>system>clock>domain(1)#
 ```
 
 ### sync-network-type
@@ -3904,6 +4015,16 @@ MP-1>config>system>date-time>sntp# poll-interval
 
 
 MP-1>config>system>date-time>sntp# server
+
+auto-create tried [server zzz-hrvst, server hrvst, server z], all refused.
+last device response ('server z'): server z
+#                                         ^
+# cli error: invalid parameter value
+ - server <server-id>
+ - no server <server-id>
+ <server-id>          : SNTP server address [1..10]
+
+MP-1>config>system>date-time>sntp#
 ```
 
 ### show status

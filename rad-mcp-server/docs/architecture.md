@@ -29,6 +29,7 @@ into the MCP ecosystem.
         │                 rad://command-tree/{family}
         │
  backends (transport)     ssh (Netmiko, device_type rad_etx)   [now]
+        │                 snmp.py (pysnmp, UDP/161 — read-only GET/GETNEXT) [now]
         │                 radview northbound API                [planned]
         │
  drivers (CLI dialect)    radcli.py — shared context-CLI dialect

@@ -9,12 +9,12 @@ component.
 
 ## Current — snapshot 2026-07-14
 
-**MCP server:** `0.1.0`
+**MCP server:** `0.2.0` (0.2.0: read-only SNMP tools — snmp_probe/snmp_get/snmp_walk — + pysnmp dependency)
 
 | Skill | Version |
 |---|---|
 | `rad-core` | 1.0.0 |
-| `rad-cli-operations` | 1.1.0 |
+| `rad-cli-operations` | 1.2.1 |
 | `rad-device-mng` | 1.0.0 |
 
 | Driver (family) | Version | Product |

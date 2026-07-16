@@ -1,6 +1,6 @@
 # mp4100 CLI reference (harvested `?` help)
 
-Captured live from marks-mp4 (Mark's Megaplex-4100 (prompt mp4100#, Mn 4.91) - FIRST mp4100-family unit; candidate-DB CLI (commit/discard-changes)) on 2026-07-12 by scripts/harvest_cli.py
+Captured live from marks-mp4 (Mark's Megaplex-4100 (prompt mp4100#, Mn 4.91) - FIRST mp4100-family unit; candidate-DB CLI (commit/discard-changes)) on 2026-07-16 by scripts/harvest_cli.py
 (re-run `harvest` after firmware upgrades — it diffs and updates in place).
 Every section is a CLI context: first the level `?` listing (commands +
 descriptions), then per-command argument help (`<command> ?`). Sections
@@ -724,6 +724,398 @@ cfm                   +
 
 
 mp4100>config>fault# fault-propagation
+
+auto-create tried [fault-propagation zzz-hrvst, fault-propagation hrvst, fault-propagation z], all refused.
+last device response ('fault-propagation z'): fault-propagation z
+#                                      ^
+# cli error: invalid parameter value
+ - fault-propagation port ethernet  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port ethernet  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port ethernet  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port ethernet  <port-index-trib> to port  pw  
+   <to-port-number>
+ - fault-propagation port ethernet  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port ethernet  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port ethernet  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - fault-propagation port ethernet  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - fault-propagation port ethernet  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port ethernet  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  e1  <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  t1  <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  pw  <to-port-number>
+ - fault-propagation port pcs  <port-index> to port  e1-i  <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  t1-i  <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  gfp  <to-port-index>
+ - fault-propagation port pcs  <port-index> to port  mlppp  <to-port-index>
+ - fault-propagation port pcs  <port-index> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port pcs  <port-index> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  pw  <to-port-number>
+ - fault-propagation port e1  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  gfp  <to-port-index>
+ - fault-propagation port e1  <port-index-trib> to port  mlppp  <to-port-index>
+ - fault-propagation port e1  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port e1  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  pw  <to-port-number>
+ - fault-propagation port t1  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  gfp  <to-port-index>
+ - fault-propagation port t1  <port-index-trib> to port  mlppp  <to-port-index>
+ - fault-propagation port t1  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port t1  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  e1  <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  t1  <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  pw  <to-port-number>
+ - fault-propagation port pw  <port-number> to port  e1-i  <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  t1-i  <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  gfp  <to-port-index>
+ - fault-propagation port pw  <port-number> to port  mlppp  <to-port-index>
+ - fault-propagation port pw  <port-number> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port pw  <port-number> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  pw  <to-port-number>
+ - fault-propagation port e1-i  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  gfp  <to-port-index>
+ - fault-propagation port e1-i  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - fault-propagation port e1-i  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port e1-i  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  pw  <to-port-number>
+ - fault-propagation port t1-i  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  gfp  <to-port-index>
+ - fault-propagation port t1-i  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - fault-propagation port t1-i  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port t1-i  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  e1  <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  t1  <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  pw  <to-port-number>
+ - fault-propagation port gfp  <port-index> to port  e1-i  <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  t1-i  <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  gfp  <to-port-index>
+ - fault-propagation port gfp  <port-index> to port  mlppp  <to-port-index>
+ - fault-propagation port gfp  <port-index> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port gfp  <port-index> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  e1  <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  t1  <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  pw  <to-port-number>
+ - fault-propagation port mlppp  <port-index> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  gfp  <to-port-index>
+ - fault-propagation port mlppp  <port-index> to port  mlppp  <to-port-index>
+ - fault-propagation port mlppp  <port-index> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port mlppp  <port-index> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  pw  
+   <to-port-number>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port ds1-opt  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  pw  
+   <to-port-number>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - fault-propagation port ds0-g703  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  pw  
+   <to-port-number>
+ - no fault-propagation port ethernet  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - no fault-propagation port ethernet  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port ethernet  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port ethernet  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  e1  <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  t1  <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  pw  <to-port-number>
+ - no fault-propagation port pcs  <port-index> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  gfp  <to-port-index>
+ - no fault-propagation port pcs  <port-index> to port  mlppp  <to-port-index>
+ - no fault-propagation port pcs  <port-index> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port pcs  <port-index> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  pw  <to-port-number>
+ - no fault-propagation port e1  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  gfp  <to-port-index>
+ - no fault-propagation port e1  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port e1  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port e1  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  pw  <to-port-number>
+ - no fault-propagation port t1  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  gfp  <to-port-index>
+ - no fault-propagation port t1  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port t1  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port t1  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  e1  <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  t1  <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  pw  <to-port-number>
+ - no fault-propagation port pw  <port-number> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  gfp  <to-port-index>
+ - no fault-propagation port pw  <port-number> to port  mlppp  <to-port-index>
+ - no fault-propagation port pw  <port-number> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port pw  <port-number> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  pw  
+   <to-port-number>
+ - no fault-propagation port e1-i  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - no fault-propagation port e1-i  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port e1-i  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port e1-i  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  pw  
+   <to-port-number>
+ - no fault-propagation port t1-i  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - no fault-propagation port t1-i  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port t1-i  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port t1-i  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  e1  <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  t1  <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  pw  <to-port-number>
+ - no fault-propagation port gfp  <port-index> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  gfp  <to-port-index>
+ - no fault-propagation port gfp  <port-index> to port  mlppp  <to-port-index>
+ - no fault-propagation port gfp  <port-index> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port gfp  <port-index> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  pw  <to-port-number>
+ - no fault-propagation port mlppp  <port-index> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  gfp  <to-port-index>
+ - no fault-propagation port mlppp  <port-index> to port  mlppp  <to-port-index>
+ - no fault-propagation port mlppp  <port-index> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port mlppp  <port-index> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  pw  
+   <to-port-number>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port ds1-opt  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  ethernet  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  e1  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  t1  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  pw  
+   <to-port-number>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  e1-i  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  t1-i  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  gfp  
+   <to-port-index>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  mlppp  
+   <to-port-index>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  ds1-opt  
+   <to-port-index-trib>
+ - no fault-propagation port ds0-g703  <port-index-trib> to port  ds0-g703  
+   <to-port-index-trib>
+
+ <to-port-number>     : [number]
+ <port-number>        : [number]
+
+mp4100>config>fault#
 ```
 
 ## configure fault cfm
@@ -760,9 +1152,9 @@ Level help (`?`):
 
 mp4100>config>flows# classifier-profile
 
-auto-create probe 'classifier-profile zzz-hrvst' refused.
-device response: classifier-profile zzz-hrvst
-#                                                 ^
+auto-create tried [classifier-profile zzz-hrvst, classifier-profile hrvst, classifier-profile z], all refused.
+last device response ('classifier-profile z'): classifier-profile z
+#                                         ^
 # cli error: parameter or keyword missing or wrong
  - classifier-profile <classification-name> {match-all|match-any}
  - no classifier-profile <classification-name>
@@ -1026,7 +1418,7 @@ access                + Specifies access paths and rights
 mp4100>config>mngmnt# enable-mng-ethernet-traffic
 ```
 
-### manager *(not entered — parameterized context)*
+### manager *(parameterized — inner help harvested under "configure management manager NAME")*
 ```text
 <ip-address>         : Manager IP address [0.0.0.0]
 
@@ -1184,6 +1576,21 @@ mp4100>config>mngmnt>access# telnet
 mp4100>config>mngmnt>access# tftp
 ```
 
+## configure management manager NAME
+
+Level help (`?`):
+```text
+[no] trap-sync-group       - Associate manager with trap sync group
+```
+
+### trap-sync-group
+```text
+<group-id>           : Trap sync group [number]
+
+
+mp4100>config>mngmnt>manager(127.0.0.1)# trap-sync-group
+```
+
 ## configure management radius
 
 Level help (`?`):
@@ -1317,7 +1724,8 @@ mp4100>config>mngmnt>snmp# access-group
 
 ### community
 ```text
-read
+<CR>
+ read
  write
  trap
 
@@ -1420,7 +1828,7 @@ Level help (`?`):
 mp4100>config>mngmnt>tacacsplus# group
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure management tacacsplus server NAME")*
 ```text
 <ip>                 : TACACS+ server IP address [0.0.0.0]
 
@@ -1440,12 +1848,100 @@ mp4100>config>mngmnt>tacacsplus>group(zzz-hrvst)$
 
 ### accounting
 ```text
-<shell>              : Shell accounting
+<CR>
+ <shell>              : Shell accounting
  <system>             : System accounting
  <commands>           : Commands accounting
 
 
 mp4100>config>mngmnt>tacacsplus>group(zzz-hrvst)$ accounting
+```
+
+## configure management tacacsplus server NAME
+
+Level help (`?`):
+```text
+accounting-port       - TACACS+ accounting TCP  port 
+      authentication-port   - TACACS+ authentication TCP  port 
+      clear-statistics      - Clear TACACS+ statistics
+ [no] group                 - Bind TACACS+ server to group
+      key                   - TACACS+ server shared secret
+      retry                 - Number of TACACS+ authentication retries
+ [no] shutdown              - Disable TACACS+ server 
+      timeout               - TACACS+ server timeout
+
+ show statistics            - Show TACACS+ statistics
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$
+```
+
+### accounting-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ accounting-port
+```
+
+### authentication-port
+```text
+<port-number>        : TCP port [1..65535, default 49]
+
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ authentication-port
+```
+
+### clear-statistics
+```text
+<CR>
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ clear-statistics
+```
+
+### group
+```text
+<group-name>         : TACACS+ server group name [1..32 chars]
+
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ group
+```
+
+### key
+```text
+<string>             : TACACS+ server shared secret [1..80 chars]
+
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ key
+```
+
+### retry
+```text
+<number-of-retries>  : Number of retries [1..1, default 1]
+
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ retry
+```
+
+### show statistics
+```text
+<CR>
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ show statistics
+```
+
+### shutdown
+```text
+<CR>
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ shutdown
+```
+
+### timeout
+```text
+<seconds>            : TACACS+ server timeout in seconds [1..10, default 5]
+
+
+mp4100>config>mngmnt>tacacsplus>server(127.0.0.1)$ timeout
 ```
 
 ## configure oam
@@ -1462,6 +1958,18 @@ cfm                   + OAM CFM configurarion
 
 
 mp4100>config>oam# efm-descriptor
+
+auto-create tried [efm-descriptor zzz-hrvst, efm-descriptor hrvst, efm-descriptor z], all refused.
+last device response ('efm-descriptor z'): efm-descriptor z
+#                                 ^
+# cli error: invalid parameter value
+ - efm-descriptor <number> [{active|passive}]
+ - no efm-descriptor <number>
+ <number>             : EFM descriptor ID [1..2]
+ <active>             : Active mode
+ <passive>            : Passive mode
+
+mp4100>config>oam#
 ```
 
 ## configure oam cfm
@@ -1486,7 +1994,7 @@ ethertype             - Standard EtherType in an OAM message
 mp4100>config>oam>cfm# ethertype
 ```
 
-### maintenance-domain *(not entered — parameterized context)*
+### maintenance-domain *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME")*
 ```text
 <mdid>               : Index of the maintenance domain [number]
 
@@ -1531,6 +2039,88 @@ mp4100>config>oam>cfm# show mips
 <CR>
 
 mp4100>config>oam>cfm# show summary
+```
+
+## configure oam cfm maintenance-domain NAME
+
+Level help (`?`):
+```text
+[no] maintenance-associat* + Creates/deletes a maintenance association
+      md-level              - OAM maintenance domain level
+ [no] name                  - Type of the maintenance domain name
+ [no] proprietary-cc        - CC protocol type
+
+
+mp4100>config>oam>cfm>md(1)$
+```
+
+### md-level
+```text
+<md-level>           : OAM maintenance domain level [0..7]
+
+
+mp4100>config>oam>cfm>md(1)# md-level
+```
+
+### name
+```text
+<string>             : Alphanumeric string format
+ <dns>                : DNS format
+ <mac-and-uint>       : MAC and UINT format
+
+
+mp4100>config>oam>cfm>md(1)# name
+```
+
+### proprietary-cc
+```text
+<CR>
+
+mp4100>config>oam>cfm>md(1)# proprietary-cc
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association
+
+Level help (`?`):
+```text
+[no] maintenance-associat* + Creates/deletes a maintenance association
+      md-level              - OAM maintenance domain level
+ [no] name                  - Type of the maintenance domain name
+ [no] proprietary-cc        - CC protocol type
+```
+
+### ccm-interval
+```text
+# cli error: Invalid Command
+mp4100>config>oam>cfm>md(1)# ccm-interval
+```
+
+### classification
+```text
+# cli error: Invalid Command
+mp4100>config>oam>cfm>md(1)# classification
+```
+
+### mep *(not entered — parameterized context)*
+```text
+# cli error: Invalid Command
+mp4100>config>oam>cfm>md(1)# mep
+```
+
+### mip-policy
+```text
+# cli error: Invalid Command
+mp4100>config>oam>cfm>md(1)# mip-policy
+```
+
+### name
+```text
+<string>             : Alphanumeric string format
+ <dns>                : DNS format
+ <mac-and-uint>       : MAC and UINT format
+
+
+mp4100>config>oam>cfm>md(1)# name
 ```
 
 ## configure port
@@ -1655,6 +2245,16 @@ mp4100>config>port# cmd-out-i
 
 
 mp4100>config>port# ds0-bundle
+
+auto-create tried [ds0-bundle zzz-hrvst, ds0-bundle hrvst, ds0-bundle z], all refused.
+last device response ('ds0-bundle z'): ds0-bundle z
+#                              ^
+# cli error: invalid parameter value
+ - ds0-bundle <port-index>
+ - no ds0-bundle <port-index>
+ <port-index>         : DS0 Bundle port index [slot/port]
+
+mp4100>config>port#
 ```
 
 ### ds0-g703 *(not entered — parameterized context)*
@@ -1665,7 +2265,7 @@ mp4100>config>port# ds0-bundle
 mp4100>config>port# ds0-g703
 ```
 
-### ds1 *(not entered — parameterized context)*
+### ds1 *(parameterized — inner help harvested under "configure port ds1 NAME")*
 ```text
 <port-index>         : Port number [slot/port]
 
@@ -1711,6 +2311,16 @@ mp4100>config>port# ethernet
 
 
 mp4100>config>port# gfp
+
+auto-create tried [gfp zzz-hrvst, gfp hrvst, gfp z], all refused.
+last device response ('gfp z'): gfp z
+#                       ^
+# cli error: invalid parameter value
+ - gfp <port-index>
+ - no gfp <port-index>
+ <port-index>         : GFP port index [slot/port]
+
+mp4100>config>port#
 ```
 
 ### hdlc *(not entered — parameterized context)*
@@ -1719,6 +2329,16 @@ mp4100>config>port# gfp
 
 
 mp4100>config>port# hdlc
+
+auto-create tried [hdlc zzz-hrvst, hdlc hrvst, hdlc z], all refused.
+last device response ('hdlc z'): hdlc z
+#                        ^
+# cli error: invalid parameter value
+ - hdlc <port-index>
+ - no hdlc <port-index>
+ <port-index>         : HDLC port index [slot/port]
+
+mp4100>config>port#
 ```
 
 ### int-ethernet *(not entered — parameterized context)*
@@ -1751,6 +2371,16 @@ mp4100>config>port# lag
 
 
 mp4100>config>port# logical-mac
+
+auto-create tried [logical-mac zzz-hrvst, logical-mac hrvst, logical-mac z], all refused.
+last device response ('logical-mac z'): logical-mac z
+#                               ^
+# cli error: invalid parameter value
+ - logical-mac <port-index>
+ - no logical-mac <port-index>
+ <port-index>         : Logical MAC port index [slot/port]
+
+mp4100>config>port#
 ```
 
 ### lre *(not entered — parameterized context)*
@@ -1759,6 +2389,16 @@ mp4100>config>port# logical-mac
 
 
 mp4100>config>port# lre
+
+auto-create tried [lre zzz-hrvst, lre hrvst, lre z], all refused.
+last device response ('lre z'): lre z
+#                       ^
+# cli error: invalid parameter value
+ - lre <port-number>
+ - no lre <port-number>
+ <port-number>        : LRE port number [number]
+
+mp4100>config>port#
 ```
 
 ### mlppp *(not entered — parameterized context)*
@@ -1767,6 +2407,16 @@ mp4100>config>port# lre
 
 
 mp4100>config>port# mlppp
+
+auto-create tried [mlppp zzz-hrvst, mlppp hrvst, mlppp z], all refused.
+last device response ('mlppp z'): mlppp z
+#                         ^
+# cli error: invalid parameter value
+ - mlppp <port-index>
+ - no mlppp <port-index>
+ <port-index>         : MLPPP port index [slot/port]
+
+mp4100>config>port#
 ```
 
 ### mng-ethernet *(parameterized — inner help harvested under "configure port mng-ethernet NAME")*
@@ -1792,6 +2442,17 @@ mp4100>config>port# mux-eth-tdm
 
 
 mp4100>config>port# pcs
+
+auto-create tried [pcs zzz-hrvst, pcs hrvst, pcs z], all refused.
+last device response ('pcs z'): pcs z
+#                       ^
+# cli error: invalid parameter value
+ - pcs <port-index>
+ - no pcs <port-index>
+ <port-index>         : Physical coding sublayer port number 
+                        [slot/port[/tributary]]
+
+mp4100>config>port#
 ```
 
 ### ppp *(not entered — parameterized context)*
@@ -1800,6 +2461,16 @@ mp4100>config>port# pcs
 
 
 mp4100>config>port# ppp
+
+auto-create tried [ppp zzz-hrvst, ppp hrvst, ppp z], all refused.
+last device response ('ppp z'): ppp z
+#                       ^
+# cli error: invalid parameter value
+ - ppp <port-index>
+ - no ppp <port-index>
+ <port-index>         : PPP Port index [slot/port]
+
+mp4100>config>port#
 ```
 
 ### sdh-sonet *(parameterized — inner help harvested under "configure port sdh-sonet NAME")*
@@ -1810,7 +2481,7 @@ mp4100>config>port# ppp
 mp4100>config>port# sdh-sonet
 ```
 
-### serial *(not entered — parameterized context)*
+### serial *(parameterized — inner help harvested under "configure port serial NAME")*
 ```text
 <port-number>        : Port number [slot/port]
 
@@ -1897,7 +2568,7 @@ mp4100>config>port# t1-i
 mp4100>config>port# t3
 ```
 
-### tdm-bridge *(not entered — parameterized context)*
+### tdm-bridge *(parameterized — inner help harvested under "configure port tdm-bridge NAME")*
 ```text
 <port-number>        : logical Port number [slot/port]
 
@@ -1919,9 +2590,19 @@ mp4100>config>port# vc-profile
 
 
 mp4100>config>port# vcg
+
+auto-create tried [vcg zzz-hrvst, vcg hrvst, vcg z], all refused.
+last device response ('vcg z'): vcg z
+#                       ^
+# cli error: invalid parameter value
+ - vcg <port-index>
+ - no vcg <port-index>
+ <port-index>         : VCG port index [slot/port]
+
+mp4100>config>port#
 ```
 
-### voice *(not entered — parameterized context)*
+### voice *(parameterized — inner help harvested under "configure port voice NAME")*
 ```text
 <port-number>        : Port number [slot/port[/tributary]]
 
@@ -2035,6 +2716,53 @@ mp4100>config>port>analog-signaling-pro(sig_over_a_bit)# d-bit-rx
 
 
 mp4100>config>port>analog-signaling-pro(sig_over_a_bit)# d-bit-tx
+```
+
+## configure port ds1 NAME
+
+Level help (`?`):
+```text
+frame-type            - Configure framing type
+ [no] name                  - Configure port name
+ [no] shutdown              - Disable port
+ [no] signaling             - Enable signaling
+
+ show status                - Display port status
+```
+
+### line-type
+```text
+# cli error: Invalid Command
+mp4100>config>port>ds1(1/1)# line-type
+```
+
+### name
+```text
+<string>             : Port name [1..64 chars]
+
+
+mp4100>config>port>ds1(1/1)# name
+```
+
+### show status
+```text
+<CR>
+
+mp4100>config>port>ds1(1/1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+mp4100>config>port>ds1(1/1)# shutdown
+```
+
+### signaling
+```text
+<CR>
+
+mp4100>config>port>ds1(1/1)# signaling
 ```
 
 ## configure port ethernet NAME
@@ -2727,6 +3455,226 @@ mp4100>config>port>sdh-sonet(cl-a/1)>oc3(1)>sts1(1)# vc
 mp4100>config>port>sdh-sonet(cl-a/1)>oc3(1)>sts1(1)# vt1-5
 ```
 
+## configure port serial NAME
+
+Level help (`?`):
+```text
+clear-statistics      - Clear the Serial port statistics
+ [no] cts-rts               - Selects the state of the local CTS line for VS 
+                              cards
+      encapsulation-mode    - Define the data encapsulation mode of VS cards
+ [no] end-to-end-control    - Define the end-to-end transmission of the local 
+                              DTR and RTS lines for VS cards
+      interface             - Define serial interface type for VS cards
+ [no] loopback              - Enables/disables loopback mode for the port
+ [no] name                  - Port name
+      rate                  - Define the channel data rate for VS cards (no 
+                              encapsulation)
+ [no] shutdown              - Administratively disables/enables the port
+
+ show statistics            - Displays the Serial port statistics
+ show status                - Displays the Serial port status
+```
+
+### activation-type
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# activation-type
+```
+
+### clear-statistics
+```text
+<CR>
+
+mp4100>config>port>serial(1/1)# clear-statistics
+```
+
+### clock-mode
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# clock-mode
+```
+
+### conference
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# conference
+```
+
+### cts-rts
+```text
+<CR>
+
+mp4100>config>port>serial(1/1)# cts-rts
+```
+
+### data-bits
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# data-bits
+```
+
+### data-position
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# data-position
+```
+
+### encapsulation-mode
+```text
+<v110>               : 
+ <3-bit-transitional> : 
+ <none>               : 
+
+
+mp4100>config>port>serial(1/1)# encapsulation-mode
+```
+
+### end-to-end-control
+```text
+<CR>
+ <rts>                : 
+ <inverse-rts>        : 
+
+
+mp4100>config>port>serial(1/1)# end-to-end-control
+```
+
+### fifo-size
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# fifo-size
+```
+
+### interface
+```text
+<v35>                : 
+ <rs-422>             : 
+ <rs-232>             : 
+
+
+mp4100>config>port>serial(1/1)# interface
+```
+
+### llb
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# llb
+```
+
+### loopback
+```text
+<local>              : 
+ <remote>             : 
+ <remote-on-remote>   : 
+
+
+mp4100>config>port>serial(1/1)# loopback
+```
+
+### mode
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# mode
+```
+
+### name
+```text
+<string>             : [1..64 chars]
+
+
+mp4100>config>port>serial(1/1)# name
+```
+
+### parity
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# parity
+```
+
+### rate
+```text
+<1>                  : 
+ <2>                  : 
+ <3>                  : 
+ <4>                  : 
+ <5>                  : 
+ <6>                  : 
+ <7>                  : 
+ <8>                  : 
+ <9>                  : 
+ <10>                 : 
+ <11>                 : 
+ <12>                 : 
+ <13>                 : 
+ <14>                 : 
+ <15>                 : 
+ <16>                 : 
+ <17>                 : 
+ <18>                 : 
+ <19>                 : 
+ <20>                 : 
+ <21>                 : 
+ <22>                 : 
+ <23>                 : 
+ <24>                 : 
+ <25>                 : 
+ <26>                 : 
+ <27>                 : 
+ <28>                 : 
+ <29>                 : 
+ <30>                 : 
+ <31>                 : 
+
+
+mp4100>config>port>serial(1/1)# rate
+```
+
+### rate-adaptive
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# rate-adaptive
+```
+
+### rlb
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# rlb
+```
+
+### show statistics
+```text
+<CR>
+
+mp4100>config>port>serial(1/1)# show statistics
+```
+
+### show status
+```text
+<CR>
+
+mp4100>config>port>serial(1/1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+mp4100>config>port>serial(1/1)# shutdown
+```
+
+### signaling
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# signaling
+```
+
+### stop-bits
+```text
+# cli error: Invalid Command
+mp4100>config>port>serial(1/1)# stop-bits
+```
+
 ## configure port signaling-profile NAME
 
 Level help (`?`):
@@ -2905,6 +3853,47 @@ mp4100>config>port>t1-i(cl-a/1)# show status
 mp4100>config>port>t1-i(cl-a/1)# shutdown
 ```
 
+## configure port tdm-bridge NAME
+
+Level help (`?`):
+```text
+[no] bind                  - Bind port to lower layer port
+ [no] name                  - Assigns/removes a port name
+ [no] shutdown              - Administratively disables/enables the port
+
+ show status                - Displays port status
+```
+
+### bind
+```text
+<serial>             : 
+
+
+mp4100>config>port>tdm-bridge(1/1)# bind
+```
+
+### name
+```text
+<string>             : [1..64 chars]
+
+
+mp4100>config>port>tdm-bridge(1/1)# name
+```
+
+### show status
+```text
+<CR>
+
+mp4100>config>port>tdm-bridge(1/1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+mp4100>config>port>tdm-bridge(1/1)# shutdown
+```
+
 ## configure port vc-profile NAME
 
 Level help (`?`):
@@ -2988,6 +3977,145 @@ mp4100>config>port>vc-profile(tug-structure)# rate-threshold
 mp4100>config>port>vc-profile(tug-structure)# tim-response
 ```
 
+## configure port voice NAME
+
+Level help (`?`):
+```text
+analog-signaling      - Define the signaling method used for all channels
+      analog-signaling-pro* - Specifies analog signaling profile name used by 
+                              the VS port 
+      cadence               - Defines cadence of the ring is generated locally 
+                              or translated directly from the received signaling
+                               
+      coding                - Define the companding law to be used by the voice 
+                              channels
+      forward-disconnect    - Defines the time that battery is removed due to  
+                              far end disconnect  signal
+      impedance             - Specifies the line impedance
+ [no] loopback              - Enables/disables loopback mode for the port
+ [no] name                  - Port name
+      ring-voltage          - This object indicates Ring Voltage of the FXS 
+                              voice port
+      rx-sensitivity        - Define the nominal output level of the receive 
+                              path
+ [no] shutdown              - This command administratively disables a port. The
+                               no form of this command administratively enables
+ [no] signaling             - Define the end-to-end signaling transfer method
+      tx-gain               - Define the nominal input level of the transmit 
+                              path
+
+ show status                - Displays the port's status
+```
+
+### activity-detection
+```text
+# cli error: Invalid Command
+mp4100>config>port>voice(1/1)# activity-detection
+```
+
+### analog-signaling-profile
+```text
+<name>               : [1..32 chars]
+
+
+mp4100>config>port>voice(1/1)# analog-signaling-profile
+```
+
+### coding
+```text
+<a-law>              : 
+ <u-law>              : 
+
+
+mp4100>config>port>voice(1/1)# coding
+```
+
+### loop-disconnect-time
+```text
+# cli error: Invalid Command
+mp4100>config>port>voice(1/1)# loop-disconnect-time
+```
+
+### loopback
+```text
+<local>              : 
+ <remote>             : 
+
+
+mp4100>config>port>voice(1/1)# loopback
+```
+
+### name
+```text
+<string>             : [1..64 chars]
+
+
+mp4100>config>port>voice(1/1)# name
+```
+
+### omni-signaling
+```text
+# cli error: Invalid Command
+mp4100>config>port>voice(1/1)# omni-signaling
+```
+
+### operation-mode
+```text
+# cli error: Invalid Command
+mp4100>config>port>voice(1/1)# operation-mode
+```
+
+### ring-voltage
+```text
+<normal>             : 
+ <high>               : 
+
+
+mp4100>config>port>voice(1/1)# ring-voltage
+```
+
+### rx-sensitivity
+```text
+<dbm>                : Nominal output level of the receive path [string] 
+                        [-17..1]
+
+
+mp4100>config>port>voice(1/1)# rx-sensitivity
+```
+
+### show status
+```text
+<CR>
+
+mp4100>config>port>voice(1/1)# show status
+```
+
+### shutdown
+```text
+<CR>
+
+mp4100>config>port>voice(1/1)# shutdown
+```
+
+### signaling
+```text
+<rbmf>               : 
+ <cas>                : 
+ <rbf>                : 
+
+
+mp4100>config>port>voice(1/1)# signaling
+```
+
+### tx-gain
+```text
+<dbm>                : Nominal input level of the transmit path [string] 
+                        [-5..5]
+
+
+mp4100>config>port>voice(1/1)# tx-gain
+```
+
 ## configure protection
 
 Level help (`?`):
@@ -3004,7 +4132,6 @@ Level help (`?`):
  [no] vc-path               + Input/Output card protection group configuration
 
  show summary-ds0-group
- show summary-tdm-group     - Display the tdm protection group status
  show summary-vc-path       - Display status of Input/Output card protection 
                                group.
 ```
@@ -3016,7 +4143,7 @@ Level help (`?`):
 mp4100>config>protection# accelerated-eth-hw-switchover
 ```
 
-### aps *(not entered — parameterized context)*
+### aps *(parameterized — inner help harvested under "configure protection aps NAME")*
 ```text
 <group-name>         : Assigns a name to the newly created APS group [1..32 
                         chars]
@@ -3032,6 +4159,17 @@ mp4100>config>protection# aps
 
 
 mp4100>config>protection# ds0-group
+
+auto-create tried [ds0-group zzz-hrvst, ds0-group hrvst, ds0-group z], all refused.
+last device response ('ds0-group z'): ds0-group z
+#                                   ^
+# cli error: invalid parameter value
+ - ds0-group <group-id>
+ - no ds0-group <group-id>
+ <group-id>           : Unique number that should identify the protection group.
+                         [1..140]
+
+mp4100>config>protection#
 ```
 
 ### erp *(not entered — parameterized context)*
@@ -3040,6 +4178,16 @@ mp4100>config>protection# ds0-group
 
 
 mp4100>config>protection# erp
+
+auto-create tried [erp zzz-hrvst, erp hrvst, erp z], all refused.
+last device response ('erp z'): erp z
+#                             ^
+# cli error: invalid parameter value
+ - erp <ring-number> [{major|sub}]
+ - no erp <ring-number>
+ <ring-number>        : [number] [1..5]
+
+mp4100>config>protection#
 ```
 
 ### ethernet-group *(not entered — parameterized context)*
@@ -3048,6 +4196,16 @@ mp4100>config>protection# erp
 
 
 mp4100>config>protection# ethernet-group
+
+auto-create tried [ethernet-group zzz-hrvst, ethernet-group hrvst, ethernet-group z], all refused.
+last device response ('ethernet-group z'): ethernet-group z
+#                                        ^
+# cli error: invalid parameter value
+ - ethernet-group <group-id>
+ - no ethernet-group <group-id>
+ <group-id>           : Assigns a number for ethernet group [number] [1..32]
+
+mp4100>config>protection#
 ```
 
 ### io-group *(not entered — parameterized context)*
@@ -3057,6 +4215,17 @@ mp4100>config>protection# ethernet-group
 
 
 mp4100>config>protection# io-group
+
+auto-create tried [io-group zzz-hrvst, io-group hrvst, io-group z], all refused.
+last device response ('io-group z'): io-group z
+#                                  ^
+# cli error: invalid parameter value
+ - io-group <group-id>
+ - no io-group <group-id>
+ <group-id>           : Unique number that should identify the protection group.
+                         [number]
+
+mp4100>config>protection#
 ```
 
 ### pw *(parameterized — inner help harvested under "configure protection pw NAME")*
@@ -3095,6 +4264,16 @@ mp4100>config>protection# show summary-vc-path
 
 
 mp4100>config>protection# tdm-group
+
+auto-create tried [tdm-group zzz-hrvst, tdm-group hrvst, tdm-group z], all refused.
+last device response ('tdm-group z'): tdm-group z
+#                                   ^
+# cli error: invalid parameter value
+ - tdm-group <group-id>
+ - no tdm-group <group-id>
+ <group-id>           : [1..144]
+
+mp4100>config>protection#
 ```
 
 ### tdm-ring *(not entered — parameterized context)*
@@ -3103,6 +4282,16 @@ mp4100>config>protection# tdm-group
 
 
 mp4100>config>protection# tdm-ring
+
+auto-create tried [tdm-ring zzz-hrvst, tdm-ring hrvst, tdm-ring z], all refused.
+last device response ('tdm-ring z'): tdm-ring z
+#                                  ^
+# cli error: invalid parameter value
+ - tdm-ring <ring-id>
+ - no tdm-ring <ring-id>
+ <ring-id>            : [1..16]
+
+mp4100>config>protection#
 ```
 
 ### vc-path *(not entered — parameterized context)*
@@ -3112,6 +4301,141 @@ mp4100>config>protection# tdm-ring
 
 
 mp4100>config>protection# vc-path
+
+auto-create tried [vc-path zzz-hrvst, vc-path hrvst, vc-path z], all refused.
+last device response ('vc-path z'): vc-path z
+#                                 ^
+# cli error: invalid parameter value
+ - vc-path <group-id>
+ - no vc-path <group-id>
+ <group-id>           : Unique number that should identify the protection group.
+                         [1..255]
+
+mp4100>config>protection#
+```
+
+## configure protection aps NAME
+
+Level help (`?`):
+```text
+[no] bind                  - Adds/removes working and protection ports to/from 
+                              the APS for Compatible mode
+ [no] flip-upon-sd          - Enables/disables the flip of the two ports upon 
+                              signal degradation
+      oper-mode             - Specifies the APS operation mode
+ [no] revertive             - Enables/disables reverting working port and 
+                              protection port
+ [no] shutdown              - Switches the APS to standby or re-activates the 
+                              APS
+      wait-to-restore       - Specifies the time to elapse after the link 
+                              recovers and before traffic switches back 
+
+ show status                - Displays the APS status
+
+mp4100>config>protection>aps(zzz-hrvst)$
+```
+
+### bind
+```text
+<protection>         : Defines the port as protection port
+ <working>            : Defines the port as working port
+
+
+mp4100>config>protection>aps(zzz-hrvst)$ bind
+```
+
+### clear
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ clear
+```
+
+### flip-upon-sd
+```text
+<CR>
+
+mp4100>config>protection>aps(zzz-hrvst)$ flip-upon-sd
+```
+
+### force-switch
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ force-switch
+```
+
+### force-switch-to-protection
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ force-switch-to-protection
+```
+
+### force-switch-to-working
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ force-switch-to-working
+```
+
+### lockout
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ lockout
+```
+
+### lockout-of-protection
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ lockout-of-protection
+```
+
+### manual-switch-to-protection
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ manual-switch-to-protection
+```
+
+### manual-switch-to-working
+```text
+# cli error: Invalid Command
+mp4100>config>protection>aps(zzz-hrvst)$ manual-switch-to-working
+```
+
+### oper-mode
+```text
+<uni-directional>    : Selects uni-directional 1+1 (uni-directional)
+ <optimized-1-plus-1> : Selects optimized 1+1 (bidirectional)
+ <compatible-1-plu*>  : Selects compatible 1+1 (bidirectional)
+
+
+mp4100>config>protection>aps(zzz-hrvst)$ oper-mode
+```
+
+### revertive
+```text
+<CR>
+
+mp4100>config>protection>aps(zzz-hrvst)$ revertive
+```
+
+### show status
+```text
+<CR>
+
+mp4100>config>protection>aps(zzz-hrvst)$ show status
+```
+
+### shutdown
+```text
+<CR>
+
+mp4100>config>protection>aps(zzz-hrvst)$ shutdown
+```
+
+### wait-to-restore
+```text
+<seconds>            : Enters wait-to-restore time in seconds [1..720]
+
+
+mp4100>config>protection>aps(zzz-hrvst)$ wait-to-restore
 ```
 
 ## configure protection pw NAME
@@ -5500,6 +6824,16 @@ mp4100>config>system>date-and-time>sntp# poll-interval
 
 
 mp4100>config>system>date-and-time>sntp# server
+
+auto-create tried [server zzz-hrvst, server hrvst, server z], all refused.
+last device response ('server z'): server z
+#                                               ^
+# cli error: invalid parameter value
+ - server <server-id>
+ - no server <server-id>
+ <server-id>          : SNTP server address [1..10]
+
+mp4100>config>system>date-and-time>sntp#
 ```
 
 ### show status

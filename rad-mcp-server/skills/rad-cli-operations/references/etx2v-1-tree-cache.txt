@@ -1,15 +1,3 @@
-# secflow command tree (family: secflow)
-
-Captured live from sf-163-187 (SecFlow-1p lab unit (re-registered via rad-device-mng skill test)) via the root `tree` command on 2026-07-16
-by scripts/harvest_cli.py — re-run `harvest` after firmware upgrades; the
-tree is re-captured fresh each run. Use it to locate which context holds a
-feature, then cli-reference-secflow.md / the cli_help tool for exact,
-firmware-current argument syntax.
-
-Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
-`-` = command/leaf, `[no]` prefix = removable with `no <leaf>`.
-
-```
 |
 +---admin
 |   |
@@ -18,6 +6,14 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   +---factory-default
 |   |
 |   +---force-reboot
+|   |
+|   +---license
+|   |   |
+|   |   +---license-enable
+|   |   |
+|   |   +---show summary
+|   |   |
+|   |   +---show vcpe-os-id
 |   |
 |   +---login
 |   |
@@ -39,13 +35,9 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---install
 |   |   |
-|   |   +---software-confirm-required
-|   |   |
 |   |   +---undo-install
 |   |   |
 |   |   +---show status
-|   |
-|   +---startup-confirm-required
 |   |
 |   +---user-default
 |   |
@@ -65,36 +57,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---remark
 |   |   |
-|   |   +---firewall
-|   |   |   |
-|   |   |   +---blacklist
-|   |   |   |
-|   |   |   +---blacklist-clear
-|   |   |   |
-|   |   |   +---interzone
-|   |   |   |   |
-|   |   |   |   +---access-group
-|   |   |   |   |
-|   |   |   |   +---clear-access-list-statistics
-|   |   |   |   |
-|   |   |   |   +---packet-filter
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---show access-list-statistics
-|   |   |   |   |
-|   |   |   |   +---show access-list-summary
-|   |   |   |
-|   |   |   +---ip-sweep-defend
-|   |   |   |
-|   |   |   +---zone
-|   |   |   |   |
-|   |   |   |   +---member
-|   |   |   |
-|   |   |   +---show blacklist-summary
-|   |   |
-|   |   +---logging
-|   |   |
 |   |   +---resequence
 |   |
 |   +---bridge
@@ -113,6 +75,8 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---bind
 |   |   |   |
+|   |   |   +---ingress-filtering
+|   |   |   |
 |   |   |   +---name
 |   |   |   |
 |   |   |   +---pvid
@@ -128,6 +92,8 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   +---untagged-port
 |   |   |
 |   |   +---vlan-aware
+|   |   |
+|   |   +---show mac-address-table
 |   |   |
 |   |   +---show mac-address-table
 |   |   |
@@ -171,8 +137,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---pfs-group
 |   |   |   |
-|   |   |   +---responder-only
-|   |   |   |
 |   |   |   +---sa-lifetime
 |   |   |   |
 |   |   |   +---sequence-number
@@ -197,13 +161,13 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---key
 |   |   |   |
-|   |   |   +---delete
+|   |   |   +---delete-rsa
 |   |   |   |
-|   |   |   +---generate
+|   |   |   +---generate-rsa
 |   |   |   |
-|   |   |   +---import
+|   |   |   +---import-rsa
 |   |   |   |
-|   |   |   +---show public-key
+|   |   |   +---show public-key-rsa
 |   |   |
 |   |   +---pki
 |   |   |   |
@@ -212,36 +176,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   +---delete-certificate
 |   |   |   |
 |   |   |   +---delete-crl
-|   |   |   |
-|   |   |   +---enroll-attributes
-|   |   |   |   |
-|   |   |   |   +---ca-url
-|   |   |   |   |
-|   |   |   |   +---challenge-password
-|   |   |   |   |
-|   |   |   |   +---common-name
-|   |   |   |   |
-|   |   |   |   +---country
-|   |   |   |   |
-|   |   |   |   +---locality
-|   |   |   |   |
-|   |   |   |   +---organization
-|   |   |   |   |
-|   |   |   |   +---organizational-unit
-|   |   |   |   |
-|   |   |   |   +---san-dns-name
-|   |   |   |   |
-|   |   |   |   +---san-email
-|   |   |   |   |
-|   |   |   |   +---san-ip-address
-|   |   |   |   |
-|   |   |   |   +---san-uri
-|   |   |   |   |
-|   |   |   |   +---serial-number
-|   |   |   |   |
-|   |   |   |   +---state
-|   |   |   |
-|   |   |   +---enroll-from-configuration
 |   |   |   |
 |   |   |   +---enroll
 |   |   |   |
@@ -262,10 +196,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   +---fault
 |   |   |
 |   |   +---fault-propagation
-|   |   |
-|   |   +---group
-|   |   |   |
-|   |   |   +---member
 |   |
 |   +---management
 |   |   |
@@ -275,31 +205,17 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---auth-policy
 |   |   |   |
+|   |   |   +---auth-policy-virtualization
+|   |   |   |
 |   |   |   +---ban-default-login-password
 |   |   |   |
 |   |   |   +---clear-statistics
 |   |   |   |
-|   |   |   +---command-authorization
-|   |   |   |
-|   |   |   +---enrollment-notification-nms
-|   |   |   |   |
-|   |   |   |   +---nms-username
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---snmp-profile
-|   |   |   |   |
-|   |   |   |   +---ssh-username
-|   |   |   |
 |   |   |   +---ftps
-|   |   |   |
-|   |   |   +---known-host
 |   |   |   |
 |   |   |   +---login-password-black-list
 |   |   |   |
 |   |   |   +---login-password-properties
-|   |   |   |
-|   |   |   +---opcua-authentification-policy
 |   |   |   |
 |   |   |   +---rest-get
 |   |   |   |
@@ -307,23 +223,11 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---sftp
 |   |   |   |
-|   |   |   +---sms
-|   |   |   |   |
-|   |   |   |   +---authentication
-|   |   |   |   |
-|   |   |   |   +---caller-id
-|   |   |   |
 |   |   |   +---snmp
 |   |   |   |
 |   |   |   +---ssh-encryption
 |   |   |   |
-|   |   |   +---ssh-key-exchange
-|   |   |   |
-|   |   |   +---ssh-mac
-|   |   |   |
 |   |   |   +---ssh
-|   |   |   |
-|   |   |   +---ssh-server-host-key
 |   |   |   |
 |   |   |   +---telnet
 |   |   |   |
@@ -341,21 +245,29 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---show access-list
 |   |   |   |
-|   |   |   +---show enrollment-status
-|   |   |   |
 |   |   |   +---show statistics
 |   |   |   |
 |   |   |   +---show status
 |   |   |
 |   |   +---dscp
 |   |   |
+|   |   +---ldap
+|   |   |   |
+|   |   |   +---base-dn
+|   |   |   |
+|   |   |   +---search-dn
+|   |   |   |
+|   |   |   +---search-user
+|   |   |   |
+|   |   |   +---server
+|   |   |   |   |
+|   |   |   |   +---ip-address
+|   |   |
 |   |   +---login-user
 |   |   |   |
 |   |   |   +---authentication-method
 |   |   |   |
 |   |   |   +---level
-|   |   |   |
-|   |   |   +---otp-authentication
 |   |   |   |
 |   |   |   +---password
 |   |   |   |
@@ -533,47 +445,91 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---show users
 |   |
-|   +---monitor
-|   |   |
-|   |   +---mirroring-session
-|   |   |   |
-|   |   |   +---destination
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---source
-|   |
 |   +---oam
 |   |   |
-|   |   +---ip-monitoring
+|   |   +---twamp
 |   |   |   |
-|   |   |   +---fail-criteria
+|   |   |   +---controller
+|   |   |   |   |
+|   |   |   |   +---bind
+|   |   |   |   |
+|   |   |   |   +---local-ip-address
+|   |   |   |   |
+|   |   |   |   +---peer
+|   |   |   |   |   |
+|   |   |   |   |   +---activate
+|   |   |   |   |   |
+|   |   |   |   |   +---calculation-mode
+|   |   |   |   |   |
+|   |   |   |   |   +---compatibility-mode
+|   |   |   |   |   |
+|   |   |   |   |   +---responder-seq-num
+|   |   |   |   |   |
+|   |   |   |   |   +---test-session
+|   |   |   |   |   |
+|   |   |   |   |   +---show report
+|   |   |   |   |   |
+|   |   |   |   |   +---show status
+|   |   |   |   |   |
+|   |   |   |   |   +---show summary-report
+|   |   |   |   |
+|   |   |   |   +---router-entity
+|   |   |   |   |
+|   |   |   |   +---shutdown
+|   |   |   |   |
+|   |   |   |   +---vlan-tag
+|   |   |   |   |
+|   |   |   |   +---show status
 |   |   |   |
-|   |   |   +---icmp-timeout
+|   |   |   +---profile
+|   |   |   |   |
+|   |   |   |   +---delay-threshold
+|   |   |   |   |
+|   |   |   |   +---delay-variation-event-type
+|   |   |   |   |
+|   |   |   |   +---delay-variation-threshold
+|   |   |   |   |
+|   |   |   |   +---loss-ratio-threshold
+|   |   |   |   |
+|   |   |   |   +---loss-timeout
+|   |   |   |   |
+|   |   |   |   +---payload-length
+|   |   |   |   |
+|   |   |   |   +---transmit-rate
 |   |   |   |
-|   |   |   +---target
-|   |   |   |
-|   |   |   +---transmit-interval
-|   |   |   |
-|   |   |   +---window-size
-|   |   |   |
-|   |   |   +---show status
+|   |   |   +---responder
+|   |   |   |   |
+|   |   |   |   +---bind
+|   |   |   |   |
+|   |   |   |   +---fragment-mark
+|   |   |   |   |
+|   |   |   |   +---local-ip-address
+|   |   |   |   |
+|   |   |   |   +---reflector-timeout
+|   |   |   |   |
+|   |   |   |   +---router-entity
+|   |   |   |   |
+|   |   |   |   +---server-timeout
+|   |   |   |   |
+|   |   |   |   +---shutdown
+|   |   |   |   |
+|   |   |   |   +---tcp-port
+|   |   |   |   |
+|   |   |   |   +---test-session
+|   |   |   |   |
+|   |   |   |   +---tx-extended-info
+|   |   |   |   |
+|   |   |   |   +---tx-seq-num
+|   |   |   |   |
+|   |   |   |   +---vlan-tag
+|   |   |   |   |
+|   |   |   |   +---show status
 |   |
 |   +---port
 |   |   |
 |   |   +---cellular
 |   |   |   |
-|   |   |   +---access-group
-|   |   |   |
-|   |   |   +---cellular-protection
-|   |   |   |   |
-|   |   |   |   +---connect-timeout
-|   |   |   |   |
-|   |   |   |   +---primary-sim
-|   |   |   |   |
-|   |   |   |   +---revertive
-|   |   |   |   |
-|   |   |   |   +---time-to-revert
+|   |   |   +---apn-name
 |   |   |   |
 |   |   |   +---classifier
 |   |   |   |   |
@@ -587,75 +543,23 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |
 |   |   |   |   +---show status
 |   |   |   |
-|   |   |   +---clear-access-list-statistics
-|   |   |   |
 |   |   |   +---clear-statistics
 |   |   |   |
-|   |   |   +---force-next-hop
-|   |   |   |
-|   |   |   +---mode
-|   |   |   |
-|   |   |   +---multi-apn
+|   |   |   +---dialer-number
 |   |   |   |
 |   |   |   +---name
 |   |   |   |
-|   |   |   +---pm-collection
+|   |   |   +---pin
 |   |   |   |
 |   |   |   +---policy-based-route
 |   |   |   |
 |   |   |   +---queue-group
 |   |   |   |
+|   |   |   +---radio-access-technology
+|   |   |   |
+|   |   |   +---rssi-threshold
+|   |   |   |
 |   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---sim
-|   |   |   |   |
-|   |   |   |   +---apn
-|   |   |   |   |   |
-|   |   |   |   |   +---apn-name
-|   |   |   |   |   |
-|   |   |   |   |   +---chap-hostname
-|   |   |   |   |   |
-|   |   |   |   |   +---chap-password
-|   |   |   |   |   |
-|   |   |   |   |   +---pap-username
-|   |   |   |   |   |
-|   |   |   |   |   +---pdp-type
-|   |   |   |   |   |
-|   |   |   |   |   +---refuse-chap
-|   |   |   |   |   |
-|   |   |   |   |   +---refuse-no-auth
-|   |   |   |   |   |
-|   |   |   |   |   +---refuse-pap
-|   |   |   |   |
-|   |   |   |   +---apn-name
-|   |   |   |   |
-|   |   |   |   +---chap-hostname
-|   |   |   |   |
-|   |   |   |   +---chap-password
-|   |   |   |   |
-|   |   |   |   +---dialer-number
-|   |   |   |   |
-|   |   |   |   +---lte-band
-|   |   |   |   |
-|   |   |   |   +---name
-|   |   |   |   |
-|   |   |   |   +---pap-username
-|   |   |   |   |
-|   |   |   |   +---pdp-type
-|   |   |   |   |
-|   |   |   |   +---pin
-|   |   |   |   |
-|   |   |   |   +---radio-access-technology
-|   |   |   |   |
-|   |   |   |   +---refuse-chap
-|   |   |   |   |
-|   |   |   |   +---refuse-no-auth
-|   |   |   |   |
-|   |   |   |   +---refuse-pap
-|   |   |   |   |
-|   |   |   |   +---rssi-threshold
-|   |   |   |
-|   |   |   +---text-me-hello
 |   |   |   |
 |   |   |   +---traffic-class
 |   |   |   |   |
@@ -664,10 +568,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   +---mark
 |   |   |   |   |
 |   |   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---show access-list-statistics
-|   |   |   |
-|   |   |   +---show access-list-summary
 |   |   |   |
 |   |   |   +---show status
 |   |   |
@@ -687,49 +587,9 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |
 |   |   |   |   +---show status
 |   |   |   |
-|   |   |   +---clear-access-list-statistics
-|   |   |   |
 |   |   |   +---clear-statistics
 |   |   |   |
-|   |   |   +---dot1x
-|   |   |   |   |
-|   |   |   |   +---authenticator
-|   |   |   |   |   |
-|   |   |   |   |   +---authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---reauthentication
-|   |   |   |   |   |
-|   |   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---clear-statistics
-|   |   |   |   |
-|   |   |   |   +---initialize
-|   |   |   |   |
-|   |   |   |   +---supplicant
-|   |   |   |   |   |
-|   |   |   |   |   +---authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---held-period
-|   |   |   |   |   |
-|   |   |   |   |   +---max-authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---shutdown
-|   |   |   |   |   |
-|   |   |   |   |   +---tx-period
-|   |   |   |   |
-|   |   |   |   +---show statistics
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
 |   |   |   +---egress-mtu
-|   |   |   |
-|   |   |   +---force-next-hop
-|   |   |   |
-|   |   |   +---mac-access-control
-|   |   |   |   |
-|   |   |   |   +---mac
-|   |   |   |   |
-|   |   |   |   +---shutdown
 |   |   |   |
 |   |   |   +---name
 |   |   |   |
@@ -753,23 +613,15 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |
 |   |   |   |   +---access-group
 |   |   |   |   |
-|   |   |   |   +---clear-access-list-statistics
-|   |   |   |   |
 |   |   |   |   +---clear-statistics
 |   |   |   |   |
 |   |   |   |   +---egress-mtu
 |   |   |   |   |
-|   |   |   |   +---force-next-hop
-|   |   |   |   |
 |   |   |   |   +---name
-|   |   |   |   |
-|   |   |   |   +---pm-collection
 |   |   |   |   |
 |   |   |   |   +---policy-based-route
 |   |   |   |   |
 |   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---show access-list-statistics
 |   |   |   |   |
 |   |   |   |   +---show access-list-summary
 |   |   |   |   |
@@ -777,13 +629,13 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |
 |   |   |   |   +---show status
 |   |   |   |
-|   |   |   +---show access-list-statistics
-|   |   |   |
 |   |   |   +---show access-list-summary
 |   |   |   |
 |   |   |   +---show statistics
 |   |   |   |
 |   |   |   +---show status
+|   |   |
+|   |   +---jumbo-frames
 |   |   |
 |   |   +---ppp
 |   |   |   |
@@ -793,15 +645,11 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---chap-password
 |   |   |   |
-|   |   |   +---ipcp-address
-|   |   |   |
 |   |   |   +---name
 |   |   |   |
 |   |   |   +---pap-username
 |   |   |   |
 |   |   |   +---pppoe
-|   |   |   |   |
-|   |   |   |   +---service-name
 |   |   |   |   |
 |   |   |   |   +---show status
 |   |   |   |
@@ -813,57 +661,13 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---show status
 |   |   |
-|   |   +---serial
-|   |   |   |
-|   |   |   +---allowed-latency
-|   |   |   |
-|   |   |   +---baud-rate
-|   |   |   |
-|   |   |   +---bus-idle
-|   |   |   |
-|   |   |   +---clear-statistics
-|   |   |   |
-|   |   |   +---data-bits
-|   |   |   |
-|   |   |   +---parity
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---stop-bits
-|   |   |   |
-|   |   |   +---terminal-server
-|   |   |   |   |
-|   |   |   |   +---disconnect
-|   |   |   |   |
-|   |   |   |   +---local-address
-|   |   |   |   |
-|   |   |   |   +---telnet-client-tcp
-|   |   |   |   |
-|   |   |   |   +---telnet-server-tcp
-|   |   |   |   |
-|   |   |   |   +---telnet-server-udp
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
-|   |   |   +---tunnel
-|   |   |   |   |
-|   |   |   |   +---address
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---transport-layer
-|   |   |   |
-|   |   |   +---tx-delay
-|   |   |   |
-|   |   |   +---show status
-|   |   |
 |   |   +---virtual
+|   |   |   |
+|   |   |   +---access-group
 |   |   |   |
 |   |   |   +---clear-statistics
 |   |   |   |
 |   |   |   +---egress-mtu
-|   |   |   |
-|   |   |   +---force-next-hop
 |   |   |   |
 |   |   |   +---name
 |   |   |   |
@@ -887,77 +691,17 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---show status
 |   |   |
-|   |   +---wifi-client
-|   |   |   |
-|   |   |   +---connection-method
-|   |   |   |
-|   |   |   +---dot1x
-|   |   |   |   |
-|   |   |   |   +---clear-statistics
-|   |   |   |   |
-|   |   |   |   +---initialize
-|   |   |   |   |
-|   |   |   |   +---supplicant
-|   |   |   |   |   |
-|   |   |   |   |   +---authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---held-period
-|   |   |   |   |   |
-|   |   |   |   |   +---max-authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---shutdown
-|   |   |   |   |   |
-|   |   |   |   |   +---tx-period
-|   |   |   |   |
-|   |   |   |   +---show statistics
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---ssid
-|   |   |   |   |
-|   |   |   |   +---password
-|   |   |   |   |
-|   |   |   |   +---priority
-|   |   |   |   |
-|   |   |   |   +---security
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---show networks
-|   |   |   |
-|   |   |   +---show status
-|   |   |
 |   |   +---wifi-country-code
 |   |   |
 |   |   +---wlan
 |   |   |   |
 |   |   |   +---access-point
 |   |   |   |   |
-|   |   |   |   +---access-group
+|   |   |   |   +---authentication
 |   |   |   |   |
 |   |   |   |   +---broadcast-ssid
 |   |   |   |   |
-|   |   |   |   +---clear-access-list-statistics
-|   |   |   |   |
-|   |   |   |   +---dot1x
-|   |   |   |   |   |
-|   |   |   |   |   +---authenticator
-|   |   |   |   |   |   |
-|   |   |   |   |   |   +---reauthentication
-|   |   |   |   |   |   |
-|   |   |   |   |   |   +---shutdown
-|   |   |   |   |   |
-|   |   |   |   |   +---clear-statistics
-|   |   |   |   |   |
-|   |   |   |   |   +---initialize
-|   |   |   |   |   |
-|   |   |   |   |   +---show statistics
-|   |   |   |   |   |
-|   |   |   |   |   +---show status
-|   |   |   |   |
-|   |   |   |   +---force-next-hop
+|   |   |   |   +---encryption
 |   |   |   |   |
 |   |   |   |   +---mac-filter
 |   |   |   |   |
@@ -979,10 +723,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |
 |   |   |   |   +---wps
 |   |   |   |   |
-|   |   |   |   +---show access-list-statistics
-|   |   |   |   |
-|   |   |   |   +---show access-list-summary
-|   |   |   |   |
 |   |   |   |   +---show connected-devices
 |   |   |   |
 |   |   |   +---channel
@@ -992,32 +732,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   +---show summary
 |   |   |
 |   |   +---show wifi
-|   |
-|   +---protection
-|   |   |
-|   |   +---erp
-|   |   |   |
-|   |   |   +---bridge
-|   |   |   |
-|   |   |   +---data-vlan
-|   |   |   |
-|   |   |   +---description
-|   |   |   |
-|   |   |   +---east-port
-|   |   |   |
-|   |   |   +---port-description
-|   |   |   |
-|   |   |   +---port-type
-|   |   |   |
-|   |   |   +---r-aps
-|   |   |   |
-|   |   |   +---sf-trigger
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---west-port
-|   |   |   |
-|   |   |   +---show status
 |   |
 |   +---qos
 |   |   |
@@ -1105,16 +819,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |
 |   +---router
 |   |   |
-|   |   +---bfd-neighbor
-|   |   |   |
-|   |   |   +---detect-multiplier
-|   |   |   |
-|   |   |   +---receive-interval
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---transmit-interval
-|   |   |
 |   |   +---bgp
 |   |   |   |
 |   |   |   +---clear-neighbor
@@ -1173,21 +877,9 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---neighbor
 |   |   |   |   |
-|   |   |   |   +---allowas-in
-|   |   |   |   |
-|   |   |   |   +---as-override
-|   |   |   |   |
-|   |   |   |   +---bfd
-|   |   |   |   |
-|   |   |   |   +---connect-timer
-|   |   |   |   |
-|   |   |   |   +---ebgp-multihop
-|   |   |   |   |
 |   |   |   |   +---local-address
 |   |   |   |   |
 |   |   |   |   +---max-prefixes
-|   |   |   |   |
-|   |   |   |   +---next-hop-self
 |   |   |   |   |
 |   |   |   |   +---password
 |   |   |   |   |
@@ -1211,8 +903,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---clear-arp-table
 |   |   |
-|   |   +---clear-bfd-statistics
-|   |   |
 |   |   +---clear-neighbor-table
 |   |   |
 |   |   +---dhcp-client
@@ -1224,8 +914,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   +---host-name
 |   |   |   |
 |   |   |   +---vendor-class-id
-|   |   |
-|   |   +---dhcp-relay-server
 |   |   |
 |   |   +---interface
 |   |   |   |
@@ -1241,11 +929,7 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |
 |   |   |   |   +---client-id
 |   |   |   |
-|   |   |   +---dhcp-relay
-|   |   |   |
 |   |   |   +---dhcpv6-client
-|   |   |   |
-|   |   |   +---dhcpv6-relay
 |   |   |   |
 |   |   |   +---dhcpv6-server
 |   |   |   |
@@ -1289,27 +973,9 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---unreachables
 |   |   |   |
-|   |   |   +---vrrp
-|   |   |   |   |
-|   |   |   |   +---description
-|   |   |   |   |
-|   |   |   |   +---ip
-|   |   |   |   |
-|   |   |   |   +---preempt
-|   |   |   |   |
-|   |   |   |   +---priority
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---timer-advertise
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
 |   |   |   +---show crypto-map-status
 |   |   |   |
 |   |   |   +---show status
-|   |   |   |
-|   |   |   +---show summary-vrrp
 |   |   |
 |   |   +---name
 |   |   |
@@ -1328,6 +994,8 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   +---nat-inside-source-static-port
 |   |   |   |
 |   |   |   +---nat-timeout
+|   |   |   |
+|   |   |   +---show nat-statistics
 |   |   |   |
 |   |   |   +---show nat-translations
 |   |   |
@@ -1387,13 +1055,9 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---tunnel-interface
 |   |   |   |
-|   |   |   +---access-group
+|   |   |   +---backup
 |   |   |   |
 |   |   |   +---bind
-|   |   |   |
-|   |   |   +---clear-access-list-statistics
-|   |   |   |
-|   |   |   +---clear-nhrp
 |   |   |   |
 |   |   |   +---clear-statistics
 |   |   |   |
@@ -1407,53 +1071,15 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---key
 |   |   |   |
-|   |   |   +---multipoint
-|   |   |   |
 |   |   |   +---name
 |   |   |   |
-|   |   |   +---nhrp-map
-|   |   |   |
-|   |   |   +---nhrp-nhs
-|   |   |   |
-|   |   |   +---nhrp-registration-timeout
-|   |   |   |
-|   |   |   +---ospf
-|   |   |   |   |
-|   |   |   |   +---area
-|   |   |   |   |
-|   |   |   |   +---authentication-key
-|   |   |   |   |
-|   |   |   |   +---authentication-type
-|   |   |   |   |
-|   |   |   |   +---dead-interval
-|   |   |   |   |
-|   |   |   |   +---hello-interval
-|   |   |   |   |
-|   |   |   |   +---metric
-|   |   |   |   |
-|   |   |   |   +---passive
-|   |   |   |   |
-|   |   |   |   +---priority
-|   |   |   |   |
-|   |   |   |   +---retransmit-interval
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---transit-delay
-|   |   |   |
-|   |   |   +---pm-collection
-|   |   |   |
 |   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---transport-router
 |   |   |   |
 |   |   |   +---tunnel-destination
 |   |   |   |
 |   |   |   +---tunnel-source
 |   |   |   |
-|   |   |   +---show access-list-statistics
-|   |   |   |
-|   |   |   +---show access-list-summary
+|   |   |   +---show crypto-map-status
 |   |   |   |
 |   |   |   +---show crypto-map-status
 |   |   |   |
@@ -1461,13 +1087,7 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---show arp-table
 |   |   |
-|   |   +---show bfd-neighbors
-|   |   |
-|   |   +---show bfd-neighbors-details
-|   |   |
 |   |   +---show dns-resolver
-|   |   |
-|   |   +---show ip-monitoring-summary
 |   |   |
 |   |   +---show neighbor-table
 |   |   |
@@ -1476,58 +1096,10 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   +---show routing-table
 |   |   |
 |   |   +---show summary-interface
-|   |   |
-|   |   +---show vrrp-summary
-|   |
-|   +---sd-iot
-|   |   |
-|   |   +---authentication-method
-|   |   |
-|   |   +---certificate
-|   |   |
-|   |   +---clear-statistics
-|   |   |
-|   |   +---client-number
-|   |   |
-|   |   +---duplication
-|   |   |
-|   |   +---ingress-port
-|   |   |
-|   |   +---keep-alive
-|   |   |
-|   |   +---shutdown
-|   |   |
-|   |   +---tunnel
-|   |   |   |
-|   |   |   +---peer-address
-|   |   |   |
-|   |   |   +---priority
-|   |   |   |
-|   |   |   +---secondary-peer-address
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |
-|   |   +---username
-|   |   |
-|   |   +---show statistics
-|   |   |
-|   |   +---show status
 |   |
 |   +---system
 |   |   |
 |   |   +---announcement
-|   |   |
-|   |   +---clock
-|   |   |   |
-|   |   |   +---gnss
-|   |   |   |   |
-|   |   |   |   +---name
-|   |   |   |   |
-|   |   |   |   +---secondary-system
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---show status
 |   |   |
 |   |   +---contact
 |   |   |
@@ -1549,8 +1121,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |   |   |
 |   |   |   |   |   +---shutdown
 |   |   |   |   |
-|   |   |   |   +---source-address
-|   |   |   |   |
 |   |   |   |   +---show status
 |   |   |   |
 |   |   |   +---summer-time
@@ -1560,10 +1130,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   +---zone
 |   |   |   |
 |   |   |   +---show summer-time
-|   |   |
-|   |   +---dhcp-relay
-|   |   |   |
-|   |   |   +---source-port
 |   |   |
 |   |   +---dhcp-server
 |   |   |   |
@@ -1629,8 +1195,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |   |
 |   |   |   +---show conflict
 |   |   |
-|   |   +---generate-log-report
-|   |   |
 |   |   +---hostname
 |   |   |
 |   |   +---inventory
@@ -1643,77 +1207,7 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---login-message
 |   |   |
-|   |   +---modbus-unit
-|   |   |   |
-|   |   |   +---byte-order
-|   |   |   |
-|   |   |   +---description
-|   |   |   |
-|   |   |   +---ip-address
-|   |   |   |
-|   |   |   +---poll
-|   |   |   |   |
-|   |   |   |   +---acquisition
-|   |   |   |   |
-|   |   |   |   +---description
-|   |   |   |   |
-|   |   |   |   +---map-to-mqtt
-|   |   |   |   |
-|   |   |   |   +---map-to-opcua
-|   |   |   |   |
-|   |   |   |   +---modbus-operation
-|   |   |   |   |
-|   |   |   |   +---scaling
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---start-address
-|   |   |   |
-|   |   |   +---retries
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---timeout
-|   |   |   |
-|   |   |   +---unit-id
-|   |   |
-|   |   +---mqtt
-|   |   |   |
-|   |   |   +---server
-|   |   |   |   |
-|   |   |   |   +---address
-|   |   |   |   |
-|   |   |   |   +---certificate
-|   |   |   |   |
-|   |   |   |   +---management-channel
-|   |   |   |   |
-|   |   |   |   +---user
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |
 |   |   +---name
-|   |   |
-|   |   +---opcua-server
-|   |   |   |
-|   |   |   +---application-certificate
-|   |   |   |
-|   |   |   +---application-name
-|   |   |   |
-|   |   |   +---application-uri
-|   |   |   |
-|   |   |   +---endpoint
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---trusted-ca
-|   |   |
-|   |   +---serial
-|   |   |   |
-|   |   |   +---terminal-server
-|   |   |   |   |
-|   |   |   |   +---dead-peer-timeout
-|   |   |   |   |
-|   |   |   |   +---shutdown
 |   |   |
 |   |   +---syslog
 |   |   |   |
@@ -1737,11 +1231,7 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---show device-information
 |   |   |
-|   |   +---show resources
-|   |   |
 |   |   +---show summary-inventory
-|   |   |
-|   |   +---show system
 |   |   |
 |   |   +---show system-date
 |   |   |
@@ -1755,11 +1245,121 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---length
 |   |   |
-|   |   +---serial-port-console
+|   |   +---serial-port-disable
 |   |   |
 |   |   +---timeout
+|   |
+|   +---virtualization
+|   |   |
+|   |   +---add-ons
+|   |   |   |
+|   |   |   +---add-on
+|   |   |   |
+|   |   |   +---show status
+|   |   |
+|   |   +---clear-cpu-utilization
+|   |   |
+|   |   +---instance
+|   |   |   |
+|   |   |   +---clear
+|   |   |   |
+|   |   |   +---core-pinning
+|   |   |   |
+|   |   |   +---create-snapshot
+|   |   |   |
+|   |   |   +---description
+|   |   |   |
+|   |   |   +---flavor
+|   |   |   |
+|   |   |   +---image
+|   |   |   |
+|   |   |   +---init-config
+|   |   |   |
+|   |   |   +---monitor
+|   |   |   |
+|   |   |   +---network
+|   |   |   |
+|   |   |   +---pause
+|   |   |   |
+|   |   |   +---reboot
+|   |   |   |
+|   |   |   +---remote-terminal
+|   |   |   |
+|   |   |   +---replace-network
+|   |   |   |
+|   |   |   +---shutdown
+|   |   |   |
+|   |   |   +---stop
+|   |   |   |
+|   |   |   +---vnc
+|   |   |   |
+|   |   |   +---show resources
+|   |   |   |
+|   |   |   +---show status
+|   |   |
+|   |   +---interface
+|   |   |   |
+|   |   |   +---access-group
+|   |   |   |
+|   |   |   +---address
+|   |   |   |
+|   |   |   +---bind
+|   |   |   |
+|   |   |   +---description
+|   |   |   |
+|   |   |   +---dhcp
+|   |   |   |
+|   |   |   +---shutdown
+|   |   |   |
+|   |   |   +---virtualization-label
+|   |   |
+|   |   +---management-mode
+|   |   |
+|   |   +---networking-mode
+|   |   |
+|   |   +---repository
+|   |   |   |
+|   |   |   +---export-image
+|   |   |   |
+|   |   |   +---flavor
+|   |   |   |
+|   |   |   +---image
+|   |   |   |
+|   |   |   +---network
+|   |   |   |   |
+|   |   |   |   +---admin-state
+|   |   |   |   |
+|   |   |   |   +---description
+|   |   |   |   |
+|   |   |   |   +---subnet
+|   |   |   |   |
+|   |   |   |   +---type
+|   |   |   |   |
+|   |   |   |   +---show status
+|   |   |   |
+|   |   |   +---show flavors
+|   |   |   |
+|   |   |   +---show images
+|   |   |
+|   |   +---virtualization-dns-server
+|   |   |
+|   |   +---virtualization-gateway
+|   |   |
+|   |   +---virtualization-ip
+|   |   |
+|   |   +---show core-mapping
+|   |   |
+|   |   +---show resources
+|   |   |
+|   |   +---show summary-instance
+|   |   |
+|   |   +---show system
+|   |   |
+|   |   +---show system-detail
 |
 +---file
+|   |
+|   +---copy
 |   |
 |   +---delete
 |   |
@@ -1771,13 +1371,7 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |
 |   +---dir
 |   |
-|   +---flash-enable
-|   |
-|   +---flash-temporarily-enable
-|   |
 |   +---folder-dir
-|   |
-|   +---media-dir
 |   |
 |   +---user-file-dir
 |   |
@@ -1790,10 +1384,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   +---show factory-default-config
 |   |
 |   +---show file-details
-|   |
-|   +---show file-transfer-status
-|   |
-|   +---show flash-status
 |   |
 |   +---show rollback-config
 |   |
@@ -1810,334 +1400,6 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 +---logon
 |
 +---on-configuration-error
-|
-+---quick-setup
-|   |
-|   +---port
-|   |   |
-|   |   +---cellular
-|   |   |   |
-|   |   |   +---access-group
-|   |   |   |
-|   |   |   +---cellular-protection
-|   |   |   |   |
-|   |   |   |   +---connect-timeout
-|   |   |   |   |
-|   |   |   |   +---primary-sim
-|   |   |   |   |
-|   |   |   |   +---revertive
-|   |   |   |   |
-|   |   |   |   +---time-to-revert
-|   |   |   |
-|   |   |   +---classifier
-|   |   |   |   |
-|   |   |   |   +---comment
-|   |   |   |   |
-|   |   |   |   +---delete
-|   |   |   |   |
-|   |   |   |   +---match
-|   |   |   |   |
-|   |   |   |   +---resequence
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
-|   |   |   +---clear-access-list-statistics
-|   |   |   |
-|   |   |   +---clear-statistics
-|   |   |   |
-|   |   |   +---force-next-hop
-|   |   |   |
-|   |   |   +---mode
-|   |   |   |
-|   |   |   +---multi-apn
-|   |   |   |
-|   |   |   +---name
-|   |   |   |
-|   |   |   +---pm-collection
-|   |   |   |
-|   |   |   +---policy-based-route
-|   |   |   |
-|   |   |   +---queue-group
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---sim
-|   |   |   |   |
-|   |   |   |   +---apn
-|   |   |   |   |   |
-|   |   |   |   |   +---apn-name
-|   |   |   |   |   |
-|   |   |   |   |   +---chap-hostname
-|   |   |   |   |   |
-|   |   |   |   |   +---chap-password
-|   |   |   |   |   |
-|   |   |   |   |   +---pap-username
-|   |   |   |   |   |
-|   |   |   |   |   +---pdp-type
-|   |   |   |   |   |
-|   |   |   |   |   +---refuse-chap
-|   |   |   |   |   |
-|   |   |   |   |   +---refuse-no-auth
-|   |   |   |   |   |
-|   |   |   |   |   +---refuse-pap
-|   |   |   |   |
-|   |   |   |   +---apn-name
-|   |   |   |   |
-|   |   |   |   +---chap-hostname
-|   |   |   |   |
-|   |   |   |   +---chap-password
-|   |   |   |   |
-|   |   |   |   +---dialer-number
-|   |   |   |   |
-|   |   |   |   +---lte-band
-|   |   |   |   |
-|   |   |   |   +---name
-|   |   |   |   |
-|   |   |   |   +---pap-username
-|   |   |   |   |
-|   |   |   |   +---pdp-type
-|   |   |   |   |
-|   |   |   |   +---pin
-|   |   |   |   |
-|   |   |   |   +---radio-access-technology
-|   |   |   |   |
-|   |   |   |   +---refuse-chap
-|   |   |   |   |
-|   |   |   |   +---refuse-no-auth
-|   |   |   |   |
-|   |   |   |   +---refuse-pap
-|   |   |   |   |
-|   |   |   |   +---rssi-threshold
-|   |   |   |
-|   |   |   +---text-me-hello
-|   |   |   |
-|   |   |   +---traffic-class
-|   |   |   |   |
-|   |   |   |   +---cos
-|   |   |   |   |
-|   |   |   |   +---mark
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---show access-list-statistics
-|   |   |   |
-|   |   |   +---show access-list-summary
-|   |   |   |
-|   |   |   +---show status
-|   |   |
-|   |   +---ethernet
-|   |   |   |
-|   |   |   +---name
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---vlan
-|   |   |
-|   |   +---serial
-|   |   |   |
-|   |   |   +---allowed-latency
-|   |   |   |
-|   |   |   +---baud-rate
-|   |   |   |
-|   |   |   +---bus-idle
-|   |   |   |
-|   |   |   +---clear-statistics
-|   |   |   |
-|   |   |   +---data-bits
-|   |   |   |
-|   |   |   +---parity
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---stop-bits
-|   |   |   |
-|   |   |   +---terminal-server
-|   |   |   |   |
-|   |   |   |   +---disconnect
-|   |   |   |   |
-|   |   |   |   +---local-address
-|   |   |   |   |
-|   |   |   |   +---telnet-client-tcp
-|   |   |   |   |
-|   |   |   |   +---telnet-server-tcp
-|   |   |   |   |
-|   |   |   |   +---telnet-server-udp
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
-|   |   |   +---tunnel
-|   |   |   |   |
-|   |   |   |   +---address
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---transport-layer
-|   |   |   |
-|   |   |   +---tx-delay
-|   |   |   |
-|   |   |   +---show status
-|   |   |
-|   |   +---virtual
-|   |   |
-|   |   +---wifi-client
-|   |   |   |
-|   |   |   +---connection-method
-|   |   |   |
-|   |   |   +---dot1x
-|   |   |   |   |
-|   |   |   |   +---clear-statistics
-|   |   |   |   |
-|   |   |   |   +---initialize
-|   |   |   |   |
-|   |   |   |   +---supplicant
-|   |   |   |   |   |
-|   |   |   |   |   +---authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---held-period
-|   |   |   |   |   |
-|   |   |   |   |   +---max-authentication
-|   |   |   |   |   |
-|   |   |   |   |   +---shutdown
-|   |   |   |   |   |
-|   |   |   |   |   +---tx-period
-|   |   |   |   |
-|   |   |   |   +---show statistics
-|   |   |   |   |
-|   |   |   |   +---show status
-|   |   |   |
-|   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---ssid
-|   |   |   |   |
-|   |   |   |   +---password
-|   |   |   |   |
-|   |   |   |   +---priority
-|   |   |   |   |
-|   |   |   |   +---security
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |
-|   |   |   +---show networks
-|   |   |   |
-|   |   |   +---show status
-|   |   |
-|   |   +---wlan
-|   |   |   |
-|   |   |   +---access-point
-|   |   |   |   |
-|   |   |   |   +---access-group
-|   |   |   |   |
-|   |   |   |   +---broadcast-ssid
-|   |   |   |   |
-|   |   |   |   +---clear-access-list-statistics
-|   |   |   |   |
-|   |   |   |   +---dot1x
-|   |   |   |   |   |
-|   |   |   |   |   +---authenticator
-|   |   |   |   |   |   |
-|   |   |   |   |   |   +---reauthentication
-|   |   |   |   |   |   |
-|   |   |   |   |   |   +---shutdown
-|   |   |   |   |   |
-|   |   |   |   |   +---clear-statistics
-|   |   |   |   |   |
-|   |   |   |   |   +---initialize
-|   |   |   |   |   |
-|   |   |   |   |   +---show statistics
-|   |   |   |   |   |
-|   |   |   |   |   +---show status
-|   |   |   |   |
-|   |   |   |   +---force-next-hop
-|   |   |   |   |
-|   |   |   |   +---mac-filter
-|   |   |   |   |
-|   |   |   |   +---mac-filter-enable
-|   |   |   |   |
-|   |   |   |   +---max-clients
-|   |   |   |   |
-|   |   |   |   +---password
-|   |   |   |   |
-|   |   |   |   +---policy-based-route
-|   |   |   |   |
-|   |   |   |   +---security
-|   |   |   |   |
-|   |   |   |   +---shutdown
-|   |   |   |   |
-|   |   |   |   +---ssid
-|   |   |   |   |
-|   |   |   |   +---wlan-partition
-|   |   |   |   |
-|   |   |   |   +---wps
-|   |   |   |   |
-|   |   |   |   +---show access-list-statistics
-|   |   |   |   |
-|   |   |   |   +---show access-list-summary
-|   |   |   |   |
-|   |   |   |   +---show connected-devices
-|   |   |   |
-|   |   |   +---channel
-|   |   |   |
-|   |   |   +---radio-mode
-|   |
-|   +---router
-|   |   |
-|   |   +---default-gateway
-|   |   |
-|   |   +---nat
-|   |   |   |
-|   |   |   +---clear-nat-statistics
-|   |   |   |
-|   |   |   +---clear-nat-translations
-|   |   |   |
-|   |   |   +---nat-exclude-source-ip
-|   |   |   |
-|   |   |   +---nat-inside-overload
-|   |   |   |
-|   |   |   +---nat-inside-source-static
-|   |   |   |
-|   |   |   +---nat-inside-source-static-port
-|   |   |   |
-|   |   |   +---nat-timeout
-|   |   |   |
-|   |   |   +---show nat-translations
-|   |   |
-|   |   +---router
-|   |   |   |
-|   |   |   +---nat
-|   |   |   |   |
-|   |   |   |   +---clear-nat-statistics
-|   |   |   |   |
-|   |   |   |   +---clear-nat-translations
-|   |   |   |   |
-|   |   |   |   +---nat-exclude-source-ip
-|   |   |   |   |
-|   |   |   |   +---nat-inside-overload
-|   |   |   |   |
-|   |   |   |   +---nat-inside-source-static
-|   |   |   |   |
-|   |   |   |   +---nat-inside-source-static-port
-|   |   |   |   |
-|   |   |   |   +---nat-timeout
-|   |   |   |   |
-|   |   |   |   +---show nat-translations
-|   |   |   |
-|   |   |   +---static-route
-|   |
-|   +---vpn
-|   |   |
-|   |   +---ipsec-transform-set
-|   |   |   |
-|   |   |   +---algorithms
-|   |   |   |
-|   |   |   +---mode
-|   |   |
-|   |   +---isakmp-policy
-|   |   |   |
-|   |   |   +---encryption
-|   |   |   |
-|   |   |   +---group
-|   |   |   |
-|   |   |   +---hash
 Global commands:
 |
 +---copy
@@ -2171,4 +1433,3 @@ Global commands:
 +---trace-route
 |
 +---tree
-```

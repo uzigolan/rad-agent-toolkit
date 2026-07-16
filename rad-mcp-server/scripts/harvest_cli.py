@@ -76,13 +76,18 @@ CREATE_EXCLUDE = {"login-user", "user", "community", "isakmp-key", "access-list"
 # gets its refusal captured, exactly as before. A pure `[number]` index stays on
 # the numeric path — its bracket form never matches these string patterns.
 PARAM_STR_RE = re.compile(r"\[1\.\.(\d+) chars|\[string\]|<[A-Za-z][\w-]*>")
+ANGLE_PARAM_RE = re.compile(r"<([A-Za-z][\w-]*)>")
+ANGLE_ANY_RE = re.compile(r"<([^>]+)>")
 TMP_NAME = "zzz-hrvst"
+TMP_NAME_CANDIDATES = (TMP_NAME, "hrvst", "z")
+IP_NAME_RE = re.compile(r"<(?:ip|ip-address|ipv4|address|server-ip|next-hop-ip-address)[^>]*>", re.IGNORECASE)
 
 # A numeric instance parameter, e.g. "[number]", optionally with an explicit
 # "[1..64]"-style range alongside it (some contexts, like `mep`, give no
 # range at all — just "[number]" — so DEFAULT_NUM_RANGE is the fallback).
 PARAM_NUM_RE = re.compile(r"\[number\]")
 PARAM_NUM_RANGE_RE = re.compile(r"\[(\d+)\.\.(\d+)\]")
+ANGLE_NUM_RE = re.compile(r"(?:[A-Za-z][\w -]*?)?(?:id|idx|index|number|num|value)\b", re.IGNORECASE)
 DEFAULT_NUM_RANGE = (1, 9999)
 
 # Numeric-indexed contexts we DO auto-create (opt-in — unlike the
@@ -126,7 +131,10 @@ DEFAULT_NUM_RANGE = (1, 9999)
 # become (family, parent_context, name)-scoped rather than a bare name.
 NUMERIC_CREATE_ALLOW = {"mep", "lag", "pw", "test",
                         "bridge", "mirroring-session", "isakmp-policy",
-                        "trap-sync-group", "ppp", "tunnel-interface"}
+                        "trap-sync-group", "ppp", "tunnel-interface",
+                        "maintenance-domain", "maintenance-association",
+                        "interface", "server", "service", "remote-mep",
+                        "cos", "dest-ne"}
 
 # Pager prompt at the tail of a page, advanced with SPACE. Two known firmware
 # spellings: the dashed `--More--` (ETX/SecFlow/MP) and the bare `more...`
@@ -440,6 +448,100 @@ class Harvester:
                     break
         return out
 
+    @staticmethod
+    def build_required_suffix(arg_help: str) -> str:
+        """Best-effort expansion of mandatory literal/enum tokens after the
+        first instance parameter in the usage line.
+
+        Examples:
+          - cos-map-profile <profile-name> classification {p-bit|ip-dscp}
+            -> " classification p-bit"
+          - controller <controller-name> [<number>]
+            -> ""
+        """
+        for line in arg_help.splitlines():
+            usage = line.strip()
+            if not usage.startswith("-"):
+                continue
+            expanded = re.sub(r"\[[^\]]*\]", "", usage[1:]).strip()
+            first_param = ANGLE_PARAM_RE.search(expanded)
+            if not first_param:
+                continue
+            suffix = expanded[first_param.end():].strip()
+            if not suffix:
+                return ""
+            suffix = re.sub(r"\{([^{}|\s]+)(?:\|[^{}]+)+\}", r"\1", suffix)
+            if ANGLE_PARAM_RE.search(suffix):
+                return ""
+            suffix = " ".join(suffix.split())
+            return f" {suffix}" if suffix else ""
+        return ""
+
+    @staticmethod
+    def string_probe_values(arg_help: str, existing: set[str]) -> list[str]:
+        """Candidate string values for a named parameterized object.
+
+        Prefer the long canonical temp name first, then shorter fallbacks for
+        CLIs that enforce a tighter max length or reject punctuation.
+        """
+        m = PARAM_STR_RE.search(arg_help)
+        max_len = max(1, int(m.group(1))) if m and m.group(1) else None
+        out = []
+        # Commands expecting an IP should be probed with a syntactically valid
+        # test address instead of a literal temp-name string.
+        if IP_NAME_RE.search(arg_help):
+            for candidate in ("127.0.0.1", "1.1.1.1"):
+                if candidate not in existing and candidate not in out:
+                    out.append(candidate)
+            if out:
+                return out
+        for candidate in TMP_NAME_CANDIDATES:
+            value = candidate[:max_len] if max_len is not None else candidate
+            if value and value not in existing and value not in out:
+                out.append(value)
+        return out
+
+    @staticmethod
+    def enum_probe_values(arg_help: str) -> list[str]:
+        """Probe values for enum-first contexts such as `ethernet {sfp|msa}`.
+
+        Returns enum literals from a usage line when no angle-bracket
+        parameter exists.
+        """
+        for line in arg_help.splitlines():
+            usage = line.strip()
+            if not usage.startswith("-"):
+                continue
+            if ANGLE_PARAM_RE.search(usage):
+                continue
+            m = re.search(r"\{([^{}|\s]+)(?:\|[^{}]+)+\}", usage)
+            if m:
+                enum_src = usage[m.start():m.end()]
+                inner = enum_src.strip("{}")
+                vals = [v.strip() for v in inner.split("|") if v.strip()]
+                return vals
+        return []
+
+    @staticmethod
+    def has_numeric_instance(arg_help: str) -> bool:
+        if PARAM_NUM_RE.search(arg_help):
+            return True
+        for line in arg_help.splitlines():
+            usage = line.strip()
+            if not usage.startswith("-"):
+                continue
+            first_param = ANGLE_ANY_RE.search(usage)
+            if first_param and ANGLE_NUM_RE.fullmatch(first_param.group(1).strip()):
+                return True
+        return False
+
+    @staticmethod
+    def numeric_range(arg_help: str) -> tuple[int, int]:
+        rng = PARAM_NUM_RANGE_RE.search(arg_help)
+        if rng:
+            return int(rng.group(1)), int(rng.group(2))
+        return DEFAULT_NUM_RANGE
+
     def enter_and_crawl(self, child: Node, path: list[str], labels: list[str],
                         nav_line: str, prompt_parent: str,
                         rollback: str | None) -> tuple[bool, str | None]:
@@ -489,22 +591,31 @@ class Harvester:
                 child, path, labels, f"{child.name} {inst}", prompt_here, rollback=None)
             if entered:
                 return True, None
+
+        # Enum-first selector contexts (no angle param), e.g. `ethernet {sfp|msa}`.
+        # These are often pure navigation selectors (not creatable objects), so
+        # they must be attempted before the [no]-removable create gate below.
+        enum_values = self.enum_probe_values(arg_help)
+        if enum_values:
+            tried: list[tuple[str, str]] = []
+            for val in enum_values:
+                nav_line = f"{child.name} {val}"
+                entered, refusal = self.enter_and_crawl(
+                    child, path, labels, nav_line, prompt_here,
+                    rollback=None)
+                if entered:
+                    return True, None
+                tried.append((nav_line, refusal))
+            last_nav, last_refusal = tried[-1]
+            attempted = ", ".join(nav for nav, _ in tried)
+            return False, (f"auto-enter tried [{attempted}], all refused.\n"
+                           f"last device response ('{last_nav}'): {last_refusal}")
+
         if not re.search(rf"\[no\]\s+{re.escape(child.name)}\b", level_help):
             return False, None  # not [no]-removable -- never safe to create
 
-        m = PARAM_STR_RE.search(arg_help)
-        if m and child.name not in CREATE_EXCLUDE:
-            tmp = TMP_NAME[: max(1, int(m.group(1)))] if m.group(1) else TMP_NAME
-            entered, refusal = self.enter_and_crawl(
-                child, path, labels, f"{child.name} {tmp}", prompt_here,
-                rollback=f"no {child.name} {tmp}")
-            if entered:
-                return True, None
-            return False, f"auto-create probe '{child.name} {tmp}' refused.\ndevice response: {refusal}"
-
-        if child.name in NUMERIC_CREATE_ALLOW and PARAM_NUM_RE.search(arg_help):
-            rng = PARAM_NUM_RANGE_RE.search(arg_help)
-            lo, hi = (int(rng.group(1)), int(rng.group(2))) if rng else DEFAULT_NUM_RANGE
+        if child.name in NUMERIC_CREATE_ALLOW and self.has_numeric_instance(arg_help):
+            lo, hi = self.numeric_range(arg_help)
             tried: list[tuple[int, str]] = []
             for idx in self.pick_safe_numeric_indices(info_text, child.name, lo, hi):
                 entered, refusal = self.enter_and_crawl(
@@ -520,6 +631,30 @@ class Harvester:
                 return False, (f"auto-create tried indices [{attempted}], all refused.\n"
                                f"last device response ('{child.name} {last_idx}'): {last_refusal}\n"
                                f"next-arg help: {diag}")
+
+        m = PARAM_STR_RE.search(arg_help)
+        if m and child.name not in CREATE_EXCLUDE:
+            required_suffix = self.build_required_suffix(arg_help)
+            tried: list[tuple[str, str]] = []
+            for tmp in self.string_probe_values(arg_help, self.existing_instances(info_text, child.name)):
+                nav_lines = [f"{child.name} {tmp}{required_suffix}"]
+                if required_suffix:
+                    # Some contexts advertise extra literals in `?` help but
+                    # actually enter with only the instance name.
+                    nav_lines.append(f"{child.name} {tmp}")
+                for nav_line in nav_lines:
+                    entered, refusal = self.enter_and_crawl(
+                        child, path, labels, nav_line, prompt_here,
+                        rollback=f"no {child.name} {tmp}")
+                    if entered:
+                        return True, None
+                    tried.append((nav_line, refusal))
+            if tried:
+                last_nav, last_refusal = tried[-1]
+                attempted = ", ".join(nav for nav, _ in tried)
+                return False, (f"auto-create tried [{attempted}], all refused.\n"
+                               f"last device response ('{last_nav}'): {last_refusal}")
+
         return False, None
 
     def crawl(self, node: Node, path: list[str], labels: list[str] | None = None):
@@ -760,7 +895,9 @@ def main():
     new_scoped = {k: v for k, v in h.records.items() if in_scope(k[0])}
     report = diff_report(old, new_scoped, in_scope)
     merged = {k: v for k, v in old.items() if not in_scope(k[0])}
-    merged.update(h.records)  # branch replaced; re-captured root keys refreshed too
+    # On a branch run the crawl includes only a pruned tree slice plus helper
+    # root/context records; only replace the requested scope in the canonical JSONL.
+    merged.update(new_scoped)
     write_records(family, merged)
     scratch.unlink(missing_ok=True)
 

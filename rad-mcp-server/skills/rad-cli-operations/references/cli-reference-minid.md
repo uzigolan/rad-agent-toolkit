@@ -31,6 +31,16 @@ ping
 save
 ```
 
+### inventory
+```text
+MiNID# inventory
+```
+
+### logon
+```text
+MiNID# logon
+```
+
 ## admin
 
 Level help (`?`):
@@ -162,16 +172,11 @@ clear-statistics
 (no help output captured)
 ```
 
-### flow *(not entered — parameterized context)*
+### flow *(parameterized — inner help harvested under "configure flows flow NAME")*
 ```text
 - flow <flow-name>
 
 MiNID>config>flows# flow
-
-auto-create probe 'flow zzz-hrvst' refused.
-device response: flow zzz-hrvst
-#CLI Error, Unknown Command
-MiNID>config>flows#
 ```
 
 ### in-service-loops-l3-l4 *(not entered — parameterized context)*
@@ -198,9 +203,7 @@ MiNID>config>flows# inner-vlan-marking
 
 ### ip-agnostic-loop
 ```text
-- lbm-reflector {sfp|msa}
-
-MiNID>config>flows# lbm-reflector ip-agnostic-loop
+(no help output captured)
 ```
 
 ### l2cp-mac
@@ -224,7 +227,7 @@ MiNID>config>flows# l2cp-profile
 MiNID>config>flows# inner-vlan-marking port-mode-action l2cp-mac l2cp-protocol
 ```
 
-### lbm-reflector *(not entered — parameterized context)*
+### lbm-reflector *(parameterized — inner help harvested under "configure flows lbm-reflector NAME")*
 ```text
 - lbm-reflector {sfp|msa}
 
@@ -286,6 +289,161 @@ MiNID>config>flows# rename-flow
 ```
 
 ### tpid-pushed-replaced-vlan
+```text
+(no help output captured)
+```
+
+## configure flows flow NAME
+
+Level help (`?`):
+```text
+[no] pm-collection
+flow-action
+[no] policer
+[no] cos-mapping
+classifier
+[no] service-name
+[no] l2cp
+[no] shutdown
+in-service-loops
+in-service-l3-l4-loops
+[no] test
+clear-statistics
+```
+
+### classifier
+```text
+- cos-mapping profile <cos-mapping-profile-name>
+
+MiNID>config>flows>flow(hrvst)# cos-mapping classifier classifier
+```
+
+### clear-statistics
+```text
+- test {loop-mac-ip-swap|discard}
+
+MiNID>config>flows>flow(hrvst)# test clear-statistics
+```
+
+### cos-mapping
+```text
+- cos-mapping profile <cos-mapping-profile-name>
+
+MiNID>config>flows>flow(hrvst)# cos-mapping
+```
+
+### flow-action
+```text
+(no help output captured)
+```
+
+### l2cp
+```text
+- cos-mapping profile <cos-mapping-profile-name>
+
+MiNID>config>flows>flow(hrvst)# cos-mapping classifier classifier service-name l2cp
+```
+
+### pm-collection
+```text
+(no help output captured)
+```
+
+### service-name
+```text
+- cos-mapping profile <cos-mapping-profile-name>
+
+MiNID>config>flows>flow(hrvst)# cos-mapping classifier classifier service-name
+```
+
+### show statistics
+```text
+- test {loop-mac-ip-swap|discard}
+
+MiNID>config>flows>flow(hrvst)# test clear-statistics show statistics
+```
+
+### shutdown
+```text
+- cos-mapping profile <cos-mapping-profile-name>
+
+MiNID>config>flows>flow(hrvst)# cos-mapping classifier classifier service-name l2cp shutdown
+```
+
+### test
+```text
+- test {loop-mac-ip-swap|discard}
+
+MiNID>config>flows>flow(hrvst)# test
+```
+
+## configure flows flow NAME in-service-l3-l4-loops
+
+Level help (`?`):
+```text
+[no] in-serv-l3-l4
+```
+
+### in-serv-l3-l4
+```text
+(no help output captured)
+```
+
+### responder
+```text
+(no help output captured)
+```
+
+## configure flows flow NAME in-service-loops
+
+Level help (`?`):
+```text
+in-serv-mode
+in-serv-action
+[no] in-serv-src-mac
+[no] in-serv-dst-mac
+```
+
+### in-serv-action
+```text
+(no help output captured)
+```
+
+### in-serv-dst-mac
+```text
+(no help output captured)
+```
+
+### in-serv-mode
+```text
+(no help output captured)
+```
+
+### in-serv-src-mac
+```text
+(no help output captured)
+```
+
+## configure flows flow NAME policer
+
+Level help (`?`):
+```text
+profile
+regular-accounting-only
+envelope
+```
+
+### envelope
+```text
+(no help output captured)
+```
+
+### profile
+```text
+(no help output captured)
+```
+
+### regular-accounting-only
 ```text
 (no help output captured)
 ```
@@ -361,6 +519,24 @@ protocol
 ```
 
 ### protocol
+```text
+(no help output captured)
+```
+
+## configure flows lbm-reflector NAME
+
+Level help (`?`):
+```text
+[no] md-level
+[no] shutdown
+```
+
+### md-level
+```text
+(no help output captured)
+```
+
+### shutdown
 ```text
 (no help output captured)
 ```
@@ -536,7 +712,7 @@ Level help (`?`):
 
 ### telnet
 ```text
-(no help output captured)
+
 ```
 
 ### tftp/sftp
@@ -566,16 +742,11 @@ MiNID>config>mngmnt>tacacsplus# group
 (no help output captured)
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure management tacacsplus server NAME")*
 ```text
 - server <ip>
 
 MiNID>config>mngmnt>tacacsplus# server
-
-auto-create probe 'server zzz-hrvst' refused.
-device response: server zzz-hrvst
-#CLI Error, Unneeded Parameter
-MiNID>config>mngmnt>tacacsplus#
 ```
 
 ### wait-to-restore-server
@@ -593,6 +764,65 @@ Level help (`?`):
 ```
 
 ### accounting
+```text
+(no help output captured)
+```
+
+## configure management tacacsplus server NAME
+
+Level help (`?`):
+```text
+accounting-port
+authentication-port
+clear-statistics
+[no] group
+[no] key
+retry
+timeout
+[no] shutdown
+```
+
+### accounting-port
+```text
+(no help output captured)
+```
+
+### authentication-port
+```text
+(no help output captured)
+```
+
+### clear-statistics
+```text
+(no help output captured)
+```
+
+### group
+```text
+(no help output captured)
+```
+
+### key
+```text
+(no help output captured)
+```
+
+### retry
+```text
+
+```
+
+### show statistics
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+### timeout
 ```text
 (no help output captured)
 ```
@@ -626,16 +856,11 @@ availability
 (no help output captured)
 ```
 
-### maintenance-domain *(not entered — parameterized context)*
+### maintenance-domain *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME")*
 ```text
 - maintenance-domain <md-index>
 
 MiNID>config>oam>cfm# maintenance-domain
-
-auto-create probe 'maintenance-domain zzz-hrvst' refused.
-device response: maintenance-domain zzz-hrvst
-#CLI Error, MD Index Exceeds Range [1-8]
-MiNID>config>oam>cfm#
 ```
 
 ### measurement-bin-profile *(parameterized — inner help harvested under "configure oam cfm measurement-bin-profile NAME")*
@@ -651,6 +876,441 @@ MiNID>config>oam>cfm# measurement-bin-profile
 ```
 
 ### show summary
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME
+
+Level help (`?`):
+```text
+md-level
+[no] name
+[no] maintenance-association
+```
+
+### maintenance-association *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME maintenance-association NAME")*
+```text
+- maintenance-association <ma-idx>
+
+MiNID>config>oam>cfm>md(2)# maintenance-association
+```
+
+### md-level
+```text
+(no help output captured)
+```
+
+### name
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME
+
+Level help (`?`):
+```text
+ccm-interval
+[no] interface-status-tlv
+name
+tag-mode
+[no] service-name
+[no] mep
+[no] mip
+```
+
+### ccm-interval
+```text
+(no help output captured)
+```
+
+### interface-status-tlv
+```text
+(no help output captured)
+```
+
+### mep *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME")*
+```text
+- mep <mep-id>
+
+MiNID>config>oam>cfm>md(2)>ma(1)# mep
+```
+
+### name
+```text
+(no help output captured)
+```
+
+### service-name
+```text
+(no help output captured)
+```
+
+### tag-mode
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME
+
+Level help (`?`):
+```text
+[no] ais
+bind
+client-md-level
+lbm
+linktrace
+dest-addr-type
+priority
+vlan
+[no] remote-mep
+[no] ccm-initiate
+[no] shutdown
+[no] service
+```
+
+### ais
+```text
+(no help output captured)
+```
+
+### bind
+```text
+(no help output captured)
+```
+
+### ccm-initiate
+```text
+- remote-mep <remote-mep-id>
+show
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6 dest-mac-addr ccm-initiate
+```
+
+### client-md-level
+```text
+(no help output captured)
+```
+
+### dest-addr-type
+```text
+(no help output captured)
+```
+
+### dest-mac-addr
+```text
+- remote-mep <remote-mep-id>
+show
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6 dest-mac-addr
+```
+
+### inner-priority
+```text
+(no help output captured)
+```
+
+### lbm
+```text
+(no help output captured)
+```
+
+### linktrace
+```text
+(no help output captured)
+```
+
+### outer-priority
+```text
+(no help output captured)
+```
+
+### outer-vlan
+```text
+(no help output captured)
+```
+
+### priority
+```text
+(no help output captured)
+```
+
+### remote-mep *(not entered — parameterized context)*
+```text
+- remote-mep <remote-mep-id>
+show
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep
+
+auto-create tried indices [1, 2, 3, 4, 5, 6], all refused.
+last device response ('remote-mep 6'): remote-mep 6
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)#
+next-arg help: - remote-mep <remote-mep-id>
+show
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6
+```
+
+### service *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME")*
+```text
+- service <service-idx>
+
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# service
+```
+
+### show lbm-results
+```text
+(no help output captured)
+```
+
+### show linktrace-results
+```text
+(no help output captured)
+```
+
+### show status
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+- remote-mep <remote-mep-id>
+show
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)# remote-mep 6 dest-mac-addr ccm-initiate shutdown
+```
+
+### vlan
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME
+
+Level help (`?`):
+```text
+delay-threshold
+delay-var-threshold
+lmm-interval
+dmm-interval
+loss-threshold
+loss-dei-bit-color
+priority
+[no] shutdown
+[no] dest-ne
+clear-statistics
+```
+
+### clear-statistics
+```text
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)>service(2)# clear-statistics
+```
+
+### delay-threshold
+```text
+(no help output captured)
+```
+
+### delay-var-threshold
+```text
+(no help output captured)
+```
+
+### dest-ne *(parameterized — inner help harvested under "configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME")*
+```text
+- dest-ne <dest-ne-id>
+
+MiNID>config>oam>cfm>md(2)>ma(1)>mep(1)>service(2)# dest-ne
+```
+
+### dmm-interval
+```text
+(no help output captured)
+```
+
+### interval
+```text
+(no help output captured)
+```
+
+### lmm-interval
+```text
+(no help output captured)
+```
+
+### loss-dei-bit-color
+```text
+(no help output captured)
+```
+
+### loss-threshold
+```text
+(no help output captured)
+```
+
+### priority
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME
+
+Level help (`?`):
+```text
+[no] delay
+[no] bind-delay-measurement-bin
+[no] bind-delay-var-measurement-bin
+[no] loss
+remote-mep
+clear-statistics
+[no] shutdown
+show-statistics
+show-delay-measurement-bins
+```
+
+### bind-delay-measurement-bin
+```text
+(no help output captured)
+```
+
+### bind-delay-var-measurement-bin
+```text
+(no help output captured)
+```
+
+### clear-statistics
+```text
+(no help output captured)
+```
+
+### delay
+```text
+(no help output captured)
+```
+
+### loss
+```text
+(no help output captured)
+```
+
+### remote-mep
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-delay-measurement-bins
+
+Level help (`?`):
+```text
+running
+current
+interval
+all-intervals
+total-intervals
+```
+
+### all-intervals
+```text
+(no help output captured)
+```
+
+### current
+```text
+(no help output captured)
+```
+
+### interval
+```text
+(no help output captured)
+```
+
+### running
+```text
+(no help output captured)
+```
+
+### total-intervals
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mep NAME service NAME dest-ne NAME show-statistics
+
+Level help (`?`):
+```text
+running
+current
+interval
+total-intervals
+all-intervals
+```
+
+### all-intervals
+```text
+(no help output captured)
+```
+
+### current
+```text
+(no help output captured)
+```
+
+### interval
+```text
+(no help output captured)
+```
+
+### running
+```text
+(no help output captured)
+```
+
+### total-intervals
+```text
+(no help output captured)
+```
+
+## configure oam cfm maintenance-domain NAME maintenance-association NAME mip
+
+Level help (`?`):
+```text
+priority
+vlan
+[no] shutdown
+```
+
+### inner-priority
+```text
+(no help output captured)
+```
+
+### outer-priority
+```text
+(no help output captured)
+```
+
+### outer-vlan
+```text
+(no help output captured)
+```
+
+### priority
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+### vlan
 ```text
 (no help output captured)
 ```
@@ -721,16 +1381,11 @@ Level help (`?`):
 [no] controller
 ```
 
-### controller *(not entered — parameterized context)*
+### controller *(parameterized — inner help harvested under "configure oam twamp controller NAME")*
 ```text
 - controller <controller-name> [<number>]
 
 MiNID>config>oam>twamp# controller
-
-auto-create probe 'controller zzz-hrvst' refused.
-device response: controller zzz-hrvst
-#CLI Error, Invalid Parameter
-MiNID>config>oam>twamp#
 ```
 
 ### profile *(parameterized — inner help harvested under "configure oam twamp profile NAME")*
@@ -740,16 +1395,90 @@ MiNID>config>oam>twamp#
 MiNID>config>oam>twamp# profile
 ```
 
-### responder *(not entered — parameterized context)*
+### responder *(parameterized — inner help harvested under "configure oam twamp responder NAME")*
 ```text
 - responder <responder-name>
 
 MiNID>config>oam>twamp# responder
+```
 
-auto-create probe 'responder zzz-hrvst' refused.
-device response: responder zzz-hrvst
-#CLI Error, Unneeded Parameter
-MiNID>config>oam>twamp#
+## configure oam twamp controller NAME
+
+Level help (`?`):
+```text
+local-ip-address
+[no] shutdown
+[no] peer
+```
+
+### local-ip-address
+```text
+(no help output captured)
+```
+
+### peer *(parameterized — inner help harvested under "configure oam twamp controller NAME peer NAME")*
+```text
+- peer <ip-address> [twamp-light]
+
+MiNID>config>oam>twamp>controller(hrvst)# peer
+```
+
+### show status
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+## configure oam twamp controller NAME peer NAME
+
+Level help (`?`):
+```text
+calculation-mode
+[no] responder-seq-num
+[no] test-session
+[no] activate
+show-status
+show-summary-report
+show-report
+```
+
+### activate
+```text
+(no help output captured)
+```
+
+### calculation-mode
+```text
+(no help output captured)
+```
+
+### responder-seq-num
+```text
+(no help output captured)
+```
+
+### show-report
+```text
+(no help output captured)
+```
+
+### show-status
+```text
+(no help output captured)
+```
+
+### show-summary-report
+```text
+(no help output captured)
+```
+
+### test-session
+```text
+(no help output captured)
 ```
 
 ## configure oam twamp profile NAME
@@ -800,6 +1529,53 @@ delay-variation-event-type
 (no help output captured)
 ```
 
+## configure oam twamp responder NAME
+
+Level help (`?`):
+```text
+ip-address
+udp-port
+[no] tx-seq-num
+[no] ip-loan
+[no] shutdown
+unbind-all-flows
+```
+
+### ip-address
+```text
+(no help output captured)
+```
+
+### ip-loan
+```text
+(no help output captured)
+```
+
+### show status
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+### tx-seq-num
+```text
+(no help output captured)
+```
+
+### udp-port
+```text
+(no help output captured)
+```
+
+### unbind-all-flows
+```text
+(no help output captured)
+```
+
 ## configure packet-capture
 
 Level help (`?`):
@@ -834,7 +1610,7 @@ timestamp-source
 
 ### rpcap-tcp-port
 ```text
-(no help output captured)
+
 ```
 
 ### show status
@@ -854,11 +1630,60 @@ Level help (`?`):
 ethernet
 ```
 
-### ethernet *(not entered — parameterized context)*
+### ethernet *(parameterized — inner help harvested under "configure port ethernet NAME")*
 ```text
 - ethernet {sfp|msa}
 
 MiNID>config>port# ethernet
+```
+
+## configure port ethernet NAME
+
+Level help (`?`):
+```text
+[no] auto-negotiation
+mtu
+clear-statistics
+```
+
+### auto-negotiation
+```text
+(no help output captured)
+```
+
+### clear-statistics
+```text
+(no help output captured)
+```
+
+### force-direct-i2c
+```text
+(no help output captured)
+```
+
+### force-speed
+```text
+(no help output captured)
+```
+
+### i2c-stretching-clock
+```text
+(no help output captured)
+```
+
+### mtu
+```text
+(no help output captured)
+```
+
+### show statistics
+```text
+(no help output captured)
+```
+
+### show status
+```text
+(no help output captured)
 ```
 
 ## configure qos
@@ -870,28 +1695,18 @@ Level help (`?`):
 [no] cos-map-profile
 ```
 
-### cos-map-profile *(not entered — parameterized context)*
+### cos-map-profile *(parameterized — inner help harvested under "configure qos cos-map-profile NAME")*
 ```text
 - cos-map-profile <profile-name> classification {p-bit|ip-dscp}
 
 MiNID>config>qos# cos-map-profile
-
-auto-create probe 'cos-map-profile zzz-hrvst' refused.
-device response: cos-map-profile zzz-hrvst
-#CLI Error, Profile Name Too Long, Max Name Length Is 10 Chars
-MiNID>config>qos#
 ```
 
-### envelope-profile *(not entered — parameterized context)*
+### envelope-profile *(parameterized — inner help harvested under "configure qos envelope-profile NAME")*
 ```text
 - envelope-profile <profile-name>
 
 MiNID>config>qos# envelope-profile
-
-auto-create probe 'envelope-profile zzz-hrvst' refused.
-device response: envelope-profile zzz-hrvst
-#CLI Error, Profile Name Too Long, Max Name Length Is 10 Chars
-MiNID>config>qos#
 ```
 
 ### policer-profile *(parameterized — inner help harvested under "configure qos policer-profile NAME")*
@@ -899,6 +1714,67 @@ MiNID>config>qos#
 - policer-profile <profile-name>
 
 MiNID>config>qos# policer-profile
+```
+
+## configure qos cos-map-profile NAME
+
+Level help (`?`):
+```text
+map
+```
+
+### map
+```text
+(no help output captured)
+```
+
+## configure qos envelope-profile NAME
+
+Level help (`?`):
+```text
+[no] cf-policy
+[no] color_aware
+compensation
+[no] cos
+```
+
+### cf-policy
+```text
+(no help output captured)
+```
+
+### color_aware
+```text
+(no help output captured)
+```
+
+### compensation
+```text
+(no help output captured)
+```
+
+### cos *(parameterized — inner help harvested under "configure qos envelope-profile NAME cos NAME")*
+```text
+- cos [<value>]
+
+MiNID>config>qos>envelope-profile(hrvst)# cos
+```
+
+### coupling-flag-0
+```text
+(no help output captured)
+```
+
+## configure qos envelope-profile NAME cos NAME
+
+Level help (`?`):
+```text
+bandwidth
+```
+
+### bandwidth
+```text
+(no help output captured)
 ```
 
 ## configure qos policer-profile NAME
@@ -975,16 +1851,11 @@ Level help (`?`):
 management-cfg
 ```
 
-### interface *(not entered — parameterized context)*
+### interface *(parameterized — inner help harvested under "configure router interface NAME")*
 ```text
 - interface <number>
 
 MiNID>config>router# interface
-
-auto-create probe 'interface zzz-hrvst' refused.
-device response: interface zzz-hrvst
-#CLI Error, Invalid Parameter
-MiNID>config>router#
 ```
 
 ### management-cfg
@@ -999,6 +1870,69 @@ MiNID>config>router# static-route management-cfg
 - static-route <ip-address/mask> address <next-hop-ip-address>
 
 MiNID>config>router# static-route
+```
+
+## configure router interface NAME
+
+Level help (`?`):
+```text
+[no] ipv6-autoconfig
+[no] address
+[no] vlan
+bind
+[no] dhcp
+[no] loaned-ip
+[no] dhcpv6-client
+```
+
+### address
+```text
+(no help output captured)
+```
+
+### bind
+```text
+(no help output captured)
+```
+
+### dhcp
+```text
+(no help output captured)
+```
+
+### dhcpv6-client
+```text
+(no help output captured)
+```
+
+### ipv6-autoconfig
+```text
+(no help output captured)
+```
+
+### loaned-ip
+```text
+(no help output captured)
+```
+
+### show status
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+### vlan
+```text
+(no help output captured)
+```
+
+### vlan-tpid
+```text
+(no help output captured)
 ```
 
 ## configure service
@@ -1046,7 +1980,7 @@ syslog
 (no help output captured)
 ```
 
-### syslog *(not entered — parameterized context)*
+### syslog *(parameterized — inner help harvested under "configure system syslog NAME")*
 ```text
 - syslog {device|server}  <server number>
 
@@ -1121,19 +2055,44 @@ poll-interval
 (no help output captured)
 ```
 
-### server *(not entered — parameterized context)*
+### server *(parameterized — inner help harvested under "configure system date-and-time ntp server NAME")*
 ```text
 - server <server-id>
 
 MiNID>config>system>date-time>ntp# server
-
-auto-create probe 'server zzz-hrvst' refused.
-device response: server zzz-hrvst
-#CLI Error, Invalid Parameter
-MiNID>config>system>date-time>ntp#
 ```
 
 ### show status
+```text
+(no help output captured)
+```
+
+## configure system date-and-time ntp server NAME
+
+Level help (`?`):
+```text
+address
+query-server
+[no] shutdown
+udp
+```
+
+### address
+```text
+(no help output captured)
+```
+
+### query-server
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
+### udp
 ```text
 (no help output captured)
 ```
@@ -1204,6 +2163,58 @@ Level help (`?`):
 (no help output captured)
 ```
 
+## configure system syslog NAME
+
+Level help (`?`):
+```text
+facility
+port
+severity-level
+[no] shutdown
+clear-statistics
+show-statistics
+```
+
+### accounting
+```text
+(no help output captured)
+```
+
+### address
+```text
+(no help output captured)
+```
+
+### clear-statistics
+```text
+(no help output captured)
+```
+
+### facility
+```text
+(no help output captured)
+```
+
+### port
+```text
+(no help output captured)
+```
+
+### severity-level
+```text
+(no help output captured)
+```
+
+### show-statistics
+```text
+(no help output captured)
+```
+
+### shutdown
+```text
+(no help output captured)
+```
+
 ## configure test
 
 Level help (`?`):
@@ -1226,9 +2237,9 @@ Level help (`?`):
 
 MiNID>config>test>l3sat# generator
 
-auto-create probe 'generator zzz-hrvst' refused.
-device response: generator zzz-hrvst
-#CLI Error, Unneeded Parameter
+auto-create tried [generator zzz-hrvst, generator hrvst, generator z], all refused.
+last device response ('generator z'): generator z
+#CLI Error, Maximum Number Of Generator Profile Reached
 MiNID>config>test>l3sat#
 ```
 
@@ -1239,16 +2250,11 @@ MiNID>config>test>l3sat#
 MiNID>config>test>l3sat# peer-profile
 ```
 
-### session-profile *(not entered — parameterized context)*
+### session-profile *(parameterized — inner help harvested under "configure test l3sat session-profile NAME")*
 ```text
 - session-profile <name>
 
 MiNID>config>test>l3sat# session-profile
-
-auto-create probe 'session-profile zzz-hrvst' refused.
-device response: session-profile zzz-hrvst
-#CLI Error, Unneeded Parameter
-MiNID>config>test>l3sat#
 ```
 
 ## configure test l3sat peer-profile NAME
@@ -1271,6 +2277,42 @@ responder-type
 ```
 
 ### udp-port
+```text
+(no help output captured)
+```
+
+## configure test l3sat session-profile NAME
+
+Level help (`?`):
+```text
+loss-ratio-threshold
+delay-threshold
+delay-variation-threshold
+[no] packet-size
+[no] L1-rate
+```
+
+### L1-rate
+```text
+(no help output captured)
+```
+
+### delay-threshold
+```text
+(no help output captured)
+```
+
+### delay-variation-threshold
+```text
+(no help output captured)
+```
+
+### loss-ratio-threshold
+```text
+(no help output captured)
+```
+
+### packet-size
 ```text
 (no help output captured)
 ```

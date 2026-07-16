@@ -85,10 +85,16 @@ per-instance: staged configs, SSH sessions; restarts per-client).
 - **Reads are whitelisted;** `admin` (reboot/factory-default) and `file`
   delete commands are out of scope by design; `clear-*`/`delete` tokens are
   writes.
+- **SNMP is read-only by wire-protocol construction:** the `snmp_probe` /
+  `snmp_get` / `snmp_walk` tools speak GET/GETNEXT only — SET is simply not
+  implemented anywhere in the toolkit; config writes have exactly one path,
+  the CLI's staged-commit flow.
 - **Interlocks in code, not config:** http transport refuses to start
   without tokens, and write tools work only for a token with write scope
   (`RAD_MCP_WRITE_TOKENS`); TLS is fail-closed (cert XOR key =
-  refuse).
+  refuse); `stage_config` refuses an mp1/mp4100 sequence that doesn't follow
+  the mandatory MP write recipe (`discard-changes` → configure →
+  `sanity-check` → `commit` → `save`).
 - **Check documented limits before additive writes** (key counts, server
   counts — the manual knows, the `?` help doesn't).
 
@@ -111,7 +117,9 @@ run, unlike skills.
 
 - **Facts and secrets never share a file:** `inventory.yaml` holds
   name/host/family/port/groups only; credentials live **only** in
-  `server/.env` (`RAD_MCP_<NAME>_USERNAME/_PASSWORD`, or the globals) and
+  `server/.env` (`RAD_MCP_<NAME>_USERNAME/_PASSWORD`, or the globals; the
+  SNMP window adds `RAD_MCP_<NAME>_SNMP_COMMUNITY` / `_SNMP_V1_COMMUNITY` /
+  `_SNMP_V3_USER`) and
   never pass through an MCP tool argument or response.
 - **The inventory is personal:** gitignored; a clone starts empty
   (`inventory.example.yaml` is the template); on first read, the server
@@ -149,9 +157,25 @@ replaces the markdown). It graduates to real RAG (planned layer 6) when the
 corpus spans many manuals/firmwares or users ask conceptual questions whose
 wording never lexically appears — the lexical layer is the foundation RAG
 builds on, not a throwaway.
+**The SNMP layer — a second, machine-readable window (added 2026-07-16).**
+The vendor MIB sets (workspace `MIBS/` + `MIBs2/`, gitignored like the
+manual PDFs) compile into `references/snmp-oid-map.json` — 35,977 symbolic
+OIDs, **portfolio-wide** (all families, whether a unit has SNMP enabled yet
+or not). Live GETNEXT walks produce per-family capability maps
+(`snmp-map-<family>.md`), and `snmp-support.md` records per-family version
+support, per-unit verified state, and the hard-won agent lessons (GETNEXT
+only — RAD agents mishandle GETBULK; end-of-view is signaled by *silence*,
+not endOfMibView; the minid agent's NEXT chain is sparse — poll it by
+explicit OID). One `sysObjectID` GET identifies the family (complete
+7-family map — the seed of auto-detect on `add_device`), and `sysDescr`
+gives the exact firmware without an SSH session — the fragile-SSH escape
+hatch. The fusion: SNMP supplies the catalog + live state (e.g.
+RAD-GEN-MIB's 258-entry alarm dictionary), the manual supplies meaning, the
+CLI reference supplies the config path.
 → [rad-cli-operations skill](../skills/rad-cli-operations/SKILL.md) ·
 [architecture.md](architecture.md) ("How the manual layer contributes —
 and is it RAG?") · [manual-quality.md](manual-quality.md) ·
+[snmp-support.md](../skills/rad-cli-operations/references/snmp-support.md) ·
 [performance.md](performance.md)
 
 ## 7. The skills and how to drive them
@@ -206,6 +230,8 @@ about the recorded combination, not the target forever.
 
 - [architecture.md](architecture.md) — the full design: stack, drivers,
   knowledge strategy, distribution roadmap.
+- [examples.md](examples.md) — 18 ready-to-paste prompts across the five
+  usage categories (device management → onboarding), persona-triggered.
 - [connecting-remote-mcp.md](connecting-remote-mcp.md) — hosting the shared server (mode 2).
 - [tests/README.md](../tests/README.md) — the knowledge-coverage eval
   harness; [tests/eval-report.md](../tests/eval-report.md) and

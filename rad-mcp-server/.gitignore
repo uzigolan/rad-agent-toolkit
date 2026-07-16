@@ -2,6 +2,8 @@
 .rad-mcp-tokens
 .rad-mcp-http-config
 *.jsonl.partial
+*.mib
+*.MIB
 .venv/
 __pycache__/
 *.pyc

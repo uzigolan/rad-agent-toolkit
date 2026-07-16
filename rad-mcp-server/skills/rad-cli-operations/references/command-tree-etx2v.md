@@ -1,6 +1,6 @@
 # etx2v command tree (family: etx2v)
 
-Captured live from etx2v-1 (ETX-2V chassis variant (manual ETX-2V-CA_AC_2CMB_4U_D) - FIRST etx2v-family unit; dialect assumed shared context CLI, NOT verified live - harvest before trusting reads) via the root `tree` command on 2026-07-15
+Captured live from etx2v-1 (ETX-2V (uCPE-OS chassis platform, prompt uCPE-OS#); verified live - shared context CLI, standard SSH; distinctive virtualization/VNF context; CLI reference + hardware manual harvested) via the root `tree` command on 2026-07-15
 by scripts/harvest_cli.py — re-run `harvest` after firmware upgrades; the
 tree is re-captured fresh each run. Use it to locate which context holds a
 feature, then cli-reference-etx2v.md / the cli_help tool for exact,
@@ -47,13 +47,9 @@ Legend from the CLI's own `?` listings: `+` = sub-context you can enter,
 |   |   |
 |   |   +---install
 |   |   |
-|   |   +---software-confirm-required
-|   |   |
 |   |   +---undo-install
 |   |   |
 |   |   +---show status
-|   |
-|   +---startup-confirm-required
 |   |
 |   +---user-default
 |   |
