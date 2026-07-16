@@ -54,6 +54,10 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   "abayev" / "noam".
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,
   safety model, knowledge layers, distribution roadmap.
+- **[docs/workflows.md](docs/workflows.md)** — end-to-end execution flows,
+   tooling building blocks, onboarding and lookup pipelines.
+- **[docs/future_concept.md](docs/future_concept.md)** — proposed dual-plane
+   MCP split (Device Access MCP + Knowledge MCP) and migration phases.
 - **[docs/VERSIONS.md](docs/VERSIONS.md)** — component versions (server, skills,
   drivers), where each version lives, and the bump policy. Live view: the
   `list_versions` tool.

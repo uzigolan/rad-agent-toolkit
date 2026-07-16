@@ -111,112 +111,49 @@ Before onboarding or runtime flow, use this toolbox summary.
 
 ### 2.1 MCP Tool Structures (What Each Tool Contains)
 
-Read-only CLI/syntax tools:
-
-1. `cli_help`
-- Contains as input: `device`, optional `context`, optional `prefix`.
-- Contains as output: command/argument help for that CLI context, no command execution.
-
-2. `run_show` and `run_show_in_context`
-- Contains as input: `device`, read command (and optional context wrapper).
-- Contains as output: operational read data from whitelisted show/info verbs.
-
-Operational state tools:
-
-1. `health_check`
-- Contains as input: `device`.
-- Contains as output: consolidated health sweep (identity, alarms, key status).
-
-2. `test_connectivity`
-- Contains as input: `device`.
-- Contains as output: SSH reachability and authentication status.
-
-3. `get_config` and `backup_config`
-- Contains as input: `device`.
-- Contains as output: exported running config and/or archived backup artifact.
-
-Write-path tools (guarded):
-
-1. `stage_config`
-- Contains as input: `device`, `lines[]`, `purpose`.
-- Contains as output: `stage_id` and preview only (no device change yet).
-
-2. `commit_config`
-- Contains as input: `stage_id`, `confirm=true`.
-- Contains as output: applied change result with backup/audit path.
-
-3. `save_startup`
-- Contains as input: `device`, `confirm=true`.
-- Contains as output: persist result for reboot survival.
-
-Inventory tools:
-
-1. `list_devices`
-- Contains as input: optional `group` and/or `family` filters.
-- Contains as output: inventory facts (name/host/family/groups).
-
-2. `add_device`
-- Contains as input: `name`, `host`, `family`, optional `port`, `groups`, `description`.
-- Contains as output: new inventory record (facts only, no credentials in payload).
-
-3. `update_device`
-- Contains as input: device name + changed fields only.
-- Contains as output: updated inventory record.
-
-4. `remove_device`
-- Contains as input: `name`, `confirm=true`.
-- Contains as output: deletion status from inventory.
-
-SNMP tools:
-
-1. `snmp_probe`, `snmp_get`, `snmp_walk`
-- Contains as input: target device, OID/scope parameters.
-- Contains as output: SNMP identity, scalar values, or walked subtree evidence.
+| Category | Tool(s) | Contains as Input | Contains as Output |
+| --- | --- | --- | --- |
+| Read-only CLI/syntax | `cli_help` | `device`, optional `context`, optional `prefix` | Command/argument help for that CLI context, no command execution |
+| Read-only CLI/syntax | `run_show`, `run_show_in_context` | `device`, read command (and optional context wrapper) | Operational read data from whitelisted show/info verbs |
+| Operational state | `health_check` | `device` | Consolidated health sweep (identity, alarms, key status) |
+| Operational state | `test_connectivity` | `device` | SSH reachability and authentication status |
+| Operational state | `get_config`, `backup_config` | `device` | Exported running config and/or archived backup artifact |
+| Write-path (guarded) | `stage_config` | `device`, `lines[]`, `purpose` | `stage_id` and preview only (no device change yet) |
+| Write-path (guarded) | `commit_config` | `stage_id`, `confirm=true` | Applied change result with backup/audit path |
+| Write-path (guarded) | `save_startup` | `device`, `confirm=true` | Persist result for reboot survival |
+| Inventory | `list_devices` | Optional `group` and/or `family` filters | Inventory facts (`name`/`host`/`family`/`groups`) |
+| Inventory | `add_device` | `name`, `host`, `family`, optional `port`, `groups`, `description` | New inventory record (facts only, no credentials in payload) |
+| Inventory | `update_device` | Device name + changed fields only | Updated inventory record |
+| Inventory | `remove_device` | `name`, `confirm=true` | Deletion status from inventory |
+| SNMP | `snmp_probe`, `snmp_get`, `snmp_walk` | Target device, OID/scope parameters | SNMP identity, scalar values, or walked subtree evidence |
 
 Usable MCP tools in lookup and validation flows:
 
-1. Call MCP `cli_help` tool
-- Read live CLI syntax and argument help from root or context.
-
-2. Call MCP `run_show` or `run_show_in_context` tool
-- Execute approved read-only operational commands for validation.
-
-3. Call MCP `health_check` or `test_connectivity` tool
-- Pre-flight checks before deeper live lookups.
-
-4. Call MCP `get_config` or `backup_config` tool
-- Read/export configuration for evidence and cross-checking.
-
-5. Call MCP `snmp_probe`, `snmp_get`, `snmp_walk` tool
-- Read telemetry and OID state where SNMP coverage exists.
+| Call | Purpose |
+| --- | --- |
+| Call MCP `cli_help` tool | Read live CLI syntax and argument help from root or context |
+| Call MCP `run_show` or `run_show_in_context` tool | Execute approved read-only operational commands for validation |
+| Call MCP `health_check` or `test_connectivity` tool | Pre-flight checks before deeper live lookups |
+| Call MCP `get_config` or `backup_config` tool | Read/export configuration for evidence and cross-checking |
+| Call MCP `snmp_probe`, `snmp_get`, `snmp_walk` tool | Read telemetry and OID state where SNMP coverage exists |
 
 Allowed static reference artifacts:
 
-1. Verified templates and caveats
-- `verified-commands.md`, `known-limitations.md`.
-
-2. Harvested CLI artifacts
-- `command-tree-*.md`, `cli-reference-*.md`, `cli-help-*.jsonl`, `*-tree-cache.txt`.
-
-3. Manual artifacts
-- `manual-<family>/manual-index.md` and chapter files.
-
-4. SNMP artifacts
-- `snmp-oid-map.json`, `snmp-map-*.md`, `snmp-support.md`.
+| Artifact Group | Files |
+| --- | --- |
+| Verified templates and caveats | `verified-commands.md`, `known-limitations.md` |
+| Harvested CLI artifacts | `command-tree-*.md`, `cli-reference-*.md`, `cli-help-*.jsonl`, `*-tree-cache.txt` |
+| Manual artifacts | `manual-<family>/manual-index.md` and chapter files |
+| SNMP artifacts | `snmp-oid-map.json`, `snmp-map-*.md`, `snmp-support.md` |
 
 Blocked or guarded operations:
 
-1. Direct write execution without staging
-- Not allowed; write path must use stage then explicit commit approval.
-
-2. Unapproved read commands outside whitelist
-- Not allowed through read tools.
-
-3. Commit/save actions inside lookup layers
-- Out of scope for lookup; these belong to the write workflow.
-
-4. Any credentials inside inventory/reference files
-- Not allowed; credentials stay in environment variables.
+| Operation | Guard Rule |
+| --- | --- |
+| Direct write execution without staging | Not allowed; write path must use stage then explicit commit approval |
+| Unapproved read commands outside whitelist | Not allowed through read tools |
+| Commit/save actions inside lookup layers | Out of scope for lookup; these belong to the write workflow |
+| Any credentials inside inventory/reference files | Not allowed; credentials stay in environment variables |
 
 ## 3. Device Onboarding Workflow (New Family)
 
@@ -606,20 +543,13 @@ Typical write sequence:
 
 Safety controls are split between skill policy and server enforcement.
 
-1. Execution gate
-- For shown commands, ask the user before running on device.
-
-2. Read whitelist
-- Only approved read command families are allowed via show tools.
-
-3. Staged write model
-- No direct write execution without stage and explicit commit approval.
-
-4. Audit and backup
-- Commit path includes backup and audit logging.
-
-5. Family-specific write constraints
-- MP candidate-db families enforce additional sequence requirements.
+| Control | Behavior |
+| --- | --- |
+| Execution gate | For shown commands, ask the user before running on device |
+| Read whitelist | Only approved read command families are allowed via show tools |
+| Staged write model | No direct write execution without stage and explicit commit approval |
+| Audit and backup | Commit path includes backup and audit logging |
+| Family-specific write constraints | MP candidate-db families enforce additional sequence requirements |
 
 ## 11. Data Sources and Ownership
 

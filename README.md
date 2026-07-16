@@ -170,27 +170,28 @@ per client.
 
 ## Documentation map
 
-How the docs link together (each node is reachable from its parent):
+How the docs link together (all docs under `rad-mcp-server/docs/` are listed):
 
-```
-README.md (this file)
-├── rad-mcp-server/README.md ........... server overview + five operation categories
-│   ├── docs/CONCEPTS.md .......... ALL principles in one file — concepts entry point
-│   ├── INSTALL.md ..................... Part 1 principles · Part 2 targets + verified matrix
-│   │   ├── scripts/install/mcp_server/ ─── run a shared http server (start/restart scripts)
-│   │   ├── scripts/install/skills_and_mcp/ ─── per-client install scripts + consolidated guide
-│   │   └── docs/connecting-remote-mcp.md . host / join a shared server (http)
-│   │   ├── docs/connecting-local-mcp.md .. same-machine wiring (stdio + http)
-│   ├── docs/architecture.md ........... canonical design (safety, knowledge layers, roadmap)
-│   │   ├── docs/performance.md ........ ingestion timing
-│   │   └── docs/manual-quality.md ..... per-family manual-ingestion quality
-│   ├── skills/*/SKILL.md .............. the three agent skills
-│   ├── commands/*.md .................. the four slash commands
-│   └── tests/README.md ................ eval harness → RESULTS.md · eval-report.md
-├── TODO.md ............................ living task list
-├── vendor-mcp-baseline.md ............. vendor MCP survey this project is modeled on
-└── rad-fusion-architecture.md ......... original design note (superseded, points inward)
-```
+| Area | File | Purpose |
+|---|---|---|
+| Root | [README.md](README.md) | Main entry point and project overview |
+| Root | [TODO.md](TODO.md) | Living roadmap and task tracking |
+| Root | [vendor-mcp-baseline.md](vendor-mcp-baseline.md) | Vendor MCP survey baseline |
+| Root | [rad-fusion-architecture.md](rad-fusion-architecture.md) | Original design note (superseded) |
+| Server | [rad-mcp-server/README.md](rad-mcp-server/README.md) | Server + skills overview |
+| Server | [rad-mcp-server/INSTALL.md](rad-mcp-server/INSTALL.md) | Installation and target-specific setup |
+| Docs | [rad-mcp-server/docs/CONCEPTS.md](rad-mcp-server/docs/CONCEPTS.md) | Unified concepts and operating model |
+| Docs | [rad-mcp-server/docs/architecture.md](rad-mcp-server/docs/architecture.md) | Canonical architecture and safety design |
+| Docs | [rad-mcp-server/docs/workflows.md](rad-mcp-server/docs/workflows.md) | Prompt-to-answer operational workflows |
+| Docs | [rad-mcp-server/docs/future_concept.md](rad-mcp-server/docs/future_concept.md) | Dual-plane MCP future concept |
+| Docs | [rad-mcp-server/docs/examples.md](rad-mcp-server/docs/examples.md) | Prompt examples by usage category |
+| Docs | [rad-mcp-server/docs/examples.html](rad-mcp-server/docs/examples.html) | HTML rendering of examples |
+| Docs | [rad-mcp-server/docs/VERSIONS.md](rad-mcp-server/docs/VERSIONS.md) | Versioning policy and component versions |
+| Docs | [rad-mcp-server/docs/connecting-local-mcp.md](rad-mcp-server/docs/connecting-local-mcp.md) | Local MCP connection guide |
+| Docs | [rad-mcp-server/docs/connecting-remote-mcp.md](rad-mcp-server/docs/connecting-remote-mcp.md) | Remote/shared MCP connection guide |
+| Docs | [rad-mcp-server/docs/manual-quality.md](rad-mcp-server/docs/manual-quality.md) | Manual-ingestion quality reports |
+| Docs | [rad-mcp-server/docs/performance.md](rad-mcp-server/docs/performance.md) | Performance notes and measurements |
+| Tests | [rad-mcp-server/tests/README.md](rad-mcp-server/tests/README.md) | Eval harness and output files |
 
 ## Quick start
 

@@ -182,6 +182,15 @@ for the full design.
   same ground conversationally, so low priority.
 
 ### Pre-existing roadmap (carried over, not from this session)
+- [ ] Reference-data control plane in MCP server: move harvested CLI,
+  manual-index/chapters, and SNMP map ownership out of
+  `skills/rad-cli-operations/references/` into MCP-managed resources and
+  tooling (for example `rad://references/*` + refresh/build tools), with
+  skills consuming those resources instead of reading directory files
+  directly. Phase 1: add MCP reference resources and refresh/build tools.
+  Phase 2: migrate skills to MCP resource reads with parity checks.
+  Phase 3: deprecate direct skill-directory reads and keep one source of
+  truth in MCP.
 - [ ] `rad://cli-reference/{family}/{context}` keyed-lookup resource for
   Desktop.
 - [ ] RADview northbound API backend alongside SSH (currently SSH/Netmiko
