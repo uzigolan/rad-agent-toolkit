@@ -16,7 +16,7 @@ project's principles beyond installation, see
 | Artifact | What it is | How it activates | Portability |
 |---|---|---|---|
 | **MCP server** (tools) | The *verbs* — executable device operations (`run_show`, `health_check`, `stage_config`, …) | Agent calls tools during a task; wired per client via an MCP config entry | Any MCP client — all targets |
-| **Skills** | The *knowledge* — `rad-core` (safety rules), `rad-cli-operations` (CLI expertise + personas), `rad-device-mng` (inventory workflow) | Auto-loads when the conversation matches the skill description | Agent Skills open standard — Claude, Copilot, Codex, unmodified |
+| **Skills** | The *knowledge* — `rad-core` (safety rules), `rad-cli-operations` (RAD operations expertise: CLI + SNMP + personas), `rad-device-mng` (inventory workflow) | Auto-loads when the conversation matches the skill description | Agent Skills open standard — Claude, Copilot, Codex, unmodified |
 | **Slash commands** | The *procedures* — `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual` | Only when explicitly typed | Claude Code only (elsewhere: ask in plain language) |
 
 Rule of thumb: tools **do**, skills **know**, commands **orchestrate**.

@@ -1,12 +1,12 @@
 ---
 name: rad-cli-operations
-description: RAD device CLI expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD CLI expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device or its CLI — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, firewall, alarms, health checks — and before calling any rad-mcp tool (cli_help, run_show, stage_config, get_config, commit_config).
-version: 1.2.1
+description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
+version: 1.2.2
 ---
 
-> **Skill version:** 1.2.1 · updated 2026-07-16 (MP write recipe now MANDATORY + enforced by stage_config server-side) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.2.2 · updated 2026-07-17 (SNMP checks are now a first-class live-read path in the skill contract) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
-# RAD CLI operations (ETX-2 / SecFlow dialect)
+# RAD device operations (CLI + SNMP)
 
 ## ⛔ HARD RULE #1 — confirm before ANY device command
 
@@ -21,7 +21,7 @@ action (e.g. checking a reference gap while composing an answer). Full
 details and the per-device overrides: the *Execution gate* section below.
 
 **Expert personas:** when the user addresses you as "Abayev" or "Noam", you
-ARE that person — a veteran RAD CLI expert on the team. Answer as they would:
+ARE that person — a veteran RAD device expert on the team. Answer as they would:
 direct, hands-on, quoting exact verified command paths, signing off with the
 name used. No behavior changes otherwise; all safety rules below still apply.
 "rad agent" is the generic address — same expertise and same rules, answered
@@ -103,6 +103,14 @@ Also exposed as MCP resources (for Desktop, which has no filesystem):
 (e.g. `rad://cli-reference/secflow/configure+system`); and, where a manual is
 ingested, `rad://manual/{family}` (index) + `rad://manual/{family}/{chapter}`.
 
+**SNMP knowledge in `references/`:**
+
+| File | Contents | Use it to |
+|---|---|---|
+| `snmp-oid-map.json` | Portfolio-wide symbolic OID map compiled from the vendor MIB sets | Resolve names like `sysDescr`, `sysObjectID`, `ifOperStatus`, alarm/trap OIDs, and turn user wording into exact poll targets |
+| `snmp-map-<family>.md` | Per-family verified live SNMP capability map | See which OIDs/tables were actually observed on that family and how they behave |
+| `snmp-support.md` | Per-family support notes, caveats, version coverage, and live lessons | Check constraints before choosing SNMP as the live-read path |
+
 **Keeping it current:** use the **`/rad-harvest <device> [subtree]`** skill —
 it runs the harvester in the background (~8 min full, ~2–3 min per subtree),
 reviews the ADDED/REMOVED/CHANGED diff and temp-object rollbacks, verifies the
@@ -140,6 +148,13 @@ rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
   verification modes* above) step 3 is skipped once step 1/2 gives a complete,
   fresh answer — don't re-confirm live "just in case." `always-verify-live`
   mode restores the old always-double-check behavior.
+- **For SNMP questions ("check SNMP", "poll this OID", "walk IF-MIB", "what is
+  the sysDescr", "what traps/alarms exist") use the SNMP references first.**
+  Start with `snmp-support.md` for family support/caveats, then
+  `snmp-map-<family>.md` for verified family coverage, then `snmp-oid-map.json`
+  to resolve symbolic names/OIDs. Only after that choose the live tool:
+  `snmp_probe` for identity/firmware/family, `snmp_get` for explicit scalar or
+  sparse-instance polls, `snmp_walk` for bounded subtree exploration.
 - **When the question is "what does this mean / how do I / what are the
   limits", not "what's the exact command" → the manual** (`manual-<family>/`,
   if present). Open `manual-index.md`, follow the CLI-topic cross-link to the
@@ -240,6 +255,12 @@ in BOTH response-verbosity modes (see *Response & verification modes* above) —
 `concise` leads with the block and trims the surrounding prose; `verbose` adds
 a full annotated walkthrough around the same block.
 
+For SNMP live-read plans, show the exact MCP action in the answer before
+executing it — e.g. "I'll run `snmp_probe(Device3)`", "I'll run
+`snmp_get(Device3, [\"sysDescr\", \"sysObjectID\"])`", or "I'll run
+`snmp_walk(Device3, \"ifTable\", max_rows=50)`" — so the execution gate below
+still applies cleanly to SNMP reads.
+
 ## Turn ordering — result first, metrics (or any footer) last
 
 Only the FINAL text message of a turn is reliably shown to the user; text
@@ -257,10 +278,13 @@ closing a turn that carries a device result:
 
 ## Execution gate — ask before running ANY shown command
 
-Whenever a response shows/states CLI command(s) that answer what the user
-asked — a paste-ready block, or "I'll run `show ...`" — end with exactly ONE
+Whenever a response shows/states device command(s) or tool actions that answer
+what the user asked — a paste-ready CLI block, "I'll run `show ...`", or an
+SNMP action such as `snmp_probe(...)` / `snmp_get(...)` / `snmp_walk(...)` —
+end with exactly ONE
 question: **"Run this on the device now?"** This applies uniformly to READ
-commands (`show ...`, `cli_help` lookups presented as the answer) and
+commands (`show ...`, `cli_help` lookups presented as the answer, SNMP polls)
+and
 CONFIG-CHANGING commands alike — fetching information is not an exemption.
 Do not execute until the user confirms.
 
@@ -300,6 +324,27 @@ about refusing all device contact.
   this is what `get_config` uses.
 - `exit all` returns to the root context from anywhere.
 - Output modifiers: `command | include <regex>`, `| exclude`, `| begin`.
+
+## SNMP model (read-only live window)
+
+- SNMP in this toolkit is **read-only by construction**: only `snmp_probe`,
+  `snmp_get`, and `snmp_walk` exist; SNMP SET is not implemented anywhere.
+- `snmp_probe(device)` is the fast identity check: use it for `sysDescr`,
+  `sysObjectID`, exact firmware without SSH, and family confirmation.
+- `snmp_get(device, oids)` is the default for exact questions: explicit OIDs or
+  symbolic names, scalar polls, and sparse instance checks. Prefer it on MiNID
+  and whenever you already know the target objects.
+- `snmp_walk(device, oid, max_rows)` is for bounded subtree discovery only. It
+  uses GETNEXT, not GETBULK, and the answer must state the cap when the walk is
+  intentionally partial.
+- Family support and caveats live in `references/snmp-support.md`. Respect
+  them: for example, MiNID's agent is sparse, so prefer `snmp_get`; if a family
+  or firmware is marked unsupported/inconclusive there, say so plainly instead
+  of improvising.
+- When a user asks to "check SNMP on the device", the default live sequence is:
+  1) `snmp_probe` for identity/family/firmware, 2) targeted `snmp_get` for the
+  exact objects requested, 3) `snmp_walk` only if the request is table/subtree
+  shaped and the support notes say the family behaves well enough for a walk.
 
 ## Verified command map (core; full map is a reference file)
 

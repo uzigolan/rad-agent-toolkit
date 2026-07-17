@@ -107,14 +107,18 @@ by design.
 `rad://command-tree/{family}`.
 
 **Skills** (loaded by Claude on demand): `rad-core` — safety rules and the
-staged-commit workflow; `rad-cli-operations` — the context-CLI model, verified
-command map, and `references/` command trees harvested from live devices.
-`rad-cli-operations` also exposes two **configurable behavior modes** (see
-its SKILL.md, *"Response & verification modes"*): response verbosity
-(`concise` default / `verbose`) and reference trust (`trust-reference`
-default / `always-verify-live`). Both default to the faster behavior; say
-e.g. *"abayev, use verbose mode"* or *"abayev, always verify live"* to revert
-for the rest of a session, and the equivalent phrase to switch back.
+staged-commit workflow; `rad-cli-operations` — the main RAD operations skill:
+context-CLI model, verified command map, SNMP read path, and the
+`references/` trees/maps harvested from live devices and vendor sources.
+It covers both CLI questions and SNMP requests such as checking `sysDescr`,
+polling exact OIDs, walking IF-MIB-style tables, or checking trap/alarm
+coverage on a device. `rad-cli-operations` also exposes two **configurable
+behavior modes** (see its SKILL.md, *"Response & verification modes"*):
+response verbosity (`concise` default / `verbose`) and reference trust
+(`trust-reference` default / `always-verify-live`). Both default to the
+faster behavior; say e.g. *"abayev, use verbose mode"* or *"abayev, always
+verify live"* to revert for the rest of a session, and the equivalent phrase
+to switch back.
 
 `/rad-harvest` (`scripts/harvest_cli.py`) now auto-creates and rolls back
 numeric-indexed parameterized contexts too (`mep`, `lag`, `pw`, `bridge`,

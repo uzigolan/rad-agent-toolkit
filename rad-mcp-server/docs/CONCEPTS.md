@@ -180,10 +180,11 @@ and is it RAG?") · [manual-quality.md](manual-quality.md) ·
 
 ## 7. The skills and how to drive them
 
-Three skills: `rad-core` (safety contract), `rad-cli-operations` (CLI
-expert: personas Abayev/Noam/"rad agent", spoken toggles for verbosity and
-reference-trust, five operation categories — syntax lookup, device inquiry,
-device changes, manual questions, knowledge upkeep), `rad-device-mng`
+Three skills: `rad-core` (safety contract), `rad-cli-operations` (RAD
+operations expert: personas Abayev/Noam/"rad agent", spoken toggles for
+verbosity and reference-trust, CLI and SNMP live-read workflows, and five
+operation categories — syntax lookup, device inquiry, device changes, manual
+questions, knowledge upkeep), `rad-device-mng`
 (inventory CRUD + onboarding). Skills answer to plain language; the four
 slash commands package recurring procedures.
 → [root README, skills section](../../README.md) · the three

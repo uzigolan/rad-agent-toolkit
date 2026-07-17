@@ -84,7 +84,7 @@ knowledge is layered from cheap/static to live/exact:
 
 | Layer | What | When Claude uses it |
 |---|---|---|
-| 1. Skill | `rad-cli-operations/SKILL.md`: CLI model, verified command map, **common config recipes**, safety rules | always loaded for RAD work; recipes answer frequent asks with zero lookups |
+| 1. Skill | `rad-cli-operations/SKILL.md`: CLI model, SNMP read model, verified command map, **common config recipes**, safety rules | always loaded for RAD work; recipes and SNMP selection rules answer frequent asks with zero guesswork |
 | 2. References | `references/cli-help-<family>.jsonl` (canonical) → `cli-reference-<family>.md` (rendered) + `command-tree-<family>.md`: the device's **complete `?` help**, every context incl. parameterized ones under `NAME` placeholders | syntax questions answered by grepping a `## <context path>` header — zero device I/O |
 | 3. Live `?` help | `cli_help` tool: firmware-exact ground truth (~1 s warm) | firmware drift, pre-write verification, contexts the harvest can't enter |
 | 4. Manual | `references/manual-<family>/` (per-chapter markdown + index), via `scripts/ingest_manual.py`; resources `rad://manual/{family}[/{chapter}]` | **concepts, procedures, limits, alarm meanings** the `?` help can't give (e.g. "max 2 MQTT servers", enrollment workflow) — cross-linked to CLI contexts |

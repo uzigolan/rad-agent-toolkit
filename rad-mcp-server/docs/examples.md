@@ -1,6 +1,6 @@
 # Example prompts — what to ask, exactly as you'd type it
 
-Ready-to-paste prompts across the five usage categories, each addressed to
+Ready-to-paste prompts across the six usage categories, each addressed to
 one of the agent's trigger names — **"rad agent"** (generic), **"abayev"** or
 **"noam"** (the CLI-expert personas; same rules, personal sign-off). Every
 device action still passes the safety flow: reads wait for your "run it now?"
@@ -34,7 +34,7 @@ as suspicious (usually a mis-registration) and asked back.
 Requires explicit confirmation; only forgets the inventory entry — never
 touches the device, its backups, or its audit history.
 
-## 2. Device operations
+## 2. CLI operations
 
 **2.1 Active alarms**
 > abayev, show the active alarms on sf-163-187
@@ -71,15 +71,40 @@ server-enforced: `discard-changes` → configure → `sanity-check` → `commit`
 Full `info` export to the local archive (`server/backups/`), with diffs
 against any earlier snapshot.
 
-## 3. Network engineering
+## 3. SNMP operations
 
-**3.1 Inquire about a topic**
+SNMP tools are read-only. As with CLI reads, the agent shows the exact live
+action and waits for confirmation before contacting the device.
+
+**3.1 Probe device identity**
+> rad agent, check SNMP on etx2v-1 and report its exact firmware, sysObjectID, and detected family
+
+Uses `snmp_probe` to read the MIB-II system identity and compare the returned
+`sysObjectID` with the toolkit's family map. This is a quick way to confirm
+device identity and firmware without opening an SSH session.
+
+**3.2 Read exact OIDs**
+> noam, read sysName, sysLocation, and sysUpTime from minid-1 using exact SNMP GETs
+
+Uses `snmp_get` with symbolic names resolved through the portfolio OID map.
+Exact GETs are preferred on MiNID because its sparse GETNEXT chain can
+under-report objects during discovery walks.
+
+**3.3 Walk an SNMP table**
+> abayev, walk IF-MIB on etx2v-1, cap it at 100 rows, and summarize interface status and error counters
+
+Uses the row-capped `snmp_walk` GETNEXT path, then turns the returned IF-MIB
+rows into an operator-friendly summary. The toolkit never performs SNMP SET.
+
+## 4. Network engineering
+
+**4.1 Inquire about a topic**
 > rad agent, how does zero-touch provisioning work on the MiNID, and what are its limits?
 
 Concept questions come from the ingested manual (per-chapter markdown +
 cross-links), syntax from the CLI reference — cited per layer.
 
-**3.2 Design: 3 × ETX-2 ring with ERP**
+**4.2 Design: 3 × ETX-2 ring with ERP**
 > abayev, I have three ETX-2 units in a ring running ERP — give me the configuration for all three
 
 Grounded in the etx2 reference (`configure protection erp`) + manual chapter:
@@ -87,7 +112,7 @@ ring-port roles, RPL owner/neighbor placement, per-unit paste-ready blocks,
 and the verification reads (`show erp status`) — staged per unit only after
 your approval.
 
-**3.3 Observability (not just monitoring) for QA on 2 × MP-1**
+**4.3 Observability (not just monitoring) for QA on 2 × MP-1**
 > noam, suggest a way for QA to monitor our two MP-1 units and produce a report that gives observability, not just monitoring
 
 Combines the layers: SNMPv1 polling (sysDescr/IF-MIB counters — stateless,
@@ -96,32 +121,32 @@ config-drift detection via scheduled `backup_config` diffs, and
 `health_check` sweeps — i.e. state + events + trends + drift, with meanings
 from the manual, not just up/down pings.
 
-## 4. Advanced
+## 5. Advanced
 
-**4.1 Compare two device types on a topic**
+**5.1 Compare two device types on a topic**
 > rad agent, compare the ETX-2 and the ETX-2V on QoS capabilities
 
 Capability grounding rule: each family answers ONLY from its own harvested
 reference + manual — no cross-family inference. Differences arrive as a
 table with the evidence (context paths / manual sections) per side.
 
-**4.2 Propose a CLI feature based on another family's implementation**
+**5.2 Propose a CLI feature based on another family's implementation**
 > abayev, the MiNID has no TWAMP responder like the ETX-2 does — draft a feature proposal for adding it to the MiNID CLI, modeled on the ETX-2 implementation
 
 Cross-family reference diff: the ETX-2's harvested `configure oam twamp`
 tree becomes the model; the proposal maps it onto MiNID's compact context
 set with what exists / what's missing / suggested syntax.
 
-**4.3 Compare competitive devices to RAD ones**
+**5.3 Compare competitive devices to RAD ones**
 > noam, compare a competitor's carrier-Ethernet demarcation device against the RAD ETX-2 for an ERP-based rollout
 
 RAD's side is grounded in harvested references + manuals; the competitor's
 side needs public sources (web/datasheets) — the agent says plainly which
 claims are verified from our knowledge base and which are external.
 
-## 5. Onboarding a new device type
+## 6. Onboarding a new device type
 
-**5.1 Harvest its CLI**
+**6.1 Harvest its CLI**
 > rad agent, harvest the CLI of the new device I just added
 
 `/rad-harvest <device>`: probe first (prompt + dialect + SSH behavior),
@@ -129,14 +154,14 @@ then the full `?`-help crawl → `cli-reference-<family>.md` + command tree.
 Fragile-SSH units go branch-by-branch; temp objects are rolled back and the
 device is verified clean afterwards.
 
-**5.2 Ingest its user manual**
+**6.2 Ingest its user manual**
 > noam, here is the user manual PDF for the new family — ingest it
 
 Drop the PDF in `manuals/`, then `/rad-load-manual <pdf> <family>`:
 per-chapter markdown + CLI-topic cross-links. The PDF stays gitignored;
 the extracted markdown is the committed knowledge.
 
-**5.3 Add its MIBs**
+**6.3 Add its MIBs**
 > abayev, here are the MIB files for the new family — add them to the SNMP layer
 
 Drop them in the workspace MIB directory and recompile
