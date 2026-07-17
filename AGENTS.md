@@ -79,7 +79,9 @@ pip install -e ".[tooling]"        # also install pymupdf (for ingest_manual.py)
 
 ```bash
 cp ../inventory.example.yaml ../inventory.yaml   # edit with your lab devices
-cp server/.env.example server/.env               # fill in SSH credentials
+# Create server/.env (gitignored) and add SSH credentials:
+#   RAD_SSH_USERNAME=...
+#   RAD_SSH_PASSWORD=...
 ```
 
 Credentials go **only** in `server/.env` (gitignored). Never put credentials in
@@ -109,13 +111,13 @@ python rad_mcp/smoke.py <device-name>
 
 There is no automated unit-test suite. Validation is done at three levels:
 
-1. **Smoke test** — `scripts/smoke.py <device>`: connects to a single lab
-   device and exercises the core tool set live. Requires SSH credentials and
-   a reachable lab device.
+1. **Smoke test** — `rad_mcp/smoke.py <device>` (run from `rad-mcp-server/server/`):
+   connects to a single lab device and exercises the core tool set live.
+   Requires SSH credentials and a reachable lab device.
 
 2. **Eval harness** (reference-only, no device contact) — `scripts/check_eval_coverage.py`
    checks the harvested CLI reference against a known prompt set. Results land
-   in `tests/RESULTS.md`. Run with:
+   in `tests/RESULTS.md`. Run from `rad-mcp-server/`:
    ```bash
    python scripts/check_eval_coverage.py
    ```
