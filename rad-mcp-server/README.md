@@ -95,6 +95,7 @@ by design.
 
 | Tool | Purpose |
 |---|---|
+| `list_versions` / `check_skill_version` | Report component versions; session self-check that alerts on skill↔server version or bundled/served mode drift |
 | `list_devices` | Inventory, filterable by group/family |
 | `test_connectivity` | SSH reachability + auth check |
 | `health_check` | Driver-defined health sweep (identity, alarms) |

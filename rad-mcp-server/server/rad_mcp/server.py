@@ -146,6 +146,88 @@ def list_devices(group: str = "", family: str = "") -> list[dict]:
     return out
 
 
+def _read_skill_version(name: str) -> str | None:
+    """The version the SERVER's own skills/ copy of <name> declares, or None
+    if the server ships no such skill."""
+    md = (REPO_ROOT / "skills" / name / "SKILL.md")
+    if not md.exists():
+        return None
+    seen = 0
+    for line in md.read_text(encoding="utf-8").splitlines():
+        if line.strip() == "---":
+            seen += 1
+            if seen == 2:
+                break
+            continue
+        if seen == 1 and line.lower().startswith("version:"):
+            return line.split(":", 1)[1].strip()
+    return "(unset)"
+
+
+def _catalog_present() -> bool:
+    try:
+        from . import knowledge as _k
+        _k._db_path()
+        return True
+    except Exception:
+        return False
+
+
+@mcp.tool()
+def check_skill_version(skill: str, version: str, mode: str = "") -> dict:
+    """Session self-check: a LOADED skill reports its own name, version, and
+    installed knowledge mode (bundled|served, from its header's "Installed
+    knowledge mode" line — omit if absent). The server replies with the
+    version IT ships for that skill and its own effective mode, and flags any
+    drift. Call once, before the first rad-mcp action of a session. Any
+    returned `alerts` should be surfaced to the user in one line each, then
+    continue — these are warnings, not blockers.
+
+    Two checks:
+      • VERSION — loaded skill version vs the server's skills/ copy (they drift
+        when one is re-synced and the other isn't).
+      • MODE — a `served` skill is thin (no references) and depends on the
+        server's knowledge catalog; if the server has no catalog, its
+        knowledge tools cannot answer and the pairing is broken. A `bundled`
+        skill is self-sufficient, so a bundled/served-server pairing is
+        harmless (reported as a note, not an alert)."""
+    alerts: list[str] = []
+    server_ver = _read_skill_version(skill)
+    if server_ver is None:
+        alerts.append(f"the rad-mcp server ships no skill named '{skill}' — a "
+                      "renamed/typo'd skill, or a server that predates it")
+        version_match = False
+    else:
+        version_match = (version.strip() == server_ver.strip())
+        if not version_match:
+            alerts.append(
+                f"VERSION MISMATCH — the '{skill}' skill loaded here is v{version.strip()}, "
+                f"but the connected rad-mcp server ships v{server_ver}. They may disagree on "
+                "tools/behavior; re-sync the skill copies (re-run the installer) or update the server.")
+    loaded_mode = (mode or "").strip().lower() or "unknown"
+    server_mode = "served" if _catalog_present() else "bundled-only"
+    mode_note = None
+    if loaded_mode == "served" and server_mode == "bundled-only":
+        alerts.append(
+            "MODE MISMATCH — this skill is installed 'served' (thin, no references) but the "
+            "server has no knowledge catalog, so cli_search/manual_search/mib_* cannot answer. "
+            "Build the catalog (scripts/build_knowledge_catalog.py) or reinstall the skill bundled.")
+    elif loaded_mode == "bundled" and server_mode == "served":
+        mode_note = ("skill is bundled (self-sufficient) while the server is served-capable — "
+                     "harmless; you may reinstall thin (--knowledge served) to save space.")
+    return {
+        "skill": skill,
+        "loaded_version": version.strip(),
+        "server_version": server_ver,
+        "version_match": version_match,
+        "loaded_mode": loaded_mode,
+        "server_effective_mode": server_mode,
+        "mode_note": mode_note,
+        "alerts": alerts,
+        "ok": not alerts,
+    }
+
+
 @mcp.tool()
 def list_versions() -> dict:
     """Report the loaded rad-mcp component versions — the server, each skill, and
@@ -154,15 +236,7 @@ def list_versions() -> dict:
     install's skills/ dir; driver versions from the live driver registry."""
     skills = []
     for skill_md in sorted((REPO_ROOT / "skills").glob("*/SKILL.md")):
-        ver, seen = "", 0
-        for line in skill_md.read_text(encoding="utf-8").splitlines():
-            if line.strip() == "---":
-                seen += 1
-                if seen == 2:
-                    break
-                continue
-            if seen == 1 and line.lower().startswith("version:"):
-                ver = line.split(":", 1)[1].strip()
+        ver = _read_skill_version(skill_md.parent.name)
         skills.append({"name": skill_md.parent.name, "version": ver or "(unset)"})
     drivers = [{"family": f, "version": getattr(d, "version", "?")}
                for f, d in sorted(_DRIVERS.items())]

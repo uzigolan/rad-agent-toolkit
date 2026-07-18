@@ -88,6 +88,20 @@ remove that entry after installing this plugin to avoid a duplicate server.
 """
 
 
+def _stamp_served_mode(skill_md: Path) -> None:
+    """Mark a thin (served) skill so its session self-check knows its mode
+    (a missing stamp means bundled). Idempotent."""
+    if not skill_md.exists():
+        return
+    t = skill_md.read_text(encoding="utf-8")
+    if "<!--rad-mode:" in t:
+        return
+    import re as _re
+    t = _re.sub(r"(?m)^(> \*\*Skill version:\*\*.*)$",
+                r"\1\n<!--rad-mode:served-->", t, count=1)
+    skill_md.write_text(t, encoding="utf-8")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Build the rad-agent-toolkit plugin bundle.")
     ap.add_argument("--knowledge", choices=("bundled", "served"), default="bundled",
@@ -111,6 +125,7 @@ def main() -> None:
     shutil.copytree(SKILLS_SRC, PLUGIN / "skills", ignore=ignore)
     if served:
         print("served mode: thin plugin (rad-cli-operations/references omitted — served by the MCP catalog)")
+        _stamp_served_mode(PLUGIN / "skills" / "rad-cli-operations" / "SKILL.md")
     (PLUGIN / "commands").mkdir()
     for md in sorted(COMMANDS_SRC.glob("*.md")):
         shutil.copy2(md, PLUGIN / "commands" / md.name)

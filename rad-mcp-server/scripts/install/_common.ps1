@@ -92,6 +92,14 @@ function Copy-SkillsTo {
             Remove-Item -Recurse -Force $refs
             Write-Host "  served mode: omitted rad-cli-operations\references (served by the MCP catalog tools)"
         }
+        # Stamp the mode so the loaded skill's self-check knows it (missing = bundled).
+        # Marker is an HTML comment with a unique token that never appears in prose.
+        $skillmd = Join-Path $Dest 'rad-cli-operations\SKILL.md'
+        if ((Test-Path $skillmd) -and ((Get-Content $skillmd -Raw) -notmatch '<!--rad-mode:')) {
+            $c = Get-Content $skillmd -Raw
+            $c = $c -replace '(?m)^(> \*\*Skill version:\*\*.*)$', "`$1`n<!--rad-mode:served-->"
+            Set-Content -Path $skillmd -Value $c -NoNewline
+        }
     }
 }
 

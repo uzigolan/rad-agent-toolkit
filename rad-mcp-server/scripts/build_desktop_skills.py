@@ -20,6 +20,14 @@ REPO = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO / "dist" / "claude-desktop-skills"
 
 
+def _stamp_served(text: str) -> str:
+    if "<!--rad-mode:" in text:
+        return text
+    import re
+    return re.sub(r"(?m)^(> \*\*Skill version:\*\*.*)$",
+                  r"\1\n<!--rad-mode:served-->", text, count=1)
+
+
 def _write_zip(out: Path, skill_dir: Path, served: bool) -> None:
     skip = (skill_dir / "references") if served else None
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
@@ -29,7 +37,12 @@ def _write_zip(out: Path, skill_dir: Path, served: bool) -> None:
             for f in files:
                 full = Path(root) / f
                 arc = full.relative_to(REPO / "skills").as_posix()
-                z.write(full, arc)
+                # served: stamp the mode into rad-cli-operations/SKILL.md so the
+                # loaded skill's self-check knows it (missing stamp = bundled).
+                if served and full.name == "SKILL.md" and full.parent.name == "rad-cli-operations":
+                    z.writestr(arc, _stamp_served(full.read_text(encoding="utf-8")))
+                else:
+                    z.write(full, arc)
 
 
 def main() -> None:

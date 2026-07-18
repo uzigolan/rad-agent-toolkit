@@ -1,10 +1,18 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.1.1
+version: 1.2.0
 ---
 
-> **Skill version:** 1.1.1 · updated 2026-07-18 (list_versions now also reports the knowledge catalog) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.2.0 · updated 2026-07-18 (session self-check for skill/server version drift) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+
+## Session self-check (once, at session start)
+
+Call `check_skill_version(skill="rad-core", version="<the X.Y.Z from the Skill
+version line above>")` once and surface any returned `alerts` to the user —
+version drift between this loaded skill and the connected server's copy. A
+mismatch is a warning, not a blocker; if the tool is unavailable, skip
+silently.
 
 # Operating RAD devices with rad-mcp
 

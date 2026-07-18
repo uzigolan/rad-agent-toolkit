@@ -9,12 +9,12 @@ component.
 
 ## Current — snapshot 2026-07-14
 
-**MCP server:** `0.5.1` (0.5.1: list_versions reports the knowledge-catalog build; 0.5.0: Phase 5 — CLI refs + manuals + reference docs in the knowledge catalog, cli_search/manual_search; 0.4.0: snmp_build_poll_plan + catalog-decoded live values + capability-observation log; 0.3.0: offline knowledge-catalog tools — knowledge_status/mib_search/mib_describe/mib_table/mib_notifications over rad-knowledge.sqlite; 0.2.0: read-only SNMP tools + pysnmp)
+**MCP server:** `0.6.0` (0.6.0: check_skill_version — session drift alert for skill/server version + bundled/served mode; 0.5.1: list_versions reports the knowledge-catalog build; 0.5.0: Phase 5 — CLI refs + manuals + reference docs in the knowledge catalog, cli_search/manual_search; 0.4.0: snmp_build_poll_plan + catalog-decoded live values + capability-observation log; 0.3.0: offline knowledge-catalog tools — knowledge_status/mib_search/mib_describe/mib_table/mib_notifications over rad-knowledge.sqlite; 0.2.0: read-only SNMP tools + pysnmp)
 
 | Skill | Version |
 |---|---|
-| `rad-core` | 1.1.1 |
-| `rad-cli-operations` | 1.2.2 |
+| `rad-core` | 1.2.0 |
+| `rad-cli-operations` | 1.3.0 |
 | `rad-device-mng` | 1.0.0 |
 
 **Knowledge catalog:** `rad-knowledge.sqlite` carries `catalog_meta.schema_version` (currently `1`) + a build timestamp + corpus hash; the live view is the `knowledge_catalog` block of `list_versions`. It is a build artifact (gitignored); the build report is committed.

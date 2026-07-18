@@ -81,9 +81,17 @@ copy_skills_to() {
         cp -R "$SKILLS_SRC/$s" "$dest/"
         echo "  skill -> $dest/$s"
     done
-    if [ "$knowledge" = "served" ] && [ -d "$dest/rad-cli-operations/references" ]; then
-        rm -rf "$dest/rad-cli-operations/references"
-        echo "  served mode: omitted rad-cli-operations/references (served by the MCP catalog tools)"
+    if [ "$knowledge" = "served" ]; then
+        [ -d "$dest/rad-cli-operations/references" ] && {
+            rm -rf "$dest/rad-cli-operations/references"
+            echo "  served mode: omitted rad-cli-operations/references (served by the MCP catalog tools)"
+        }
+        # Stamp the mode so the loaded skill's self-check knows it (missing =
+        # bundled). Marker is an HTML comment with a token never used in prose.
+        local md="$dest/rad-cli-operations/SKILL.md"
+        if [ -f "$md" ] && ! grep -q '<!--rad-mode:' "$md"; then
+            sed -i 's#^\(> \*\*Skill version:\*\*.*\)$#\1\n<!--rad-mode:served-->#' "$md"
+        fi
     fi
 }
 

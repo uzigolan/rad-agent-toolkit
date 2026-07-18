@@ -1,10 +1,26 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.2.2
+version: 1.3.0
 ---
 
-> **Skill version:** 1.2.2 · updated 2026-07-17 (SNMP checks are now a first-class live-read path in the skill contract) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.3.0 · updated 2026-07-18 (session self-check: version + bundled/served mode drift alert) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+
+## Session self-check (once, before your first rad-mcp tool call)
+
+Call `check_skill_version(skill="rad-cli-operations", version="<the X.Y.Z from
+the Skill version line above>", mode="<`served` if an HTML comment near the top
+of this file marks it as served — the served installers stamp one — otherwise
+`bundled`>")`. Surface every
+entry in the returned `alerts` to the user, one line each:
+- **VERSION MISMATCH** — this loaded skill vs the connected server's `skills/`
+  copy drifted (re-sync the copies / re-run the installer).
+- **MODE MISMATCH** — a served (thin, no-references) skill against a server
+  with no knowledge catalog: `cli_search`/`manual_search`/`mib_*` can't
+  answer (build the catalog or reinstall bundled).
+
+Alerts are warnings, not blockers — report and continue. Do this once per
+session; if the tool is unavailable (no rad-mcp connection), skip silently.
 
 # RAD device operations (CLI + SNMP)
 
