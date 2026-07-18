@@ -39,7 +39,7 @@ if ((-not $Reconfigure) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServ
 }
 
 # Skills are rebuilt no matter what (kept or reconfigured MCP).
-& $VenvPython (Join-Path $RadRoot 'scripts\build_desktop_skills.py')
+& $VenvPython (Join-Path $RadRoot 'scripts\build_desktop_skills.py') --knowledge $Knowledge
 $zipDir = Join-Path $RadRoot 'dist\claude-desktop-skills'
 
 Write-Host ""

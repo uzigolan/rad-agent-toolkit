@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "Abayev" / "abayev" or "Noam" / "noam" (the RAD expert personas — e.g. "abayev, how do I ...", "noam, add a route ...") or "rad agent" / "RAD agent" (generic address — e.g. "rad agent, show the startup config") and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.3.0
+version: 1.4.1
 ---
 
-> **Skill version:** 1.3.0 · updated 2026-07-18 (session self-check: version + bundled/served mode drift alert) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.4.1 · updated 2026-07-18 (version requests merge check_skill_version + list_versions; per-skill mode list + server effective mode now mandatory in every version answer) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -21,6 +21,45 @@ entry in the returned `alerts` to the user, one line each:
 
 Alerts are warnings, not blockers — report and continue. Do this once per
 session; if the tool is unavailable (no rad-mcp connection), skip silently.
+
+### Answering a version request — always give the WHOLE picture
+
+Whenever the user asks about versions at ANY point ("what version", "give me
+the versions", "version check", "are the skills up to date"), do NOT answer
+from `list_versions` alone — it only reports the **server's** skill copies, not
+what is installed and loaded on this client. Run BOTH sides and merge them:
+
+1. `check_skill_version(...)` for **each loaded skill** — `rad-cli-operations`,
+   `rad-core`, and `rad-device-mng` — passing each skill's own loaded version
+   and mode (read from that skill's "Skill version" line + served stamp). This
+   is the only source of the **local, installed** version and mode.
+2. `list_versions()` once — for the **server** version and the knowledge-catalog
+   status (schema, build time, object count).
+
+Then report one merged block per skill: **loaded** version+mode (from
+check_skill_version) vs **server** version+mode, `version_match`, plus the
+server version and catalog status. Call out every drift alert (VERSION /
+MODE MISMATCH) explicitly. If loaded and server differ — including
+loaded-mode `bundled` while the client was just reinstalled `served` (a
+stale, not-yet-reloaded session) — say so and note a window reload / new
+session is needed for the loaded copy to match disk. Never present
+`list_versions` numbers as "the loaded skill versions" — they are the
+server's copies.
+
+**ALWAYS include an explicit per-skill loaded-mode list plus the server's
+effective mode — even for a bare "which mode?" or "versions?" question. This
+block is mandatory, never omit it:**
+
+```
+rad-cli-operations: <bundled|served>
+rad-core:           <bundled|served>
+rad-device-mng:     <bundled|served>
+Server effective mode: <served-capable | bundled-only>
+```
+
+Each skill's mode is read from its own loaded copy (served stamp present =
+served, absent = bundled) — so a mixed result (one served, others bundled) is
+normal and correct; report it as-is, don't "harmonize" it.
 
 # RAD device operations (CLI + SNMP)
 

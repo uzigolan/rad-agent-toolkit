@@ -325,7 +325,7 @@ if ($TlsCert) {
     Write-Host "  (FastMCP logs 'transport http' - transport name, not the scheme; Uvicorn confirms https://)"
 }
 # Knowledge catalog readiness (served-mode clients read it via the MCP tools).
-$catalog = Join-Path $RadRoot 'buildad-knowledge.sqlite'
+$catalog = Join-Path $RadRoot 'build\rad-knowledge.sqlite'
 if (Test-Path $catalog) {
     Write-Host "  knowledge catalog: present ($([math]::Round((Get-Item $catalog).Length/1MB)) MB) - served-mode clients supported"
 } else {

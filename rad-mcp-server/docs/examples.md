@@ -96,6 +96,23 @@ under-report objects during discovery walks.
 Uses the row-capped `snmp_walk` GETNEXT path, then turns the returned IF-MIB
 rows into an operator-friendly summary. The toolkit never performs SNMP SET.
 
+**3.4 Rich MIB catalog — the two "gold-standard" prompts**
+
+These ask for **RAD-proprietary** MIB content no general model has memorized, so
+a correct, detailed answer can *only* come from the MCP knowledge catalog
+(`mib_search` / `mib_describe` over `rad-knowledge.sqlite`) — they're the way to
+prove the catalog is really being used, in either bundled or served mode.
+
+> rad agent, describe RAD-EthIf-MIB::erpNodeState — give the exact OID, syntax, enum values, description, and source provenance
+
+> rad agent, search the MIB catalog for RAD-proprietary ATM objects and describe one with its full definition
+
+A real answer returns the enterprise OID (`1.3.6.1.4.1.164.*`), enum values,
+table context, and a source `sha256` — none of which is guessable. To *verify*
+the catalog served it (not training memory), tail `server/logs/audit.jsonl`:
+each call logs a `mib_search` / `mib_describe` line. A thin, name-only reply
+means the MCP server isn't connected and it fell back to the static OID map.
+
 ## 4. Network engineering
 
 **4.1 Inquire about a topic**

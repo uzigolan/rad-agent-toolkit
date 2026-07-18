@@ -48,10 +48,13 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   or read-write (`RAD_MCP_WRITE_TOKENS`).
   Per-target specifics in
   [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md). Start here.
-- **[docs/examples.md](docs/examples.md)** ([HTML](docs/examples.html)) — 18 ready-to-paste prompts across
+- **[docs/examples.md](docs/examples.md)** ([HTML](docs/examples.html)) — 20 ready-to-paste prompts across
   the five usage categories (device management, operations, network
   engineering, advanced, onboarding), each addressed to "rad agent" /
   "abayev" / "noam".
+- **[docs/knowledge-modes.md](docs/knowledge-modes.md)** — bundled ("embeded")
+  vs served skills explained in plain English on one page: what differs, what's
+  identical (all SNMP/MIB is server-side), and which to pick.
 - **[docs/architecture.md](docs/architecture.md)** — the full design: stack,
   safety model, knowledge layers, distribution roadmap.
 - **[docs/workflows.md](docs/workflows.md)** — end-to-end execution flows,
@@ -106,6 +109,14 @@ by design.
 | `get_config` / `backup_config` | Full config export / snapshot to local archive |
 | `stage_config` → `commit_config` | Staged writes: preview, explicit confirm, auto pre-commit backup |
 | `save_startup` | Persist running config (confirm required) |
+
+**Try it (gold-standard MIB prompt):**
+> rad agent, describe RAD-EthIf-MIB::erpNodeState — exact OID, enum values, and description
+
+A correct answer (enterprise OID `1.3.6.1.4.1.164.*`, enum values, a source
+`sha256`) proves the semantic catalog is live: that RAD-proprietary detail can
+only come from `rad-knowledge.sqlite`, never from model memory. More SNMP/MIB
+prompts in [docs/examples.md](docs/examples.md).
 
 **Resources:** `rad://inventory`, `rad://backups`, `rad://backups/{file}`,
 `rad://command-tree/{family}`.

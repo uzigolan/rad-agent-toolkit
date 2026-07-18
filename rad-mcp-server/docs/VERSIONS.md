@@ -3,19 +3,21 @@
 How rad-mcp components are versioned, and what's current. The **live source of
 truth** is the `list_versions` MCP tool (returns the server + every skill +
 every driver in one call); the server version is additionally reported via MCP
-`serverInfo` at the `initialize` handshake (e.g. Claude Code `/mcp`). The
-snapshot below is maintained by hand — update it in the same change that bumps a
-component.
+`serverInfo` at the `initialize` handshake (e.g. Claude Code `/mcp`).
 
-## Current — snapshot 2026-07-14
+**Skill** versions are intentionally NOT copied into this doc — they change
+often and would drift; run `list_versions` for the current numbers. What's
+below is the server changelog, the driver→product map, and the where-to-bump
+rules — the parts that rarely move.
 
-**MCP server:** `0.6.0` (0.6.0: check_skill_version — session drift alert for skill/server version + bundled/served mode; 0.5.1: list_versions reports the knowledge-catalog build; 0.5.0: Phase 5 — CLI refs + manuals + reference docs in the knowledge catalog, cli_search/manual_search; 0.4.0: snmp_build_poll_plan + catalog-decoded live values + capability-observation log; 0.3.0: offline knowledge-catalog tools — knowledge_status/mib_search/mib_describe/mib_table/mib_notifications over rad-knowledge.sqlite; 0.2.0: read-only SNMP tools + pysnmp)
+## Current
 
-| Skill | Version |
-|---|---|
-| `rad-core` | 1.2.0 |
-| `rad-cli-operations` | 1.3.0 |
-| `rad-device-mng` | 1.0.0 |
+**Skills** — run `list_versions` (the server's copies) and `check_skill_version`
+(your loaded copy) for current values; not hand-listed here, so they can't go
+stale. Where they live + the bump policy are below.
+
+**MCP server changelog** (current version is authoritative via `list_versions`):
+`0.6.0` check_skill_version — session drift alert for skill/server version + bundled/served mode · `0.5.1` list_versions reports the knowledge-catalog build · `0.5.0` Phase 5 — CLI refs + manuals + reference docs in the catalog, cli_search/manual_search · `0.4.0` snmp_build_poll_plan + catalog-decoded live values + capability-observation log · `0.3.0` offline knowledge-catalog tools (knowledge_status/mib_search/mib_describe/mib_table/mib_notifications) over rad-knowledge.sqlite · `0.2.0` read-only SNMP tools + pysnmp
 
 **Knowledge catalog:** `rad-knowledge.sqlite` carries `catalog_meta.schema_version` (currently `1`) + a build timestamp + corpus hash; the live view is the `knowledge_catalog` block of `list_versions`. It is a build artifact (gitignored); the build report is committed.
 

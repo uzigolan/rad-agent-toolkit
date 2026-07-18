@@ -106,6 +106,18 @@ is read natively); own workspace: copy the three folders (whole,
 [fallback-older-vscode.md](fallback-older-vscode.md) (instructions-files
 route, field-tested 2026-07-12).
 
+> **⚠ Remove DUPLICATE skill copies BEFORE reinstalling (Copilot quirk).**
+> VS Code Copilot can hold **several copies of the same rad skill loaded at
+> once** — from `~/.copilot/skills`, `~/.claude/skills`, a workspace
+> `.github/skills`, or a leftover from a previous install. When copies
+> collide, Copilot may load a **stale** one, so a freshly installed
+> served/1.4.x skill can still report as an old bundled version. **The tell:**
+> open the Copilot **Skills UI** (Settings → Skills) and click the trash icon
+> on a rad skill — if the skill **stays listed** after deleting, there is more
+> than one copy loaded. **Delete every copy** until it disappears, *then*
+> install the new rad skills → Reload Window → start a new chat. (Confirmed
+> 2026-07-18.)
+
 **Restart + verify:** restart the server ("MCP: List Servers" → Restart) or
 reload the window. MCP tools exist **only in agent mode** (invisible in
 Ask/Edit). "MCP: List Servers" → rad-mcp running; `/rad` autocompletes the
