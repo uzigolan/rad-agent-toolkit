@@ -71,6 +71,14 @@ Distilled from the minid + etx2v onboardings (2026-07-15..18).
      vs claimed, credential model, read strategy, quirks). That yaml is the
      SINGLE SOURCE — no code change; snmp.py and the catalog build both
      read it. Add the unit's `RAD_MCP_<NAME>_SNMP_*` key to `server/.env`.
+    - **Coverage gate for all families (mandatory):** after adding the new
+       family, run the coverage checker and fix any gaps before proceeding:
+
+    ```
+    rad-mcp-server\server\.venv\Scripts\python.exe rad-mcp-server\scripts\check_snmp_support_coverage.py
+    ```
+
+    The command must return `SNMP support coverage check: OK`.
 7. **Catalog rebuild** (folds steps 4-6 into the served-mode database):
 
    ```

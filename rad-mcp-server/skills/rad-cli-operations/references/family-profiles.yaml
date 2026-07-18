@@ -22,7 +22,7 @@ families:
     end_of_view: "silence"
   etx1p:
     sys_object_ids: ["1.3.6.1.4.1.164.6.1.6.68"]
-    versions_verified: "v1"
+    versions_verified: "v1,v2c"
     versions_claimed: "v1,v2c,v3"
     credential_model: "v1/v2c community + v3 USM"
     read_strategy: "walk-ok"

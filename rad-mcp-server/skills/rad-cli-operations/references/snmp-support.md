@@ -136,6 +136,8 @@ Agent lessons (verified live 2026-07-16, both units):
 4. ~~`backends/snmp.py` + read-only tool surface~~ — DONE (server 0.2.0):
    `snmp_probe` (identity + family hint), `snmp_get` (explicit OIDs — the
    minid path), `snmp_walk` (capped GETNEXT, silence-tolerant). Env creds:
-   `RAD_MCP_<NAME>_SNMP_COMMUNITY` / `_SNMP_V3_USER`. Never SET.
+  `RAD_MCP_<NAME>_SNMP_V1_COMMUNITY` (default path), optional
+  `RAD_MCP_<NAME>_SNMP_V1_COMMUNITIES` (CSV fallback list), plus
+  `RAD_MCP_<NAME>_SNMP_COMMUNITY` / `_SNMP_V3_USER`. Never SET.
 5. Fusion cross-links: alarm dictionary ↔ manual alarm chapters ↔
    `configure reporting`; IF-MIB rows ↔ `configure port`.

@@ -238,6 +238,8 @@ flowchart LR
 
 4. SNMP integration
 - Extend [skills/rad-cli-operations/references/snmp-oid-map.json](../skills/rad-cli-operations/references/snmp-oid-map.json) and add family SNMP mapping docs.
+- Update [skills/rad-cli-operations/references/family-profiles.yaml](../skills/rad-cli-operations/references/family-profiles.yaml) for the new family and refresh support notes in [skills/rad-cli-operations/references/snmp-support.md](../skills/rad-cli-operations/references/snmp-support.md).
+- Run coverage gate for ALL existing families: [scripts/check_snmp_support_coverage.py](../scripts/check_snmp_support_coverage.py) and resolve any missing family rows/blocks before release.
 - Validate by calling MCP SNMP tools on a real target.
 
 5. Validation and documentation

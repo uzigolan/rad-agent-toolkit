@@ -119,7 +119,7 @@ run, unlike skills.
   name/host/family/port/groups only; credentials live **only** in
   `server/.env` (`RAD_MCP_<NAME>_USERNAME/_PASSWORD`, or the globals; the
   SNMP window adds `RAD_MCP_<NAME>_SNMP_COMMUNITY` / `_SNMP_V1_COMMUNITY` /
-  `_SNMP_V3_USER`) and
+  `_SNMP_V1_COMMUNITIES` / `_SNMP_V3_USER`) and
   never pass through an MCP tool argument or response.
 - **The inventory is personal:** gitignored; a clone starts empty
   (`inventory.example.yaml` is the template); on first read, the server
