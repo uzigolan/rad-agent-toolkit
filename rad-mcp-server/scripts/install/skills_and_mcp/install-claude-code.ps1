@@ -11,6 +11,7 @@ Http mode removes any existing rad-mcp registration first, then adds the URL.
 Afterwards: reload the VS Code window / start a new claude session.
 #>
 param(
+    [ValidateSet('bundled','served','')][string]$Knowledge = '',
     [switch]$Http,
     [string]$Url,
     [string]$Token,
@@ -18,6 +19,7 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
+$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
     throw "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)"
@@ -35,7 +37,7 @@ if (-not $explicit) {
     if ($mcpOk -or $pluginOk) {
         Write-Host "$Name is already configured with Claude Code - keeping the MCP config."
         if ($mcpOk -and $mcpGet -match 'http') {
-            Copy-SkillsTo "$env:USERPROFILE\.claude\skills"
+            Copy-SkillsTo "$env:USERPROFILE\.claude\skills" -Knowledge $Knowledge
         } else {
             Assert-CommonSetup
             $repoRoot = (Resolve-Path (Join-Path $RadRoot '..')).Path
@@ -67,7 +69,7 @@ if ($Http -or $Url -or $Token) {
     Show-McpConfigText -Text ("transport = http`nurl       = $u`nheader    = Authorization: Bearer $t") `
                        -Title 'added MCP configuration (claude mcp, token masked):'
     # Skills still need a client-side install in http mode:
-    Copy-SkillsTo "$env:USERPROFILE\.claude\skills"
+    Copy-SkillsTo "$env:USERPROFILE\.claude\skills" -Knowledge $Knowledge
 } else {
     Assert-CommonSetup
     $repoRoot = (Resolve-Path (Join-Path $RadRoot '..')).Path

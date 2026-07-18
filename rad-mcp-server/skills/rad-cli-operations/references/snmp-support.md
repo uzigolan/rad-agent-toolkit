@@ -120,6 +120,9 @@ on identical walk data).
 Agent lessons (verified live 2026-07-16, both units):
 - **Use GETNEXT, not GETBULK** — the minid agent's GETBULK jumps arcs and
   mis-orders; both agents answer GETNEXT correctly.
+- **minid answers unknown OIDs with `tooBig`** instead of noSuchInstance
+  (observed live 2026-07-18 on GETs for nonexistent instances) — treat a
+  `tooBig` from minid as "object not implemented", not as a message-size issue.
 - **End-of-view = silence, not endOfMibView** — BOTH agents stop responding
   at the same spot (ENTITY-MIB `entPhysical*.1001`) instead of answering;
   treat a mid-walk timeout after a pause-retry as end-of-view, not an outage.

@@ -341,6 +341,13 @@ if [ -n "$TLS_CERT" ]; then
     echo "  TLS key:  $TLS_KEY"
     echo "  (FastMCP logs 'transport http' — transport name, not scheme; Uvicorn confirms https://)"
 fi
+# Knowledge catalog readiness (served-mode clients read it via the MCP tools).
+if [ -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
+    echo "  knowledge catalog: present ($(( $(stat -c%s "$RAD_ROOT/build/rad-knowledge.sqlite" 2>/dev/null || echo 0) / 1048576 )) MB) - served-mode clients supported"
+else
+    echo "  knowledge catalog: NOT built - bundled-mode clients work; served-mode needs it:"
+    echo "    python scripts/build_knowledge_catalog.py --mib-root \"MIBs2:priority=200\" --mib-root \"MIBS:priority=100\""
+fi
 echo "Starting $NAME on ${scheme}://${HOST}:${PORT}/mcp  (Ctrl-C to stop)"
 [ "$HOST" != "127.0.0.1" ] && echo "Reachable on the LAN — internal networks only, never a public interface."
 (cd "$RAD_ROOT/server" && exec "$VENV_PYTHON" -m rad_mcp.server)

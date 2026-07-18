@@ -18,6 +18,7 @@ Run: python scripts/build_plugin.py
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import shutil
@@ -88,6 +89,14 @@ remove that entry after installing this plugin to avoid a duplicate server.
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser(description="Build the rad-agent-toolkit plugin bundle.")
+    ap.add_argument("--knowledge", choices=("bundled", "served"), default="bundled",
+                    help="bundled (default): plugin carries the skills' references (~14 MB). "
+                         "served: thin plugin — rad-cli-operations/references omitted, served "
+                         "by the MCP catalog tools.")
+    args = ap.parse_args()
+    served = args.knowledge == "served"
+
     if OUT_ROOT.exists():
         shutil.rmtree(OUT_ROOT)
     (PLUGIN / ".claude-plugin").mkdir(parents=True)
@@ -98,7 +107,10 @@ def main() -> None:
     (PLUGIN / "README.md").write_text(README, encoding="utf-8")
 
     # skills/ and commands/ copied verbatim from canonical sources
-    shutil.copytree(SKILLS_SRC, PLUGIN / "skills")
+    ignore = shutil.ignore_patterns("references") if served else None
+    shutil.copytree(SKILLS_SRC, PLUGIN / "skills", ignore=ignore)
+    if served:
+        print("served mode: thin plugin (rad-cli-operations/references omitted — served by the MCP catalog)")
     (PLUGIN / "commands").mkdir()
     for md in sorted(COMMANDS_SRC.glob("*.md")):
         shutil.copy2(md, PLUGIN / "commands" / md.name)

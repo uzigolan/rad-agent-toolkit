@@ -311,9 +311,15 @@ Every module and object must retain:
 - Selection reason and source priority.
 - Raw normalized compiler record for forward compatibility.
 
-The database should not embed vendor source text unless redistribution rights
-permit it. It can always store parsed metadata, source identity, hashes, and
-local paths.
+Be explicit about what "vendor text" means here: object DESCRIPTION strings
+**are** vendor-authored text, and the catalog stores them (FTS5 over
+descriptions is a core requirement — there is no useful semantic catalog
+without them). This is acceptable in the current setting because the corpus
+is RAD's own MIB kit used in an internal RAD pilot, and the IEEE/IETF
+standard MIB texts are redistributable. What the database must NOT embed is
+the full original source files; it stores parsed metadata, description
+text, source identity, hashes, and local paths. Revisit this statement
+before any distribution of the catalog outside RAD.
 
 ## Semantic compilation
 
@@ -382,6 +388,21 @@ The canonical runtime artifact is `rad-knowledge.sqlite`. The runtime opens it
 read-only. Catalog generation uses a temporary database and atomically replaces
 the packaged file only after all validation succeeds.
 
+### Artifact and git policy
+
+With full semantics plus FTS5 over the current corpus the database is
+estimated at tens of MB — a **build artifact, not a committed binary**. The
+repo policy mirrors the existing source-vs-derived pattern (MIB sources and
+manual PDFs gitignored; extracted knowledge committed):
+
+- `rad-knowledge.sqlite` — **gitignored**; produced by the build wrapper on
+  the machine that needs it (install/release step), or distributed as a
+  release artifact.
+- The **build report** (JSON + human summary) — committed; it is the
+  reviewable record of what the build selected, rejected, and validated.
+- The regenerated compatibility `snmp-oid-map.json` — committed, as today.
+- A failed build must leave the previously packaged database untouched.
+
 ### Core MIB tables
 
 | Table | Purpose |
@@ -427,6 +448,36 @@ Recommended evidence types:
 - `operator-verified`
 
 An answer must not upgrade `mib-defined` evidence to `supported`.
+
+The evidence tables must not start empty. The toolkit already holds verified
+`live-snmp` evidence — the per-unit probe results and the walked capability
+maps (`snmp-map-minid.md`, `snmp-map-etx2v.md`, and the live-state table in
+[snmp-support.md](snmp-support.md)) — and Phase 1 must import them as the
+first `capability_runs` / `capability_observations` rows.
+
+### Transport and agent profiles
+
+Semantic correctness is not enough to make a poll plan *executable*: the RAD
+agents have live-verified transport quirks that decide whether a plan works
+at all. These facts currently live as prose in
+[snmp-support.md](snmp-support.md); the catalog must carry them as data:
+
+| Table | Purpose |
+|---|---|
+| `family_snmp_profile` | Per-family transport facts: supported/verified SNMP versions (e.g. **mp4100 answers v1 ONLY** — v2c/v3 time out despite the manual's claims), credential model (v1/v2c community vs. v3 USM), preferred read strategy, and walk behavior flags |
+
+Minimum fields per family:
+
+- `versions_verified` — live-verified list, distinct from `versions_claimed`
+  (the manual's claim); never conflate the two.
+- `read_strategy` — `walk-ok` or `get-preferred` (the minid agent's GETNEXT
+  chain is SPARSE: discovery walks under-report, so plans for it must expand
+  to explicit GET lists).
+- `bulk_supported` — false for all current RAD families (GETBULK jumps arcs
+  and mis-orders on the small agents; plans must be GETNEXT/GET only).
+- `end_of_view` — `silence` for current RAD agents (a mid-walk timeout after
+  one pause-retry is end-of-view, not an outage) vs. `endOfMibView`.
+- Provenance like every other row: how verified, on which unit, when.
 
 ### Search indexes
 
@@ -512,10 +563,15 @@ Builds an offline plan from concepts or selected objects. It must:
 3. Exclude non-readable and notification-only objects.
 4. Prefer exact GET operations when complete instances are known.
 5. Use bounded walks when instances are unknown.
-6. Include expected syntax, enums, units, and decoding instructions.
-7. Include family support evidence and uncertainty.
-8. Return only operations accepted by the existing SNMP backend.
-9. Never contact a device.
+6. **Honor the target family's `family_snmp_profile`**: emit only transport
+   operations the family verifiably answers (version, GETNEXT/GET-only, no
+   GETBULK), switch to explicit-GET expansion for `get-preferred` agents
+   (minid), and annotate walks with the family's end-of-view behavior so a
+   silence is decoded as completion, not failure.
+7. Include expected syntax, enums, units, and decoding instructions.
+8. Include family support evidence and uncertainty.
+9. Return only operations accepted by the existing SNMP backend.
+10. Never contact a device.
 
 Example result shape:
 
@@ -589,39 +645,117 @@ For every object, return:
 
 If the user asks only for local data, stop there. Do not probe a device.
 
+## Knowledge distribution modes (binding requirement)
+
+After full implementation, BOTH modes remain installable — the catalog adds
+`served`, it does not retire `bundled`:
+
+| Mode | Skill payload | Knowledge source | Works without MCP? |
+|---|---|---|---|
+| **`bundled`** (today) | SKILL.md + `references/` (~14 MB) | grep the installed files | Yes (knowledge only; no device tools) |
+| **`served`** | SKILL.md only (~tens of KB) | MCP knowledge tools over `rad-knowledge.sqlite` | No — an MCP connection is required for any knowledge answer |
+
+Requirements this places on the implementation:
+
+- Every client installer (`scripts/install/skills_and_mcp/*`) gains a
+  knowledge-mode choice (e.g. `--knowledge bundled|served`; interactive
+  prompt when unspecified), following the same keep-existing-config
+  conventions the installers already use.
+- The plugin/Desktop-zip build produces both variants (full and thin).
+- `list_versions` reports the installed knowledge mode and, in `served`
+  mode, the catalog content version.
+- The skill text must not assume one mode: knowledge lookups are phrased as
+  "grep the reference file (bundled) / call the knowledge tool (served)".
+- `bundled` remains the fallback when the catalog or its tools are
+  unavailable, and stays the default until `served` passes the acceptance
+  criteria below.
+
 ## Compatibility and migration
 
 The semantic catalog should be introduced without breaking current SNMP
 operations.
 
-### Phase 1: Compiler and validation
+### Phase 1: Compiler and validation — IMPLEMENTED 2026-07-18
+
+Delivered by `scripts/build_knowledge_catalog.py` (first build: 286 modules
+selected MIBs2-first, 330 compiled incl. web-pulled standard imports, 36,197
+objects / 23,192 enum values / 4,466 index rows / 2,828 notifications with
+15,145 payload rows / 640 TCs into `build/rad-knowledge.sqlite`, ~50 MB with
+FTS5; all 10 fixtures passed; evidence + family profiles seeded; the 2 OID
+"conflicts" are benign IEEE alias nodes, reported not fatal).
 
 - Implement deterministic source selection and PySMI semantic compilation.
 - Normalize all selected modules into a temporary SQLite database.
 - Add schema, integrity tests, provenance, and build reports.
+- Seed `family_snmp_profile` and `capability_runs`/`capability_observations`
+  from the already-verified evidence (snmp-support.md live tables, the
+  per-unit probes, and the walked snmp-map files) — the knowledge plane must
+  not launch with empty evidence while verified facts exist.
 - Continue using the existing flat map at runtime.
 
-### Phase 2: Compatibility generation
+### Phase 2: Compatibility generation — IMPLEMENTED 2026-07-18
+
+The same build regenerates the flat map with a stability-first tie-break for
+shared OIDs (a compatibility map never re-attributes a shared OID between
+builds). Result vs. the shipped map: **added=0 removed=0 changed=0** —
+regeneration is exact; `--apply-compat` now maintains
+`references/snmp-oid-map.json` from the database.
 
 - Generate `snmp-oid-map.json` from the canonical database.
 - Compare it with the current map and explain every added, removed, or changed
   mapping.
 - Keep family SNMP maps and `snmp-support.md` unchanged as evidence sources.
 
-### Phase 3: Offline MCP tools
+### Phase 3: Offline MCP tools — IMPLEMENTED 2026-07-18
+
+Delivered: `server/rad_mcp/knowledge.py` (read-only URI open, per-call
+connections, parameterized SQL, bounded results, exact > prefix > FTS
+ranking) + five tools in server 0.3.0. FTS indexes decamelized symbol words
+("ERP state" finds `erpPortState`); `mib_describe` resolves textual
+conventions and attaches live capability evidence; `mib_table` returns
+ordered typed indexes, IMPLIED flags, all columns, and identifying-column
+suggestions. Verified on the design's ERP target outcome.
 
 - Add catalog status, search, describe, table, and notification tools.
 - Package the database with the server and open it read-only.
 - Keep the operations skill thin by routing questions to these MCP tools.
 
-### Phase 4: Poll-plan integration
+### Phase 4: Poll-plan integration — IMPLEMENTED 2026-07-18
+
+Delivered in server 0.4.0: `snmp_build_poll_plan` (offline; resolves
+symbols/OIDs/concepts, expands tables, excludes non-readable +
+notification-only objects with reasons, honors `family_snmp_profile` —
+get-preferred families plan an identifying-column walk + explicit GETs);
+live `snmp_get`/`snmp_walk` values are now decoded with catalog semantics
+(enum meaning + units appended — verified live: minid ifOperStatus `2 = down`);
+every live SNMP call appends a row to
+`server/logs/capability-observations.jsonl` (append-only live evidence,
+importable by the next catalog build).
 
 - Add `snmp_build_poll_plan`.
 - Connect approved plans to existing SNMP tools.
 - Decode live values with catalog semantics.
 - Store live capability observations separately from MIB definitions.
 
-### Phase 5: Broader knowledge integration
+### Phase 5: Broader knowledge integration — IMPLEMENTED 2026-07-18
+
+Delivered in server 0.5.0: the catalog build ingests the CLI references
+(cli-help-<family>.jsonl → `cli_help` + FTS, 4,367 records / 7 families),
+the manuals (per-section split of manual-<family>/ → `manual_sections` +
+FTS, 1,546 sections / 7 families), and the curated reference docs
+(verified-commands, snmp-support, known-limitations, snmp capability maps →
+`reference_docs`), each row with file provenance (`knowledge_sources`,
+sha256). Two retrieval tools keep domain semantics distinct: `cli_search`
+(exact context/prefix > prefix > FTS — the served-mode reference grep) and
+`manual_search` (bounded excerpts with chapter/section/page provenance;
+optional refdoc scope). Phase 5 fixtures gate the build: every CLI family
+must also carry manual sections, and known lookups (static-route, zero
+touch) must answer. DB ~63 MB. The bundled/served installer option (Knowledge distribution modes) is now
+IMPLEMENTED 2026-07-18: `--knowledge bundled|served` on every skills_and_mcp
+installer + the mcp_server launcher's catalog-readiness check, driven by
+`Copy-SkillsTo`/`copy_skills_to` (served omits references/) and thin
+plugin/Desktop-zip builds. Verified: bundled=276 files/14 MB, served=3
+files/56 KB.
 
 - Add manuals and CLI references to the same prepared database.
 - Preserve domain-specific tables and provenance.
@@ -706,3 +840,7 @@ The first production version is complete when:
   support.
 - No offline knowledge call can contact a device.
 - Live execution continues through the existing guarded SNMP tools.
+- Both knowledge distribution modes install and pass the same knowledge
+  answers: a `bundled` install (skills + references, no catalog) and a
+  `served` install (thin skills + catalog tools) answer the fixture
+  questions identically, and the installer offers the choice.

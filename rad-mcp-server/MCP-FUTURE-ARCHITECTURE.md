@@ -22,6 +22,23 @@ installed skills and into a generated, server-side SQLite knowledge catalog.
 Expose narrow MCP query tools that retrieve only the records needed for the
 current question.
 
+**Two knowledge distribution modes, both installable (binding requirement,
+2026-07-18).** The catalog does not retire the file-based skill; after full
+implementation every installer must offer BOTH:
+
+- **`bundled`** (Bundled Knowledge — today's mode): skills install WITH their
+  `references/` files; knowledge answers work with no MCP connection.
+- **`served`** (Served Knowledge): thin skills (SKILL.md only); ALL knowledge
+  is served by the MCP catalog tools from `rad-knowledge.sqlite`.
+
+The mode is a per-install choice (e.g. `--knowledge bundled|served`),
+orthogonal to the stdio/http transport modes. The skill's behavior layer
+(safety contract, personas, method) is identical in both; only where
+knowledge lives differs. `list_versions` and the docs must report which mode
+an installation uses. Note the naming trap: `bundled` is not "offline mode" —
+served-mode knowledge tools are also offline (no device I/O); the modes
+differ in where knowledge lives, not device connectivity.
+
 Use:
 
 - **PySMI** at build time to compile original ASN.1 MIBs into semantic JSON.

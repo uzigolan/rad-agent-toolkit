@@ -343,11 +343,49 @@ def snmp_probe(device: str) -> dict[str, str]:
     return out
 
 
+def _decorate(oid: str, val: str) -> str:
+    """Append catalog semantics (enum meaning, units) to a live value.
+    Graceful no-op when the knowledge catalog is absent."""
+    try:
+        from . import knowledge as k
+        d = k.decode_value(oid, val)
+    except Exception:
+        d = None
+    if not d:
+        return val
+    out = val
+    if d.get("meaning"):
+        out += f"  = {d['meaning']}"
+    if d.get("units"):
+        out += f" [{d['units']}]"
+    return out
+
+
+def _log_observation(dev, tool: str, subject: str, observed: str) -> None:
+    """Append-only live capability evidence (design Phase 4: stored separately
+    from MIB definitions; the next catalog build can import this file)."""
+    try:
+        import json as _json
+        path = REPO_ROOT / "server" / "logs" / "capability-observations.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as f:
+            f.write(_json.dumps({
+                "ts": datetime.now(timezone.utc).isoformat(),
+                "family": dev.family, "device": dev.name, "tool": tool,
+                "subject": subject, "observed": observed,
+                "evidence_type": "live-snmp",
+            }) + "\n")
+    except Exception:
+        pass  # evidence logging must never break a live read
+
+
 @mcp.tool()
 def snmp_get(device: str, oids: list[str]) -> dict[str, str]:
     """SNMP GET of explicit OIDs (read-only), values keyed by OID with the
-    symbolic name appended. This — not snmp_walk — is the reliable way to poll
-    families whose agent has a sparse GETNEXT chain (minid)."""
+    symbolic name appended and decoded with catalog semantics (enum meaning,
+    units) when the knowledge catalog is present. This — not snmp_walk — is
+    the reliable way to poll families whose agent has a sparse GETNEXT chain
+    (minid)."""
     s = _snmp()
     dev = get_device(device)
     if not oids:
@@ -356,7 +394,9 @@ def snmp_get(device: str, oids: list[str]) -> dict[str, str]:
         raise ToolError("max 64 OIDs per call — split larger polls")
     raw = s.snmp_get(dev, oids)
     audit("snmp_get", device, detail=f"{len(oids)} oids")
-    return {f"{oid}  ({s.resolve_name(oid)})": val for oid, val in raw.items()}
+    answered = sum(1 for v in raw.values() if not v.startswith(("ERROR", "PDU-ERROR")))
+    _log_observation(dev, "snmp_get", f"{len(oids)} explicit OIDs", f"{answered} answered")
+    return {f"{oid}  ({s.resolve_name(oid)})": _decorate(oid, val) for oid, val in raw.items()}
 
 
 @mcp.tool()
@@ -371,13 +411,141 @@ def snmp_walk(device: str, oid: str, max_rows: int = 200) -> dict:
     max_rows = max(1, min(int(max_rows), 2000))
     rows, capped, note = s.snmp_walk(dev, oid, max_rows)
     audit("snmp_walk", device, detail=f"{oid} ({len(rows)} rows)")
+    _log_observation(dev, "snmp_walk", f"walk {oid}",
+                     f"{len(rows)} rows{' (capped)' if capped else ''}{'; ' + note if note else ''}")
     return {
         "root": f"{oid}  ({s.resolve_name(oid)})",
-        "rows": {f"{o}  ({s.resolve_name(o)})": v for o, v in rows},
+        "rows": {f"{o}  ({s.resolve_name(o)})": _decorate(o, v) for o, v in rows},
         "row_count": len(rows),
         "capped": capped,
         "note": note or ("complete" if not capped else ""),
     }
+
+
+@mcp.tool()
+def snmp_build_poll_plan(refs: list[str], family: str, max_rows_per_walk: int = 200) -> dict:
+    """Build an OFFLINE SNMP poll plan from concepts/symbols/OIDs for a target
+    family (Phase 4). Resolves refs against the knowledge catalog, expands
+    tables, excludes non-readable and notification-only objects, and honors
+    the family's live-verified transport profile (version, GET-vs-walk
+    strategy, end-of-view behavior). NEVER contacts a device — show the
+    returned operations to the user and ask the confirmation question before
+    executing them via snmp_get/snmp_walk."""
+    k = _knowledge()
+    if not refs:
+        raise ToolError("pass at least one concept/symbol/OID, e.g. ['erpTable', 'ERP R-APS counters']")
+    out = _kcall(k.build_poll_plan, refs, family, max_rows_per_walk=max_rows_per_walk)
+    audit("snmp_build_poll_plan", "-", detail=f"{family}: {len(refs)} refs")
+    return out
+
+
+# --------------------------------------------------- knowledge catalog (offline)
+# Phase 3 of references/snmp-mib-catalog-design.md: OFFLINE tools over the
+# read-only rad-knowledge.sqlite semantic MIB catalog. They never contact a
+# device (no confirmation gate needed) and are available to RO and RW tokens
+# alike. MIB-DEFINED != device-implemented — answers carry capability
+# evidence separately.
+
+def _knowledge():
+    from . import knowledge as k
+    return k
+
+
+def _kcall(fn, *args, **kw):
+    k = _knowledge()
+    try:
+        return fn(*args, **kw)
+    except k.KnowledgeUnavailable as exc:
+        raise ToolError(str(exc)) from exc
+
+
+@mcp.tool()
+def knowledge_status() -> dict:
+    """Knowledge-catalog status (offline): build identity, corpus hash, object
+    counts, source roots, last build's validation summary."""
+    k = _knowledge()
+    out = _kcall(k.status)
+    audit("knowledge_status", "-")
+    return out
+
+
+@mcp.tool()
+def mib_search(query: str, module: str = "", kind: str = "", oid_prefix: str = "",
+               family: str = "", limit: int = 25) -> dict:
+    """Search the semantic MIB catalog (offline) by concept, symbol, or OID.
+    Deterministic ranking: exact > prefix/OID-subtree > full-text (descriptions
+    + enum labels). Optional filters: module, kind (scalar/table/row/column/
+    notification), oid_prefix; family adds that family's verified transport
+    profile to the answer. Results are MIB-defined objects — NOT proof a
+    family implements them."""
+    k = _knowledge()
+    out = _kcall(k.search, query, module=module, kind=kind,
+                 oid_prefix=oid_prefix, family=family, limit=limit)
+    audit("mib_search", "-", detail=query[:80])
+    return out
+
+
+@mcp.tool()
+def mib_describe(ref: str) -> dict:
+    """Full semantic definition of one MIB object (offline) by symbol,
+    MODULE::symbol, or numeric OID: syntax + textual convention + display
+    hint, access, description, enums, ranges, units, default, table/index
+    context, augments, notification payload, module revision, source
+    provenance (file + sha256), and live capability evidence when any exists."""
+    k = _knowledge()
+    out = _kcall(k.describe, ref)
+    audit("mib_describe", "-", detail=ref[:80])
+    return out
+
+
+@mcp.tool()
+def mib_table(ref: str) -> dict:
+    """Complete table model (offline) for a table/row/column reference:
+    table+entry OIDs, ordered indexes (with types and IMPLIED flags),
+    instance-encoding rule, every column with access/type/units/enums, and
+    suggested identifying columns — everything needed to plan a poll."""
+    k = _knowledge()
+    out = _kcall(k.table_model, ref)
+    audit("mib_table", "-", detail=ref[:80])
+    return out
+
+
+@mcp.tool()
+def mib_notifications(query: str, module: str = "", limit: int = 20) -> dict:
+    """Find notifications/traps in the catalog (offline) by concept, with each
+    notification's ordered payload objects."""
+    k = _knowledge()
+    out = _kcall(k.notifications, query, module=module, limit=limit)
+    audit("mib_notifications", "-", detail=query[:80])
+    return out
+
+
+@mcp.tool()
+def cli_search(query: str, family: str = "", context: str = "", limit: int = 15) -> dict:
+    """Search the harvested CLI `?`-help knowledge (offline, Phase 5 — the
+    served-mode equivalent of grepping cli-reference-<family>.md). Ranking:
+    exact context/prefix > context prefix > full-text over help bodies.
+    ALWAYS pass `family` when known — commands are family-specific."""
+    k = _knowledge()
+    out = _kcall(k.cli_search, query, family=family, context=context, limit=limit)
+    audit("cli_search", "-", detail=f"{family}:{query[:60]}")
+    return out
+
+
+@mcp.tool()
+def manual_search(query: str, family: str = "", limit: int = 10,
+                  include_refdocs: bool = True) -> dict:
+    """Search the ingested user manuals per-section (offline, Phase 5 — the
+    served-mode equivalent of grepping manual-<family>/). Returns bounded
+    excerpts with chapter/section/page provenance; optionally also searches
+    the curated reference docs (verified-commands, snmp-support,
+    known-limitations, snmp capability maps). Concepts/limits live here —
+    exact syntax comes from cli_search."""
+    k = _knowledge()
+    out = _kcall(k.manual_search, query, family=family, limit=limit,
+                 include_refdocs=include_refdocs)
+    audit("manual_search", "-", detail=f"{family}:{query[:60]}")
+    return out
 
 
 # ---------------------------------------------------------------- resources

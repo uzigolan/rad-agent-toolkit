@@ -178,17 +178,49 @@ and is it RAG?") · [manual-quality.md](manual-quality.md) ·
 [snmp-support.md](../skills/rad-cli-operations/references/snmp-support.md) ·
 [performance.md](performance.md)
 
+## 6b. Knowledge distribution modes (install-time choice)
+
+Every skills installer offers `--knowledge bundled|served` (`-Knowledge` on
+PowerShell; interactive prompt when omitted, **bundled default**):
+
+- **bundled** (today's mode): skills install WITH their `references/`
+  (~14 MB, 276 files); knowledge answers work with no MCP connection.
+- **served**: thin skills (SKILL.md only, ~56 KB, 3 files); ALL knowledge is
+  served by the MCP catalog tools (`cli_search`, `manual_search`, `mib_*`)
+  over `rad-knowledge.sqlite`. Requires a connected rad-mcp server whose
+  `build/rad-knowledge.sqlite` is present (the HTTP-server launcher reports
+  catalog readiness).
+
+The behavior layer (safety contract, personas, method) is identical in both;
+only where knowledge LIVES differs. Naming trap: served is not "offline
+mode" — its knowledge tools are also offline (no device I/O); the modes
+differ in where knowledge lives, not device connectivity. `bundled` stays
+the default and is never removed. The plugin (claude-code stdio) and Desktop
+zip builds honor `--knowledge served` by producing thin variants.
+→ [snmp-mib-catalog-design.md](../skills/rad-cli-operations/references/snmp-mib-catalog-design.md)
+("Knowledge distribution modes") · [MCP-FUTURE-ARCHITECTURE.md](../MCP-FUTURE-ARCHITECTURE.md)
+
 ## 7. The skills and how to drive them
 
 Three skills: `rad-core` (safety contract), `rad-cli-operations` (RAD
 operations expert: personas Abayev/Noam/"rad agent", spoken toggles for
-verbosity and reference-trust, CLI and SNMP live-read workflows, and five
+verbosity and reference-trust, CLI and SNMP live-read workflows, and six
 operation categories — syntax lookup, device inquiry, device changes, manual
-questions, knowledge upkeep), `rad-device-mng`
-(inventory CRUD + onboarding). Skills answer to plain language; the four
-slash commands package recurring procedures.
+questions, SNMP/knowledge queries, knowledge upkeep), `rad-device-mng`
+(inventory CRUD + onboarding). Skills answer to plain language; the slash
+commands package recurring procedures — `/rad-health`, `/rad-backup`, the
+knowledge pipelines `/rad-harvest` and `/rad-load-manual`, and
+`/rad-onboard-family` (the one-time conductor that *composes* the pipeline
+skills to onboard a brand-new family end-to-end — it never replaces them;
+each pipeline stays independently runnable for its lifetime trigger).
+
+**Onboarding a new family requires two live inputs** — a reachable device of
+that family (probe → CLI harvest need a real unit) and the family's manual
+PDF (the concept layer). Without both, onboarding cannot complete; there is
+no offline path.
 → [root README, skills section](../../README.md) · the three
-[skills/](../skills/) SKILL.md files
+[skills/](../skills/) SKILL.md files ·
+[commands/rad-onboard-family.md](../commands/rad-onboard-family.md)
 
 ## 8. Cross-client truths (verified, not assumed)
 

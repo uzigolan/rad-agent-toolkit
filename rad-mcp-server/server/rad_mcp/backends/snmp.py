@@ -35,17 +35,48 @@ _REPO = Path(__file__).resolve().parents[3]          # rad-mcp-server/
 _OID_MAP_PATH = _REPO / "skills" / "rad-cli-operations" / "references" / "snmp-oid-map.json"
 _oid_map: dict[str, str] | None = None
 
-# sysObjectID -> family (RAD enterprise arc 1.3.6.1.4.1.164.6.1.6.<product>).
-# Grows as units are probed; see snmp-support.md's live-probe table.
-SYS_OBJECT_FAMILY = {  # ALL 7 families verified live 2026-07-16
+# sysObjectID -> family map + per-family transport profiles: the SINGLE
+# SOURCE is references/family-profiles.yaml (onboarding a family = add a
+# block there, no code change). Loaded lazily; a tiny built-in fallback keeps
+# probes working if the yaml is missing (fresh clone before skills install).
+_PROFILES_PATH = _REPO / "skills" / "rad-cli-operations" / "references" / "family-profiles.yaml"
+_FALLBACK_SYS_OBJECT_FAMILY = {
     "1.3.6.1.4.1.164.6.1.6.36": "minid",
     "1.3.6.1.4.1.164.6.1.6.55": "etx2v",
-    "1.3.6.1.4.1.164.6.1.6.68": "etx1p",
-    "1.3.6.1.4.1.164.6.1.6.79": "etx2",
-    "1.3.6.1.4.1.164.6.1.10.7": "secflow",
-    "1.3.6.1.4.1.164.6.1.3.120": "mp4100",
-    "1.3.6.1.4.1.164.6.1.3.179": "mp1",
 }
+_profiles_cache: dict | None = None
+
+
+def load_family_profiles() -> dict:
+    """Parse family-profiles.yaml -> {family: profile-dict}; cached."""
+    global _profiles_cache
+    if _profiles_cache is None:
+        try:
+            import yaml
+            doc = yaml.safe_load(_PROFILES_PATH.read_text(encoding="utf-8")) or {}
+            _profiles_cache = {"provenance": doc.get("provenance", ""),
+                               "families": doc.get("families", {}) or {}}
+        except Exception:
+            _profiles_cache = {"provenance": "", "families": {}}
+    return _profiles_cache
+
+
+def sys_object_family_map() -> dict[str, str]:
+    fams = load_family_profiles()["families"]
+    out = dict(_FALLBACK_SYS_OBJECT_FAMILY)
+    for fam, prof in fams.items():
+        for oid in (prof or {}).get("sys_object_ids", []) or []:
+            out[oid] = fam
+    return out
+
+
+class _SysObjectFamily:
+    """Mapping view over the yaml (kept name-compatible with the old dict)."""
+    def get(self, key, default=None):
+        return sys_object_family_map().get(key, default)
+
+
+SYS_OBJECT_FAMILY = _SysObjectFamily()
 
 SYSTEM_OIDS = {
     "sysDescr": "1.3.6.1.2.1.1.1.0",

@@ -13,3 +13,8 @@ server/logs/
 server/backups/
 *.egg-info/
 dist/
+
+# Knowledge-catalog build artifacts (design: the sqlite is a build
+# artifact, not a committed binary; the report IS committed)
+build/*
+!build/mib-catalog-report.json

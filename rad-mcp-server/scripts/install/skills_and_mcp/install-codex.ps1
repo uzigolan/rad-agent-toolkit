@@ -11,6 +11,7 @@ only the skills are refreshed. Pass -Reconfigure to replace it (TOML is edited
 as text, so remove the old section by hand first, then rerun with -Reconfigure).
 #>
 param(
+    [ValidateSet('bundled','served','')][string]$Knowledge = '',
     [switch]$Http,
     [string]$Url,
     [string]$Token,
@@ -18,6 +19,7 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
+$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 $cfgPath = "$env:USERPROFILE\.codex\config.toml"
 $sectionRe = "\[mcp_servers\.$([regex]::Escape($Name))\]"
@@ -26,7 +28,7 @@ $explicit = $Http -or $Url -or $Token -or $Reconfigure
 if ($exists -and -not $explicit) {
     # Keep the existing MCP config untouched; still refresh the skills.
     Write-Host "$Name is already configured in ${cfgPath}: keeping it (pass -Reconfigure to replace)."
-    Copy-SkillsTo "$env:USERPROFILE\.agents\skills"
+    Copy-SkillsTo "$env:USERPROFILE\.agents\skills" -Knowledge $Knowledge
     Write-Host ""
     Write-Host "Done - kept existing MCP config, refreshed skills. Restart Codex."
     return
@@ -98,7 +100,7 @@ New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
 Add-Content -Path $cfgPath -Value $block
 Write-Host "  mcp   -> $cfgPath"
 Show-McpConfigText -Text $block
-Copy-SkillsTo "$env:USERPROFILE\.agents\skills"
+Copy-SkillsTo "$env:USERPROFILE\.agents\skills" -Knowledge $Knowledge
 
 Write-Host ""
 Write-Host "Done. Now: restart Codex (config + skills load at startup), then verify"

@@ -9,11 +9,11 @@ component.
 
 ## Current — snapshot 2026-07-14
 
-**MCP server:** `0.2.0` (0.2.0: read-only SNMP tools — snmp_probe/snmp_get/snmp_walk — + pysnmp dependency)
+**MCP server:** `0.5.0` (0.5.0: Phase 5 — CLI refs + manuals + reference docs in the knowledge catalog, cli_search/manual_search; 0.4.0: snmp_build_poll_plan + catalog-decoded live values + capability-observation log; 0.3.0: offline knowledge-catalog tools — knowledge_status/mib_search/mib_describe/mib_table/mib_notifications over rad-knowledge.sqlite; 0.2.0: read-only SNMP tools + pysnmp)
 
 | Skill | Version |
 |---|---|
-| `rad-core` | 1.0.0 |
+| `rad-core` | 1.1.0 |
 | `rad-cli-operations` | 1.2.2 |
 | `rad-device-mng` | 1.0.0 |
 

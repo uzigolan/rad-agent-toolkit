@@ -324,6 +324,14 @@ if ($TlsCert) {
     Write-Host "  TLS key:  $TlsKey"
     Write-Host "  (FastMCP logs 'transport http' - transport name, not the scheme; Uvicorn confirms https://)"
 }
+# Knowledge catalog readiness (served-mode clients read it via the MCP tools).
+$catalog = Join-Path $RadRoot 'buildad-knowledge.sqlite'
+if (Test-Path $catalog) {
+    Write-Host "  knowledge catalog: present ($([math]::Round((Get-Item $catalog).Length/1MB)) MB) - served-mode clients supported"
+} else {
+    Write-Host "  knowledge catalog: NOT built - bundled-mode clients work; served-mode needs it:"
+    Write-Host "    $VenvPython (Join-Path scripts build_knowledge_catalog.py) --mib-root MIBs2:priority=200 --mib-root MIBS:priority=100"
+}
 Write-Host "Starting $Name on ${scheme}://${BindHost}:${Port}/mcp  (Ctrl-C to stop)"
 if ($BindHost -ne '127.0.0.1') { Write-Host "Reachable on the LAN - internal networks only, never a public interface." }
 Push-Location (Join-Path $RadRoot 'server')

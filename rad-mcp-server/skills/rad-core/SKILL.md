@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.0.0
+version: 1.1.0
 ---
 
-> **Skill version:** 1.0.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.1.0 · updated 2026-07-18 (7 families incl. minid/etx2v; etx1 dropped) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Operating RAD devices with rad-mcp
 
@@ -69,8 +69,6 @@ The plugin targets the full RAD portfolio; each family maps to a driver under
   `virtualization` context (VNF hosting) plus crypto/ipsec, oam twamp, ldap.
   719-node tree / 527 captures harvested; hardware+BIOS manual ingested
   (`drivers/etx2v.py`).
-- Planned: `etx1` (legacy ETX-1) — different (menu) CLI dialect, own driver
-  and skill to come.
 
 ## Versions
 

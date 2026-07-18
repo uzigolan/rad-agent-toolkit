@@ -89,7 +89,8 @@ knowledge is layered from cheap/static to live/exact:
 | 3. Live `?` help | `cli_help` tool: firmware-exact ground truth (~1 s warm) | firmware drift, pre-write verification, contexts the harvest can't enter |
 | 4. Manual | `references/manual-<family>/` (per-chapter markdown + index), via `scripts/ingest_manual.py`; resources `rad://manual/{family}[/{chapter}]` | **concepts, procedures, limits, alarm meanings** the `?` help can't give (e.g. "max 2 MQTT servers", enrollment workflow) — cross-linked to CLI contexts |
 | 5. MCP resources | `rad://inventory`, `rad://backups`, `rad://command-tree/{family}`, `rad://cli-reference/{family}[/{context}]`, `rad://manual/{family}[/{chapter}]` | surfaces without filesystem access (Desktop) |
-| 6. Manuals RAG | `search_docs` — semantic search / embeddings over the manual corpus | planned — layer 4 already makes the text greppable; RAG adds fuzzy recall at fleet scale |
+| 6. Knowledge catalog | `rad-knowledge.sqlite` (FTS5): CLI refs + manuals + semantic MIB catalog + capability evidence in one DB, queried by `cli_search` / `manual_search` / `mib_*` / `snmp_build_poll_plan` | **served mode** — the server answers knowledge with no skill-side reference files (see `references/snmp-mib-catalog-design.md`); also the SNMP semantics layer for every family |
+| 7. Manuals RAG | semantic/embedding recall over the corpus | planned — layer 6's FTS5 already gives lexical retrieval; vector RAG adds fuzzy recall at fleet scale |
 
 The layers reinforce each other: skills teach the *method* (recipe → reference
 grep → manual for concepts → live verify → stage), references give the *map*,

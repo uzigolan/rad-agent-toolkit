@@ -17,8 +17,9 @@ Prompts for transport:
 By default, if rad-mcp is already in the Desktop config it is KEPT untouched;
 the skill zips are rebuilt either way. Pass -Reconfigure to replace the entry.
 #>
-param([string]$Name = 'rad-mcp', [switch]$Reconfigure)
+param([ValidateSet('bundled','served','')][string]$Knowledge = '', [string]$Name = 'rad-mcp', [switch]$Reconfigure)
 . (Join-Path $PSScriptRoot '..\_common.ps1')
+$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 Assert-CommonSetup
 

@@ -20,10 +20,12 @@ while [ $# -gt 0 ]; do
         --token) HTTP_TOKEN="$2"; shift 2 ;;
         --name) NAME="$2"; shift 2 ;;
         --reconfigure) RAD_RECONFIGURE=1; shift ;;
+        --knowledge) RAD_KNOWLEDGE="$2"; shift 2 ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
 NAME="${NAME:-rad-mcp}"
+KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 case "$(uname -s)" in
     Darwin) CFG="$HOME/Library/Application Support/Code/User/mcp.json" ;;
@@ -45,7 +47,7 @@ else
     fi
     set_json_mcp_entry "$CFG" servers "$ENTRY" "$NAME"
 fi
-copy_skills_to "$HOME/.copilot/skills"
+copy_skills_to "$HOME/.copilot/skills" "$KMODE"
 
 echo ""
 echo "Done. Now: reload the VS Code window, accept the MCP trust dialog,"

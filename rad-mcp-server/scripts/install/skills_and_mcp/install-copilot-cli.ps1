@@ -11,6 +11,7 @@ flags force a mode), offers to keep the existing configuration.
 Afterwards: RESTART the copilot session (skills + MCP load at startup only).
 #>
 param(
+    [ValidateSet('bundled','served','')][string]$Knowledge = '',
     [switch]$Http,
     [string]$Url,
     [string]$Token,
@@ -18,6 +19,7 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
+$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 $cfgPath = "$env:USERPROFILE\.copilot\mcp.json"
 New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
@@ -26,7 +28,7 @@ Backup-JsonConfig -Path $cfgPath
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
 if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name)) {
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
-    Copy-SkillsTo "$env:USERPROFILE\.copilot\skills"
+    Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
     Write-Host ""
     Write-Host "Done. Existing MCP config kept; skills refreshed. Restart the copilot session."
     return
@@ -80,7 +82,7 @@ if (-not ($Http -or $Url -or $Token)) {
 }
 
 Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry -Name $Name
-Copy-SkillsTo "$env:USERPROFILE\.copilot\skills"
+Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
 
 Write-Host ""
 Write-Host "Done. Now: restart the copilot session, then verify with /mcp show and /skills list."

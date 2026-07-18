@@ -20,17 +20,19 @@ while [ $# -gt 0 ]; do
         --token) HTTP_TOKEN="$2"; shift 2 ;;
         --name) NAME="$2"; shift 2 ;;
         --reconfigure) RAD_RECONFIGURE=1; shift ;;
+        --knowledge) RAD_KNOWLEDGE="$2"; shift 2 ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
 NAME="${NAME:-rad-mcp}"
+KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 CFG_PATH="$HOME/.codex/config.toml"
 if [ -f "$CFG_PATH" ] && grep -q "\[mcp_servers\.${NAME}\]" "$CFG_PATH"; then
     # By default keep the existing MCP config and just refresh the skills.
     if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECONFIGURE:-}" != "1" ]; then
         echo "$NAME is already configured in $CFG_PATH: keeping it (pass --reconfigure to replace)."
-        copy_skills_to "$HOME/.agents/skills"
+        copy_skills_to "$HOME/.agents/skills" "$KMODE"
         echo ""
         echo "Done - kept existing MCP config, refreshed skills. Restart Codex."
         exit 0
@@ -75,7 +77,7 @@ mkdir -p "$(dirname "$CFG_PATH")"
 printf '%s\n' "$BLOCK" >> "$CFG_PATH"
 echo "  mcp   -> $CFG_PATH"
 show_mcp_config_text "$BLOCK"
-copy_skills_to "$HOME/.agents/skills"
+copy_skills_to "$HOME/.agents/skills" "$KMODE"
 
 echo ""
 echo "Done. Now: restart Codex (config + skills load at startup), then verify"

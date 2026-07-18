@@ -18,12 +18,14 @@ NAME="rad-mcp"
 while [ $# -gt 0 ]; do
     case "$1" in
         --name) NAME="$2"; shift 2 ;;
+        --knowledge) RAD_KNOWLEDGE="$2"; shift 2 ;;
         --reconfigure) RAD_RECONFIGURE=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
 
 assert_common_setup
+KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 case "$(uname -s)" in
     Darwin) CFG_PATH="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
@@ -50,7 +52,7 @@ else
 fi
 
 # Skills are rebuilt no matter what (kept or reconfigured MCP).
-"$VENV_PYTHON" "$RAD_ROOT/scripts/build_desktop_skills.py"
+"$VENV_PYTHON" "$RAD_ROOT/scripts/build_desktop_skills.py" --knowledge "$KMODE"
 ZIP_DIR="$RAD_ROOT/dist/claude-desktop-skills"
 
 echo ""

@@ -21,10 +21,12 @@ while [ $# -gt 0 ]; do
         --token) HTTP_TOKEN="$2"; shift 2 ;;
         --name) NAME="$2"; shift 2 ;;   # http mode only; plugin/stdio uses the plugin's bundled name
         --reconfigure) RAD_RECONFIGURE=1; shift ;;
+        --knowledge) RAD_KNOWLEDGE="$2"; shift 2 ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
 NAME="${NAME:-rad-mcp}"
+KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 if ! command -v claude >/dev/null 2>&1; then
     echo "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)" >&2
@@ -39,7 +41,7 @@ if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECO
     if [ -n "$MCP_GET" ] || claude plugin list 2>/dev/null | grep -q 'rad-mcp'; then
         echo "$NAME is already configured with Claude Code - keeping the MCP config."
         if printf '%s' "$MCP_GET" | grep -qi 'http'; then
-            copy_skills_to "$HOME/.claude/skills"
+            copy_skills_to "$HOME/.claude/skills" "$KMODE"
         else
             assert_common_setup
             REPO_ROOT="$(cd "$RAD_ROOT/.." && pwd)"
@@ -63,7 +65,7 @@ if [ "$MODE" = http ]; then
 url       = $HTTP_URL
 header    = Authorization: Bearer $HTTP_TOKEN" "added MCP configuration (claude mcp, token masked):"
     # Skills still need a client-side install in http mode:
-    copy_skills_to "$HOME/.claude/skills"
+    copy_skills_to "$HOME/.claude/skills" "$KMODE"
 else
     assert_common_setup
     REPO_ROOT="$(cd "$RAD_ROOT/.." && pwd)"

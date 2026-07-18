@@ -68,7 +68,12 @@ assert_common_setup() {
 }
 
 copy_skills_to() {
+    # $1 = dest, $2 = knowledge mode (bundled|served; default bundled).
+    #   bundled — skills carry references/ (~14 MB); works with no MCP.
+    #   served  — thin skills; rad-cli-operations/references/ omitted and served
+    #             by the MCP catalog tools (needs the rad-mcp catalog present).
     local dest="$1"
+    local knowledge="${2:-bundled}"
     mkdir -p "$dest"
     local s
     for s in "${SKILL_NAMES[@]}"; do
@@ -76,6 +81,30 @@ copy_skills_to() {
         cp -R "$SKILLS_SRC/$s" "$dest/"
         echo "  skill -> $dest/$s"
     done
+    if [ "$knowledge" = "served" ] && [ -d "$dest/rad-cli-operations/references" ]; then
+        rm -rf "$dest/rad-cli-operations/references"
+        echo "  served mode: omitted rad-cli-operations/references (served by the MCP catalog tools)"
+    fi
+}
+
+resolve_knowledge_mode() {
+    # echoes 'bundled' or 'served'. $1 = flag value ('' to prompt).
+    local mode="$1"
+    if [ -z "$mode" ]; then
+        echo "Knowledge distribution mode:" >&2
+        echo "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]" >&2
+        echo "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools" >&2
+        printf "Choice [1]: " >&2
+        read -r ans || ans=""
+        case "$ans" in 2|served|Served) mode=served ;; *) mode=bundled ;; esac
+    fi
+    mode="$(printf '%s' "$mode" | tr 'A-Z' 'a-z')"
+    if [ "$mode" = "served" ] && [ ! -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
+        echo "  WARNING: served mode needs the knowledge catalog, but build/rad-knowledge.sqlite is missing." >&2
+        echo "           Build it: python scripts/build_knowledge_catalog.py --mib-root \"MIBs2:priority=200\" --mib-root \"MIBS:priority=100\"" >&2
+    fi
+    echo "  knowledge mode: $mode" >&2
+    printf '%s' "$mode"
 }
 
 # First non-loopback IPv4 of this host (best-effort, Linux/macOS). Empty if none.

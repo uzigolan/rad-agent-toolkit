@@ -85,8 +85,7 @@ row exists on it. Its SSH is fragile/unique — the connect profile lives in
 standard SSH, with a distinctive top-level `virtualization` (VNF) context not on
 any other family — grep `cli-reference-etx2v.md`. Each family has its
 own `references/` file set — grep the one matching the device's inventory
-family. Legacy ETX-1 uses a different (menu) CLI and will get its own
-skill. SecFlow-1p manual: https://www.rad.com/docs/965
+family. SecFlow-1p manual: https://www.rad.com/docs/965
 
 **Harvested knowledge in `references/` (per family):**
 

@@ -61,7 +61,7 @@ repo root (reads `.claude/` directly). This is the only target with the
 
 **Restart + verify:** CLI — restart the session; extension — reload the
 window. Then `claude mcp list` / `/mcp` (14 tools = stdio; 8 = read-only
-http); `/rad` autocompletes the four commands; *"rad agent, list the managed
+http); `/rad` autocompletes the five commands; *"rad agent, list the managed
 devices"* triggers the skill. Launch errors (extension): Output panel →
 "Claude Code" channel.
 

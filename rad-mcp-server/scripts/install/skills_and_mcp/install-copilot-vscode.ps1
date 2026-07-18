@@ -12,6 +12,7 @@ mode), offers to keep the existing configuration. Afterwards: reload the VS
 Code window, accept the trust dialog, use agent mode.
 #>
 param(
+    [ValidateSet('bundled','served','')][string]$Knowledge = '',
     [switch]$Http,
     [string]$Url,
     [string]$Token,
@@ -19,6 +20,7 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
+$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 $cfgPath = Join-Path $env:APPDATA 'Code\User\mcp.json'
 New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
@@ -27,7 +29,7 @@ Backup-JsonConfig -Path $cfgPath
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
 if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -Name $Name)) {
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
-    Copy-SkillsTo "$env:USERPROFILE\.copilot\skills"
+    Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
     Write-Host ""
     Write-Host "Done. Existing MCP config kept; skills refreshed. Reload the VS Code window."
     return
@@ -56,7 +58,7 @@ if (-not ($Http -or $Url -or $Token)) {
 }
 
 Set-JsonMcpEntry -Path $cfgPath -RootKey 'servers' -Entry $entry -Name $Name
-Copy-SkillsTo "$env:USERPROFILE\.copilot\skills"
+Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
 
 Write-Host ""
 Write-Host "Done. Now: reload the VS Code window, accept the MCP trust dialog,"

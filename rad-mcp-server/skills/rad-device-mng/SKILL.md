@@ -60,7 +60,7 @@ for the current list, or just call `list_devices()` and look at what
 families are already in use). Registering a device with an unsupported
 family is refused with the valid list in the error — this tool adds a new
 **unit** of an existing CLI dialect, not support for a new dialect. A
-genuinely new dialect (legacy ETX-1, MP-4100, ...) needs its own driver —
+genuinely new dialect (e.g. the legacy ETX-1 menu CLI) needs its own driver —
 a code change, not an inventory change.
 
 ## Adding a device — required intake (HARD GATE)

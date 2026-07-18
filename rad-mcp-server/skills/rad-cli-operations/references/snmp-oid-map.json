@@ -1,9 +1,7 @@
 {
 "_meta": {
-"source": "workspace MIBS/ + MIBs2/ union (MIBs2 newer revisions win overlaps; MIBS supplies IEEE/IANA standards), compiled by pysmi JsonCodeGen",
-"generated": "2026-07-16",
-"modules_staged": 286,
-"modules_compiled": 330,
+"source": "regenerated from rad-knowledge.sqlite (build_knowledge_catalog.py, Phase 2)",
+"generated": "2026-07-18",
 "objects": 35977
 },
 "0.0": "SNMPv2-SMI::zeroDotZero",

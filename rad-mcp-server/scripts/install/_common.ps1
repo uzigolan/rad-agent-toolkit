@@ -69,12 +69,54 @@ function Assert-CommonSetup {
 }
 
 function Copy-SkillsTo {
-    param([Parameter(Mandatory)][string]$Dest)
+    # Knowledge distribution mode:
+    #   bundled (default) — skills carry their references/ (~14 MB); knowledge
+    #                       answers work with no MCP connection.
+    #   served            — thin skills (SKILL.md only); the rad-cli-operations
+    #                       references/ is omitted and served by the MCP
+    #                       knowledge-catalog tools (cli_search / manual_search
+    #                       / mib_*). Requires a connected rad-mcp server whose
+    #                       build/rad-knowledge.sqlite is present.
+    param(
+        [Parameter(Mandatory)][string]$Dest,
+        [ValidateSet('bundled', 'served')][string]$Knowledge = 'bundled'
+    )
     New-Item -ItemType Directory -Force $Dest | Out-Null
     foreach ($s in $script:SkillNames) {
         Copy-Item -Recurse -Force (Join-Path $script:SkillsSrc $s) $Dest
         Write-Host "  skill -> $Dest\$s"
     }
+    if ($Knowledge -eq 'served') {
+        $refs = Join-Path $Dest 'rad-cli-operations\references'
+        if (Test-Path $refs) {
+            Remove-Item -Recurse -Force $refs
+            Write-Host "  served mode: omitted rad-cli-operations\references (served by the MCP catalog tools)"
+        }
+    }
+}
+
+function Resolve-KnowledgeMode {
+    # Returns 'bundled' or 'served'. A -Knowledge flag wins; otherwise prompt
+    # (bundled is the default). Warns in served mode if the catalog is absent.
+    param([string]$Knowledge)
+    $mode = if ($Knowledge) { $Knowledge.ToLower() } else { '' }
+    if (-not $mode) {
+        Write-Host ""
+        Write-Host "Knowledge distribution mode:"
+        Write-Host "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]"
+        Write-Host "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools"
+        $ans = Read-Host "Choice [1]"
+        $mode = if ($ans -match '^2$|^served') { 'served' } else { 'bundled' }
+    }
+    if ($mode -eq 'served') {
+        $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'
+        if (-not (Test-Path $db)) {
+            Write-Host "  WARNING: served mode needs the knowledge catalog, but $db is missing."
+            Write-Host "           Build it: python scripts\build_knowledge_catalog.py --mib-root `"MIBs2:priority=200`" --mib-root `"MIBS:priority=100`""
+        }
+    }
+    Write-Host "  knowledge mode: $mode"
+    return $mode
 }
 
 function New-StdioEntry {
