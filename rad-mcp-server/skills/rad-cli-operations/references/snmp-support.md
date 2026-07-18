@@ -1,5 +1,10 @@
 # SNMP support per family — manual + CLI-harvest evidence
 
+Future semantic MIB compilation, prepared SQLite catalog, MCP lookup, and
+poll-plan design are specified in
+[snmp-mib-catalog-design.md](snmp-mib-catalog-design.md). This document remains
+the record of current family evidence and observed live behavior.
+
 Groundwork for the SNMP knowledge layer (device data fusion: CLI reference ↔
 manual ↔ SNMP). Compiled 2026-07-16 from the ingested manuals
 (`manual-<family>/`) cross-checked against the harvested CLI references

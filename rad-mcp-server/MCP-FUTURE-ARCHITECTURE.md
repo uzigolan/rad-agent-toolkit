@@ -117,6 +117,10 @@ the MCP server owns the authoritative CLI, manual, MIB, and capability data.
 Knowledge tools can answer questions or prepare plans without device contact.
 Only the existing guarded device plane can execute those plans.
 
+The detailed MIB compiler, semantic schema, prepared-database, MCP query, and
+SNMP poll-plan specification is maintained in
+[snmp-mib-catalog-design.md](skills/rad-cli-operations/references/snmp-mib-catalog-design.md).
+
 ## Why SQLite with FTS5 is the best fit
 
 The known MIB corpus contains roughly 330 modules and 35,977 objects. Even after
