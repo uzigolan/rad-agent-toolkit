@@ -1,6 +1,6 @@
 [project]
 name = "rad-mcp"
-version = "0.5.0"
+version = "0.5.1"
 description = "MCP server for RAD Data Communications devices (ETX-2 family and beyond)"
 requires-python = ">=3.10"
 dependencies = [

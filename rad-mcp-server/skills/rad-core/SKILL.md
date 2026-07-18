@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.1.0
+version: 1.1.1
 ---
 
-> **Skill version:** 1.1.0 · updated 2026-07-18 (7 families incl. minid/etx2v; etx1 dropped) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.1.1 · updated 2026-07-18 (list_versions now also reports the knowledge catalog) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Operating RAD devices with rad-mcp
 
@@ -78,8 +78,8 @@ is loaded (and spot a stale deployed copy vs the source). When the user asks to
 drivers versions"*, *"abayev, what versions are loaded"* — produce a table:
 
 1. **Prefer the `list_versions` MCP tool** (read-only, works on every transport
-   incl. Desktop). It returns `{server, skills:[{name,version}],
-   drivers:[{family,version}]}`.
+   incl. Desktop). It returns `{server, skills:[...], drivers:[...], knowledge_catalog:{...}}`
+   (the catalog block reports the served-mode DB build, or "not built" in bundled mode).
 2. **No tool available?** Read the versions from files: each skill's `version:`
    frontmatter line in `skills/<name>/SKILL.md`, and each driver's `version`
    attribute in `server/rad_mcp/drivers/<family>.py`.

@@ -1,4 +1,6 @@
-# Future rad-mcp Architecture
+# rad-mcp + skills — SERVED mode architecture
+
+*(Knowledge distribution mode: **served** — thin skills; the MCP server answers knowledge from . As of 2026-07-18 this is IMPLEMENTED (server 0.5.0); the bundled counterpart is [MCP-SKILLS-BUNDLED-ARCHITECTURE.md](MCP-SKILLS-BUNDLED-ARCHITECTURE.md).)*
 
 ## Document purpose
 
@@ -13,7 +15,7 @@ It is intended to be sufficient for a separate development team to implement
 the design without relying on the original discussion.
 
 The implemented baseline is documented in
-[`MCP-CURRENT-ARCHITECTURE.md`](MCP-CURRENT-ARCHITECTURE.md).
+[`MCP-SKILLS-BUNDLED-ARCHITECTURE.md`](MCP-SKILLS-BUNDLED-ARCHITECTURE.md).
 
 ## Executive decision
 

@@ -198,7 +198,7 @@ differ in where knowledge lives, not device connectivity. `bundled` stays
 the default and is never removed. The plugin (claude-code stdio) and Desktop
 zip builds honor `--knowledge served` by producing thin variants.
 → [snmp-mib-catalog-design.md](../skills/rad-cli-operations/references/snmp-mib-catalog-design.md)
-("Knowledge distribution modes") · [MCP-FUTURE-ARCHITECTURE.md](../MCP-FUTURE-ARCHITECTURE.md)
+("Knowledge distribution modes") · [MCP-SKILLS-SERVED-ARCHITECTURE.md](../MCP-SKILLS-SERVED-ARCHITECTURE.md)
 
 ## 7. The skills and how to drive them
 

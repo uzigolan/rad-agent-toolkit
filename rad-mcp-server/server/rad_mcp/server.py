@@ -166,7 +166,25 @@ def list_versions() -> dict:
         skills.append({"name": skill_md.parent.name, "version": ver or "(unset)"})
     drivers = [{"family": f, "version": getattr(d, "version", "?")}
                for f, d in sorted(_DRIVERS.items())]
-    return {"server": __version__, "skills": skills, "drivers": drivers}
+    # Knowledge catalog is a distributable, versioned artifact too (schema +
+    # content build). Report it so served-mode installs can spot a stale DB.
+    catalog: dict = {"status": "not built (bundled-mode installs answer from skill references)"}
+    try:
+        from . import knowledge as _k
+        s = _k.status()
+        m = s.get("meta", {})
+        catalog = {
+            "schema_version": m.get("schema_version"),
+            "built_at": m.get("built_at"),
+            "corpus_sha256": (m.get("corpus_sha256") or "")[:16],
+            "objects": s.get("counts", {}).get("mib_objects"),
+            "cli_help": s.get("counts", {}).get("cli_help"),
+            "manual_sections": s.get("counts", {}).get("manual_sections"),
+        }
+    except Exception:
+        pass
+    return {"server": __version__, "skills": skills, "drivers": drivers,
+            "knowledge_catalog": catalog}
 
 
 @mcp.tool()

@@ -14,7 +14,7 @@ caveats remain in [snmp-support.md](snmp-support.md). The current
 `snmp-oid-map.json` contains useful symbol-to-OID mappings, but it does not
 preserve enough MIB semantics to answer detailed questions by itself.
 
-The design follows [MCP-FUTURE-ARCHITECTURE.md](../../../MCP-FUTURE-ARCHITECTURE.md):
+The design follows [MCP-SKILLS-SERVED-ARCHITECTURE.md](../../../MCP-SKILLS-SERVED-ARCHITECTURE.md):
 
 - Keep one `rad-mcp` process.
 - Keep authoritative knowledge at the MCP level, not in a large skill.
