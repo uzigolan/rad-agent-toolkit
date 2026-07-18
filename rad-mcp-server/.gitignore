@@ -4,6 +4,8 @@
 *.jsonl.partial
 *.mib
 *.MIB
+*.pdf
+*.PDF
 .venv/
 __pycache__/
 *.pyc

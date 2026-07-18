@@ -15,9 +15,11 @@ __pycache__/
 Thumbs.db
 desktop.ini
 
-# Device manual PDFs (large binaries) — the extracted markdown under
+# PDFs are never committed (large binaries) — manuals live locally under
+# rad-mcp-server/manuals/; the extracted markdown under
 # skills/rad-cli-operations/references/manual-<family>/ is committed instead
-rad-mcp-server/manuals/*.pdf
+*.pdf
+*.PDF
 
 # Vendor MIB source sets (large; MIBs2 is the fuller RAD kit) — same pattern
 # as the manual PDFs: sources stay local, the COMPILED symbolic map
