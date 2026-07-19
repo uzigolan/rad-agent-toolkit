@@ -215,7 +215,15 @@ def select_sources(roots: list[tuple[Path, int]], report: dict):
                 continue
             text = f.read_text(encoding="utf-8", errors="replace")
             m = MODULE_RE.search(text)          # full-file scan (long headers OK)
-            rec = {"root": root.name, "path": str(f.relative_to(REPO)), "sha256": sha256(f),
+            # Store a repo-relative path when the MIB root lives inside the repo;
+            # otherwise (a user-supplied directory anywhere on disk) store the
+            # absolute path. Both reconstruct via `REPO / path` later — an absolute
+            # right-hand side wins the join, so copyfile still finds the source.
+            try:
+                rel_path = str(f.relative_to(REPO))
+            except ValueError:
+                rel_path = str(f)
+            rec = {"root": root.name, "path": rel_path, "sha256": sha256(f),
                    "priority": prio, "module": m.group(1) if m else None}
             if not m:
                 rec.update(selected=0, reason="no ASN.1 module header found")

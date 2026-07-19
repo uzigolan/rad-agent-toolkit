@@ -37,6 +37,19 @@ Key behaviors:
   beyond loopback also needs the firewall/TLS steps in
   [connecting-remote-mcp.md](../../../docs/connecting-remote-mcp.md).
 - **TLS** — pass `-TlsCert`/`-TlsKey` to serve https.
+- **Knowledge catalog (optional)** — `build/rad-knowledge.sqlite` (the MIB
+  catalog the `mib_*` tools + served-mode clients read) is a **gitignored build
+  artifact**. The script **always asks about it interactively** (a y/N
+  question, never only a flag): if a catalog is **present** it asks *"Rebuild
+  the MIB catalog from a MIB directory? (keep current if no) [y/N]"* (default
+  keeps it); if **absent** it asks *"Add MIBs now — build the catalog from a MIB
+  directory? [y/N]"* (default skips — server still runs, MIB tools disabled, CLI
+  + bundled knowledge still work). Answering **y** prompts for a MIB directory
+  and builds it (auto-installs `pysmi`, single `--mib-root <dir>`, a few
+  minutes). `-BuildCatalog` / `--build-catalog` is only an optional
+  non-interactive shortcut (auto-answers y). Already have a prebuilt catalog?
+  Drop it at `build/rad-knowledge.sqlite` before starting — it'll be detected
+  as present.
 
 ## Example run
 

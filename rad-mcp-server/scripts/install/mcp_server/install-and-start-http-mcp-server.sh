@@ -28,10 +28,18 @@
 # endpoints. Provide --tls-cert + --tls-key (PEM files) or answer the
 # interactive prompt. Without TLS the server runs plain HTTP — only clients
 # that accept plain-HTTP endpoints (e.g. local VS Code / Codex) will connect.
+#
+# KNOWLEDGE CATALOG (optional): build/rad-knowledge.sqlite is the MIB catalog the
+# mib_* tools + served-mode clients read (a gitignored build artifact). The script
+# ALWAYS asks about it interactively (a y/N question, not a flag): if a catalog is
+# present it offers to rebuild it (default: keep the current one); if it's absent
+# it offers to build one (default: skip). Answering y prompts for a MIB directory
+# and builds it (auto-installs pysmi). --build-catalog is only an optional
+# non-interactive shortcut that auto-answers y to the build question.
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
-HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""; NAME="rad-mcp"
+HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""; NAME="rad-mcp"; BUILD_CATALOG=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --host) HOST="$2"; shift 2 ;;
@@ -42,6 +50,7 @@ while [ $# -gt 0 ]; do
         --new-tokens) NEW_TOKENS=1; shift ;;
         --tls-cert) TLS_CERT="$2"; shift 2 ;;
         --tls-key) TLS_KEY="$2"; shift 2 ;;
+        --build-catalog) BUILD_CATALOG=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
@@ -341,12 +350,59 @@ if [ -n "$TLS_CERT" ]; then
     echo "  TLS key:  $TLS_KEY"
     echo "  (FastMCP logs 'transport http' — transport name, not scheme; Uvicorn confirms https://)"
 fi
-# Knowledge catalog readiness (served-mode clients read it via the MCP tools).
-if [ -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
-    echo "  knowledge catalog: present ($(( $(stat -c%s "$RAD_ROOT/build/rad-knowledge.sqlite" 2>/dev/null || echo 0) / 1048576 )) MB) - served-mode clients supported"
+# Knowledge catalog (OPTIONAL) — the MIB tools (mib_search/describe/table/...)
+# and served-mode clients read build/rad-knowledge.sqlite. Always ASK about MIBs
+# interactively: if a catalog is present, offer to rebuild it (default: keep);
+# if absent, offer to build one (default: skip). Either way the answer is a
+# y/N prompt, not a flag. --build-catalog is only an optional non-interactive
+# shortcut (auto-yes to the build question).
+CATALOG="$RAD_ROOT/build/rad-knowledge.sqlite"
+show_catalog_present() {
+    echo "  knowledge catalog: present ($(( $(stat -c%s "$CATALOG" 2>/dev/null || echo 0) / 1048576 )) MB) - MIB tools + served-mode supported"
+}
+if [ -f "$CATALOG" ]; then
+    CATALOG_PRESENT=1
+    show_catalog_present
 else
-    echo "  knowledge catalog: NOT built - bundled-mode clients work; served-mode needs it:"
-    echo "    python scripts/build_knowledge_catalog.py --mib-root \"MIBs2:priority=200\" --mib-root \"MIBS:priority=100\""
+    CATALOG_PRESENT=0
+    echo "  knowledge catalog: not present. It powers the MIB tools (mib_search/describe/table/...);"
+    echo "  CLI + bundled knowledge work fine without it."
+fi
+
+DO_BUILD=""
+if [ "$BUILD_CATALOG" = "1" ]; then
+    DO_BUILD=1
+else
+    if [ "$CATALOG_PRESENT" = "1" ]; then
+        printf "  Rebuild the MIB catalog from a MIB directory? (keep current if no) [y/N]: "
+    else
+        printf "  Add MIBs now - build the catalog from a MIB directory? [y/N]: "
+    fi
+    read -r ANS || ANS=""
+    case "$ANS" in y|Y|yes|YES) DO_BUILD=1 ;; esac
+fi
+
+if [ "$DO_BUILD" = "1" ]; then
+    printf "  Path to the MIB directory (folder with .mib files): "
+    read -r MIB_DIR || MIB_DIR=""
+    if [ -n "$MIB_DIR" ] && [ -d "$MIB_DIR" ]; then
+        MIB_ABS="$(cd "$MIB_DIR" && pwd)"
+        if ! "$VENV_PYTHON" -c "import pysmi" 2>/dev/null; then
+            echo "  installing pysmi into the venv (one-time) ..."
+            "$VENV_PYTHON" -m pip install --quiet pysmi
+        fi
+        echo "  building the catalog from $MIB_ABS (this can take a few minutes) ..."
+        if "$VENV_PYTHON" "$RAD_ROOT/scripts/build_knowledge_catalog.py" --mib-root "$MIB_ABS" && [ -f "$CATALOG" ]; then
+            show_catalog_present
+        else
+            echo "  WARNING: catalog build failed - continuing (see output above)."
+        fi
+    else
+        echo "  WARNING: '$MIB_DIR' not found - continuing without (re)building."
+    fi
+elif [ "$CATALOG_PRESENT" != "1" ]; then
+    echo "  knowledge catalog: skipped - MIB tools disabled (CLI + bundled knowledge still work)."
+    echo "    Add later: re-run and answer y, or drop a prebuilt rad-knowledge.sqlite into build/."
 fi
 echo "Starting $NAME on ${scheme}://${HOST}:${PORT}/mcp  (Ctrl-C to stop)"
 [ "$HOST" != "127.0.0.1" ] && echo "Reachable on the LAN — internal networks only, never a public interface."

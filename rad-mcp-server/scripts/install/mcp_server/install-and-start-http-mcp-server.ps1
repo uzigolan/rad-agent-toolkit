@@ -23,6 +23,14 @@ TLS NOTE: Claude Desktop (and most hosted MCP clients) only connect to HTTPS
 endpoints. Provide -TlsCert + -TlsKey (PEM files) or answer the interactive
 prompt. Without TLS the server runs plain HTTP — only clients that accept
 plain-HTTP endpoints (e.g. local VS Code / Codex) will connect.
+
+KNOWLEDGE CATALOG (optional): build\rad-knowledge.sqlite is the MIB catalog the
+mib_* tools + served-mode clients read (a gitignored build artifact). The script
+ALWAYS asks about it interactively (a y/N question, not a flag): if a catalog is
+present it offers to rebuild it (default: keep the current one); if it's absent
+it offers to build one (default: skip). Answering y prompts for a MIB directory
+and builds it (auto-installs pysmi). -BuildCatalog is only an optional
+non-interactive shortcut that auto-answers y to the build question.
 #>
 param(
     [string]$BindHost,
@@ -32,7 +40,8 @@ param(
     [string]$TlsCert,
     [string]$TlsKey,
     [string]$Name = 'rad-mcp',
-    [switch]$NewTokens
+    [switch]$NewTokens,
+    [switch]$BuildCatalog
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 Assert-CommonSetup
@@ -324,13 +333,62 @@ if ($TlsCert) {
     Write-Host "  TLS key:  $TlsKey"
     Write-Host "  (FastMCP logs 'transport http' - transport name, not the scheme; Uvicorn confirms https://)"
 }
-# Knowledge catalog readiness (served-mode clients read it via the MCP tools).
+# Knowledge catalog (OPTIONAL) — the MIB tools (mib_search/describe/table/...)
+# and served-mode clients read build\rad-knowledge.sqlite. Always ASK about MIBs
+# interactively: if a catalog is present, offer to rebuild it (default: keep);
+# if absent, offer to build one (default: skip). Either way the answer is a
+# y/N prompt, not a flag. -BuildCatalog is only an optional non-interactive
+# shortcut (auto-yes to the build question).
 $catalog = Join-Path $RadRoot 'build\rad-knowledge.sqlite'
-if (Test-Path $catalog) {
-    Write-Host "  knowledge catalog: present ($([math]::Round((Get-Item $catalog).Length/1MB)) MB) - served-mode clients supported"
+function Show-CatalogPresent { Write-Host "  knowledge catalog: present ($([math]::Round((Get-Item $catalog).Length/1MB)) MB) - MIB tools + served-mode supported" }
+
+$catalogPresent = Test-Path $catalog
+if ($catalogPresent) {
+    Show-CatalogPresent
 } else {
-    Write-Host "  knowledge catalog: NOT built - bundled-mode clients work; served-mode needs it:"
-    Write-Host "    $VenvPython (Join-Path scripts build_knowledge_catalog.py) --mib-root MIBs2:priority=200 --mib-root MIBS:priority=100"
+    Write-Host "  knowledge catalog: not present. It powers the MIB tools (mib_search/describe/table/...);"
+    Write-Host "  CLI + bundled knowledge work fine without it."
+}
+
+if ($BuildCatalog) {
+    $doBuild = $true
+} else {
+    $q = if ($catalogPresent) { "  Rebuild the MIB catalog from a MIB directory? (keep current if no) [y/N]" }
+         else                 { "  Add MIBs now - build the catalog from a MIB directory? [y/N]" }
+    $ans = Read-Host $q
+    $doBuild = ($ans -match '^(y|yes)$')
+}
+
+if ($doBuild) {
+    $mibDir = Read-Host "  Path to the MIB directory (folder with .mib files)"
+    if ($mibDir -and (Test-Path $mibDir)) {
+        $mibAbs = (Resolve-Path $mibDir).Path
+        # pysmi's import check and PySMI's compile step both write to stderr; under
+        # this script's ErrorActionPreference='Stop' PowerShell 5.1 would turn that
+        # native stderr into a terminating NativeCommandError. Relax it here and use
+        # $LASTEXITCODE (the real signal) to decide success.
+        $eapPrev = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            & $VenvPython -c "import pysmi" 2>$null
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "  installing pysmi into the venv (one-time) ..."
+                & $VenvPython -m pip install --quiet pysmi
+            }
+            Write-Host "  building the catalog from $mibAbs (this can take a few minutes) ..."
+            & $VenvPython (Join-Path $RadRoot 'scripts\build_knowledge_catalog.py') --mib-root "$mibAbs"
+            $buildOk = ($LASTEXITCODE -eq 0)
+        } finally {
+            $ErrorActionPreference = $eapPrev
+        }
+        if ($buildOk -and (Test-Path $catalog)) { Show-CatalogPresent }
+        else { Write-Host "  WARNING: catalog build failed - continuing (see output above)." }
+    } else {
+        Write-Host "  WARNING: '$mibDir' not found - continuing without (re)building."
+    }
+} elseif (-not $catalogPresent) {
+    Write-Host "  knowledge catalog: skipped - MIB tools disabled (CLI + bundled knowledge still work)."
+    Write-Host "    Add later: re-run and answer y, or drop a prebuilt rad-knowledge.sqlite into build\."
 }
 Write-Host "Starting $Name on ${scheme}://${BindHost}:${Port}/mcp  (Ctrl-C to stop)"
 if ($BindHost -ne '127.0.0.1') { Write-Host "Reachable on the LAN - internal networks only, never a public interface." }

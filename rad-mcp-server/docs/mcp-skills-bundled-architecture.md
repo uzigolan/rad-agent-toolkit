@@ -1,6 +1,6 @@
 # rad-mcp + skills — BUNDLED mode architecture
 
-*(Knowledge distribution mode: **bundled** — skills carry their ; works with no MCP connection. The served counterpart is [MCP-SKILLS-SERVED-ARCHITECTURE.md](MCP-SKILLS-SERVED-ARCHITECTURE.md).)*
+*(Knowledge distribution mode: **bundled** — skills carry their ; works with no MCP connection. The served counterpart is [mcp-skills-served-architecture.md](mcp-skills-served-architecture.md).)*
 
 ## Document purpose
 
@@ -10,7 +10,7 @@ tools, resources, safety controls, knowledge sources, device integrations,
 storage, deployment modes, and known limitations.
 
 This is a current-state document. Proposed changes belong in
-[`MCP-SKILLS-SERVED-ARCHITECTURE.md`](MCP-SKILLS-SERVED-ARCHITECTURE.md).
+[`mcp-skills-served-architecture.md`](mcp-skills-served-architecture.md).
 
 ## Product boundary
 
