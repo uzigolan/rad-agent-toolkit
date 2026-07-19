@@ -25,12 +25,13 @@ prompt. Without TLS the server runs plain HTTP — only clients that accept
 plain-HTTP endpoints (e.g. local VS Code / Codex) will connect.
 
 KNOWLEDGE CATALOG (optional): build\rad-knowledge.sqlite is the MIB catalog the
-mib_* tools + served-mode clients read (a gitignored build artifact). The script
-ALWAYS asks about it interactively (a y/N question, not a flag): if a catalog is
-present it offers to rebuild it (default: keep the current one); if it's absent
-it offers to build one (default: skip). Answering y prompts for a MIB directory
-and builds it (auto-installs pysmi). -BuildCatalog is only an optional
-non-interactive shortcut that auto-answers y to the build question.
+mib_* tools + served-mode clients read (a gitignored build artifact). It is
+listed in the saved-config summary and kept as-is when you answer "Keep this
+configuration (incl. MIBs)" — no separate MIB question then. Otherwise the
+script asks interactively (a y/N question): if a catalog is present it offers to
+rebuild it (default keep); if absent it offers to build one (default skip).
+Answering y prompts for a MIB directory and builds it (auto-installs pysmi).
+-BuildCatalog is an optional non-interactive shortcut that auto-answers y.
 #>
 param(
     [string]$BindHost,
@@ -75,7 +76,10 @@ if (-not $explicitParams -and (Test-Path $ConfigStore)) {
     if ($saved['RAD_MCP_TLS_CERT']) { Write-Host "    TLS       : HTTPS ($($saved['RAD_MCP_TLS_CERT']))" }
     else                            { Write-Host "    TLS       : none (plain HTTP)" }
     Write-Host "    tokens    : reused from .rad-mcp-tokens"
-    $keepAns = Read-Host "Keep this configuration? [Y/n]"
+    $savedCatalog = Join-Path $RadRoot 'build\rad-knowledge.sqlite'
+    if (Test-Path $savedCatalog) { Write-Host "    MIBs      : catalog present ($([math]::Round((Get-Item $savedCatalog).Length/1MB)) MB) - kept as-is" }
+    else                         { Write-Host "    MIBs      : no catalog (MIB tools disabled) - kept as-is" }
+    $keepAns = Read-Host "Keep this configuration (incl. MIBs)? [Y/n]"
     if ($keepAns -notmatch '^[nN]') {
         $KeepConfig = $true
         $BindHost = $saved['RAD_MCP_HOST']
@@ -352,6 +356,8 @@ if ($catalogPresent) {
 
 if ($BuildCatalog) {
     $doBuild = $true
+} elseif ($KeepConfig) {
+    $doBuild = $false   # "keep configuration (incl. MIBs)" already covered the catalog — don't ask again
 } else {
     $q = if ($catalogPresent) { "  Rebuild the MIB catalog from a MIB directory? (keep current if no) [y/N]" }
          else                 { "  Add MIBs now - build the catalog from a MIB directory? [y/N]" }

@@ -30,12 +30,13 @@
 # that accept plain-HTTP endpoints (e.g. local VS Code / Codex) will connect.
 #
 # KNOWLEDGE CATALOG (optional): build/rad-knowledge.sqlite is the MIB catalog the
-# mib_* tools + served-mode clients read (a gitignored build artifact). The script
-# ALWAYS asks about it interactively (a y/N question, not a flag): if a catalog is
-# present it offers to rebuild it (default: keep the current one); if it's absent
-# it offers to build one (default: skip). Answering y prompts for a MIB directory
-# and builds it (auto-installs pysmi). --build-catalog is only an optional
-# non-interactive shortcut that auto-answers y to the build question.
+# mib_* tools + served-mode clients read (a gitignored build artifact). It is
+# listed in the saved-config summary and kept as-is when you answer "Keep this
+# configuration (incl. MIBs)" — no separate MIB question then. Otherwise the
+# script asks interactively (a y/N question): if a catalog is present it offers to
+# rebuild it (default keep); if absent it offers to build one (default skip).
+# Answering y prompts for a MIB directory and builds it (auto-installs pysmi).
+# --build-catalog is an optional non-interactive shortcut that auto-answers y.
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
@@ -91,7 +92,12 @@ if [ -z "$EXPLICIT" ] && [ -f "$CONFIG_STORE" ]; then
     echo "    name      : $saved_name"
     if [ -n "$saved_cert" ]; then echo "    TLS       : HTTPS ($saved_cert)"; else echo "    TLS       : none (plain HTTP)"; fi
     echo "    tokens    : reused from .rad-mcp-tokens"
-    read -r -p "Keep this configuration? [Y/n]: " keep_ans || keep_ans=""
+    if [ -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
+        echo "    MIBs      : catalog present ($(( $(stat -c%s "$RAD_ROOT/build/rad-knowledge.sqlite" 2>/dev/null || echo 0) / 1048576 )) MB) - kept as-is"
+    else
+        echo "    MIBs      : no catalog (MIB tools disabled) - kept as-is"
+    fi
+    read -r -p "Keep this configuration (incl. MIBs)? [Y/n]: " keep_ans || keep_ans=""
     case "$keep_ans" in
         n|N|no|No) echo "Reconfiguring from scratch." ;;
         *)
@@ -372,6 +378,8 @@ fi
 DO_BUILD=""
 if [ "$BUILD_CATALOG" = "1" ]; then
     DO_BUILD=1
+elif [ "$KEEP_CONFIG" = "1" ]; then
+    DO_BUILD=""   # "keep configuration (incl. MIBs)" already covered the catalog — don't ask again
 else
     if [ "$CATALOG_PRESENT" = "1" ]; then
         printf "  Rebuild the MIB catalog from a MIB directory? (keep current if no) [y/N]: "
