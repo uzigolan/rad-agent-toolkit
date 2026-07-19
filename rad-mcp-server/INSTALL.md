@@ -162,7 +162,7 @@ elsewhere — but the tools resolve it correctly, which is why the docs use
 ## Common setup (once per machine)
 
 Required for every target that runs the server locally.
-Requirements: Python 3.10+, SSH reachability to your RAD devices.
+Requirements: Python 3.10+, SSH (or telnet) reachability to your RAD devices.
 
 **The install scripts now do this for you.** On first run, the bash and
 PowerShell installers (and `install-and-start-http-mcp-server.*`) auto-create `server/.venv` and

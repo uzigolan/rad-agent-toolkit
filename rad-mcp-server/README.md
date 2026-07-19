@@ -30,8 +30,8 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
 > **Status: internal RAD pilot.** Do not point at production equipment.
 
-> **Prerequisites:** Python **3.11+** (3.10 minimum) and SSH reachability to
-> your devices. On RHEL-family distros (Rocky/RHEL/Alma) the default `python3`
+> **Prerequisites:** Python **3.11+** (3.10 minimum) and SSH (or telnet)
+> reachability to your devices. On RHEL-family distros (Rocky/RHEL/Alma) the default `python3`
 > is often 3.6 — too old; install a newer one (`sudo dnf install -y python3.11`)
 > and build the venv with `python3.11`. Full steps in [INSTALL.md](INSTALL.md#common-setup-once-per-machine).
 
@@ -100,7 +100,7 @@ by design.
 |---|---|
 | `list_versions` / `check_skill_version` | Report component versions; session self-check that alerts on skill↔server version or bundled/served mode drift |
 | `list_devices` | Inventory, filterable by group/family |
-| `test_connectivity` | SSH reachability + auth check |
+| `test_connectivity` | SSH/telnet reachability + auth check (per the device's inventory `transport`) |
 | `health_check` | Driver-defined health sweep (identity, alarms) |
 | `run_show` / `run_show_in_context` | Whitelisted reads (RAD CLIs scope `show` to contexts) |
 | `cli_help` | Relay the CLI's interactive `?` help — commands, argument types, constraints. Never executes |
@@ -174,7 +174,7 @@ rad-mcp-server/
 │       ├── server.py          # FastMCP entrypoint: tools + resources (stdio)
 │       ├── smoke.py           # CLI smoke test against one device
 │       ├── inventory.py / audit.py
-│       ├── backends/          # transport: ssh (Netmiko) now, radview later
+│       ├── backends/          # transport: ssh/telnet (Netmiko) now, radview later
 │       └── drivers/           # radcli.py shared dialect; secflow/etx2 on top
 ├── skills/
 │   ├── rad-core/SKILL.md

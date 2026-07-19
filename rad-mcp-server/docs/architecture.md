@@ -28,7 +28,7 @@ into the MCP ecosystem.
         │                 resources: rad://inventory · rad://backups[/name] ·
         │                 rad://command-tree/{family}
         │
- backends (transport)     ssh (Netmiko, device_type rad_etx)   [now]
+ backends (transport)     ssh / telnet (Netmiko, device_type rad_etx[_telnet])   [now]
         │                 snmp.py (pysnmp, UDP/161 — read-only GET/GETNEXT) [now]
         │                 radview northbound API                [planned]
         │

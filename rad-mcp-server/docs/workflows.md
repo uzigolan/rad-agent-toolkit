@@ -116,7 +116,7 @@ Before onboarding or runtime flow, use this toolbox summary.
 | Read-only CLI/syntax | `cli_help` | `device`, optional `context`, optional `prefix` | Command/argument help for that CLI context, no command execution |
 | Read-only CLI/syntax | `run_show`, `run_show_in_context` | `device`, read command (and optional context wrapper) | Operational read data from whitelisted show/info verbs |
 | Operational state | `health_check` | `device` | Consolidated health sweep (identity, alarms, key status) |
-| Operational state | `test_connectivity` | `device` | SSH reachability and authentication status |
+| Operational state | `test_connectivity` | `device` | SSH/telnet reachability and authentication status (per the device's `transport`) |
 | Operational state | `get_config`, `backup_config` | `device` | Exported running config and/or archived backup artifact |
 | Write-path (guarded) | `stage_config` | `device`, `lines[]`, `purpose` | `stage_id` and preview only (no device change yet) |
 | Write-path (guarded) | `commit_config` | `stage_id`, `confirm=true` | Applied change result with backup/audit path |
