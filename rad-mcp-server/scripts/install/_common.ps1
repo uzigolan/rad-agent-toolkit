@@ -49,14 +49,49 @@ function Get-BestPython {
     return $null
 }
 
+function Install-PortablePython {
+    # Self-contained fallback when the machine has no Python >= 3.10:
+    # download the official CPython NuGet package (full interpreter, venv
+    # capable) and unzip it INSIDE the repo (server\.python). Nothing is
+    # installed system-wide - no PATH, no registry, no admin; deleting the
+    # repo folder removes it completely.
+    $dest = Join-Path $script:RadRoot 'server\.python'
+    $exe = Join-Path $dest 'tools\python.exe'
+    if (Test-Path $exe) { return $exe }
+    Write-Host "No Python >= 3.10 found - downloading a portable CPython into the repo"
+    Write-Host "(one-time, ~30 MB, repo-local only; nothing installed on Windows) ..."
+    $zip = Join-Path $env:TEMP "rad-portable-python-$PID.zip"
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri 'https://www.nuget.org/api/v2/package/python/3.12.10' `
+            -OutFile $zip -UseBasicParsing
+        Expand-Archive -Path $zip -DestinationPath $dest -Force
+    } catch {
+        Write-Host "  portable python download failed: $($_.Exception.Message)"
+        return $null
+    } finally {
+        Remove-Item $zip -ErrorAction SilentlyContinue
+    }
+    if (Test-Path $exe) {
+        Write-Host "  portable python -> $exe"
+        return $exe
+    }
+    return $null
+}
+
 function Assert-CommonSetup {
     if (Test-Path $script:VenvPython) { return }
     # No venv yet — bootstrap it automatically so install is a single command.
-    $py = Get-BestPython
+    # A repo-local portable python from a previous run wins; then the system
+    # interpreters; last resort is downloading the portable one.
+    $portable = Join-Path $script:RadRoot 'server\.python\tools\python.exe'
+    $py = if (Test-Path $portable) { $portable } else { Get-BestPython }
+    if (-not $py) { $py = Install-PortablePython }
     if (-not $py) {
-        throw ("No Python >= 3.10 found, and the server venv doesn't exist yet. " +
-               "Install Python 3.10+ (python.org), then re-run this installer. " +
-               "(see INSTALL.md -> Common setup)")
+        throw ("No Python >= 3.10 found, and the portable-python download failed " +
+               "(no network / no PyPI-NuGet access?). Either fix network access and " +
+               "re-run, or install Python 3.10+ (python.org), then re-run this " +
+               "installer. (see INSTALL.md -> Common setup)")
     }
     Write-Host "Setting up the server venv (one-time, using $py) ..."
     & $py -m venv (Join-Path $script:RadRoot 'server\.venv')
