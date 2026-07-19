@@ -346,21 +346,16 @@ function Invoke-TransportPrompt {
     Write-Host ""
     Write-Host "Select MCP transport:"
     Write-Host "  1) stdio  - local; the client launches the server via command/args (full toolset)"
-    Write-Host "  2) http   - remote; connect to an HTTPS server by URL + bearer token (read-only)"
+    Write-Host "  2) http   - remote; connect to an http(s) server by URL + bearer token (read-only)"
     $ans = Read-Host "Choice [1]"
     $mode = if ($ans -match '^2$|^http$|^HTTP$|^Http$') { 'http' } else { 'stdio' }
     if ($mode -eq 'http') {
-        Write-Host "  Note: Claude Desktop only accepts HTTPS URLs for remote MCP servers."
-        Write-Host "        HTTP URLs work with other clients; proceed at your own risk."
+        Write-Host "  Note: Claude Desktop is the exception - it only accepts HTTPS URLs."
         do {
-            $url = Read-Host "Server URL [https://127.0.0.1:8080/mcp]"
-            if (-not $url) { $url = 'https://127.0.0.1:8080/mcp' }
+            $url = Read-Host "Server URL [http://127.0.0.1:8080/mcp]"
+            if (-not $url) { $url = 'http://127.0.0.1:8080/mcp' }
             if ($url -notmatch '^https?://') {
                 Write-Host "  ERROR: URL must start with http:// or https://. Please re-enter."
-            } elseif ($url -match '^http://') {
-                Write-Host "  WARNING: http:// URL detected. Claude Desktop requires https://."
-                Write-Host "           If you're using another MCP client, this is fine. Proceeding..."
-                break
             }
         } while ($url -notmatch '^https?://')
         $token = Read-Host "Bearer token (leave blank to auto-generate one)"

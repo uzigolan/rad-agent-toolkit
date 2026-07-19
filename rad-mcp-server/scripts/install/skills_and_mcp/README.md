@@ -90,6 +90,10 @@ check on <device>"*. Logs: `%APPDATA%\Claude\logs\mcp*.log`.
 
 ## GitHub Copilot — VS Code (agent mode)
 
+> Step-by-step guide:
+> [INSTALL-copilot-vscode-mcp-skills.md](INSTALL-copilot-vscode-mcp-skills.md)
+> (also as [.html](INSTALL-copilot-vscode-mcp-skills.html)).
+
 **Config:** workspace `.vscode/mcp.json` — root key is **`servers`**, not
 `mcpServers` (the #1 mistake copying a Claude config). Entry: stdio
 (`"type": "stdio"`, `command`/`args`/`cwd`/`env`) or http (`"type": "http"`,
@@ -134,6 +138,10 @@ or `.sh`). Copilot's Start/Restart action does not launch that listener; it
 only controls Copilot's local MCP runtime/connection state.
 
 ## GitHub Copilot — JetBrains IDEs (IntelliJ, PyCharm, …)
+
+> Step-by-step guide:
+> [INSTALL-copilot-intellij-mcp-skills.md](INSTALL-copilot-intellij-mcp-skills.md)
+> (also as [.html](INSTALL-copilot-intellij-mcp-skills.html)).
 
 **Prerequisite — the OFFICIAL plugin only:** install **"GitHub Copilot"
 by GitHub** from the JetBrains Marketplace

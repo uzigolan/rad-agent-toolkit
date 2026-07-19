@@ -144,7 +144,7 @@ prompt_transport() {
     if [ -z "$MODE" ]; then
         echo "Select MCP transport:"
         echo "  1) stdio  - local; the client launches the server via command/args (full toolset)"
-        echo "  2) http   - remote; connect to an HTTPS server by URL + bearer token (read-only)"
+        echo "  2) http   - remote; connect to an http(s) server by URL + bearer token (read-only)"
         local ans
         read -r -p "Choice [1]: " ans || ans=""
         case "$ans" in
@@ -155,28 +155,21 @@ prompt_transport() {
     if [ "$MODE" = http ]; then
         if [ -z "$HTTP_URL" ]; then
             local ip; ip="$(_first_ipv4)"
-            echo "Note: Claude Desktop only accepts HTTPS URLs for remote MCP servers."
-            echo "      HTTP URLs work with other clients."
+            echo "Note: Claude Desktop is the exception - it only accepts HTTPS URLs."
             echo "Server URL:"
-            echo "  1) https://127.0.0.1:8080/mcp   (server on this same machine)"
+            echo "  1) http://127.0.0.1:8080/mcp   (server on this same machine)"
             if [ -n "$ip" ]; then
-                echo "  2) https://$ip:8080/mcp   (this host's LAN address)"
+                echo "  2) http://$ip:8080/mcp   (this host's LAN address)"
             fi
             echo "  or type a full http:// or https:// URL"
             local uans
             while true; do
                 read -r -p "Choice [1]: " uans || uans=""
                 case "$uans" in
-                    ""|1) HTTP_URL="https://127.0.0.1:8080/mcp"; break ;;
-                    2) HTTP_URL="${ip:+https://$ip:8080/mcp}"; HTTP_URL="${HTTP_URL:-https://127.0.0.1:8080/mcp}"; break ;;
-                    https://*) HTTP_URL="$uans"; break ;;
-                    http://*)
-                        echo "  WARNING: http:// URL detected. Claude Desktop requires https://."
-                        echo "           If you're using another MCP client, this is fine."
-                        HTTP_URL="$uans"
-                        break
-                        ;;
-                    *) echo "  (unrecognized, using localhost)"; HTTP_URL="https://127.0.0.1:8080/mcp"; break ;;
+                    ""|1) HTTP_URL="http://127.0.0.1:8080/mcp"; break ;;
+                    2) HTTP_URL="${ip:+http://$ip:8080/mcp}"; HTTP_URL="${HTTP_URL:-http://127.0.0.1:8080/mcp}"; break ;;
+                    http://*|https://*) HTTP_URL="$uans"; break ;;
+                    *) echo "  (unrecognized, using localhost)"; HTTP_URL="http://127.0.0.1:8080/mcp"; break ;;
                 esac
             done
         fi
