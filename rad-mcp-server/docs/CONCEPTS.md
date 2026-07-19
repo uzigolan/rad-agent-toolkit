@@ -123,7 +123,7 @@ run, unlike skills.
   never pass through an MCP tool argument or response.
 - **The inventory is personal:** gitignored; a clone starts empty
   (`inventory.example.yaml` is the template); on first read, the server
-  auto-creates `inventory.yaml` as `devices: []`.
+  auto-creates `inventory.yaml` as `devices:` (empty list).
 - **Adding a device requires all six facts from the user** (name, host,
   family, group, username, password) — the intake gate; nothing is written
   until all are given.

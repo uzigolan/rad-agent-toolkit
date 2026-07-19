@@ -15,13 +15,13 @@ shipped in `inventory.yaml`. Four tools, full CRUD:
 | Operation | Tool | Notes |
 |---|---|---|
 | **List** | `list_devices(group?, family?)` | Read-only, always available (even over shared/remote transport). Credential-free summaries only. |
-| **Create** | `add_device(name, host, family, port?, groups?, description?, overwrite?)` | Write tool — local/stdio only, never over shared HTTP. |
-| **Update** | `update_device(name, host?, family?, port?, groups?, description?)` | Partial update — omitted fields keep their current value. |
+| **Create** | `add_device(name, host, family, transport?, port?, groups?, description?, overwrite?)` | Write tool — local/stdio only, never over shared HTTP. |
+| **Update** | `update_device(name, host?, family?, transport?, port?, groups?, description?)` | Partial update — omitted fields keep their current value. |
 | **Delete** | `remove_device(name, confirm=true)` | Requires explicit user approval first, same as `commit_config`/`save_startup`. |
 
 **Fresh install — no inventory file yet (expected, not a fault):**
 `inventory.yaml` is gitignored, so a fresh clone has none. On first read,
-the server now auto-creates `inventory.yaml` as `devices: []`, and
+the server now auto-creates `inventory.yaml` as `devices:` (empty list), and
 `list_devices` returns an empty list. No manual copy is required (copying
 `inventory.example.yaml` is still the optional hand-edit path).
 
@@ -29,7 +29,7 @@ the server now auto-creates `inventory.yaml` as `devices: []`, and
 
 **Inventory facts and credentials live in two different places, and the
 tools only ever touch one of them.** `inventory.yaml` holds name/host/
-family/port/groups/description — facts, nothing secret. Credentials live
+family/transport/port/groups/description — facts, nothing secret. Credentials live
 **only** in `server/.env`, and none of these four tools read, write, or even
 see them. After `add_device`, the device exists but has no way to log in
 until you also set, in `server/.env`:
@@ -84,8 +84,9 @@ Rules:
   configs, or prior sessions without the user explicitly confirming the value.
 - No partial adds: with any field missing, nothing is written anywhere —
   not the inventory, not `.env`.
-- Optional extras (ask only if relevant, defaults otherwise): `port` (22),
-  `description` ("").
+- Optional extras (ask only if relevant, defaults otherwise): `transport`
+  (`ssh`, or `telnet` for units without SSH — telnet is cleartext, prefer
+  ssh when both work), `port` (22 for ssh / 23 for telnet), `description` ("").
 
 ## Workflow
 
@@ -114,7 +115,7 @@ Rules:
 ## Update and remove
 
 - `update_device` is a partial patch — pass only the fields that changed.
-  Changing `host`/`port`/`groups`/`description` is routine (a unit moved,
+  Changing `host`/`transport`/`port`/`groups`/`description` is routine (a unit moved,
   got re-IP'd, changed team ownership). Changing `family` is not — that
   normally means the entry was created wrong, not that the hardware itself
   changed CLI dialect. Confirm with the user before changing `family`
