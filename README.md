@@ -29,6 +29,11 @@ The agent answers from family-specific CLI references, manuals, and SNMP maps.
 When live access is needed, it can inspect device state, perform read-only SNMP
 checks, back up configurations, and prepare guarded configuration changes.
 
+Live access uses two independent paths: the device **CLI over SSH _or_ telnet**
+(chosen per device by its inventory `transport` — SSH by default, telnet for
+units where SSH isn't available), and a **separate, read-only SNMP** path
+(GET/GETNEXT only, never SET) for identity, counters, and MIB lookups.
+
 See [more ready-to-paste prompts](rad-mcp-server/docs/examples.md).
 
 ## How it works

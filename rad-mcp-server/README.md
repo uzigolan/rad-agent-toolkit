@@ -10,6 +10,15 @@ ingested user manuals, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
 §1). The MCP server is the execution arm that puts that knowledge to work on
 real devices.
 
+> **How it reaches devices — two independent paths:**
+> - **CLI** (reads, staged config, backups, health) runs over **SSH _or_
+>   telnet**, chosen per device by the inventory `transport` field — SSH by
+>   default; telnet for units where SSH isn't available (it's cleartext, so
+>   prefer SSH when both work). Same CLI, same safety rules over either.
+> - **SNMP** (`snmp_probe`/`snmp_get`/`snmp_walk` + the offline MIB catalog) is
+>   a **separate, read-only** path over UDP (GET/GETNEXT only, never SET) —
+>   independent of the CLI transport.
+
 The first RAD entry in the MCP ecosystem — naming follows the vendor convention
 set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 
