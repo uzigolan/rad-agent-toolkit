@@ -141,7 +141,20 @@ function New-StdioEntry {
 
 function New-HttpEntry {
     # Returns a hashtable for an http MCP entry (server runs manually).
-    param([Parameter(Mandatory)][string]$Url, [Parameter(Mandatory)][string]$Token)
+    # -RequestInit: JetBrains Copilot nests auth headers under "requestInit"
+    # (fetch-style) instead of a top-level "headers" key.
+    param(
+        [Parameter(Mandatory)][string]$Url,
+        [Parameter(Mandatory)][string]$Token,
+        [switch]$RequestInit
+    )
+    if ($RequestInit) {
+        return [ordered]@{
+            type        = 'http'
+            url         = $Url
+            requestInit = @{ headers = @{ Authorization = "Bearer $Token" } }
+        }
+    }
     return [ordered]@{
         type    = 'http'
         url     = $Url
@@ -331,6 +344,10 @@ function Test-KeepExisting {
         $auth = ''
         if ($e.PSObject.Properties['headers'] -and $e.headers.PSObject.Properties['Authorization']) {
             $auth = $e.headers.Authorization
+        } elseif ($e.PSObject.Properties['requestInit'] -and
+                  $e.requestInit.PSObject.Properties['headers'] -and
+                  $e.requestInit.headers.PSObject.Properties['Authorization']) {
+            $auth = $e.requestInit.headers.Authorization
         }
         $tok = if ($auth) { ($auth -split ' ')[-1] } else { '' }
         $masked = if ($tok.Length -gt 8) { $tok.Substring(0, 4) + '...' + $tok.Substring($tok.Length - 4) }

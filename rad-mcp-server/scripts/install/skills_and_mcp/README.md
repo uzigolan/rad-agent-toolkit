@@ -13,6 +13,7 @@ machine. Principles (stdio vs http, who-starts-the-server, artifact kinds):
 | [Claude Code](#claude-code--cli--vs-code-extension) (CLI + VS Code ext) | `install-claude-code.ps1` / `.sh` | plugin/stdio (default), `-Http -Token <t>` |
 | [Claude Desktop](#claude-desktop--chat--cowork) | `install-claude-desktop.ps1` / `.sh` | stdio only; zip upload stays manual |
 | [Copilot VS Code](#github-copilot--vs-code-agent-mode) | `install-copilot-vscode.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
+| [Copilot JetBrains](#github-copilot--jetbrains-ides-intellij-pycharm-) (IntelliJ, …) | `install-copilot-intellij.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Copilot CLI](#github-copilot--cli) | `install-copilot-cli.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Codex](#openai-codex--ide-extension--chatgpt-desktop-app) (IDE + ChatGPT desktop) | `install-codex.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 
@@ -132,11 +133,86 @@ example via `scripts/install/mcp_server/install-and-start-http-mcp-server.ps1`
 or `.sh`). Copilot's Start/Restart action does not launch that listener; it
 only controls Copilot's local MCP runtime/connection state.
 
+## GitHub Copilot — JetBrains IDEs (IntelliJ, PyCharm, …)
+
+**Prerequisite — the OFFICIAL plugin only:** install **"GitHub Copilot"
+by GitHub** from the JetBrains Marketplace
+(`plugins.jetbrains.com/plugin/17718`). Do NOT use the IDE's
+default/bundled AI plugins (JetBrains **AI Assistant** / Junie) for this —
+they are a different product: they don't read the Copilot configs, don't
+load Agent Skills, and their settings pages stay empty for everything
+installed here.
+
+**Config:** global `%LOCALAPPDATA%\github-copilot\intellij\mcp.json`
+(Windows) / `~/.config/github-copilot/intellij/mcp.json` (macOS/Linux) —
+one file shared by ALL JetBrains IDEs, root key **`servers`** like VS Code.
+The installer ALSO writes `~\.copilot\mcp-config.json` + `mcp.json` for the
+embedded CLI agent (see the two-paths warning below).
+Entry: stdio (`"type": "stdio"`, `command`/`args`/`cwd`/`env`) or http
+(`"type": "http"`, `url`, `requestInit.headers.Authorization` — note the
+**`requestInit`** nesting; the VS Code top-level `headers` shape is the #1
+mistake copying a VS Code config here). The same file is editable in-IDE:
+Settings → Tools → GitHub Copilot → Model Context Protocol → Configure (or
+in agent mode: Tools icon → Add More Tools). The plugin also reads a
+project-level `.vscode/mcp.json` and a `%USERPROFILE%\.mcp.json`.
+
+**Skills:** personal skills from `~/.copilot/skills/` (the SAME folder
+Copilot CLI and VS Code read — the installer copies there, so a VS Code or
+CLI install already covers it); project skills from `.github/skills/` (or
+`.claude/skills/` — inside this repo nothing to do). Agent Skills are a
+**public-preview toggle**: Settings → GitHub Copilot → Chat → enable Agent
+Skills — without it the skills silently never load. The duplicate-copies
+quirk from the VS Code section applies here too (same `~/.copilot/skills`
+folder).
+
+**Restart + verify:** restart the IDE (MCP config is read on plugin start;
+the MCP settings page also has a refresh), then START A NEW CHAT (the
+embedded CLI agent loads MCP + skills at session start only). MCP tools
+exist **only in agent mode**. Verify in the chat: `/mcp list` (or
+`/mcp show`) → rad-mcp next to the builtin github-mcp-server;
+`/skills list` → the three rad skills; then *"rad agent, list the managed
+devices"* — approve the tool-permission prompt. Quirks: org policy "MCP
+servers in Copilot" gates everything on Business/Enterprise (same gate as
+VS Code); the plugin needs a recent version — agent mode + MCP shipped
+mid-2025, Agent Skills late-2025.
+
+> **⚠ TWO agent paths, TWO MCP configs (field-tested 2026-07-19, working).**
+> Recent plugin versions embed the **Copilot CLI agent** in the IDE chat (the
+> one whose `/` menu has `/context`, `/mcp`, `/skills`, `/fleet`, …). That
+> agent does NOT read `intellij\mcp.json` — it reads the Copilot **CLI**
+> config, specifically **`~\.copilot\mcp-config.json`** (NOT `mcp.json`; the
+> ACP-mode agent ignored `mcp.json` in testing), so it only shows the builtin
+> github-mcp-server until that file has the entry. `install-copilot-intellij`
+> now writes BOTH paths (and `install-copilot-cli` writes both CLI
+> filenames), so a fresh install needs nothing extra. Skills are unaffected
+> (both paths read `~\.copilot\skills`). Symptom of the half-configured
+> state: idea.log shows `[mcpGateway] registered mount 'rad-mcp' … [ready]`
+> yet `/mcp` in the chat lists only github-mcp-server. Also: this loader
+> enforces the Agent Skills **1024-char `description:` limit** and drops
+> longer skills SILENTLY (bit us with rad-cli-operations 1.4.1; fixed in
+> 1.4.2).
+
+> **⚠ Where to verify — ONLY inside the Copilot chat.** The IDE settings
+> pages are misleading here: **Settings → Tools → AI Assistant (JetBrains
+> AI) shows NOTHING about Copilot** — its MCP/skills pages belong to
+> JetBrains' own AI product and stay empty/unrelated no matter what you
+> install for Copilot (its MCP client may even probe rad-mcp and log odd
+> open/close sessions — harmless). The authoritative checks are the chat
+> commands: `/mcp list` (or `/mcp show`) for servers, `/skills list` for
+> skills (typing `/` alone does NOT list personal skills), and `/env` for
+> the whole loaded environment in one view.
+
+**Important (http mode):** you must start the MCP listener yourself (see
+[`../mcp_server/`](../mcp_server/README.md)); the IDE never starts an
+external HTTP listener — only stdio entries auto-start.
+
 ## GitHub Copilot — CLI
 
 **Config:** `~/.copilot/mcp-config.json` — root key **is** `mcpServers`,
 stdio type is `"local"`, **no `cwd` support** (safe — inventory comes from
-the env var), add `"tools": ["*"]`. Or `/mcp add` inside a session. http:
+the env var), add `"tools": ["*"]`. Some CLI builds read `~/.copilot/mcp.json`
+instead — the installer writes BOTH filenames in sync (the JetBrains-embedded
+CLI agent reads `mcp-config.json`; field-tested 2026-07-19). Or `/mcp add` inside a session. http:
 same entry, `"type": "http"` + `url` + `headers`. ⚠ **Launch-directory
 discovery:** the CLI also reads an `.mcp.json` in the directory you launch
 `copilot` from — this repo ships one with the committing machine's paths;

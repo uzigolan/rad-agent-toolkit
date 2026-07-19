@@ -225,6 +225,7 @@ everywhere unmodified — only the folder they load from differs.
 | Claude Code — CLI | ✅ `claude mcp add -s user` | ✅ `~/.claude/skills/` | ✅ `~/.claude/commands/` | ✅ 2026-07-11 (Linux, user-home install) | [claude-code §](scripts/install/skills_and_mcp/README.md#claude-code--cli--vs-code-extension) |
 | Claude Desktop — chat + Cowork | ✅ config file | ✅ zip upload | ❌ plain language | ✅ local stdio only + skills (HTTP/HTTPS entry ignored; proven 2026-07-10) | [claude-desktop §](scripts/install/skills_and_mcp/README.md#claude-desktop--chat--cowork) |
 | GitHub Copilot — VS Code (agent mode) | ✅ `.vscode/mcp.json` | ✅ `.claude/skills/` read natively | ✅ skills as `/name` | ✅ 2026-07-10 (Windows, stdio + shared http) | [copilot-vscode §](scripts/install/skills_and_mcp/README.md#github-copilot--vs-code-agent-mode) |
+| GitHub Copilot — JetBrains IDEs (IntelliJ, agent mode; official GitHub plugin ONLY, not JetBrains AI Assistant) | ✅ `intellij\mcp.json` + `~/.copilot/mcp-config.json` (two agent paths) | ✅ `~/.copilot/skills/` (preview toggle; 1024-char description limit) | ⚠ verify via `/mcp list` + `/skills list`, not `/` | ✅ 2026-07-19 (Windows, shared http, embedded CLI agent) | [copilot-intellij §](scripts/install/skills_and_mcp/README.md#github-copilot--jetbrains-ides-intellij-pycharm-) |
 | GitHub Copilot — CLI | ✅ `~/.copilot/mcp-config.json` | ✅ `copilot skill add` | ✅ | ✅ 2026-07-11 (Linux Rocky 8.9, full fresh-clone flow) | [copilot-cli §](scripts/install/skills_and_mcp/README.md#github-copilot--cli) |
 | OpenAI Codex — IDE extension | ✅ `~/.codex/config.toml` (shared) | ⚠ `~/.agents/skills/` + `AGENTS.md` backstop | `$skill-name` | ⏳ shared config verified; no dedicated session test | [codex §](scripts/install/skills_and_mcp/README.md#openai-codex--ide-extension--chatgpt-desktop-app) |
 | OpenAI Codex — ChatGPT desktop app | ✅ `~/.codex/config.toml` (shared) | ⚠ `~/.agents/skills/` + `AGENTS.md` backstop | `$skill-name` | ✅ 2026-07-11 (app 27.7, shared http; gate via `AGENTS.md` backstop) | [codex §](scripts/install/skills_and_mcp/README.md#openai-codex--ide-extension--chatgpt-desktop-app) |
@@ -240,6 +241,7 @@ duplicating it; each ends by printing its client's restart/verify step):
 | Claude Code (CLI + VS Code ext) | `scripts\install\skills_and_mcp\install-claude-code.ps1` | plugin/stdio (default), `-Http -Token <t>` |
 | Claude Desktop | `scripts\install\skills_and_mcp\install-claude-desktop.ps1` | local stdio only (no HTTP/HTTPS); zip upload stays manual |
 | Copilot VS Code | `scripts\install\skills_and_mcp\install-copilot-vscode.ps1 [-Workspace <dir>]` | stdio (default), `-Http -Token <t>` |
+| Copilot JetBrains (IntelliJ, …) | `scripts\install\skills_and_mcp\install-copilot-intellij.ps1` | stdio (default), `-Http -Token <t>` |
 | Copilot CLI | `scripts\install\skills_and_mcp\install-copilot-cli.ps1` | stdio (default), `-Http -Token <t>` |
 | Codex (CLI/IDE/desktop) | `scripts\install\skills_and_mcp\install-codex.ps1` | stdio (default), `-Http -Token <t>` |
 

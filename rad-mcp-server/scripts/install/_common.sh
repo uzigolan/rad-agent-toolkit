@@ -219,13 +219,20 @@ print(json.dumps(e))
 PY
 }
 
-# Build an http MCP entry JSON. $1 = url, $2 = token.
+# Build an http MCP entry JSON. $1 = url, $2 = token, $3 = "request-init" to
+# nest auth headers under "requestInit" (JetBrains Copilot) instead of a
+# top-level "headers" key.
 new_http_entry() {
-    "$(_py)" - "$1" "$2" <<'PY'
+    "$(_py)" - "$1" "$2" "${3:-}" <<'PY'
 import json, sys
-url, token = sys.argv[1], sys.argv[2]
-print(json.dumps({"type": "http", "url": url,
-                  "headers": {"Authorization": f"Bearer {token}"}}))
+url, token, style = sys.argv[1], sys.argv[2], sys.argv[3]
+headers = {"Authorization": f"Bearer {token}"}
+e = {"type": "http", "url": url}
+if style == "request-init":
+    e["requestInit"] = {"headers": headers}
+else:
+    e["headers"] = headers
+print(json.dumps(e))
 PY
 }
 
@@ -314,7 +321,8 @@ if not e:
 t = e.get("type", "stdio")
 if t == "http":
     url = e.get("url", "?")
-    auth = (e.get("headers") or {}).get("Authorization", "")
+    auth = ((e.get("headers") or {}).get("Authorization", "")
+            or ((e.get("requestInit") or {}).get("headers") or {}).get("Authorization", ""))
     tok = auth.split()[-1] if auth else ""
     masked = (tok[:4] + "..." + tok[-4:]) if len(tok) > 8 else ("set" if tok else "none")
     print(f"http  url={url}  token={masked}")

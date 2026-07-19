@@ -5,9 +5,12 @@ Install rad-mcp (MCP + skills) for the GitHub Copilot CLI (`copilot`).
   .\install-copilot-cli.ps1 -Http [-Url <url>] -Token <token> # http client
   .\install-copilot-cli.ps1 -Reconfigure                      # force replace an existing entry
 
-Writes/merges ~\.copilot\mcp.json (root key "mcpServers") and copies
-the skills to ~\.copilot\skills. If rad-mcp is already configured (and no
-flags force a mode), offers to keep the existing configuration.
+Writes/merges ~\.copilot\mcp-config.json AND ~\.copilot\mcp.json (root key
+"mcpServers" — CLI versions disagree on the filename, so both are kept in
+sync; the embedded Copilot CLI agent in JetBrains IDEs reads mcp-config.json,
+field-tested 2026-07-19) and copies the skills to ~\.copilot\skills. If
+rad-mcp is already configured (and no flags force a mode), offers to keep the
+existing configuration.
 Afterwards: RESTART the copilot session (skills + MCP load at startup only).
 #>
 param(
@@ -21,9 +24,12 @@ param(
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 $Knowledge = Resolve-KnowledgeMode $Knowledge
 
-$cfgPath = "$env:USERPROFILE\.copilot\mcp.json"
+# Both filenames the CLI has used; kept in sync (mcp-config.json is what the
+# JetBrains-embedded CLI agent reads).
+$cfgPaths = @("$env:USERPROFILE\.copilot\mcp-config.json", "$env:USERPROFILE\.copilot\mcp.json")
+$cfgPath = $cfgPaths[0]
 New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
-Backup-JsonConfig -Path $cfgPath
+foreach ($p in $cfgPaths) { Backup-JsonConfig -Path $p }
 
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
 if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name)) {
@@ -81,7 +87,9 @@ if (-not ($Http -or $Url -or $Token)) {
     }
 }
 
-Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry -Name $Name
+foreach ($p in $cfgPaths) {
+    Set-JsonMcpEntry -Path $p -RootKey 'mcpServers' -Entry $entry -Name $Name
+}
 Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
 
 Write-Host ""

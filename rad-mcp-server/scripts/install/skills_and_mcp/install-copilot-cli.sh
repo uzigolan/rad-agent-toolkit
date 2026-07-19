@@ -5,8 +5,11 @@
 #   ./install-copilot-cli.sh                       # interactive transport prompt
 #   ./install-copilot-cli.sh --http --url <url> --token <token>   # non-interactive http
 #
-# Writes/merges ~/.copilot/mcp.json (root key "mcpServers") and copies
-# the skills to ~/.copilot/skills. Replaces any existing rad-mcp entry.
+# Writes/merges ~/.copilot/mcp-config.json AND ~/.copilot/mcp.json (root key
+# "mcpServers" — CLI versions disagree on the filename, so both are kept in
+# sync; the embedded Copilot CLI agent in JetBrains IDEs reads mcp-config.json,
+# field-tested 2026-07-19) and copies the skills to ~/.copilot/skills.
+# Replaces any existing rad-mcp entry.
 # Afterwards: RESTART the copilot session (skills + MCP load at startup only).
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
@@ -26,7 +29,10 @@ done
 NAME="${NAME:-rad-mcp}"
 KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
-CFG="$HOME/.copilot/mcp.json"
+# Both filenames the CLI has used; kept in sync (mcp-config.json is what the
+# JetBrains-embedded CLI agent reads).
+CFG="$HOME/.copilot/mcp-config.json"
+CFG_ALT="$HOME/.copilot/mcp.json"
 maybe_keep_existing "$CFG" mcpServers "$NAME"
 if [ -n "$KEEP_EXISTING" ]; then
     echo "  mcp   -> kept existing $NAME entry in $CFG"
@@ -57,7 +63,10 @@ print(json.dumps({"type": "local", "command": venv,
 PY
 )"
     fi
+    backup_json_config "$CFG"
+    backup_json_config "$CFG_ALT"
     set_json_mcp_entry "$CFG" mcpServers "$ENTRY" "$NAME"
+    set_json_mcp_entry "$CFG_ALT" mcpServers "$ENTRY" "$NAME"
 fi
 copy_skills_to "$HOME/.copilot/skills" "$KMODE"
 
