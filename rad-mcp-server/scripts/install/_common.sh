@@ -253,11 +253,38 @@ set_json_mcp_entry() {
     mkdir -p "$(dirname "$path")"
     "$(_py)" - "$path" "$root" "$entry" "$name" <<'PY'
 import json, os, sys
+
+def _strip_comments(t):
+    # JSONC tolerance: IntelliJ's Copilot plugin seeds mcp.json with //
+    # comments. String-aware strip of // and /* */ (rewriting drops them;
+    # the .bak keeps the original).
+    out, i, instr, esc = [], 0, False, False
+    while i < len(t):
+        c = t[i]
+        if instr:
+            out.append(c)
+            if esc: esc = False
+            elif c == "\\": esc = True
+            elif c == '"': instr = False
+        elif c == '"':
+            instr = True; out.append(c)
+        elif t[i:i+2] == "//":
+            while i < len(t) and t[i] != "\n": i += 1
+            continue
+        elif t[i:i+2] == "/*":
+            j = t.find("*/", i + 2)
+            i = len(t) if j < 0 else j + 2
+            continue
+        else:
+            out.append(c)
+        i += 1
+    return "".join(out)
+
 path, root, entry_json, name = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 entry = json.loads(entry_json)
 if os.path.exists(path):
     with open(path) as f:
-        cfg = json.load(f)
+        cfg = json.loads(_strip_comments(f.read()))
 else:
     cfg = {}
 cfg.setdefault(root, {})
@@ -307,12 +334,37 @@ maybe_keep_existing() {
     local summary
     summary="$("$(_py)" - "$path" "$root" "$name" <<'PY'
 import json, os, sys
+
+def _strip_comments(t):
+    # JSONC tolerance — see set_json_mcp_entry.
+    out, i, instr, esc = [], 0, False, False
+    while i < len(t):
+        c = t[i]
+        if instr:
+            out.append(c)
+            if esc: esc = False
+            elif c == "\\": esc = True
+            elif c == '"': instr = False
+        elif c == '"':
+            instr = True; out.append(c)
+        elif t[i:i+2] == "//":
+            while i < len(t) and t[i] != "\n": i += 1
+            continue
+        elif t[i:i+2] == "/*":
+            j = t.find("*/", i + 2)
+            i = len(t) if j < 0 else j + 2
+            continue
+        else:
+            out.append(c)
+        i += 1
+    return "".join(out)
+
 path, root, name = sys.argv[1], sys.argv[2], sys.argv[3]
 if not os.path.exists(path):
     sys.exit(0)
 try:
     with open(path) as f:
-        cfg = json.load(f)
+        cfg = json.loads(_strip_comments(f.read()))
 except Exception:
     sys.exit(0)
 e = (cfg.get(root) or {}).get(name)

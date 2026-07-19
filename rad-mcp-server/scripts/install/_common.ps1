@@ -204,6 +204,44 @@ function Format-Json {
     return $sb.ToString()
 }
 
+function Remove-JsonComments {
+    # Strip // line and /* */ block comments (outside string literals) so
+    # JSONC configs parse with ConvertFrom-Json — IntelliJ's Copilot plugin
+    # seeds mcp.json with a commented template. String-aware, same scanning
+    # approach as Format-Json. NB: rewriting the file afterwards drops the
+    # comments (the .bak keeps them).
+    param([Parameter(Mandatory)][AllowEmptyString()][string]$Json)
+    $sb = [System.Text.StringBuilder]::new()
+    $inStr = $false
+    $esc = $false
+    $chars = $Json.ToCharArray()
+    for ($i = 0; $i -lt $chars.Length; $i++) {
+        $c = $chars[$i]
+        if ($inStr) {
+            [void]$sb.Append($c)
+            if ($esc) { $esc = $false }
+            elseif ($c -eq '\') { $esc = $true }
+            elseif ($c -eq '"') { $inStr = $false }
+            continue
+        }
+        if ($c -eq '"') { $inStr = $true; [void]$sb.Append($c); continue }
+        if ($c -eq '/' -and ($i + 1) -lt $chars.Length) {
+            if ($chars[$i + 1] -eq '/') {
+                while ($i -lt $chars.Length -and $chars[$i] -ne "`n") { $i++ }
+                if ($i -lt $chars.Length) { [void]$sb.Append("`n") }
+                continue
+            }
+            if ($chars[$i + 1] -eq '*') {
+                $end = $Json.IndexOf('*/', $i + 2)
+                $i = if ($end -lt 0) { $chars.Length } else { $end + 1 }
+                continue
+            }
+        }
+        [void]$sb.Append($c)
+    }
+    return $sb.ToString()
+}
+
 function Set-JsonMcpEntry {
     # Create/merge a JSON config file, replacing any existing entry named $Name
     # under the given root key ("mcpServers" or "servers").
@@ -214,7 +252,7 @@ function Set-JsonMcpEntry {
         [string]$Name = 'rad-mcp'
     )
     if (Test-Path $Path) {
-        $cfg = Get-Content $Path -Raw | ConvertFrom-Json
+        $cfg = (Remove-JsonComments (Get-Content $Path -Raw)) | ConvertFrom-Json
     } else {
         New-Item -ItemType Directory -Force (Split-Path $Path) | Out-Null
         $cfg = [pscustomobject]@{}
@@ -335,7 +373,7 @@ function Test-KeepExisting {
     )
     if ($Reconfigure) { return $false }
     if (-not (Test-Path $Path)) { return $false }
-    try { $cfg = Get-Content $Path -Raw | ConvertFrom-Json } catch { return $false }
+    try { $cfg = (Remove-JsonComments (Get-Content $Path -Raw)) | ConvertFrom-Json } catch { return $false }
     $root = $cfg.$RootKey
     if (-not $root -or -not $root.PSObject.Properties[$Name]) { return $false }
     $e = $root.$Name
