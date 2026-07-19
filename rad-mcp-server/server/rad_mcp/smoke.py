@@ -2,9 +2,10 @@
 
 Usage:  python -m rad_mcp.smoke <device-name> [extra show command ...]
 
-Connects over SSH, prints the prompt, runs the driver's health commands plus
-any extra commands given, and writes a full transcript to logs/smoke-<device>.txt
-so driver command sets can be grounded against real output.
+Connects over the device's inventory transport (SSH or telnet), prints the
+prompt, runs the driver's health commands plus any extra commands given, and
+writes a full transcript to logs/smoke-<device>.txt so driver command sets
+can be grounded against real output.
 """
 from __future__ import annotations
 
@@ -28,10 +29,13 @@ def main() -> int:
 
     dev = get_device(name)
     driver = get_driver(dev.family)
-    print(f"Connecting to {dev.name} ({dev.host}:{dev.port}) as netmiko '{driver.netmiko_device_type}' ...")
+    device_type = driver.netmiko_device_type
+    if dev.transport == "telnet":
+        device_type += "_telnet"
+    print(f"Connecting to {dev.name} ({dev.host}:{dev.port}) as netmiko '{device_type}' ...")
 
     conn = ConnectHandler(
-        device_type=driver.netmiko_device_type,
+        device_type=device_type,
         host=dev.host,
         port=dev.port,
         username=dev.username,

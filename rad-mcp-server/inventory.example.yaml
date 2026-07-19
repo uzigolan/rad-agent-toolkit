@@ -9,7 +9,9 @@
 #                              # the RAD_MCP_<NAME>_USERNAME/_PASSWORD env keys
 #     host: 192.0.2.10         # IP or resolvable hostname
 #     family: etx2             # one of the shipped drivers: secflow | etx1p | etx2
-#     port: 22                 # optional, default 22
+#     transport: ssh           # optional: ssh (default) | telnet — prefer ssh;
+#                              # telnet is cleartext, use only when SSH is unavailable
+#     port: 22                 # optional, default 22 for ssh / 23 for telnet
 #     groups: [lab]            # at least one group tag
 #     description: "what/where this unit is"
 devices:

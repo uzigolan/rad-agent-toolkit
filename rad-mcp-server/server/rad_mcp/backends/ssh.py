@@ -1,4 +1,8 @@
-"""SSH backend built on Netmiko's `rad_etx` (and future RAD) device types."""
+"""CLI backend built on Netmiko's `rad_etx` (and future RAD) device types.
+
+Speaks SSH by default; a device with `transport: telnet` in the inventory is
+driven over Netmiko's `<device_type>_telnet` variant instead — same session
+caching, prompt anchoring, and command semantics on both transports."""
 from __future__ import annotations
 
 import re
@@ -39,7 +43,12 @@ class SSHBackend(Backend):
         driver = get_driver(device.family)
         # Per-family SSH tuning (legacy KEX/ciphers, timeouts, keepalive for old
         # or unstable links). The driver's options override this baseline.
+        # (Keys are BaseConnection params, so the telnet variant accepts them
+        # too — SSH-only ones are simply ignored there.)
         opts = {"conn_timeout": 15, **getattr(driver, "ssh_connect_options", {})}
+        device_type = driver.netmiko_device_type
+        if device.transport == "telnet":
+            device_type += "_telnet"
         # RAD units refuse a new SSH session while the previous one is still
         # being torn down (Paramiko surfaces this as "No existing session"),
         # so retry connection setup with a backoff — both tunable per family.
@@ -51,7 +60,7 @@ class SSHBackend(Backend):
                 time.sleep(backoff * attempt)
             try:
                 return ConnectHandler(
-                    device_type=driver.netmiko_device_type,
+                    device_type=device_type,
                     host=device.host,
                     port=device.port,
                     username=device.username,

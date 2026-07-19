@@ -792,7 +792,8 @@ if WRITE_TOOLS_ENABLED:
         name: str,
         host: str,
         family: str,
-        port: int = 22,
+        transport: str = "ssh",
+        port: int | None = None,
         groups: list[str] | None = None,
         description: str = "",
         overwrite: bool = False,
@@ -803,6 +804,12 @@ if WRITE_TOOLS_ENABLED:
         (see list_devices/drivers — e.g. 'secflow', 'etx1p', 'etx2'); this
         does not add support for a new CLI dialect, only a new unit of an
         existing one.
+
+        `transport` is 'ssh' (default) or 'telnet' — same CLI over either.
+        `port` defaults to the transport's standard port (22 for ssh, 23 for
+        telnet) when omitted. Prefer ssh when the unit offers both; telnet
+        sends credentials and config in cleartext, so reserve it for units
+        (or lab setups) where SSH is unavailable.
 
         After this call: set credentials in server/.env as
         RAD_MCP_<NAME>_USERNAME / RAD_MCP_<NAME>_PASSWORD (name upper-cased,
@@ -815,17 +822,15 @@ if WRITE_TOOLS_ENABLED:
         _require_write_scope()
         get_driver(family)  # raises with the valid-family list if unknown
         inv_path = add_device_entry(
-            name, host, family, port=port, groups=groups or [],
-            description=description, overwrite=overwrite,
+            name, host, family, transport=transport, port=port,
+            groups=groups or [], description=description, overwrite=overwrite,
         )
-        audit("add_device", name, detail=f"host={host} family={family} overwrite={overwrite}")
+        audit("add_device", name,
+              detail=f"host={host} family={family} transport={transport} overwrite={overwrite}")
         env_prefix = "RAD_MCP_" + name.upper().replace("-", "_")
         return {
             "status": f"Added '{name}' to {inv_path.name}.",
-            "device": {
-                "name": name, "host": host, "family": family, "port": port,
-                "groups": groups or [], "description": description,
-            },
+            "device": get_device(name).summary(),
             "next_steps": [
                 f"Set credentials in server/.env: {env_prefix}_USERNAME=... and "
                 f"{env_prefix}_PASSWORD=... (or rely on the global "
@@ -845,26 +850,31 @@ if WRITE_TOOLS_ENABLED:
         name: str,
         host: str | None = None,
         family: str | None = None,
+        transport: str | None = None,
         port: int | None = None,
         groups: list[str] | None = None,
         description: str | None = None,
     ) -> dict:
         """Update a subset of an existing inventory device's fields (host,
-        family, port, groups, description). Omitted parameters keep their
-        current value. Does not touch credentials — those still live only in
-        server/.env, update them there directly if they changed. Changing
-        `family` mid-life is unusual (normally means the entry was
-        misconfigured, not that the hardware changed) — confirm with the user
-        before doing that specifically.
+        family, transport, port, groups, description). Omitted parameters
+        keep their current value. `transport` is 'ssh' or 'telnet'; when the
+        transport changes and the port was the old transport's default, the
+        port re-resolves to the new default (22 for ssh, 23 for telnet) —
+        pass `port` explicitly to override. Does not touch credentials —
+        those still live only in server/.env, update them there directly if
+        they changed. Changing `family` mid-life is unusual (normally means
+        the entry was misconfigured, not that the hardware changed) — confirm
+        with the user before doing that specifically.
         """
         _require_write_scope()
         if family is not None:
             get_driver(family)  # raises with the valid-family list if unknown
         updated = update_device_entry(
-            name, host=host, family=family, port=port, groups=groups,
-            description=description,
+            name, host=host, family=family, transport=transport, port=port,
+            groups=groups, description=description,
         )
-        audit("update_device", name, detail=f"host={host} family={family} groups={groups}")
+        audit("update_device", name,
+              detail=f"host={host} family={family} transport={transport} groups={groups}")
         return {"status": f"Updated '{name}'.", "device": updated.summary()}
 
     @mcp.tool()
