@@ -47,6 +47,7 @@ Non-interactive examples:
 
 | Prompt | Options | Guidance |
 |---|---|---|
+| **Devices** (only when `inventory.yaml` already has devices) | `use` / `reset` | `use` (default) keeps the existing inventory untouched. `reset` removes **all devices AND all their secrets** — usernames, passwords, SNMP communities — from `server/.env` (server config keys like tokens/TLS are preserved; both files get a timestamped `.bak` first). Non-interactive: `-KeepDevices` / `-ResetDevices` (`--keep-devices` / `--reset-devices`). Re-add devices afterwards with `add_device` + `set_device_credentials`. |
 | **Bind address** | `127.0.0.1` / this host's LAN IP / `0.0.0.0` | `127.0.0.1` = this machine only. Anything reachable beyond loopback also needs the firewall/TLS steps — **internal networks only, never a public interface.** |
 | **Token(s)** | read-write / read-only / **both** | At least one token is required (http refuses to start unauthenticated). "both" gives one read-write + one read-only so you can hand out whichever role per client. |
 | **TLS** | No TLS / Self-signed / Imported | Plain HTTP works for local clients (VS Code / Codex / Copilot). **Claude Desktop and most hosted clients require HTTPS** — pick self-signed (fastest) or import your own PEM cert + key. |

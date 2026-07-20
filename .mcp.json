@@ -1,4 +1,9 @@
 {
-  "mcpServers": {}
-
+  "mcpServers": {
+    "rad-mcp": {
+      "command": "c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/server/.venv/Scripts/python.exe",
+      "args": ["-m", "rad_mcp.server"],
+      "cwd": "c:/Users/uzi_g/Downloads/ai-projects/fusion-cli/rad-mcp-server/server"
+    }
+  }
 }

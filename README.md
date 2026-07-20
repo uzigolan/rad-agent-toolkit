@@ -23,8 +23,8 @@ one package.
   `"noam, compare a competitor with ETX-2 for an ERP rollout"`.
 - **SNMP operations:** `"rad agent, check SNMP on etx2v-1"` or
   `"abayev, walk IF-MIB on etx2v-1 and summarize interface errors"`.
-- **Hardware & product selection (datasheets):** `"noam, which Megaplex-4 card
-  gives me 16 E1 ports, and what are its ordering options?"`.
+- **Hardware & product selection (datasheets):** `"rad agent, how do the
+  ETX-2i 10G and 100G variants differ — ports, timing, ordering?"`.
 - **Onboarding a new device type:** `"rad agent, harvest the new device CLI"` or
   `"abayev, add these MIB files to the SNMP knowledge layer"`.
 

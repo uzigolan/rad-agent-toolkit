@@ -1,10 +1,10 @@
 ---
 name: rad-device-mng
 description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units. ALSO load whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent" with an inventory operation — e.g. "noam, show the list of devices", "rad agent, add my device", "abayev, remove Device3 from the list".
-version: 1.0.0
+version: 1.3.0
 ---
 
-> **Skill version:** 1.0.0 · updated 2026-07-14 (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.3.0 · updated 2026-07-20 (set_device_credentials now also manages SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Managing the device inventory
 
@@ -15,9 +15,20 @@ shipped in `inventory.yaml`. Four tools, full CRUD:
 | Operation | Tool | Notes |
 |---|---|---|
 | **List** | `list_devices(group?, family?)` | Read-only, always available (even over shared/remote transport). Credential-free summaries only. |
-| **Create** | `add_device(name, host, family, transport?, port?, groups?, description?, overwrite?)` | Write tool — local/stdio only, never over shared HTTP. |
-| **Update** | `update_device(name, host?, family?, transport?, port?, groups?, description?)` | Partial update — omitted fields keep their current value. |
-| **Delete** | `remove_device(name, confirm=true)` | Requires explicit user approval first, same as `commit_config`/`save_startup`. |
+| **Create** | `add_device(name, host, family, transport?, port?, groups?, description?, overwrite?)` | Write tool — on by default over stdio; over shared HTTP it IS available when the client's token is write-scoped (`RAD_MCP_WRITE_TOKENS` — see the token-roles section below). |
+| **Update** | `update_device(name, host?, family?, transport?, port?, groups?, description?)` | Partial update — omitted fields keep their current value. Same write gating as `add_device`. |
+| **Delete** | `remove_device(name, confirm=true)` | Requires explicit user approval first, same as `commit_config`/`save_startup`. Same write gating. |
+| **Secrets** | `set_device_credentials(name, username?, password?, snmp_community?, snmp_v1_community?, snmp_v1_communities?, snmp_v3_user?)` | Write tool, same gating. One tool for ALL device secrets — CLI login (username+password always as a pair) and SNMP (v2c community, v1 community, v1 CSV fallback list, v3 USM user). The SERVER writes them to its own `server/.env` — works identically local and remote. Effective immediately, including rotation. |
+
+**NEVER edit `inventory.yaml` or `server/.env` by hand (or with scripts) —
+the whole add-device flow, credentials included, goes through these tools.**
+Both files live beside the MCP server (possibly on another machine a client
+cannot reach), and the tools are what keep them consistent for every
+connected client. If `add_device`/`set_device_credentials` are absent from
+your tool list, that is not a cue to edit files — it means this connection is
+read-only (read-only token, or `RAD_MCP_READONLY`); say so and point the user
+at the token-roles section below. (Hand-editing `server/.env` on the server
+host remains a valid ADMIN path — it's just never the agent's job.)
 
 **Fresh install — no inventory file yet (expected, not a fault):**
 `inventory.yaml` is gitignored, so a fresh clone has none. On first read,
@@ -27,35 +38,41 @@ the server now auto-creates `inventory.yaml` as `devices:` (empty list), and
 
 ## The one thing that trips people up: credentials
 
-**Inventory facts and credentials live in two different places, and the
-tools only ever touch one of them.** `inventory.yaml` holds name/host/
-family/transport/port/groups/description — facts, nothing secret. Credentials live
-**only** in `server/.env`, and none of these four tools read, write, or even
-see them. After `add_device`, the device exists but has no way to log in
-until you also set, in `server/.env`:
+**Inventory facts and credentials live in two different places, and both are
+server-managed.** `inventory.yaml` holds name/host/family/transport/port/
+groups/description — facts, nothing secret. Credentials live **only** in
+`server/.env` on the server host, and since 2026-07-20 the server manages
+them itself via **`set_device_credentials(name, username, password)`** — the
+server writes `RAD_MCP_<NAME>_USERNAME`/`_PASSWORD` into its own `.env`
+(`<NAME>` = device name upper-cased, dashes → underscores — e.g. `my-etx2` →
+`RAD_MCP_MY_ETX2_USERNAME`). This is THE way to set credentials when the
+server runs on another machine, where no client can reach that file. The
+values are never echoed back and the audit log records only that they
+changed; on shared networks call it over TLS (or localhost).
 
-```
-RAD_MCP_<NAME>_USERNAME=...
-RAD_MCP_<NAME>_PASSWORD=...
-```
+**SNMP secrets go through the same tool** — pass whichever applies:
+`snmp_community` (v2c), `snmp_v1_community` (v1), `snmp_v1_communities`
+(v1 CSV fallback list, tried left→right), `snmp_v3_user` (USM no-auth).
+They map to `RAD_MCP_<NAME>_SNMP_*` keys, which is what `snmp_probe`/
+`snmp_get`/`snmp_walk` resolve. After setting them, verify with
+`snmp_probe(name)`.
 
-(`<NAME>` = the device name, upper-cased, dashes → underscores — e.g. `my-etx2`
-→ `RAD_MCP_MY_ETX2_USERNAME`.) Or skip the per-device pair entirely and rely
-on the global `RAD_MCP_USERNAME`/`RAD_MCP_PASSWORD` if this device shares
-credentials with others already in `.env`.
+Alternatives that remain valid: rely on the global `RAD_MCP_USERNAME`/
+`RAD_MCP_PASSWORD` (and `RAD_MCP_SNMP_*` globals) if the device shares
+secrets already in `.env`, or an admin on the server host hand-editing
+`server/.env`.
 
-**No restart for NEW keys** (since 2026-07-10): the server re-reads `.env`
-at every credential lookup (`_refresh_env()` in `inventory.py`), so a
-just-added device's fresh `RAD_MCP_<NAME>_*` keys work on the very next
-`test_connectivity` — the add-device flow is restart-free end to end.
-The one case that still needs a server restart: **changing the value of a
-key that was already loaded** (e.g. rotating a password) — already-loaded
-env vars are not overridden by the re-read.
+**Effective immediately, restarts never needed via the tool**: new keys have
+always been picked up on the next connection (`_refresh_env()`), and
+`set_device_credentials` also updates the running process's environment, so
+even **rotating an existing password** takes effect at once. (The only
+restart case left: an admin hand-edits an already-loaded key in `.env`.)
 
 ## `family` must already exist as a driver
 
 `add_device`/`update_device` validate `family` against the drivers rad-mcp
-ships (`secflow`, `etx1p`, `etx2` — check `server/rad_mcp/drivers/__init__.py`
+ships (`secflow`, `etx1p`, `etx2`, `etx2v`, `mp4100`, `mp1`, `minid` — check
+`server/rad_mcp/drivers/__init__.py`
 for the current list, or just call `list_devices()` and look at what
 families are already in use). Registering a device with an unsupported
 family is refused with the valid list in the error — this tool adds a new
@@ -74,10 +91,10 @@ and stop until answered.
 |---|---|
 | **name** | letters/digits/hyphens/underscores only, starts with letter/digit (becomes `RAD_MCP_<NAME>_*` env-var names). If the user's choice is invalid, propose the closest legal form and get their OK — don't silently rename. |
 | **host** | IP address or resolvable hostname |
-| **family** | one of the shipped drivers — `secflow`, `etx1p`, `etx2` (see driver section below). Don't guess it from the name or from past sessions; confirm with the user. |
+| **family** | one of the shipped drivers — `secflow`, `etx1p`, `etx2`, `etx2v`, `mp4100`, `mp1`, `minid` (see driver section below). Don't guess it from the name or from past sessions; confirm with the user. |
 | **group(s)** | at least one group tag, e.g. `lab` |
-| **username** | for `server/.env` ONLY — never an MCP tool argument |
-| **password** | same — `.env` only, and quote the value in `.env` if it contains `#` (dotenv comment char) |
+| **username** | passed to `set_device_credentials` after the add — never stored in the inventory |
+| **password** | same — the tool quotes it safely in the server's `.env`; never echo it back into the conversation after use |
 
 Rules:
 - Missing fields come from the USER — never scavenged from backups, old
@@ -94,19 +111,13 @@ Rules:
    name collisions.
 2. **Intake gate** — collect all six required fields (section above).
 3. **Add** — `add_device(name, host, family, groups=[...], description="...")`
-   — facts only; the credentials NEVER appear in the tool call. Its
-   response's `next_steps` spells out the `.env` keys and the restart —
-   read that back to the user, don't just say "done."
-4. **Write the two `.env` lines** — `RAD_MCP_<NAME>_USERNAME` /
-   `RAD_MCP_<NAME>_PASSWORD` in `server/.env`. Credentials must never flow
-   through an MCP tool argument or response. A local agent (Claude Code) may
-   APPEND the two lines itself — append-only, without reading, printing, or
-   echoing the file's existing contents; single-quote a password containing
-   `#`. Otherwise, tell the user the exact two line names to add manually.
-5. **Verify immediately** — new `.env` keys are picked up automatically on
-   the next connection (no restart): `test_connectivity(name)`, then
-   `health_check(name)`. Only a CHANGED value for an already-loaded key
-   (password rotation) still needs a server restart first.
+   — facts only; credentials are the next step's separate call. Read its
+   response's `next_steps` back to the user, don't just say "done."
+4. **Set credentials** — `set_device_credentials(name, username, password)`.
+   The server writes its own `server/.env`; never edit that file yourself
+   and never repeat the password back in the conversation afterwards.
+5. **Verify immediately** — credentials are effective at once (no restart,
+   rotation included): `test_connectivity(name)`, then `health_check(name)`.
 6. **If this is a new unit whose exact firmware/context tree hasn't been
    harvested yet** (new to this family, or firmware differs from what's in
    `cli-reference-<family>.md`), suggest `/rad-harvest <name>` next — see
@@ -127,7 +138,8 @@ Rules:
 
 ## Why these are write tools, not always-on
 
-`add_device`/`update_device`/`remove_device` (and the config-write tools
+`add_device`/`update_device`/`remove_device`/`set_device_credentials` (and
+the config-write tools
 `stage_config`/`commit_config`/`save_startup`) are gated by transport:
 
 - **stdio (local):** on by default — full toolset. `RAD_MCP_READONLY=true`
@@ -152,7 +164,7 @@ with that token in `RAD_MCP_WRITE_TOKENS`. Two roles, two env vars:
 | Role | Env var on the server | What the holder can do |
 |---|---|---|
 | read-only | `RAD_MCP_TOKENS` | reads only: `list_devices`, `run_show`, `health_check`, `get_config`, `backup_config`, … |
-| read-write | `RAD_MCP_WRITE_TOKENS` | all reads **plus** `add_device`/`update_device`/`remove_device` and staged `stage_config`/`commit_config`/`save_startup` |
+| read-write | `RAD_MCP_WRITE_TOKENS` | all reads **plus** `add_device`/`update_device`/`remove_device`/`set_device_credentials` and staged `stage_config`/`commit_config`/`save_startup` |
 
 Both are comma-separated; http refuses to start with neither set.
 

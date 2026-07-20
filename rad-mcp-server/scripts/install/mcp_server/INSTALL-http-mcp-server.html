@@ -84,6 +84,19 @@ system"</strong> — run it through a one-off bypass (no persistent policy chang
   <thead><tr><th>Prompt</th><th>Options</th><th>Guidance</th></tr></thead>
   <tbody>
     <tr>
+      <td><strong>Devices</strong> (only when <code>inventory.yaml</code> already has devices)</td>
+      <td><code>use</code> / <code>reset</code></td>
+      <td><code>use</code> (default) keeps the existing inventory untouched.
+          <code>reset</code> removes <strong>all devices AND all their
+          secrets</strong> — usernames, passwords, SNMP communities — from
+          <code>server/.env</code> (server config keys like tokens/TLS are
+          preserved; both files get a timestamped <code>.bak</code> first).
+          Non-interactive: <code>-KeepDevices</code> / <code>-ResetDevices</code>
+          (<code>--keep-devices</code> / <code>--reset-devices</code>). Re-add
+          devices afterwards with <code>add_device</code> +
+          <code>set_device_credentials</code>.</td>
+    </tr>
+    <tr>
       <td><strong>Bind address</strong></td>
       <td><code>127.0.0.1</code> / this host's LAN IP / <code>0.0.0.0</code></td>
       <td><code>127.0.0.1</code> = this machine only. Anything reachable beyond

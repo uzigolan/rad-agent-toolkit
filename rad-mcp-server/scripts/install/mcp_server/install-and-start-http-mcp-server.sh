@@ -9,6 +9,13 @@
 #   ./install-and-start-http-mcp-server.sh                       # interactive host/port/token prompts
 #   ./install-and-start-http-mcp-server.sh --host 0.0.0.0 --port 8080 --write-token <t>
 #   ./install-and-start-http-mcp-server.sh --read-token <t> --write-token <t> --tls-cert c.pem --tls-key k.pem
+#   ./install-and-start-http-mcp-server.sh --keep-devices | --reset-devices   # skip the device question
+#
+# DEVICE INVENTORY: when inventory.yaml already has devices, the script asks
+# whether to USE them or RESET — reset empties the inventory AND strips every
+# device secret (usernames, passwords, SNMP communities) from server/.env via
+# scripts/reset_devices.py (timestamped .bak backups; token/TLS/config keys
+# are preserved). --keep-devices / --reset-devices answer it non-interactively.
 #
 # CONFIG REUSE: the full configuration (bind host, port, name, TLS) is saved to
 # server/.rad-mcp-http-config (tokens to server/.rad-mcp-tokens), both
@@ -40,7 +47,7 @@
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/_common.sh"
 
-HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""; NAME="rad-mcp"; BUILD_CATALOG=""
+HOST=""; PORT="8080"; READ_TOKEN=""; WRITE_TOKEN=""; TLS_CERT=""; TLS_KEY=""; NEW_TOKENS=""; NAME="rad-mcp"; BUILD_CATALOG=""; KEEP_DEVICES=""; RESET_DEVICES=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --host) HOST="$2"; shift 2 ;;
@@ -52,11 +59,40 @@ while [ $# -gt 0 ]; do
         --tls-cert) TLS_CERT="$2"; shift 2 ;;
         --tls-key) TLS_KEY="$2"; shift 2 ;;
         --build-catalog) BUILD_CATALOG=1; shift ;;
+        --keep-devices) KEEP_DEVICES=1; shift ;;
+        --reset-devices) RESET_DEVICES=1; shift ;;
         *) echo "unknown argument: $1" >&2; exit 1 ;;
     esac
 done
 
 assert_common_setup
+
+# --- Device inventory: use existing devices, or reset everything ------------
+# "Reset" empties inventory.yaml AND strips every device secret (usernames,
+# passwords, SNMP communities) from server/.env — server config keys (tokens,
+# TLS, name) are preserved, and both files get a timestamped .bak first.
+if [ -n "$KEEP_DEVICES" ] && [ -n "$RESET_DEVICES" ]; then
+    echo "--keep-devices and --reset-devices are mutually exclusive." >&2; exit 1
+fi
+DEV_COUNT=0
+if [ -f "$INVENTORY" ]; then
+    DEV_COUNT=$(grep -Ec '^[[:space:]]*-[[:space:]]*name[[:space:]]*:' "$INVENTORY" || true)
+fi
+if [ "$DEV_COUNT" -gt 0 ] && [ -z "$KEEP_DEVICES" ]; then
+    DO_RESET="$RESET_DEVICES"
+    if [ -z "$RESET_DEVICES" ]; then
+        echo ""
+        echo "Existing device inventory found: $DEV_COUNT device(s) in inventory.yaml."
+        printf "Use existing devices, or reset (remove ALL devices incl. passwords + SNMP communities)? [use/reset] (default use): "
+        read -r ANS
+        case "$ANS" in r|reset|R|RESET|Reset) DO_RESET=1 ;; esac
+    fi
+    if [ -n "$DO_RESET" ]; then
+        "$VENV_PYTHON" "$RAD_ROOT/scripts/reset_devices.py" || { echo "device reset failed — nothing was started." >&2; exit 1; }
+    else
+        echo "  devices -> keeping the existing inventory ($DEV_COUNT device(s))."
+    fi
+fi
 
 # --- HTTP/HTTPS mode ---
 # Tokens persist across restarts in this gitignored file so a restart reuses the

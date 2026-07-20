@@ -44,7 +44,9 @@ from . import __version__
 from .audit import audit, redact
 from .backends import get_backend
 from .drivers import _DRIVERS, get_driver
-from .inventory import add_device_entry, get_device, load_inventory, remove_device_entry, update_device_entry
+from .inventory import (add_device_entry, get_device, load_inventory,
+                        remove_device_entry, set_device_credentials as _set_device_credentials,
+                        update_device_entry)
 
 _TRANSPORT = os.environ.get("RAD_MCP_TRANSPORT", "stdio").lower()
 _HTTP = _TRANSPORT in ("http", "streamable-http")
@@ -116,8 +118,9 @@ mcp = FastMCP(
     version=__version__,   # reported via MCP serverInfo at the initialize handshake
     instructions=(
         "Operate RAD Data Communications devices (ETX-2 family and beyond). "
-        "New device not in list_devices yet? Use add_device to register it "
-        "(facts only — credentials still go in server/.env, never the tool call). "
+        "New device not in list_devices yet? Use add_device to register the facts, "
+        "then set_device_credentials for its login — the server stores credentials "
+        "in its own .env; never edit inventory.yaml or server/.env yourself. "
         "Always run health_check or test_connectivity before configuration work. "
         "Writes are staged: stage_config returns a stage_id and preview; nothing "
         "touches the device until commit_config is called with confirm=true. "
@@ -847,9 +850,10 @@ if WRITE_TOOLS_ENABLED:
         description: str = "",
         overwrite: bool = False,
     ) -> dict:
-        """Register a new device in the local inventory (facts only — never
-        credentials, never registered over shared/remote transport since this
-        is a write tool). `family` must be a driver rad-mcp already ships
+        """Register a new device in the inventory (facts only — credentials
+        are set separately via set_device_credentials). Write-gated: stdio by
+        default, or HTTP with a write-scoped token. `family` must be a driver
+        rad-mcp already ships
         (see list_devices/drivers — e.g. 'secflow', 'etx1p', 'etx2'); this
         does not add support for a new CLI dialect, only a new unit of an
         existing one.
@@ -881,17 +885,57 @@ if WRITE_TOOLS_ENABLED:
             "status": f"Added '{name}' to {inv_path.name}.",
             "device": get_device(name).summary(),
             "next_steps": [
-                f"Set credentials in server/.env: {env_prefix}_USERNAME=... and "
-                f"{env_prefix}_PASSWORD=... (or rely on the global "
-                "RAD_MCP_USERNAME/RAD_MCP_PASSWORD if this device shares them).",
-                "New .env keys are picked up automatically on the next "
-                "connection — no restart needed. (Only changing an "
-                "already-loaded key requires a server restart.)",
+                f"Set its credentials with set_device_credentials('{name}', "
+                "<username>, <password>) — the server writes them to its own "
+                "server/.env; they are effective immediately. (Alternative for "
+                f"someone on the server host: put {env_prefix}_USERNAME / "
+                f"{env_prefix}_PASSWORD in server/.env by hand, or rely on the "
+                "global RAD_MCP_USERNAME/RAD_MCP_PASSWORD if shared.)",
                 f"Run test_connectivity('{name}') then health_check('{name}').",
                 f"If '{family}'s CLI reference is missing this unit's context "
                 f"or firmware differs from what was harvested, run "
                 f"/rad-harvest {name} to build/refresh it.",
             ],
+        }
+
+    @mcp.tool()
+    def set_device_credentials(name: str, username: str = "", password: str = "",
+                               snmp_community: str = "", snmp_v1_community: str = "",
+                               snmp_v1_communities: str = "", snmp_v3_user: str = "") -> dict:
+        """Set (or rotate) an inventory device's secrets — CLI login and/or
+        SNMP communities. The server writes the RAD_MCP_<NAME>_* keys into its
+        OWN server/.env — this is how secrets are managed when the server runs
+        on another host, where clients cannot reach that file. Effective
+        immediately on the next connection, including rotation (no restart
+        needed via this path). The device must already exist (add_device first).
+
+        Provide only what you're setting: `username`+`password` (always as a
+        pair) for the CLI; `snmp_community` (v2c), `snmp_v1_community` (v1),
+        `snmp_v1_communities` (v1 CSV fallback list, tried left->right), or
+        `snmp_v3_user` (USM no-auth) for SNMP.
+
+        Write-gated like add_device (stdio, or HTTP with a write-scoped
+        token). Secrets transit this tool call, so on shared networks use it
+        only over TLS (RAD_MCP_TLS_CERT/KEY) or localhost. Values are never
+        echoed back, and the audit log records only which keys changed.
+        """
+        _require_write_scope()
+        res = _set_device_credentials(
+            name, username, password, snmp_community=snmp_community,
+            snmp_v1_community=snmp_v1_community,
+            snmp_v1_communities=snmp_v1_communities, snmp_v3_user=snmp_v3_user)
+        audit("set_device_credentials", name,
+              detail=f"keys {'+'.join(res['created'] + res['replaced'])} (values redacted)")
+        action = "rotated" if res["replaced"] else "created"
+        changed = ", ".join(k.removeprefix(res["prefix"] + "_")
+                            for k in res["created"] + res["replaced"])
+        steps = [f"Run test_connectivity('{name}') then health_check('{name}')."]
+        if any("SNMP" in k for k in res["created"] + res["replaced"]):
+            steps.append(f"Verify SNMP with snmp_probe('{name}').")
+        return {
+            "status": f"Secrets for '{name}' {action} in the server's .env "
+                      f"({changed}). Effective immediately.",
+            "next_steps": steps,
         }
 
     @mcp.tool()
@@ -910,8 +954,8 @@ if WRITE_TOOLS_ENABLED:
         transport changes and the port was the old transport's default, the
         port re-resolves to the new default (22 for ssh, 23 for telnet) —
         pass `port` explicitly to override. Does not touch credentials —
-        those still live only in server/.env, update them there directly if
-        they changed. Changing `family` mid-life is unusual (normally means
+        use set_device_credentials for those. Changing `family` mid-life is
+        unusual (normally means
         the entry was misconfigured, not that the hardware changed) — confirm
         with the user before doing that specifically.
         """

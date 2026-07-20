@@ -1,6 +1,6 @@
 # Example prompts — what to ask, exactly as you'd type it
 
-Ready-to-paste prompts across the six usage categories, each addressed to
+Ready-to-paste prompts across the seven usage categories, each addressed to
 one of the agent's trigger names — **"rad agent"** (generic), **"abayev"** or
 **"noam"** (the CLI-expert personas; same rules, personal sign-off). Every
 device action still passes the safety flow: reads wait for your "run it now?"
@@ -138,16 +138,6 @@ config-drift detection via scheduled `backup_config` diffs, and
 `health_check` sweeps — i.e. state + events + trends + drift, with meanings
 from the manual, not just up/down pings.
 
-**4.4 Hardware & product selection (datasheets)**
-> noam, which Megaplex-4 card gives me 16 E1 ports, and what are its ordering options?
-
-Answered offline from the datasheet layer (`datasheet_search` /
-`references/datasheets/`): the M16E1/M16T1 card's interface specs and its
-RECOMMENDED CONFIGURATIONS ordering block — and because its `kind` is
-`card`, the answer says it plugs into a Megaplex-4 chassis (configuration
-happens on the `mp4100` CLI). Variant comparisons work the same way:
-*"noam, how do the ETX-2i 10G and 100G variants differ?"*
-
 ## 5. Advanced
 
 **5.1 Compare two device types on a topic**
@@ -188,7 +178,44 @@ Drop the PDF in `manuals/`, then `/rad-load-manual <pdf> <family>`:
 per-chapter markdown + CLI-topic cross-links. The PDF stays gitignored;
 the extracted markdown is the committed knowledge.
 
-**6.3 Ingest its datasheet(s)**
+**6.3 Add its MIBs**
+> abayev, here are the MIB files for the new family — add them to the SNMP layer
+
+Drop them in the workspace MIB directory and recompile
+`snmp-oid-map.json` (the map is portfolio-wide); then one `snmp_probe`
+captures the family's `sysObjectID` for the auto-detect map and a capped
+walk produces its `snmp-map-<family>.md` capability map.
+
+## 7. Datasheets — hardware & product knowledge
+
+Specs, interfaces, variants and ordering come from the **datasheet layer**
+(39 products: every family's system datasheets + the Megaplex-4 card set),
+answered offline via `datasheet_search` / `references/datasheets/`. `kind`
+matters in every answer: `system` is a standalone device, `card` is a
+plug-in module for its family's chassis, `accessory` is non-traffic
+hardware.
+
+**7.1 Pick the right card**
+> noam, which Megaplex-4 card gives me 16 E1 ports, and what are its ordering options?
+
+The M16E1/M16T1 card's interface specs and its RECOMMENDED CONFIGURATIONS
+ordering block — and because its `kind` is `card`, the answer says it plugs
+into a Megaplex-4 chassis (configuration happens on the `mp4100` CLI).
+
+**7.2 Compare product variants**
+> rad agent, how do the ETX-2i 10G and 100G variants differ — ports, timing, ordering?
+
+Side-by-side from the two variants' datasheet sections (INTERFACES, TIMING
+AND SYNCHRONIZATION, ORDERING OPTIONS) — same family (`etx2`), so the CLI
+reference applies to both; only the hardware differs.
+
+**7.3 Spec lookup on one product**
+> abayev, what is the operating temperature range and power options of the SecFlow-1p?
+
+A bounded read of the `secflow-1p` sheet's ENVIRONMENTAL/PHYSICAL sections —
+cited with the section and page, no device contact and no web search.
+
+**7.4 Ingest new or updated datasheets**
 > rad agent, here are the datasheet PDFs for the new family — add them to the knowledge
 
 Drop the PDFs in `datasheets/`, add each one's entry to
@@ -196,11 +223,3 @@ Drop the PDFs in `datasheets/`, add each one's entry to
 system/card/accessory, read off the sheet's own first-page banner), then
 `/rad-load-datasheet --all`. Specs, variants and ordering become searchable
 per subject section; PDFs stay gitignored.
-
-**6.4 Add its MIBs**
-> abayev, here are the MIB files for the new family — add them to the SNMP layer
-
-Drop them in the workspace MIB directory and recompile
-`snmp-oid-map.json` (the map is portfolio-wide); then one `snmp_probe`
-captures the family's `sysObjectID` for the auto-detect map and a capped
-walk produces its `snmp-map-<family>.md` capability map.

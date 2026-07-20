@@ -76,7 +76,9 @@ Distilled from the minid + etx2v onboardings (2026-07-15..18).
      **`references/family-profiles.yaml`** (sysObjectID, versions_verified
      vs claimed, credential model, read strategy, quirks). That yaml is the
      SINGLE SOURCE — no code change; snmp.py and the catalog build both
-     read it. Add the unit's `RAD_MCP_<NAME>_SNMP_*` key to `server/.env`.
+     read it. Set the unit's SNMP secret via
+     `set_device_credentials(<name>, snmp_v1_community=... / snmp_community=...)`
+     (writes the `RAD_MCP_<NAME>_SNMP_*` key into the server's own `.env`).
     - **Coverage gate for all families (mandatory):** after adding the new
        family, run the coverage checker and fix any gaps before proceeding:
 

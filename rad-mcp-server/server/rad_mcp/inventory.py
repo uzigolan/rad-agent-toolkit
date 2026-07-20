@@ -118,6 +118,72 @@ def get_device(name: str, path: str | Path | None = None) -> Device:
 
 _NAME_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_-]*$")
 
+SERVER_ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
+
+
+def _env_quote(value: str) -> str:
+    """Quote a value for a dotenv line. Single quotes are literal in dotenv;
+    fall back to double quotes (with escaping) when the value contains one."""
+    if "'" not in value:
+        return f"'{value}'"
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def set_device_credentials(name: str, username: str = "", password: str = "",
+                           snmp_community: str = "", snmp_v1_community: str = "",
+                           snmp_v1_communities: str = "", snmp_v3_user: str = "",
+                           env_path: str | Path | None = None) -> dict:
+    """Write a device's secrets (CLI login and/or SNMP communities) into
+    server/.env ON THIS HOST and refresh the process environment, so the
+    change is effective on the next connection — including rotation of an
+    existing value (the os.environ update overrides the loaded-at-startup
+    value, closing the 'changed keys need a restart' gap for this path).
+
+    Only the fields provided are written; username/password must come as a
+    pair. The device must already exist in the inventory (add_device first).
+    Values are never returned or logged by this function.
+    """
+    get_device(name)  # raises KeyError with the known-device list if unknown
+    prefix = "RAD_MCP_" + name.upper().replace("-", "_")
+    keys: dict[str, str] = {}
+    if username or password:
+        if not (username and password):
+            raise ValueError("username and password must be provided together")
+        keys[f"{prefix}_USERNAME"] = username
+        keys[f"{prefix}_PASSWORD"] = password
+    for suffix, value in (("_SNMP_COMMUNITY", snmp_community),
+                          ("_SNMP_V1_COMMUNITY", snmp_v1_community),
+                          ("_SNMP_V1_COMMUNITIES", snmp_v1_communities),
+                          ("_SNMP_V3_USER", snmp_v3_user)):
+        if value:
+            keys[prefix + suffix] = value
+    if not keys:
+        raise ValueError("nothing to set — provide username+password and/or "
+                         "an SNMP field (snmp_community, snmp_v1_community, "
+                         "snmp_v1_communities, snmp_v3_user)")
+
+    env_file = Path(env_path or SERVER_ENV_PATH)
+    env_file.parent.mkdir(parents=True, exist_ok=True)
+    lines = env_file.read_text(encoding="utf-8").splitlines() if env_file.exists() else []
+    replaced = set()
+    out = []
+    for line in lines:
+        key = line.split("=", 1)[0].strip() if "=" in line else None
+        if key in keys:
+            out.append(f"{key}={_env_quote(keys[key])}")
+            replaced.add(key)
+        else:
+            out.append(line)
+    appended = [k for k in keys if k not in replaced]
+    out.extend(f"{k}={_env_quote(keys[k])}" for k in appended)
+    env_file.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+    # effective immediately for this server process, even for rotation
+    for k, v in keys.items():
+        os.environ[k] = v
+    return {"env_file": str(env_file), "prefix": prefix,
+            "replaced": sorted(replaced), "created": sorted(appended)}
+
 
 def add_device_entry(
     name: str,

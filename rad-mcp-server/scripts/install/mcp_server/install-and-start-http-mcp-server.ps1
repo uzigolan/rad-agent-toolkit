@@ -7,6 +7,13 @@ configure any client; run the matching install-*.ps1 in http mode for that.
   .\install-and-start-http-mcp-server.ps1                            # interactive prompts
   .\install-and-start-http-mcp-server.ps1 -BindHost 0.0.0.0 -Port 8080 -WriteToken <t>
   .\install-and-start-http-mcp-server.ps1 -ReadToken <t> -WriteToken <t> -TlsCert c.pem -TlsKey k.pem
+  .\install-and-start-http-mcp-server.ps1 -KeepDevices | -ResetDevices   # skip the device question
+
+DEVICE INVENTORY: when inventory.yaml already has devices, the script asks
+whether to USE them or RESET — reset empties the inventory AND strips every
+device secret (usernames, passwords, SNMP communities) from server\.env via
+scripts\reset_devices.py (timestamped .bak backups; token/TLS/config keys are
+preserved). -KeepDevices / -ResetDevices answer it non-interactively.
 
 CONFIG REUSE: the full configuration (bind host, port, name, TLS) is saved to
 server\.rad-mcp-http-config (tokens to server\.rad-mcp-tokens), both gitignored.
@@ -42,10 +49,37 @@ param(
     [string]$TlsKey,
     [string]$Name = 'rad-mcp',
     [switch]$NewTokens,
-    [switch]$BuildCatalog
+    [switch]$BuildCatalog,
+    [switch]$KeepDevices,   # non-interactive: keep the existing inventory as-is
+    [switch]$ResetDevices   # non-interactive: remove ALL devices + their passwords/SNMP communities
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
 Assert-CommonSetup
+
+# --- Device inventory: use existing devices, or reset everything ------------
+# "Reset" empties inventory.yaml AND strips every device secret (usernames,
+# passwords, SNMP communities) from server\.env — server config keys (tokens,
+# TLS, name) are preserved, and both files get a timestamped .bak first.
+if ($KeepDevices -and $ResetDevices) { throw '-KeepDevices and -ResetDevices are mutually exclusive.' }
+$devCount = 0
+if (Test-Path $Inventory) {
+    $devCount = @(Select-String -Path $Inventory -Pattern '^\s*-\s*name\s*:').Count
+}
+if ($devCount -gt 0 -and -not $KeepDevices) {
+    $doReset = [bool]$ResetDevices
+    if (-not $ResetDevices) {
+        Write-Host ""
+        Write-Host "Existing device inventory found: $devCount device(s) in inventory.yaml."
+        $ans = Read-Host "Use existing devices, or reset (remove ALL devices incl. passwords + SNMP communities)? [use/reset] (default use)"
+        $doReset = ($ans -match '^(r|reset)$')
+    }
+    if ($doReset) {
+        & $VenvPython (Join-Path $RadRoot 'scripts\reset_devices.py')
+        if ($LASTEXITCODE -ne 0) { throw 'device reset failed — nothing was started.' }
+    } else {
+        Write-Host "  devices -> keeping the existing inventory ($devCount device(s))."
+    }
+}
 
 # --- HTTP/HTTPS mode ---
 # Tokens persist across restarts in this gitignored file so a restart reuses the
