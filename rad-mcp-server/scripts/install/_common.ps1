@@ -125,8 +125,15 @@ function Assert-CommonSetup {
     $ErrorActionPreference = 'Continue'
     try {
         & $script:VenvPython -m pip install --quiet --upgrade pip 2>$null
-        & $script:VenvPython -m pip install --quiet -e (Join-Path $script:RadRoot 'server') 2>$null
-        if ($LASTEXITCODE -ne 0) { throw "pip install failed - check network / PyPI access, then re-run." }
+        # Do NOT 2>$null this one: if the install fails, pip's stderr is the only
+        # clue (no PyPI access / proxy, a dependency that needs building, ...).
+        # ErrorActionPreference='Continue' (above) keeps that stderr from
+        # terminating the script; $LASTEXITCODE is the real success signal.
+        & $script:VenvPython -m pip install --quiet -e (Join-Path $script:RadRoot 'server')
+        if ($LASTEXITCODE -ne 0) {
+            throw ("pip install failed (see pip's output above for the cause - " +
+                   "usually no network / PyPI access or a proxy). Fix that, then re-run.")
+        }
     } finally {
         $ErrorActionPreference = $eapPrev
     }
