@@ -57,10 +57,11 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   or read-write (`RAD_MCP_WRITE_TOKENS`).
   Per-target specifics in
   [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md). Start here.
-- **[docs/examples.md](docs/examples.md)** ([HTML](docs/examples.html)) — 20 ready-to-paste prompts across
-  the five usage categories (device management, operations, network
-  engineering, advanced, onboarding), each addressed to "rad agent" /
-  "abayev" / "noam".
+- **[docs/examples.md](docs/examples.md)** ([HTML](docs/examples.html)) — 30 ready-to-paste prompts across
+  nine usage categories, knowledge-first: user manual, datasheets, device
+  management, CLI, SNMP, network engineering, advanced, onboarding, and a
+  closing fusion set that spans every layer in one prompt — each addressed
+  to "rad agent" / "abayev" / "noam".
 - **[docs/knowledge-modes.md](docs/knowledge-modes.md)** — bundled ("embeded")
   vs served skills explained in plain English on one page: what differs, what's
   identical (all SNMP/MIB is server-side), and which to pick.

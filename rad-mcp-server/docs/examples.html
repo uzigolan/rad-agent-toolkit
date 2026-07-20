@@ -6,7 +6,7 @@
 <title>rad-mcp — example prompts</title>
 <style>
   :root {
-    --bg: #f4f6fa; --bg2: #eaeef5; --card: #ffffff; --ink: #182030; --muted: #5d6activated878;
+    --bg: #f4f6fa; --bg2: #eaeef5; --card: #ffffff; --ink: #182030; --muted: #5d6878;
   }
   :root {
     --bg: #f4f6fa; --card: #ffffff; --ink: #182030; --muted: #5d6878;
@@ -95,15 +95,20 @@
   }
   section h2 { font-size: 1.3rem; margin: 0; letter-spacing: -.01em; }
   .sec-sub { color: var(--muted); font-size: .86rem; margin-top: .1rem; }
-  .s1 .medal { background: linear-gradient(135deg, var(--c1), #0a4f8a); }
-  .s2 .medal { background: linear-gradient(135deg, var(--c2), #075a43); }
-  .s3 .medal { background: linear-gradient(135deg, var(--c3), #8a3f0e); }
-  .s4 .medal { background: linear-gradient(135deg, var(--c4), #5a2b80); }
+  .s1 .medal { background: linear-gradient(135deg, var(--c6), #0a5560); }
+  .s2 .medal { background: linear-gradient(135deg, var(--c3), #8a3f0e); }
+  .s3 .medal { background: linear-gradient(135deg, var(--c1), #0a4f8a); }
+  .s4 .medal { background: linear-gradient(135deg, var(--c2), #075a43); }
   .s5 .medal { background: linear-gradient(135deg, var(--c5), #8a1750); }
-  .s6 .medal { background: linear-gradient(135deg, var(--c6), #0a5560); }
-  .s1 .card { border-left-color: var(--c1); } .s2 .card { border-left-color: var(--c2); }
-  .s3 .card { border-left-color: var(--c3); } .s4 .card { border-left-color: var(--c4); }
-  .s5 .card { border-left-color: var(--c5); }
+  .s6 .medal { background: linear-gradient(135deg, var(--c4), #5a2b80); }
+  .s7 .medal { background: linear-gradient(135deg, var(--c1), #0a4f8a); }
+  .s8 .medal { background: linear-gradient(135deg, var(--c2), #075a43); }
+  .s9 .medal { background: linear-gradient(135deg, var(--c5), #8a1750); }
+  .s1 .card { border-left-color: var(--c6); } .s2 .card { border-left-color: var(--c3); }
+  .s3 .card { border-left-color: var(--c1); } .s4 .card { border-left-color: var(--c2); }
+  .s5 .card { border-left-color: var(--c5); } .s6 .card { border-left-color: var(--c4); }
+  .s7 .card { border-left-color: var(--c1); } .s8 .card { border-left-color: var(--c2); }
+  .s9 .card { border-left-color: var(--c5); }
 
   .card {
     background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c1);
@@ -163,18 +168,19 @@
     the safety flow: reads wait for your <i>"run it now?"</i>, writes go backup → preview →
     <b>your explicit approval</b> → commit → verify.</p>
     <div class="chips">
-      <span class="chip"><b>18</b> prompts</span>
-      <span class="chip"><b>5</b> categories</span>
+      <span class="chip"><b>30</b> prompts</span>
+      <span class="chip"><b>9</b> categories</span>
       <span class="chip"><b>3</b> trigger names</span>
       <span class="chip"><b>7</b> device families verified live</span>
-      <span class="chip"><b>CLI + manual + SNMP</b> fused knowledge</span>
+      <span class="chip"><b>CLI + manual + SNMP + datasheets</b> fused knowledge</span>
     </div>
   </div>
 </div>
 
 <div class="bar"><div class="bar-in">
-  <a href="#s1">1 · Management</a><a href="#s2">2 · Operations</a><a href="#s3">3 · Engineering</a>
-  <a href="#s4">4 · Advanced</a><a href="#s5">5 · Onboarding</a><a href="#s6">6 · Datasheets</a>
+  <a href="#s1">1 · Manual</a><a href="#s2">2 · Datasheets</a><a href="#s3">3 · Management</a>
+  <a href="#s4">4 · Operations</a><a href="#s5">5 · SNMP</a><a href="#s6">6 · Engineering</a>
+  <a href="#s7">7 · Advanced</a><a href="#s8">8 · Onboarding</a><a href="#s9">9 · Fusion</a>
   <span class="sep"></span>
   <button class="pfilter" data-p="agent"><span class="dot d-agent"></span>rad agent</button>
   <button class="pfilter" data-p="abayev"><span class="dot d-abayev"></span>abayev</button>
@@ -185,154 +191,214 @@
 
 <section class="s1" id="s1">
   <div class="sec-head"><div class="medal">1</div>
+    <div><h2>User manual — feature &amp; concept knowledge</h2><div class="sec-sub">"how does it work?" answered offline — concepts from the ingested manual, syntax from the CLI reference, cited per layer</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">1.1</span>Inquire about a topic</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">how does zero-touch provisioning work on the MiNID, and what are its limits?</span><button class="copy">copy</button></div>
+    <p class="what">Concepts come from the ingested manual (per-chapter markdown + cross-links), syntax
+    from the CLI reference — cited per layer, with <b>no device contact</b>.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">1.2</span>Understand a mechanism in depth</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">according to the ETX-2 manual, what happens on an ERP ring when a link fails — which timers are involved, and is the recovery revertive?</span><button class="copy">copy</button></div>
+    <p class="what">Answered from the manual's protection chapter, with the matching
+    <code>configure protection erp</code> verbs cited from the harvested reference — a design-grade
+    explanation, not a generic textbook answer.</p></div>
+</section>
+
+<section class="s2" id="s2">
+  <div class="sec-head"><div class="medal">2</div>
+    <div><h2>Datasheets — hardware &amp; product knowledge</h2><div class="sec-sub">specs · interfaces · variants · ordering — 39 products, answered offline; <code>kind</code>: system device / chassis card / accessory</div></div></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">2.1</span>Pick the right card</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">which Megaplex-4 card gives me 16 E1 ports, and what are its ordering options?</span><button class="copy">copy</button></div>
+    <p class="what">The M16E1/M16T1 card's interface specs + RECOMMENDED CONFIGURATIONS ordering block — and
+    because its <code>kind</code> is <code>card</code>, the answer says it plugs into a Megaplex-4 chassis (configuration
+    happens on the <code>mp4100</code> CLI).</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">2.2</span>Compare product variants</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">how do the ETX-2i 10G and 100G variants differ — ports, timing, ordering?</span><button class="copy">copy</button></div>
+    <p class="what">Side-by-side from the two variants' datasheet sections (INTERFACES, TIMING AND
+    SYNCHRONIZATION, ORDERING OPTIONS) — same family (<code>etx2</code>), so the CLI reference applies to both;
+    only the hardware differs.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">2.3</span>Spec lookup on one product</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">what is the operating temperature range and power options of the SecFlow-1p?</span><button class="copy">copy</button></div>
+    <p class="what">A bounded read of the <code>secflow-1p</code> sheet's ENVIRONMENTAL/PHYSICAL sections — cited with
+    the section and page, no device contact and no web search.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">2.4</span>Ingest new or updated datasheets</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">here are the datasheet PDFs for the new family — add them to the knowledge</span><button class="copy">copy</button></div>
+    <p class="what">Drop the PDFs in <code>datasheets/</code>, add each one's entry to <code>datasheet-map.yaml</code>
+    (product slug, family, <code>kind</code> — system/card/accessory, read off the sheet's own first-page banner),
+    then <code>/rad-load-datasheet</code>. Specs, variants and ordering become searchable per subject section;
+    the PDFs stay gitignored.</p></div>
+</section>
+
+<section class="s3" id="s3">
+  <div class="sec-head"><div class="medal">3</div>
     <div><h2>Device management</h2><div class="sec-sub">inventory CRUD — facts in yaml, secrets in .env, gates on everything destructive</div></div></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">1.1</span>Add a device</h3>
+  <div class="card" data-p="agent"><h3><span class="n">3.1</span>Add a device</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234</span><button class="copy">copy</button></div>
     <p class="what">The intake gate requires all <b>six facts</b> before anything is written; facts go to
     <code>inventory.yaml</code>, credentials only to <code>server/.env</code>. Omit a field and the agent asks for
     all missing ones in one question.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">1.2</span>List devices</h3>
+  <div class="card" data-p="noam"><h3><span class="n">3.2</span>List devices</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">show the list of devices</span><button class="copy">copy</button></div>
     <p class="what">Credential-free summaries (name/host/family/groups). Filterable: <i>"noam, list only the mp1 family"</i>.</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">1.3</span>Change a device</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">3.3</span>Change a device</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">marks-mp4 moved — update its host to 172.17.161.95</span><button class="copy">copy</button></div>
     <p class="what">Partial update — only the named field changes. Changing <code>family</code> is treated as
     suspicious (usually a mis-registration) and asked back.</p></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">1.4</span>Remove a device</h3>
+  <div class="card" data-p="agent"><h3><span class="n">3.4</span>Remove a device</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">remove lab-etx2 from the list</span><button class="copy">copy</button></div>
     <p class="what">Requires explicit confirmation; only forgets the inventory entry — never touches the
     device, its backups, or its audit history.</p></div>
 </section>
 
-<section class="s2" id="s2">
-  <div class="sec-head"><div class="medal">2</div>
+<section class="s4" id="s4">
+  <div class="sec-head"><div class="medal">4</div>
     <div><h2>Device operations</h2><div class="sec-sub">live reads after your confirmation · writes only through the staged flow</div></div></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">2.1</span>Active alarms</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">4.1</span>Active alarms</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">show the active alarms on sf-163-187</span><button class="copy">copy</button></div>
     <p class="what">Navigates <code>configure reporting</code> → <code>show active-alarms</code> and interprets severity —
     a major/critical alarm blocks config work by policy.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">2.2</span>Ports status</h3>
+  <div class="card" data-p="noam"><h3><span class="n">4.2</span>Ports status</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">show the ports status on ehud1p</span><button class="copy">copy</button></div>
     <p class="what"><code>configure port</code> → <code>show summary</code>. Port naming is family-specific (secflow
     <code>ethernet 3</code>, etx1p <code>ethernet lan1</code>, etx2 <code>ethernet 0/2</code>) — the agent uses the target
     family's convention.</p></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">2.3</span>Certificate + MQTT server configuration</h3>
+  <div class="card" data-p="agent"><h3><span class="n">4.3</span>Certificate + MQTT server configuration</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">suggest the CLI configuration for a device certificate and an MQTTS server on the ETX-1p</span><button class="copy">copy</button></div>
     <p class="what">Answered from the harvested reference + manual with <b>no device contact</b>: key
     generation (<span class="warn">⚠ the ETX-1p holds max ONE key pair — stated up front</span>), self-signed or
     CA-enrolled certificate, and the MQTT binding (<code>certificate &lt;name&gt; trusted-ca &lt;ca&gt;</code> — required).</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">2.4</span>Change configuration on a device</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">4.4</span>Change configuration on a device</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">change the location of sf-163-187 to "TLV lab rack 3"</span><button class="copy">copy</button></div>
     <p class="what">The staged flow: backup → <code>stage_config</code> preview → your explicit approval → commit →
     verify. On <b>mp1/mp4100</b> the mandatory MP recipe applies and is <b>server-enforced</b>:
     <code>discard-changes</code> → configure → <code>sanity-check</code> → <code>commit</code> → <code>save</code>.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">2.5</span>Download (back up) configuration</h3>
+  <div class="card" data-p="noam"><h3><span class="n">4.5</span>Download (back up) configuration</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">back up the configuration of minid-1 and diff it against the previous backup</span><button class="copy">copy</button></div>
     <p class="what">Full <code>info</code> export to the local archive (<code>server/backups/</code>), with diffs against
     any earlier snapshot.</p></div>
 </section>
 
-<section class="s3" id="s3">
-  <div class="sec-head"><div class="medal">3</div>
+<section class="s5" id="s5">
+  <div class="sec-head"><div class="medal">5</div>
+    <div><h2>SNMP operations</h2><div class="sec-sub">read-only — probe · exact GETs · capped walks · the rich MIB catalog; never SNMP SET</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">5.1</span>Probe device identity</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">check SNMP on etx2v-1 and report its exact firmware, sysObjectID, and detected family</span><button class="copy">copy</button></div>
+    <p class="what"><code>snmp_probe</code> reads the MIB-II system identity and compares the returned
+    <code>sysObjectID</code> with the toolkit's family map — identity + firmware without opening SSH.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">5.2</span>Read exact OIDs</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">read sysName, sysLocation, and sysUpTime from minid-1 using exact SNMP GETs</span><button class="copy">copy</button></div>
+    <p class="what"><code>snmp_get</code> with symbolic names resolved through the portfolio OID map. Exact GETs
+    are preferred on MiNID — its sparse GETNEXT chain can under-report objects during walks.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">5.3</span>Walk an SNMP table</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">walk IF-MIB on etx2v-1, cap it at 100 rows, and summarize interface status and error counters</span><button class="copy">copy</button></div>
+    <p class="what">The row-capped <code>snmp_walk</code> GETNEXT path, turned into an operator-friendly interface
+    summary. The toolkit never performs SNMP SET.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">5.4</span>Rich MIB catalog — the "gold-standard" prompt</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">describe RAD-EthIf-MIB::erpNodeState — give the exact OID, syntax, enum values, description, and source provenance</span><button class="copy">copy</button></div>
+    <p class="what">RAD-proprietary MIB content no general model has memorized — a correct answer (enterprise
+    OID <code>1.3.6.1.4.1.164.*</code>, enums, table context, source <code>sha256</code>) can only come from the MCP
+    knowledge catalog (<code>mib_search</code>/<code>mib_describe</code>). A thin, name-only reply means the server
+    isn't connected.</p></div>
+</section>
+
+<section class="s6" id="s6">
+  <div class="sec-head"><div class="medal">6</div>
     <div><h2>Network engineering</h2><div class="sec-sub">designs grounded in the family's own reference + manual — never generic training answers</div></div></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">3.1</span>Inquire about a topic</h3>
-    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">how does zero-touch provisioning work on the MiNID, and what are its limits?</span><button class="copy">copy</button></div>
-    <p class="what">Concepts come from the ingested manual (per-chapter markdown + cross-links), syntax
-    from the CLI reference — cited per layer.</p></div>
-
-  <div class="card" data-p="abayev"><h3><span class="n">3.2</span>Design: 3 × ETX-2 ring with ERP</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">6.1</span>Design: 3 × ETX-2 ring with ERP</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">I have three ETX-2 units in a ring running ERP — give me the configuration for all three</span><button class="copy">copy</button></div>
     <p class="what">Grounded in the etx2 reference (<code>configure protection erp</code>) + manual: ring-port roles,
     RPL owner/neighbor placement, per-unit paste-ready blocks, verification reads — staged per unit
     only after your approval.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">3.3</span>Observability for QA on 2 × MP-1</h3>
+  <div class="card" data-p="noam"><h3><span class="n">6.2</span>Observability for QA on 2 × MP-1</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">suggest a way for QA to monitor our two MP-1 units and produce a report that gives observability, not just monitoring</span><button class="copy">copy</button></div>
     <p class="what">Fuses the layers: SNMPv1 polling (IF-MIB counters — stateless, scriptable), the SNMP
     <b>alarm dictionary</b> + <code>show active-alarms</code> for events, config-drift via scheduled backup diffs,
     and <code>health_check</code> sweeps — state + events + trends + drift, with meanings from the manual.</p></div>
 </section>
 
-<section class="s4" id="s4">
-  <div class="sec-head"><div class="medal">4</div>
+<section class="s7" id="s7">
+  <div class="sec-head"><div class="medal">7</div>
     <div><h2>Advanced</h2><div class="sec-sub">cross-family and cross-vendor work — with the evidence trail visible</div></div></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">4.1</span>Compare two device types on a topic</h3>
+  <div class="card" data-p="agent"><h3><span class="n">7.1</span>Compare two device types on a topic</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">compare the ETX-2 and the ETX-2V on QoS capabilities</span><button class="copy">copy</button></div>
     <p class="what">Capability-grounding rule: each family answers ONLY from its own harvested reference +
     manual — no cross-family inference. Differences arrive as a table with evidence per side.</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">4.2</span>Propose a CLI feature from another family</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">7.2</span>Propose a CLI feature from another family</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">the MiNID has no TWAMP responder like the ETX-2 does — draft a feature proposal for adding it to the MiNID CLI, modeled on the ETX-2 implementation</span><button class="copy">copy</button></div>
     <p class="what">Cross-family reference diff: the ETX-2's harvested <code>configure oam twamp</code> tree becomes
     the model, mapped onto MiNID's compact context set — what exists / what's missing / suggested syntax.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">4.3</span>Compare competitive devices to RAD ones</h3>
+  <div class="card" data-p="noam"><h3><span class="n">7.3</span>Compare competitive devices to RAD ones</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">compare a competitor's carrier-Ethernet demarcation device against the RAD ETX-2 for an ERP-based rollout</span><button class="copy">copy</button></div>
     <p class="what">RAD's side is grounded in harvested references + manuals; the competitor's side needs
     public sources — the agent says plainly which claims are verified from our knowledge base and
     which are external.</p></div>
 </section>
 
-<section class="s5" id="s5">
-  <div class="sec-head"><div class="medal">5</div>
-    <div><h2>Onboarding a new device type</h2><div class="sec-sub">the knowledge pipelines: CLI harvest · manual ingest · MIB compile (datasheet ingest → section 6)</div></div></div>
+<section class="s8" id="s8">
+  <div class="sec-head"><div class="medal">8</div>
+    <div><h2>Onboarding a new device type</h2><div class="sec-sub">the knowledge pipelines: CLI harvest · manual ingest · MIB compile (datasheet ingest → section 2)</div></div></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">5.1</span>Harvest its CLI</h3>
+  <div class="card" data-p="agent"><h3><span class="n">8.1</span>Harvest its CLI</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">harvest the CLI of the new device I just added</span><button class="copy">copy</button></div>
     <p class="what"><code>/rad-harvest</code>: probe first (prompt + dialect + SSH behavior), then the full
     <code>?</code>-help crawl → CLI reference + command tree. Fragile-SSH units go branch-by-branch; temp
     objects are rolled back and the device is verified clean afterwards.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">5.2</span>Ingest its user manual</h3>
+  <div class="card" data-p="noam"><h3><span class="n">8.2</span>Ingest its user manual</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">here is the user manual PDF for the new family — ingest it</span><button class="copy">copy</button></div>
     <p class="what">Drop the PDF in <code>manuals/</code>, then <code>/rad-load-manual</code>: per-chapter markdown +
     CLI-topic cross-links. The PDF stays gitignored; the extracted markdown is the committed knowledge.</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">5.3</span>Add its MIBs</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">8.3</span>Add its MIBs</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">here are the MIB files for the new family — add them to the SNMP layer</span><button class="copy">copy</button></div>
     <p class="what">Drop them in the workspace MIB directory and recompile <code>snmp-oid-map.json</code> (the map
     is portfolio-wide); one <code>snmp_probe</code> captures the family's <code>sysObjectID</code> for auto-detect, and a
     capped walk produces its <code>snmp-map-&lt;family&gt;.md</code> capability map.</p></div>
 </section>
 
-<section class="s6" id="s6">
-  <div class="sec-head"><div class="medal">6</div>
-    <div><h2>Datasheets — hardware &amp; product knowledge</h2><div class="sec-sub">specs · interfaces · variants · ordering — 39 products, answered offline; <code>kind</code>: system device / chassis card / accessory</div></div></div>
+<section class="s9" id="s9">
+  <div class="sec-head"><div class="medal">9</div>
+    <div><h2>Fusion — every layer in one prompt</h2><div class="sec-sub">capstone prompts spanning datasheets · manual · inventory · CLI · SNMP · backups — same safety flow at every step</div></div></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">6.1</span>Pick the right card</h3>
-    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">which Megaplex-4 card gives me 16 E1 ports, and what are its ordering options?</span><button class="copy">copy</button></div>
-    <p class="what">The M16E1/M16T1 card's interface specs + RECOMMENDED CONFIGURATIONS ordering block — and
-    because its <code>kind</code> is <code>card</code>, the answer says it plugs into a Megaplex-4 chassis (configuration
-    happens on the <code>mp4100</code> CLI).</p></div>
+  <div class="card" data-p="agent"><h3><span class="n">9.1</span>Commission a new unit, zero to managed</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">we just unboxed a SecFlow-1p — confirm its power and temperature specs from the datasheet, add it to the inventory as sf-new at 172.17.163.200 (family secflow, group lab, user su, password 1234), run a health check, verify its identity over SNMP, and set its location to "OT cabinet 2"</span><button class="copy">copy</button></div>
+    <p class="what">One prompt, every layer in order: datasheet lookup (offline) → the six-fact intake
+    gate → <code>health_check</code> → <code>snmp_probe</code> identity cross-check → the staged config flow for the
+    location write.</p></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">6.2</span>Compare product variants</h3>
-    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">how do the ETX-2i 10G and 100G variants differ — ports, timing, ordering?</span><button class="copy">copy</button></div>
-    <p class="what">Side-by-side from the two variants' datasheet sections (INTERFACES, TIMING AND
-    SYNCHRONIZATION, ORDERING OPTIONS) — same family (<code>etx2</code>), so the CLI reference applies to both;
-    only the hardware differs.</p></div>
+  <div class="card" data-p="noam"><h3><span class="n">9.2</span>Full-stack status report</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">give me a full status report on marks-mp4 — what its active alarms mean per the manual, port status from the CLI, IF-MIB error counters over SNMP, and whether the config drifted since the last backup</span><button class="copy">copy</button></div>
+    <p class="what">Fuses events (<code>show active-alarms</code> + the manual's alarm meanings), live state (CLI
+    port reads), trends (SNMP counters), and drift (backup diff) into one operator-grade report.</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">6.3</span>Spec lookup on one product</h3>
-    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">what is the operating temperature range and power options of the SecFlow-1p?</span><button class="copy">copy</button></div>
-    <p class="what">A bounded read of the <code>secflow-1p</code> sheet's ENVIRONMENTAL/PHYSICAL sections — cited with
-    the section and page, no device contact and no web search.</p></div>
-
-  <div class="card" data-p="agent"><h3><span class="n">6.4</span>Ingest new or updated datasheets</h3>
-    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">here are the datasheet PDFs for the new family — add them to the knowledge</span><button class="copy">copy</button></div>
-    <p class="what">Drop the PDFs in <code>datasheets/</code>, add each one's entry to <code>datasheet-map.yaml</code>
-    (product slug, family, <code>kind</code> — system/card/accessory, read off the sheet's own first-page banner),
-    then <code>/rad-load-datasheet</code>. Specs, variants and ordering become searchable per subject section;
-    the PDFs stay gitignored.</p></div>
+  <div class="card" data-p="abayev"><h3><span class="n">9.3</span>From datasheet to running ring</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">we're rolling out a 3-unit ETX-2 ERP ring — pick the right ETX-2i variant from the datasheets, design the ring from the manual and CLI reference, stage the configuration for each unit, and after I approve verify the ring by CLI and SNMP</span><button class="copy">copy</button></div>
+    <p class="what">Hardware selection (datasheet variants/ordering) → grounded design (manual chapter +
+    <code>configure protection erp</code> reference) → per-unit staged commits, each with your explicit
+    approval → post-commit verification via <code>show erp status</code> and an IF-MIB walk.</p></div>
 </section>
 
 </main>
