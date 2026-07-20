@@ -94,12 +94,24 @@ function Assert-CommonSetup {
                "installer. (see INSTALL.md -> Common setup)")
     }
     Write-Host "Setting up the server venv (one-time, using $py) ..."
-    & $py -m venv (Join-Path $script:RadRoot 'server\.venv')
-    if ($LASTEXITCODE -ne 0) { throw "failed to create the venv with '$py -m venv'." }
-    Write-Host "  installing rad-mcp into the venv (pip install -e .) ..."
-    & $script:VenvPython -m pip install --quiet --upgrade pip 2>$null
-    & $script:VenvPython -m pip install --quiet -e (Join-Path $script:RadRoot 'server')
-    if ($LASTEXITCODE -ne 0) { throw "pip install failed - check network / PyPI access, then re-run." }
+    # venv/pip write progress + logging noise to stderr (e.g. pip's harmless
+    # "--- Logging error ---"); under this file's ErrorActionPreference='Stop'
+    # PowerShell 5.1 turns any native stderr line into a TERMINATING
+    # NativeCommandError, aborting the bootstrap. Relax it around these calls
+    # and gate on $LASTEXITCODE (the real success signal). A half-built venv is
+    # then avoided: if pip fails we throw, and the caller can re-run cleanly.
+    $eapPrev = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $py -m venv (Join-Path $script:RadRoot 'server\.venv')
+        if ($LASTEXITCODE -ne 0) { throw "failed to create the venv with '$py -m venv'." }
+        Write-Host "  installing rad-mcp into the venv (pip install -e .) ..."
+        & $script:VenvPython -m pip install --quiet --upgrade pip 2>$null
+        & $script:VenvPython -m pip install --quiet -e (Join-Path $script:RadRoot 'server') 2>$null
+        if ($LASTEXITCODE -ne 0) { throw "pip install failed - check network / PyPI access, then re-run." }
+    } finally {
+        $ErrorActionPreference = $eapPrev
+    }
     Write-Host "  venv ready: $script:VenvPython"
 }
 
