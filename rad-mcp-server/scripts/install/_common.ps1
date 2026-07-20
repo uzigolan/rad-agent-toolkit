@@ -80,32 +80,50 @@ function Install-PortablePython {
 }
 
 function Assert-CommonSetup {
-    if (Test-Path $script:VenvPython) { return }
-    # No venv yet — bootstrap it automatically so install is a single command.
-    # A repo-local portable python from a previous run wins; then the system
-    # interpreters; last resort is downloading the portable one.
-    $portable = Join-Path $script:RadRoot 'server\.python\tools\python.exe'
-    $py = if (Test-Path $portable) { $portable } else { Get-BestPython }
-    if (-not $py) { $py = Install-PortablePython }
-    if (-not $py) {
-        throw ("No Python >= 3.10 found, and the portable-python download failed " +
-               "(no network / no PyPI-NuGet access?). Either fix network access and " +
-               "re-run, or install Python 3.10+ (python.org), then re-run this " +
-               "installer. (see INSTALL.md -> Common setup)")
+    # A venv python existing is NOT proof of a working install — a prior aborted
+    # bootstrap can leave it half-built (python present, rad-mcp/deps missing).
+    # Verify rad_mcp actually imports; only then is setup complete. If the venv
+    # exists but the import fails, fall through and (re)run the pip install to
+    # repair it. (Guard the native probe: a failed import prints a traceback to
+    # stderr, which under this file's ErrorActionPreference='Stop' would itself
+    # terminate on PowerShell 5.1.)
+    if (Test-Path $script:VenvPython) {
+        $eap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+        try { & $script:VenvPython -c "import rad_mcp" 2>$null } finally { $ErrorActionPreference = $eap }
+        if ($LASTEXITCODE -eq 0) { return }
+        Write-Host "Server venv found but rad-mcp isn't installed (a prior setup didn't finish) - completing it ..."
+    } else {
+        # No venv yet — bootstrap it automatically so install is a single command.
+        # A repo-local portable python from a previous run wins; then the system
+        # interpreters; last resort is downloading the portable one.
+        $portable = Join-Path $script:RadRoot 'server\.python\tools\python.exe'
+        $py = if (Test-Path $portable) { $portable } else { Get-BestPython }
+        if (-not $py) { $py = Install-PortablePython }
+        if (-not $py) {
+            throw ("No Python >= 3.10 found, and the portable-python download failed " +
+                   "(no network / no PyPI-NuGet access?). Either fix network access and " +
+                   "re-run, or install Python 3.10+ (python.org), then re-run this " +
+                   "installer. (see INSTALL.md -> Common setup)")
+        }
+        Write-Host "Setting up the server venv (one-time, using $py) ..."
+        # Native venv/pip write logging noise to stderr; under ErrorActionPreference
+        # ='Stop' PowerShell 5.1 turns any native stderr line into a TERMINATING
+        # NativeCommandError. Relax it around these calls; gate on $LASTEXITCODE.
+        $eapPrev = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            & $py -m venv (Join-Path $script:RadRoot 'server\.venv')
+            if ($LASTEXITCODE -ne 0) { throw "failed to create the venv with '$py -m venv'." }
+        } finally {
+            $ErrorActionPreference = $eapPrev
+        }
     }
-    Write-Host "Setting up the server venv (one-time, using $py) ..."
-    # venv/pip write progress + logging noise to stderr (e.g. pip's harmless
-    # "--- Logging error ---"); under this file's ErrorActionPreference='Stop'
-    # PowerShell 5.1 turns any native stderr line into a TERMINATING
-    # NativeCommandError, aborting the bootstrap. Relax it around these calls
-    # and gate on $LASTEXITCODE (the real success signal). A half-built venv is
-    # then avoided: if pip fails we throw, and the caller can re-run cleanly.
+    # (Re)install rad-mcp into the venv — runs for a fresh venv AND to repair a
+    # half-built one. Same ErrorActionPreference guard as above.
+    Write-Host "  installing rad-mcp into the venv (pip install -e .) ..."
     $eapPrev = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
     try {
-        & $py -m venv (Join-Path $script:RadRoot 'server\.venv')
-        if ($LASTEXITCODE -ne 0) { throw "failed to create the venv with '$py -m venv'." }
-        Write-Host "  installing rad-mcp into the venv (pip install -e .) ..."
         & $script:VenvPython -m pip install --quiet --upgrade pip 2>$null
         & $script:VenvPython -m pip install --quiet -e (Join-Path $script:RadRoot 'server') 2>$null
         if ($LASTEXITCODE -ne 0) { throw "pip install failed - check network / PyPI access, then re-run." }
