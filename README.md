@@ -7,7 +7,7 @@ The toolkit gives AI agents practical knowledge of RAD devices and a safe MCP
 connection to real equipment. It combines firmware-exact CLI references,
 device manuals, SNMP knowledge, and live device tools in one package.
 
-> **Internal RAD pilot.** Use lab equipment only. Do not connect this project
+> **Lab use only.** Use lab equipment only. Do not connect this project
 > to production devices.
 
 ## What can I ask?

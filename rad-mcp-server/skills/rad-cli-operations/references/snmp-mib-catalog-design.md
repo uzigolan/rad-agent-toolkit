@@ -315,7 +315,7 @@ Be explicit about what "vendor text" means here: object DESCRIPTION strings
 **are** vendor-authored text, and the catalog stores them (FTS5 over
 descriptions is a core requirement — there is no useful semantic catalog
 without them). This is acceptable in the current setting because the corpus
-is RAD's own MIB kit used in an internal RAD pilot, and the IEEE/IETF
+is RAD's own MIB kit, and the IEEE/IETF
 standard MIB texts are redistributable. What the database must NOT embed is
 the full original source files; it stores parsed metadata, description
 text, source identity, hashes, and local paths. Revisit this statement

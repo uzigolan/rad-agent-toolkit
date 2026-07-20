@@ -37,7 +37,7 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
 | `minid` | MiNID miniature NID (sleeve device) | 2.6 | `drivers/minid.py` | ✅ verified live (minid-1, prompt `MiNID#`) — shared context CLI, direct-write save; **fragile/unique SSH** → patient per-family connect profile; `tree` paginates with a bare `more...` pager; harvested branch-by-branch (fragile link can't sustain a full-tree session) + manual |
 | `etx2v` | ETX-2V (uCPE-OS chassis platform) | 5.0.0 | `drivers/etx2v.py` | ✅ verified live (etx2v-1, prompt `uCPE-OS#`) — shared context CLI, standard SSH; distinctive top-level `virtualization` (VNF) context; 719-node tree / 527 captures harvested + hardware/BIOS manual |
 
-> **Status: internal RAD pilot.** Do not point at production equipment.
+> **Lab use only.** Do not point at production equipment.
 
 > **Prerequisites:** Python **3.11+** (3.10 minimum) and SSH (or telnet)
 > reachability to your devices. On RHEL-family distros (Rocky/RHEL/Alma) the default `python3`

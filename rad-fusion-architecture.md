@@ -4,7 +4,7 @@
 > repo at [rad-mcp-server/docs/architecture.md](rad-mcp-server/docs/architecture.md)
 > (kept there so it ships with the code). This file is the original design note.
 
-> Architecture v0.2 — July 2026. Internal RAD pilot. Implemented in [rad-mcp-server/](rad-mcp-server/).
+> Architecture v0.2 — July 2026. Implemented in [rad-mcp-server/](rad-mcp-server/).
 > Goal: let AI agents (Claude Code, Claude Desktop, claude.ai connectors) operate the
 > **full RAD portfolio** via CLI — SecFlow (SF-1p verified live), ETX-2, and planned
 > ETX-1 / MP-4100 — as an official RAD-branded plugin, the first of its kind per the
@@ -26,7 +26,7 @@
 | Device access | **Pluggable backend — SSH first, RADview later** | Tool layer never touches Netmiko directly; it calls a `DeviceSession` facade |
 | Write scope | **Full config management in v1** | Mandatory safety rails: auto-backup before write, diff preview, explicit commit, rollback, audit log |
 | Product scope | **Broader RAD portfolio** | Driver registry keyed by platform; ETX-2 is the reference driver, others plug in |
-| Distribution | **Internal pilot first** | Private repo, lab devices; public/marketplace release is Phase 3 |
+| Distribution | **Lab-first** | Lab devices first; public/marketplace release is Phase 3 |
 
 ## 2. Component overview
 
@@ -157,7 +157,7 @@ New product family = one driver module + one skill folder. No tool changes.
 
 | Phase | Deliverable | Exit criteria |
 |---|---|---|
-| **1 — Pilot core** | SSH backend + ETX-2 driver + read tools + health-check skill; stdio plugin installed by pilot team | Health check + config backup working against lab ETX units |
+| **1 — Core** | SSH backend + ETX-2 driver + read tools + health-check skill; stdio plugin installed locally | Health check + config backup working against lab ETX units |
 | **1.5 — Writes** | Staged-commit engine, provision/rollback tools, provisioning skill | A full EVC/flow provision executed end-to-end via Claude with diff+confirm |
 | **2 — Breadth** | RADview backend, second product-family driver, streamable-http transport (token auth) → usable as claude.ai/Desktop connector | Second family passes the same test suite; remote deployment on a bastion |
 | **3 — Release** | Security review, docs, public RAD GitHub org repo, MCP Registry + plugin marketplace listing | First **[OFFICIAL]** RAD entry in the ecosystem |

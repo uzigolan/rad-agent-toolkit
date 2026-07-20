@@ -254,8 +254,8 @@ RAG adds the fuzzy one.
 
 ## Distribution path
 
-- **Now (internal pilot):** absolute venv paths in `.mcp.json` / Desktop
-  config on the pilot machine.
+- **Now (local install):** absolute venv paths in `.mcp.json` / Desktop
+  config on the local machine.
 - **Now also available — shared remote server (internal):**
   `RAD_MCP_TRANSPORT=http` serves one authenticated endpoint that
   many clients connect to by URL (no per-user local install). Bearer-auth
