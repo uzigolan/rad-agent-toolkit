@@ -7,6 +7,10 @@ clients with the scripts in
 [`../skills_and_mcp/`](../skills_and_mcp/README.md) (http
 mode).
 
+> **Step-by-step guide:** [INSTALL-http-mcp-server.md](INSTALL-http-mcp-server.md)
+> (also as [.html](INSTALL-http-mcp-server.html)) — prompts, what it writes,
+> connecting a client, security, and troubleshooting.
+
 You only need these for the **shared-server** modes — one local instance for
 several clients ([connecting-local-mcp.md](../../../docs/connecting-local-mcp.md))
 or hosting for other machines
