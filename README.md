@@ -5,7 +5,8 @@ changes through a guarded workflow.**
 
 The toolkit gives AI agents practical knowledge of RAD devices and a safe MCP
 connection to real equipment. It combines firmware-exact CLI references,
-device manuals, SNMP knowledge, and live device tools in one package.
+device manuals, product datasheets, SNMP knowledge, and live device tools in
+one package.
 
 > **Lab use only.** Use lab equipment only. Do not connect this project
 > to production devices.
@@ -22,10 +23,13 @@ device manuals, SNMP knowledge, and live device tools in one package.
   `"noam, compare a competitor with ETX-2 for an ERP rollout"`.
 - **SNMP operations:** `"rad agent, check SNMP on etx2v-1"` or
   `"abayev, walk IF-MIB on etx2v-1 and summarize interface errors"`.
+- **Hardware & product selection (datasheets):** `"noam, which Megaplex-4 card
+  gives me 16 E1 ports, and what are its ordering options?"`.
 - **Onboarding a new device type:** `"rad agent, harvest the new device CLI"` or
   `"abayev, add these MIB files to the SNMP knowledge layer"`.
 
-The agent answers from family-specific CLI references, manuals, and SNMP maps.
+The agent answers from family-specific CLI references, manuals, product
+datasheets (hardware specs, interfaces, variants, ordering), and SNMP maps.
 When live access is needed, it can inspect device state, perform read-only SNMP
 checks, back up configurations, and prepare guarded configuration changes.
 

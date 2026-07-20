@@ -260,6 +260,13 @@
     <p class="what">Fuses the layers: SNMPv1 polling (IF-MIB counters — stateless, scriptable), the SNMP
     <b>alarm dictionary</b> + <code>show active-alarms</code> for events, config-drift via scheduled backup diffs,
     and <code>health_check</code> sweeps — state + events + trends + drift, with meanings from the manual.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">3.4</span>Hardware &amp; product selection (datasheets)</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">which Megaplex-4 card gives me 16 E1 ports, and what are its ordering options?</span><button class="copy">copy</button></div>
+    <p class="what">Answered offline from the <b>datasheet layer</b> (<code>datasheet_search</code>): the M16E1/M16T1 card's
+    interface specs + ordering block — and because its <code>kind</code> is <code>card</code>, the answer says it plugs into
+    a Megaplex-4 chassis (configuration happens on the <code>mp4100</code> CLI). Variant comparisons work the
+    same way: <i>"how do the ETX-2i 10G and 100G variants differ?"</i></p></div>
 </section>
 
 <section class="s4" id="s4">
@@ -285,7 +292,7 @@
 
 <section class="s5" id="s5">
   <div class="sec-head"><div class="medal">5</div>
-    <div><h2>Onboarding a new device type</h2><div class="sec-sub">the three knowledge pipelines: CLI harvest · manual ingest · MIB compile</div></div></div>
+    <div><h2>Onboarding a new device type</h2><div class="sec-sub">the four knowledge pipelines: CLI harvest · manual ingest · datasheet ingest · MIB compile</div></div></div>
 
   <div class="card" data-p="agent"><h3><span class="n">5.1</span>Harvest its CLI</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">harvest the CLI of the new device I just added</span><button class="copy">copy</button></div>
@@ -298,7 +305,14 @@
     <p class="what">Drop the PDF in <code>manuals/</code>, then <code>/rad-load-manual</code>: per-chapter markdown +
     CLI-topic cross-links. The PDF stays gitignored; the extracted markdown is the committed knowledge.</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">5.3</span>Add its MIBs</h3>
+  <div class="card" data-p="agent"><h3><span class="n">5.3</span>Ingest its datasheet(s)</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">here are the datasheet PDFs for the new family — add them to the knowledge</span><button class="copy">copy</button></div>
+    <p class="what">Drop the PDFs in <code>datasheets/</code>, add each one's entry to <code>datasheet-map.yaml</code>
+    (product slug, family, <code>kind</code> — system/card/accessory, read off the sheet's own first-page banner),
+    then <code>/rad-load-datasheet</code>. Specs, variants and ordering become searchable per subject section;
+    the PDFs stay gitignored.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">5.4</span>Add its MIBs</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">here are the MIB files for the new family — add them to the SNMP layer</span><button class="copy">copy</button></div>
     <p class="what">Drop them in the workspace MIB directory and recompile <code>snmp-oid-map.json</code> (the map
     is portfolio-wide); one <code>snmp_probe</code> captures the family's <code>sysObjectID</code> for auto-detect, and a

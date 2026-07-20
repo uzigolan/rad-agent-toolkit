@@ -58,11 +58,12 @@ http switch: `claude mcp remove rad-mcp` (and
 (`claude plugin marketplace add <repo>/rad-mcp-server`, then
 `claude plugin install rad-mcp@rad-marketplace`); or run `claude` from the
 repo root (reads `.claude/` directly). This is the only target with the
-`/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual` commands.
+`/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual`,
+`/rad-load-datasheet` commands.
 
 **Restart + verify:** CLI — restart the session; extension — reload the
 window. Then `claude mcp list` / `/mcp` (14 tools = stdio; 8 = read-only
-http); `/rad` autocompletes the five commands; *"rad agent, list the managed
+http); `/rad` autocompletes the six commands; *"rad agent, list the managed
 devices"* triggers the skill. Launch errors (extension): Output panel →
 "Claude Code" channel.
 

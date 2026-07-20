@@ -845,6 +845,7 @@ their stricter RW-only scope.
 | `knowledge_search` | Allowed | Allowed | No |
 | `cli_lookup`, `cli_search` | Allowed | Allowed | No |
 | `manual_search`, `manual_get` | Allowed | Allowed | No |
+| `datasheet_search` | Allowed | Allowed | No |
 | `capability_check` | Allowed | Allowed | No |
 | `mib_search`, `mib_describe`, `mib_table`, `mib_notifications` | Allowed | Allowed | No |
 | `snmp_build_poll_plan` | Allowed | Allowed | No |
@@ -896,6 +897,13 @@ Ranked family-scoped manual search with page and chapter provenance.
 
 Fetches one bounded chunk by stable ID. This supports search-then-read rather
 than returning an entire chapter.
+
+### `datasheet_search` *(implemented 2026-07-20)*
+
+Ranked search over the ingested product datasheets, per subject section, with
+`family` / `product` / `kind` filters. `kind` distinguishes a standalone
+device (`system`) from a chassis module (`card` — e.g. every Megaplex-4 card)
+and `accessory`. Full sheets are fetchable via `rad://datasheet/{product}`.
 
 ### `capability_check`
 
@@ -1219,6 +1227,12 @@ server declares a supported schema range and refuses incompatible catalogs.
 - Ingest chapter chunks and cross-links.
 - Add `manual_search` and `manual_get`.
 - Back manual resources from SQLite.
+
+### Phase 4b: Datasheet catalog *(done 2026-07-20)*
+
+- Ingest per-subject datasheet sections (`datasheet_sections` + FTS5),
+  classified by `datasheet-map.yaml` (family / product / kind).
+- Add `datasheet_search`; expose `rad://datasheet[/{product}]` resources.
 
 ### Phase 5: Capability fusion
 

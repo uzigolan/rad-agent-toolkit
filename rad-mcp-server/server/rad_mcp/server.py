@@ -640,6 +640,25 @@ def manual_search(query: str, family: str = "", limit: int = 10,
     return out
 
 
+@mcp.tool()
+def datasheet_search(query: str, family: str = "", product: str = "",
+                     kind: str = "", limit: int = 10) -> dict:
+    """Search the ingested product datasheets per subject section (offline —
+    the served-mode equivalent of grepping references/datasheets/). Third
+    knowledge domain: hardware specs, interfaces, timing options, ordering and
+    product variants live HERE; concepts/procedures in manual_search; exact
+    command syntax in cli_search. Results carry `kind`: 'system' is a
+    standalone device, 'card' a plug-in module for its family's chassis (e.g.
+    every mp4100 card), 'accessory' non-traffic hardware. Filter by `family`
+    (inventory family), `product` (datasheet slug, see rad://datasheet), or
+    `kind`."""
+    k = _knowledge()
+    out = _kcall(k.datasheet_search, query, family=family, product=product,
+                 kind=kind, limit=limit)
+    audit("datasheet_search", "-", detail=f"{family or product or '*'}:{query[:60]}")
+    return out
+
+
 # ---------------------------------------------------------------- resources
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -780,6 +799,36 @@ def manual_chapter_resource(family: str, chapter: str) -> str:
         return "REFUSED: invalid family or chapter name."
     if not path.exists():
         return f"Unknown chapter '{chapter}' for '{family}'. See rad://manual/{family} for the index."
+    return path.read_text(encoding="utf-8")
+
+
+@mcp.resource("rad://datasheet")
+def datasheet_index_resource() -> str:
+    """Index of all ingested product datasheets, grouped by family: system
+    datasheets, chassis cards and accessories per family, plus standalone
+    products with no inventory family. Fetch one datasheet via
+    rad://datasheet/{product} (the product slug from this index).
+    """
+    path = REFERENCE_DIR / "datasheets" / "datasheet-index.md"
+    if not path.exists():
+        return ("No datasheets ingested yet. Run scripts/ingest_datasheet.py --all "
+                "(driven by references/datasheet-map.yaml).")
+    return path.read_text(encoding="utf-8")
+
+
+@mcp.resource("rad://datasheet/{product}")
+def datasheet_resource(product: str) -> str:
+    """One product datasheet as markdown, split into '##' subject sections
+    (features, interfaces, specifications, ordering). `product` is the slug
+    from rad://datasheet (e.g. 'etx-2i-10g', 'asmi-54c'); '.md' optional.
+    """
+    stem = product[:-3] if product.endswith(".md") else product
+    ds_root = (REFERENCE_DIR / "datasheets").resolve()
+    path = (ds_root / f"{stem}.md").resolve()
+    if path.parent != ds_root or path.name == "datasheet-index.md":
+        return "REFUSED: invalid product name."
+    if not path.exists():
+        return f"Unknown product '{product}'. See rad://datasheet for the index."
     return path.read_text(encoding="utf-8")
 
 

@@ -21,6 +21,14 @@ desktop.ini
 *.pdf
 *.PDF
 
+# Datasheet PDFs: same policy — the directory and its whole content stay
+# local; only the extracted markdown under
+# skills/rad-cli-operations/references/datasheets/ is committed
+# (both patterns are root-anchored so the references/datasheets/ markdown
+# stays trackable)
+/rad-mcp-server/datasheets/
+/datasheets/
+
 # Vendor MIB source sets (large; MIBs2 is the fuller RAD kit) — same pattern
 # as the manual PDFs: sources stay local, the COMPILED symbolic map
 # (skills/rad-cli-operations/references/snmp-oid-map.json) is committed

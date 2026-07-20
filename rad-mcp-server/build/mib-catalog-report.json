@@ -1,5 +1,5 @@
 {
- "build_started": "2026-07-18T12:19:57.407378+00:00",
+ "build_started": "2026-07-20T11:49:01.521743+00:00",
  "python": "3.12.3",
  "sqlite": "3.45.1",
  "roots": [
@@ -4101,7 +4101,9 @@
   "manual_sections": 1546,
   "reference_docs": 24,
   "families_cli": 7,
-  "families_manual": 7
+  "families_manual": 7,
+  "datasheet_sections": 522,
+  "products_datasheet": 39
  },
  "fixtures": [
   {
@@ -4173,7 +4175,8 @@
    "mp1",
    "mp4100",
    "secflow"
-  ]
+  ],
+  "datasheet_products": 39
  },
  "fts_smoke_hits": 17,
  "validation_problems": [],

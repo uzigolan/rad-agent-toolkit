@@ -6,7 +6,7 @@ SecFlow (SF-1p), ETX-1p, ETX-2 (ETX-2I), Megaplex-4100, MP-1, MiNID and ETX-2V
 (uCPE-OS) verified live.
 
 The center of gravity is the **skill layer** — live-harvested CLI knowledge,
-ingested user manuals, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
+ingested user manuals and product datasheets, and safety rules ([docs/CONCEPTS.md](docs/CONCEPTS.md)
 §1). The MCP server is the execution arm that puts that knowledge to work on
 real devices.
 
@@ -92,8 +92,13 @@ operations:
 4. **Manual & concept questions** (no device contact) — meaning, limits,
    procedures from the ingested user manual: *"what does the LOS alarm
    mean?"*, *"how many keys can the ETX-1p hold?"*
-5. **Knowledge upkeep** — `/rad-harvest` re-captures the CLI reference
+5. **Hardware & product questions** (no device contact) — specs, interfaces,
+   variants and ordering from the ingested datasheets: *"which Megaplex-4
+   card gives me 16 E1 ports?"*, *"how do the ETX-2i 10G and 100G variants
+   differ?"* — a `card` answer names the chassis family it plugs into
+6. **Knowledge upkeep** — `/rad-harvest` re-captures the CLI reference
    after a firmware change; `/rad-load-manual` ingests a manual PDF;
+   `/rad-load-datasheet` ingests the product-datasheet PDFs;
    `/rad-onboard-family` conducts a brand-new family end-to-end (calling
    the pipeline skills — never replacing them).
 
@@ -114,7 +119,7 @@ by design.
 | `run_show` / `run_show_in_context` | Whitelisted reads (RAD CLIs scope `show` to contexts) |
 | `cli_help` | Relay the CLI's interactive `?` help — commands, argument types, constraints. Never executes |
 | `snmp_probe` / `snmp_get` / `snmp_walk` | Read-only SNMP window (GET/GETNEXT only, never SET): identity + exact firmware without an SSH session, explicit-OID polls, capped walks — values decoded with catalog semantics. See `references/snmp-support.md` |
-| `knowledge_status` / `mib_search` / `mib_describe` / `mib_table` / `mib_notifications` / `snmp_build_poll_plan` / `cli_search` / `manual_search` | **Offline** semantic MIB catalog (rad-knowledge.sqlite, FTS5): concept search, full object semantics (enums/units/indexes/provenance), table models, trap payloads. Never contacts a device; MIB-defined ≠ implemented (capability evidence carried separately) |
+| `knowledge_status` / `mib_search` / `mib_describe` / `mib_table` / `mib_notifications` / `snmp_build_poll_plan` / `cli_search` / `manual_search` / `datasheet_search` | **Offline** semantic MIB catalog (rad-knowledge.sqlite, FTS5): concept search, full object semantics (enums/units/indexes/provenance), table models, trap payloads, CLI/manual/datasheet full-text. Never contacts a device; MIB-defined ≠ implemented (capability evidence carried separately) |
 | `get_config` / `backup_config` | Full config export / snapshot to local archive |
 | `stage_config` → `commit_config` | Staged writes: preview, explicit confirm, auto pre-commit backup |
 | `save_startup` | Persist running config (confirm required) |
@@ -154,10 +159,10 @@ genuinely no live instance), not a guess. Full method + a real case study:
 `docs/architecture.md` and `tests/eval-report.md`.
 
 **Slash commands** (Claude Code only): `/rad-health`, `/rad-backup`, and the
-knowledge pipelines `/rad-harvest`, `/rad-load-manual` — composed one-time by
-`/rad-onboard-family` (new family end-to-end: driver → probe → harvest →
-manual → MIBs/catalog → registration; the pipelines stay independently
-runnable for their lifetime triggers).
+knowledge pipelines `/rad-harvest`, `/rad-load-manual`, `/rad-load-datasheet`
+— composed one-time by `/rad-onboard-family` (new family end-to-end: driver →
+probe → harvest → manual → MIBs/catalog → registration; the pipelines stay
+independently runnable for their lifetime triggers).
 
 ## Safety model
 

@@ -17,7 +17,7 @@ rules — the parts that rarely move.
 stale. Where they live + the bump policy are below.
 
 **MCP server changelog** (current version is authoritative via `list_versions`):
-`0.6.0` check_skill_version — session drift alert for skill/server version + bundled/served mode · `0.5.1` list_versions reports the knowledge-catalog build · `0.5.0` Phase 5 — CLI refs + manuals + reference docs in the catalog, cli_search/manual_search · `0.4.0` snmp_build_poll_plan + catalog-decoded live values + capability-observation log · `0.3.0` offline knowledge-catalog tools (knowledge_status/mib_search/mib_describe/mib_table/mib_notifications) over rad-knowledge.sqlite · `0.2.0` read-only SNMP tools + pysnmp
+`0.7.0` datasheet layer — 39 product datasheets in the catalog (datasheet_sections + FTS5, family/product/kind classification via datasheet-map.yaml), datasheet_search tool, rad://datasheet resources, /rad-load-datasheet command · `0.6.0` check_skill_version — session drift alert for skill/server version + bundled/served mode · `0.5.1` list_versions reports the knowledge-catalog build · `0.5.0` Phase 5 — CLI refs + manuals + reference docs in the catalog, cli_search/manual_search · `0.4.0` snmp_build_poll_plan + catalog-decoded live values + capability-observation log · `0.3.0` offline knowledge-catalog tools (knowledge_status/mib_search/mib_describe/mib_table/mib_notifications) over rad-knowledge.sqlite · `0.2.0` read-only SNMP tools + pysnmp
 
 **Knowledge catalog:** `rad-knowledge.sqlite` carries `catalog_meta.schema_version` (currently `1`) + a build timestamp + corpus hash; the live view is the `knowledge_catalog` block of `list_versions`. It is a build artifact (gitignored); the build report is committed.
 

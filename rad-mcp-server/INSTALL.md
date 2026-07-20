@@ -17,7 +17,7 @@ project's principles beyond installation, see
 |---|---|---|---|
 | **MCP server** (tools) | The *verbs* — executable device operations (`run_show`, `health_check`, `stage_config`, …) | Agent calls tools during a task; wired per client via an MCP config entry | Any MCP client — all targets |
 | **Skills** | The *knowledge* — `rad-core` (safety rules), `rad-cli-operations` (RAD operations expertise: CLI + SNMP + personas), `rad-device-mng` (inventory workflow) | Auto-loads when the conversation matches the skill description | Agent Skills open standard — Claude, Copilot, Codex, unmodified |
-| **Slash commands** | The *procedures* — `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual`, `/rad-onboard-family` | Only when explicitly typed | Claude Code only (elsewhere: ask in plain language) |
+| **Slash commands** | The *procedures* — `/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual`, `/rad-load-datasheet`, `/rad-onboard-family` | Only when explicitly typed | Claude Code only (elsewhere: ask in plain language) |
 
 Rule of thumb: tools **do**, skills **know**, commands **orchestrate**.
 
@@ -28,7 +28,8 @@ omitted, **bundled default**):
 - **bundled** — skills install with their `references/` (~14 MB); knowledge
   answers work with no MCP connection.
 - **served** — thin skills (SKILL.md only, ~56 KB); ALL knowledge is served
-  by the MCP catalog tools (`cli_search`, `manual_search`, `mib_*`) over
+  by the MCP catalog tools (`cli_search`, `manual_search`,
+  `datasheet_search`, `mib_*`) over
   `rad-knowledge.sqlite`. Requires a connected rad-mcp server with the
   catalog built (the HTTP-server launcher reports catalog readiness; build
   it via `scripts/build_knowledge_catalog.py`).

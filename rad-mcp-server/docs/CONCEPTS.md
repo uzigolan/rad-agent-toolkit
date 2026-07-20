@@ -9,7 +9,9 @@ it is gathered from the READMEs, INSTALL.md, the docs/, and the skills.
 **The knowledge is the product; the server is its hands.** The main asset
 is the skill layer: firmware-exact CLI truth harvested live from real
 units, user manuals ingested into greppable chapters with CLI cross-links,
-a verified command map, personas, and safety rules — expertise no generic
+product datasheets ingested into per-subject spec sections (classified
+family/product/card), a verified command map, personas, and safety rules —
+expertise no generic
 model has, captured once and loaded by any Agent-Skills client unmodified.
 The MCP server matters as the execution arm (staged writes, whitelisted
 reads, live `?` relay) — as important as hands are, and still second
@@ -157,6 +159,16 @@ replaces the markdown). It graduates to real RAG (planned layer 6) when the
 corpus spans many manuals/firmwares or users ask conceptual questions whose
 wording never lexically appears — the lexical layer is the foundation RAG
 builds on, not a throwaway.
+**The datasheet layer — the third knowledge domain (added 2026-07-20).**
+Portfolio-wide product datasheets (39 PDFs, gitignored under `datasheets/`)
+ingest into per-subject markdown sections under `references/datasheets/`,
+classified by `datasheet-map.yaml` — each sheet's own first-page banner
+declares its `family`, `product` slug, and `kind` (`system` standalone
+device / `card` chassis module / `accessory`); e.g. the Megaplex-4 family
+carries one system sheet plus ~19 card sheets (ASMi-54C, M8E1T1, OP-108C…).
+Hardware specs, interfaces, variants and ordering live HERE; syntax stays
+in the CLI reference, concepts/procedures in the manual. Served mode gets
+the same via `datasheet_search` + `rad://datasheet` resources.
 **The SNMP layer — a second, machine-readable window (added 2026-07-16).**
 The vendor MIB sets (workspace `MIBS/` + `MIBs2/`, gitignored like the
 manual PDFs) compile into `references/snmp-oid-map.json` — 35,977 symbolic
@@ -186,7 +198,8 @@ PowerShell; interactive prompt when omitted, **bundled default**):
 - **bundled** (today's mode): skills install WITH their `references/`
   (~14 MB, 276 files); knowledge answers work with no MCP connection.
 - **served**: thin skills (SKILL.md only, ~56 KB, 3 files); ALL knowledge is
-  served by the MCP catalog tools (`cli_search`, `manual_search`, `mib_*`)
+  served by the MCP catalog tools (`cli_search`, `manual_search`,
+  `datasheet_search`, `mib_*`)
   over `rad-knowledge.sqlite`. Requires a connected rad-mcp server whose
   `build/rad-knowledge.sqlite` is present (the HTTP-server launcher reports
   catalog readiness).
@@ -206,10 +219,12 @@ Three skills: `rad-core` (safety contract), `rad-cli-operations` (RAD
 operations expert: personas Abayev/Noam/"rad agent", spoken toggles for
 verbosity and reference-trust, CLI and SNMP live-read workflows, and six
 operation categories — syntax lookup, device inquiry, device changes, manual
-questions, SNMP/knowledge queries, knowledge upkeep), `rad-device-mng`
+questions, hardware/datasheet questions, SNMP/knowledge queries, knowledge
+upkeep), `rad-device-mng`
 (inventory CRUD + onboarding). Skills answer to plain language; the slash
 commands package recurring procedures — `/rad-health`, `/rad-backup`, the
-knowledge pipelines `/rad-harvest` and `/rad-load-manual`, and
+knowledge pipelines `/rad-harvest`, `/rad-load-manual` and
+`/rad-load-datasheet`, and
 `/rad-onboard-family` (the one-time conductor that *composes* the pipeline
 skills to onboard a brand-new family end-to-end — it never replaces them;
 each pipeline stays independently runnable for its lifetime trigger).

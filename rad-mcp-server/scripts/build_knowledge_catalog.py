@@ -123,6 +123,16 @@ CREATE TABLE reference_docs (
   id INTEGER PRIMARY KEY, name TEXT NOT NULL, section TEXT NOT NULL,
   body TEXT NOT NULL, source_id INTEGER NOT NULL REFERENCES knowledge_sources(id));
 CREATE VIRTUAL TABLE refdoc_fts USING fts5(name, section, body, content='');
+-- Datasheets: third knowledge domain (hardware specs / interfaces / variants /
+-- ordering). family is NULL for standalone products with no inventory family;
+-- kind is 'system' (standalone device), 'card' (chassis module) or 'accessory'.
+CREATE TABLE datasheet_sections (
+  id INTEGER PRIMARY KEY, family TEXT, product TEXT NOT NULL, kind TEXT NOT NULL,
+  file TEXT NOT NULL, section TEXT NOT NULL, pages TEXT, body TEXT NOT NULL,
+  source_id INTEGER NOT NULL REFERENCES knowledge_sources(id));
+CREATE INDEX ix_ds_family ON datasheet_sections(family);
+CREATE INDEX ix_ds_product ON datasheet_sections(product);
+CREATE VIRTUAL TABLE datasheet_fts USING fts5(family, product, section, body, content='');
 """
 
 # ── verified seed data: family profiles come from the SINGLE SOURCE yaml ───
@@ -412,6 +422,7 @@ def normalize(jout: Path, selected: dict, compile_status: dict, con: sqlite3.Con
 SECTION_RE = re.compile(r"^## +(.+?)\s*$", re.M)
 PAGES_RE = re.compile(r"\*\(p\.([\d\u2013-]+)\)\*")
 REFDOC_FILES = ("verified-commands.md", "snmp-support.md", "known-limitations.md")
+DS_META_RE = re.compile(r"<!-- datasheet product=(\S+) family=(\S+) kind=(\S+) source=(\S+) -->")
 
 
 def _split_sections(body: str):
@@ -430,7 +441,8 @@ def _split_sections(body: str):
 def ingest_references(con: sqlite3.Connection, report: dict):
     """Phase 5: CLI-help jsonl + manual chapters + curated reference docs."""
     cur = con.cursor()
-    counts = {"cli_help": 0, "manual_sections": 0, "reference_docs": 0, "families_cli": 0, "families_manual": 0}
+    counts = {"cli_help": 0, "manual_sections": 0, "reference_docs": 0, "families_cli": 0, "families_manual": 0,
+              "datasheet_sections": 0, "products_datasheet": 0}
 
     def src_row(domain, family, path: Path) -> int:
         cur.execute("INSERT INTO knowledge_sources(domain,family,path,sha256) VALUES (?,?,?,?)",
@@ -479,6 +491,31 @@ def ingest_references(con: sqlite3.Connection, report: dict):
                 cur.execute("INSERT INTO manual_fts(rowid,family,chapter,section,body) VALUES (?,?,?,?,?)",
                             (cur.lastrowid, family, chapter, clean, chunk))
                 counts["manual_sections"] += 1
+
+    # Datasheets (one md per product; '##' subject sections; datasheet-map.yaml
+    # provenance is baked into each file's meta comment by ingest_datasheet.py)
+    dsdir = REFS / "datasheets"
+    if dsdir.is_dir():
+        for f in sorted(dsdir.glob("*.md")):
+            if f.name == "datasheet-index.md":
+                continue
+            body = f.read_text(encoding="utf-8", errors="replace")
+            m = DS_META_RE.search(body)
+            product = m.group(1) if m else f.stem
+            family = None if (not m or m.group(2) == "-") else m.group(2)
+            kind = m.group(3) if m else "system"
+            sid = src_row("datasheet", family, f)
+            counts["products_datasheet"] += 1
+            for section, chunk in _split_sections(body):
+                pm = PAGES_RE.search(section)
+                pages = pm.group(1) if pm else None
+                clean = PAGES_RE.sub("", section).strip()
+                cur.execute("INSERT INTO datasheet_sections(family,product,kind,file,section,pages,body,source_id) "
+                            "VALUES (?,?,?,?,?,?,?,?)",
+                            (family, product, kind, f.name, clean, pages, chunk, sid))
+                cur.execute("INSERT INTO datasheet_fts(rowid,family,product,section,body) VALUES (?,?,?,?,?)",
+                            (cur.lastrowid, family or "", product, clean, chunk))
+                counts["datasheet_sections"] += 1
 
     # Curated reference docs (family-agnostic knowledge) + snmp capability maps
     doc_files = [REFS / n for n in REFDOC_FILES if (REFS / n).exists()]
@@ -575,7 +612,16 @@ def validate(con: sqlite3.Connection, report: dict, strict: bool):
         problems.append("phase5: cli_fts lookup 'static-route' returned nothing")
     if not cur.execute('SELECT 1 FROM manual_fts WHERE manual_fts MATCH ? LIMIT 1', ('"zero" "touch"',)).fetchone():
         problems.append("phase5: manual_fts lookup 'zero touch' returned nothing")
-    report["phase5_fixtures"] = {"cli_families": sorted(fams), "manual_families": sorted(man_fams)}
+    # Datasheet fixtures (only when the datasheet layer has been ingested)
+    ds_products = cur.execute("SELECT count(DISTINCT product) FROM datasheet_sections").fetchone()[0]
+    if ds_products:
+        if not cur.execute('SELECT 1 FROM datasheet_fts WHERE datasheet_fts MATCH ? LIMIT 1',
+                           ('"teleprotection"',)).fetchone():
+            problems.append("datasheets: fts lookup 'teleprotection' (TP card) returned nothing")
+        if not cur.execute("SELECT 1 FROM datasheet_sections WHERE family='mp4100' AND kind='card' LIMIT 1").fetchone():
+            problems.append("datasheets: no mp4100 card sections (expected ~19 card datasheets)")
+    report["phase5_fixtures"] = {"cli_families": sorted(fams), "manual_families": sorted(man_fams),
+                                 "datasheet_products": ds_products}
     # FTS smoke
     hits = cur.execute("SELECT count(*) FROM obj_fts WHERE obj_fts MATCH 'ring protection'").fetchone()[0]
     report["fts_smoke_hits"] = hits

@@ -176,7 +176,10 @@ flowchart TD
     O4 --> S41[ ] --> O41[Generate manual-family/manual-index.md]
     O4 --> S42[ ] --> O42[Generate per-chapter manual markdown]
 
-    O4 --> S45[ ] --> O5[SNMP Onboarding]
+    O4 --> S43[ ] --> O4D[Datasheet Ingest\nAdd datasheet-map.yaml entry + run /rad-load-datasheet]
+    O4D --> S44[ ] --> O4D1[Generate datasheets/product.md + datasheet-index.md]
+
+    O4D --> S45[ ] --> O5[SNMP Onboarding]
     O5 --> S51[ ] --> O51[Collect MIBs and family OIDs]
     O5 --> S52[ ] --> O52[Update snmp-oid-map.json]
     O5 --> S53[ ] --> O53[Create snmp-map-family.md + update snmp-support.md]
@@ -258,7 +261,8 @@ flowchart TD
     F2Q -- No --> FX[Fix inventory or credentials]
     F2Q -- Yes --> F3[Run /rad-harvest]
     F3 --> F4[Run /rad-load-manual]
-    F4 --> F5[SNMP quick map: update snmp-oid-map.json + call snmp_probe]
+    F4 --> F4D[Run /rad-load-datasheet if the family has datasheet PDFs]
+    F4D --> F5[SNMP quick map: update snmp-oid-map.json + call snmp_probe]
     F5 --> F6[Update references + SKILL.md family coverage]
     F6 --> F7[Smoke test key prompts]
     F7 --> F8[Done: Family onboarded with existing driver]
@@ -511,6 +515,10 @@ For knowledge-only or pre-flight syntax answers, the lookup order is:
 4. Manual layer for concept/procedure/limits
 - Source folders: manual-family chapters and index.
 - Use for "what/why/limits" answers.
+
+4b. Datasheet layer for hardware/spec/variant/ordering questions
+- Source folder: [skills/rad-cli-operations/references/datasheets](../skills/rad-cli-operations/references/datasheets) (+ `datasheet_search` in served mode).
+- Use for "how many ports / which SFPs / which card / ordering options"; a `kind=card` hit is a chassis module — pair it with its family's CLI reference.
 
 5. SNMP map and support notes when the question is telemetry/state oriented
 - [skills/rad-cli-operations/references/snmp-oid-map.json](../skills/rad-cli-operations/references/snmp-oid-map.json)

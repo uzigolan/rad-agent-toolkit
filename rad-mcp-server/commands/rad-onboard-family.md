@@ -62,6 +62,12 @@ Distilled from the minid + etx2v onboardings (2026-07-15..18).
 5. **Manual** → drop the PDF in `manuals/` and run
    **`/rad-load-manual <pdf> <family>`**; follow that skill's quality checks
    (chapter completeness, cross-links, no mojibake).
+5b. **Datasheet(s)** → drop the family's datasheet PDF(s) in `datasheets/`,
+   add an entry per PDF to `references/datasheet-map.yaml` (product slug,
+   family, `kind` system/card/accessory — read the sheet's own first-page
+   banner, don't trust filenames), then run **`/rad-load-datasheet`**;
+   follow that skill's quality checks (index completeness, clean `##`
+   subject headings, no mojibake).
 6. **MIBs + SNMP registration**:
    - Copy any family-specific MIB files into the workspace MIB set
      (`MIBs2/`; sources stay gitignored).

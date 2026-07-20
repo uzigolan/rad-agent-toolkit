@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.4.2
+version: 1.5.0
 ---
 
-> **Skill version:** 1.4.2 · updated 2026-07-19 (frontmatter description trimmed to fit Copilot's 1024-char skill-description limit — JetBrains/CLI loaders silently drop longer skills) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.5.0 · updated 2026-07-20 (datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -150,12 +150,14 @@ family. SecFlow-1p manual: https://www.rad.com/docs/965
 | `cli-reference-<family>.md` | Complete harvested `?` help: every context's level listing + per-command argument constraints. Parameterized (named/indexed) contexts are harvested too, under a `NAME` placeholder — e.g. `## configure system mqtt server NAME` — captured via an existing instance or a temp object rolled back immediately | Answer syntax questions WITHOUT touching the device — grep the context path header, e.g. `## configure system` |
 | `cli-help-<family>.jsonl` | Same data, machine-readable (source for the MCP resources) | — |
 | `manual-<family>/` (when present) | The device **user manual** split into per-chapter markdown + `manual-index.md` (chapter list + CLI-topic → chapter cross-links). COMPANION to the CLI reference, not a replacement | Answer *concepts / procedures / limits / alarm meanings* the `?` help can't give — e.g. "max 2 MQTT servers", "what does LOS mean", enrollment workflow. Start at `manual-index.md`, then grep the chapter |
+| `datasheets/` (portfolio-wide) | **Product datasheets**, one markdown per product split into `##` subject sections, + `datasheet-index.md`. Classified by `datasheet-map.yaml`: `family`, `product` slug, `kind` (`system` = standalone device, `card` = plug-in chassis module — e.g. every Megaplex-4 card, `accessory`) | Answer *hardware spec / interface / variant / ordering* questions — port counts, SFP options, temperature ranges, timing options, which card gives N×E1. Start at `datasheet-index.md`; `kind=card` means "a module inside its family's chassis", not a standalone box |
 
 Also exposed as MCP resources (for Desktop, which has no filesystem):
 `rad://command-tree/{family}`, `rad://cli-reference/{family}` (context index),
 `rad://cli-reference/{family}/{context}` — spaces become `+`, root is `root`
-(e.g. `rad://cli-reference/secflow/configure+system`); and, where a manual is
-ingested, `rad://manual/{family}` (index) + `rad://manual/{family}/{chapter}`.
+(e.g. `rad://cli-reference/secflow/configure+system`); where a manual is
+ingested, `rad://manual/{family}` (index) + `rad://manual/{family}/{chapter}`;
+and `rad://datasheet` (index) + `rad://datasheet/{product}`.
 
 **SNMP knowledge in `references/`:**
 
@@ -172,8 +174,10 @@ device is clean, and syncs the skill copies. (Directly:
 `python scripts/harvest_cli.py harvest <device> [--branch "configure crypto"]`.)
 For the manual layer, drop the family's PDF in `manuals/` and run
 `python scripts/ingest_manual.py <pdf> <family>` (re-runnable; rewrites
-`references/manual-<family>/`). The PDF stays gitignored; the extracted
-markdown is committed.
+`references/manual-<family>/`). For the datasheet layer, drop the PDF in
+`datasheets/`, add its entry to `references/datasheet-map.yaml`, and run
+`python scripts/ingest_datasheet.py --all` (or the `/rad-load-datasheet`
+skill). PDFs stay gitignored; the extracted markdown is committed.
 
 ## How this skill treats the harvested data
 
@@ -189,10 +193,15 @@ device `?` help ──harvest_cli.py──▶ cli-help-<family>.jsonl   (canonic
 
 user manual PDF ──ingest_manual.py──▶ manual-<family>/*.md + manual-index.md
    (concepts, not syntax)              └─▶ rad://manual/{family}[/{chapter}]
+
+datasheet PDFs ──ingest_datasheet.py──▶ datasheets/<product>.md + datasheet-index.md
+   (specs/variants/ordering,             └─▶ rad://datasheet[/{product}]
+    driven by datasheet-map.yaml)
 ```
 
-The two pipelines are independent and never overwrite each other: re-harvesting
-rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
+The three pipelines are independent and never overwrite each other:
+re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
+`manual-<family>/`; re-ingesting datasheets rewrites `datasheets/`.
 
 - **Answer-time lookup order (fastest first):** 1) the *Common config recipes*
   below — zero lookups; 2) grep `cli-reference-<family>.md` for the context
@@ -216,6 +225,14 @@ rewrites the CLI reference; re-ingesting a manual rewrites `manual-<family>/`.
   `trusted-ca`, *how many* MQTT servers/keys the box allows, *what* an alarm
   string means, and multi-step enrollment procedures. Syntax still comes from
   the CLI reference — cite the manual for concepts, the reference for commands.
+- **When the question is hardware/product-shaped ("how many ports / which SFPs
+  / what variants / which card do I need / temperature range / ordering
+  options") → the datasheets** (`references/datasheets/`, or the
+  `datasheet_search` tool / `rad://datasheet` resources in served mode). Start
+  at `datasheet-index.md`. Mind `kind`: a `card` (e.g. M8E1T1, ASMi-54C) is a
+  module for its family's chassis — configuration still happens on the chassis
+  family's CLI, so pair the card's datasheet with the family's CLI reference
+  and manual when answering.
 - **Capability questions ("does family X support / have Y?") — ground per
   family, never generalize.** Answer only from the TARGET family's own sources:
   grep `cli-reference-<family>.md` (+ `command-tree-<family>.md`) and

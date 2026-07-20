@@ -86,6 +86,12 @@ def status() -> dict:
                             "mib_notification_objects", "mib_table_indexes",
                             "capability_observations", "family_snmp_profile",
                             "cli_help", "manual_sections", "reference_docs")}
+        # older catalogs predate the datasheet layer — report 0, don't fail
+        try:
+            counts["datasheet_sections"] = cur.execute(
+                "SELECT count(*) FROM datasheet_sections").fetchone()[0]
+        except sqlite3.OperationalError:
+            counts["datasheet_sections"] = 0
         roots = [dict(r) for r in cur.execute(
             "SELECT root, priority, count(*) AS files, sum(selected) AS selected "
             "FROM source_files GROUP BY root, priority ORDER BY priority DESC")]
@@ -615,5 +621,47 @@ def manual_search(query: str, family: str = "", limit: int = 10,
         return {"query": query, "returned": len(results), "results": results,
                 "note": "concepts/limits/procedures from the manual layer; "
                         "exact command syntax comes from cli_search"}
+    finally:
+        con.close()
+
+
+def datasheet_search(query: str, family: str = "", product: str = "",
+                     kind: str = "", limit: int = 10) -> dict:
+    """Search the ingested product datasheets (per-subject-section). Third
+    knowledge domain: hardware specs, interfaces, timing, ordering options and
+    product variants live here — concepts/procedures are manual_search's job,
+    exact command syntax is cli_search's. `kind` in results distinguishes a
+    standalone device ('system') from a plug-in chassis module ('card')."""
+    limit = max(1, min(int(limit), 30))
+    con = _connect()
+    try:
+        cur = con.cursor()
+        try:
+            cur.execute("SELECT 1 FROM datasheet_sections LIMIT 1")
+        except sqlite3.OperationalError:
+            return {"query": query, "returned": 0, "results": [],
+                    "note": "catalog predates the datasheet layer — rebuild it "
+                            "with scripts/build_knowledge_catalog.py"}
+        fsql, args = "", []
+        if family:
+            fsql += " AND d.family=?"; args.append(family)
+        if product:
+            fsql += " AND d.product=?"; args.append(product)
+        if kind:
+            fsql += " AND d.kind=?"; args.append(kind)
+        rows = cur.execute(
+            f"SELECT d.* FROM datasheet_fts f JOIN datasheet_sections d ON d.id=f.rowid "
+            f"WHERE datasheet_fts MATCH ?{fsql} ORDER BY bm25(datasheet_fts) LIMIT ?",
+            [_fts_query(query)] + args + [limit]).fetchall()
+        results = [{"domain": "datasheet", "family": r["family"],
+                    "product": r["product"], "kind": r["kind"],
+                    "section": r["section"], "pages": r["pages"],
+                    "file": r["file"], "excerpt": _excerpt(r["body"], query)}
+                   for r in rows]
+        return {"query": query, "returned": len(results), "results": results,
+                "note": "hardware specs/interfaces/ordering from the datasheet layer; "
+                        "kind=card means a module for its family's chassis, not a "
+                        "standalone device; procedures live in manual_search, syntax "
+                        "in cli_search"}
     finally:
         con.close()

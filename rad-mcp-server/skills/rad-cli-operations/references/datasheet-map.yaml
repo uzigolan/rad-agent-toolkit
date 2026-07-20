@@ -1,0 +1,219 @@
+# Datasheet -> family/product map (single source for scripts/ingest_datasheet.py).
+# Classification comes from each PDF's own first-page banner ("Data Sheet |
+# <family> | <product> | ..."), verified by scripts scan on 2026-07-20 — not
+# from filenames. kind: system = standalone device datasheet; card = plug-in
+# module for a chassis family; accessory = non-traffic hardware.
+# family: null = real product with no inventory family (still ingested and
+# searchable by product). Set skip: true on any entry to exclude it.
+provenance: first-page text of each PDF under rad-mcp-server/datasheets/
+datasheets:
+
+  # ── Megaplex-4 (family mp4100): chassis + modules ─────────────────────────
+  - pdf: Megaplex-4.pdf
+    product: megaplex-4
+    title: Megaplex-4 Next Generation Multiservice Access Nodes
+    family: mp4100
+    kind: system
+  - pdf: asmi-54c_ds.pdf
+    product: asmi-54c
+    title: ASMi-54C Ethernet and TDM over SHDSL/SHDSL.bis 8-Port Modules
+    family: mp4100
+    kind: card
+  - pdf: dnfv_dnfv-l.ds_.pdf
+    product: dnfv
+    title: D-NFV / D-NFV-L Virtualization Modules
+    family: mp4100
+    kind: card
+  - pdf: hs-u-6-12_ds.pdf
+    product: hs-u-6-12
+    title: HS-U-6/12 ISDN "U" Interface Data Channel Modules
+    family: mp4100
+    kind: card
+  - pdf: m-eth_ds.pdf
+    product: m-eth
+    title: M-ETH Access Gigabit Ethernet Module
+    family: mp4100
+    kind: card
+  - pdf: m16e1t1_ds_cie.pdf
+    product: m16e1t1
+    title: M16E1 / M16T1 16-Port E1 and T1 Modules
+    family: mp4100
+    kind: card
+  - pdf: m8e1t1.pdf
+    product: m8e1t1
+    title: M8E1 / M8T1 8-Port E1 and T1 Modules
+    family: mp4100
+    kind: card
+  - pdf: m8sl.pdf
+    product: m8sl
+    title: M8SL 8-Port SHDSL E1 Module
+    family: mp4100
+    kind: card
+  - pdf: mpw.pdf
+    product: mpw-1
+    title: MPW-1 TDM Pseudowire Access Gateway Module
+    family: mp4100
+    kind: card
+  - pdf: ms-jnpr.pdf
+    product: ms-jnpr
+    title: MS-JNPR IP/MPLS Edge Router Module
+    family: mp4100
+    kind: card
+  - pdf: ms-sgw.pdf
+    product: ms-sgw
+    title: MS-SGW VPN Aggregator, Router and Firewall Module
+    family: mp4100
+    kind: card
+  - pdf: ms-ub_0.pdf
+    product: ms-ub
+    title: MS-UB Multiservice Virtualization Platform Module
+    family: mp4100
+    kind: card
+  - pdf: ms_cesp_ds_1.pdf
+    product: ms-cesp
+    title: MS-CESP Data/Voice Cross-Connect Processing Engine
+    family: mp4100
+    kind: card
+  - pdf: op-108c_ds.pdf
+    product: op-108c
+    title: OP-108C Dual Fiber Multiplexer Module for 4E1 and Ethernet
+    family: mp4100
+    kind: card
+  - pdf: sh-16_ds_0.pdf
+    product: sh-16
+    title: SH-16 E1/Ethernet over SHDSL/SHDSL.bis 16-Port Module
+    family: mp4100
+    kind: card
+  - pdf: t3_ds.pdf
+    product: t3
+    title: T3 Multiplexer Module
+    family: mp4100
+    kind: card
+  - pdf: tp_ds.pdf
+    product: tp
+    title: TP Distance Teleprotection Module
+    family: mp4100
+    kind: card
+  - pdf: vs_ds.pdf
+    product: vs
+    title: VS Multiservice Module
+    family: mp4100
+    kind: card
+  - pdf: vc-4-omni_ds_0.pdf
+    product: vc-4-omni
+    title: VC-4-OMNI 4-Channel PCM Voice Module
+    family: mp4100
+    kind: card
+    note: also fits Megaplex-2100/2104 I/O slots
+  - pdf: vc4_4a_8_8a_16_ds.pdf
+    product: vc-4-8-16
+    title: VC-4/4A, VC-8/8A, VC-16 PCM and ADPCM Voice Modules
+    family: mp4100
+    kind: card
+    note: also fits Megaplex-2100/2104
+  - pdf: Cabling-Management-System-DS.pdf
+    product: cabling-solution
+    title: Megaplex-4 Cabling Solution (cable management accessories)
+    family: mp4100
+    kind: accessory
+
+  # ── ETX-2i (family etx2): system variants ─────────────────────────────────
+  - pdf: etx-2i_1g_ds_0.pdf
+    product: etx-2i-1g
+    title: ETX-2i (1G devices) IP and Carrier Ethernet Demarcation with D-NFV
+    family: etx2
+    kind: system
+  - pdf: etx-2i-10g_ds_ga.pdf
+    product: etx-2i-10g
+    title: ETX-2i-10G / ETX-2i-10G-B Ethernet Business and Cell-Site Gateways
+    family: etx2
+    kind: system
+  - pdf: etx-2i-100g_ds_ga_0.pdf
+    product: etx-2i-100g
+    title: ETX-2i-100G Business Access and Cell Site Gateway (100G EAD)
+    family: etx2
+    kind: system
+  - pdf: etx-2i-400g_ds_03-26_ca_0.pdf
+    product: etx-2i-400g
+    title: ETX-2i-400G High-Density 400G Demarcation & Aggregation Platform
+    family: etx2
+    kind: system
+    note: Controlled Availability datasheet (03-26)
+
+  # ── SecFlow (family secflow): system variants ─────────────────────────────
+  - pdf: secflow-1_ds.pdf
+    product: secflow-1
+    title: SecFlow-1 Ruggedized SCADA-Aware Router Gateway
+    family: secflow
+    kind: system
+  - pdf: secflow-1c-4g_ds.pdf
+    product: secflow-1c-4g
+    title: SecFlow-1c-4G Industrial LTE Cellular Router
+    family: secflow
+    kind: system
+  - pdf: secflow-1c-4gm_ds.pdf
+    product: secflow-1c-4gm
+    title: SecFlow-1c-4Gm Compact Industrial LTE Cellular Router
+    family: secflow
+    kind: system
+  - pdf: secflow-1c-5g_ds.pdf
+    product: secflow-1c-5g
+    title: SecFlow-1c-5G Industrial 5G Cellular Router
+    family: secflow
+    kind: system
+  - pdf: secflow-1p_ds.pdf
+    product: secflow-1p
+    title: SecFlow-1p Industrial IoT Gateway
+    family: secflow
+    kind: system
+  - pdf: secflow-1v_ds_ver_2_3_mr_plc.pdf
+    product: secflow-1v
+    title: SecFlow-1v Ruggedized Multiservice Gateway
+    family: secflow
+    kind: system
+  - pdf: secflow-2_4.3_ds_ga.pdf
+    product: secflow-2
+    title: SecFlow-2 Ruggedized SCADA-Aware Ethernet Switch/Router
+    family: secflow
+    kind: system
+  - pdf: SecFlow-4.pdf
+    product: secflow-4
+    title: SecFlow-4 Modular Ruggedized SCADA-Aware Ethernet Switch/Router
+    family: secflow
+    kind: system
+
+  # ── One-datasheet families ────────────────────────────────────────────────
+  - pdf: etx-1p_ds.pdf
+    product: etx-1p
+    title: ETX-1p CPE for VPN and Cloud Access, Services/IoT Gateway
+    family: etx1p
+    kind: system
+  - pdf: etx-2v_ds.pdf
+    product: etx-2v
+    title: ETX-2v Open uCPE White Box Platforms
+    family: etx2v
+    kind: system
+  - pdf: minid_2_6_ds_ga.pdf
+    product: minid
+    title: MiNID Miniature Programmable Network Interface Device
+    family: minid
+    kind: system
+  - pdf: mp-1_ds-2_2_0.pdf
+    product: megaplex-1
+    title: Megaplex-1 Multiservice Pseudowire Access Gateway
+    family: mp1
+    kind: system
+
+  # ── No inventory family (still ingested, searchable by product) ───────────
+  - pdf: miclk_2_3_ga_ds.pdf
+    product: miclk
+    title: MiCLK 1588 Grandmaster on an SFP with Built-in GNSS
+    family: null
+    kind: system
+    note: standalone SFP product; no chassis banner and no inventory family yet
+  - pdf: vc-6lb_ds.pdf
+    product: vc-6lb
+    title: VC-6/LB 6-Channel PCM Voice Modules for Local Battery Telephones
+    family: null
+    kind: card
+    note: Megaplex-2100/2104 module only — NOT a Megaplex-4 card; no mp2100 family exists

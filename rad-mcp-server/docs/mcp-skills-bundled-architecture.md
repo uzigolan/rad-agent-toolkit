@@ -387,6 +387,7 @@ The packaged Claude commands are:
 - `/rad-backup`
 - `/rad-harvest`
 - `/rad-load-manual`
+- `/rad-load-datasheet`
 
 Skills currently serve two roles: small behavioral instructions and a large
 delivery vehicle for references. This creates duplicated data across source,
