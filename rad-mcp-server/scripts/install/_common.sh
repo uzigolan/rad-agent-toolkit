@@ -43,31 +43,29 @@ _best_python() {
 assert_common_setup() {
     if [ -x "$VENV_PYTHON" ]; then
         # A venv python existing is NOT proof of a working install — a prior
-        # aborted bootstrap can leave it half-built (python present, rad-mcp
-        # missing). Only skip setup if rad_mcp actually imports; otherwise fall
-        # through and (re)run the pip install to repair it.
+        # aborted bootstrap can leave it half-built (rad-mcp/deps missing, or
+        # even a broken pip). Only skip setup if rad_mcp actually imports;
+        # otherwise delete the venv and rebuild clean.
         if "$VENV_PYTHON" -c "import rad_mcp" >/dev/null 2>&1; then return; fi
-        echo "Server venv found but rad-mcp isn't installed (a prior setup didn't finish) - completing it ..." >&2
-    else
-        # No venv yet — bootstrap it automatically so install is a single command.
-        local py; py="$(_best_python || true)"
-        if [ -z "$py" ]; then
-            echo "No Python >= 3.10 found, and the server venv doesn't exist yet." >&2
-            echo "  (RHEL's default python3 is often 3.6, too old.)" >&2
-            echo "  On RHEL-family:  sudo dnf install -y python3.11   (or python3.12)" >&2
-            echo "  then re-run this installer." >&2
-            echo "  (see INSTALL.md -> Common setup)" >&2
-            exit 1
-        fi
-        echo "Setting up the server venv (one-time, using $py) ..." >&2
-        "$py" -m venv "$RAD_ROOT/server/.venv" >&2 || {
-            echo "failed to create the venv with '$py -m venv' (venv module missing?)." >&2
-            echo "  On RHEL-family:  sudo dnf install -y python3.11 python3.11-pip" >&2
-            exit 1
-        }
+        echo "Server venv is incomplete (a prior setup didn't finish) - rebuilding it clean ..." >&2
+        rm -rf "$RAD_ROOT/server/.venv"
     fi
-    # (Re)install rad-mcp into the venv — runs for a fresh venv AND to repair a
-    # half-built one.
+    # Bootstrap a fresh venv automatically so install is a single command.
+    local py; py="$(_best_python || true)"
+    if [ -z "$py" ]; then
+        echo "No Python >= 3.10 found, and the server venv doesn't exist yet." >&2
+        echo "  (RHEL's default python3 is often 3.6, too old.)" >&2
+        echo "  On RHEL-family:  sudo dnf install -y python3.11   (or python3.12)" >&2
+        echo "  then re-run this installer." >&2
+        echo "  (see INSTALL.md -> Common setup)" >&2
+        exit 1
+    fi
+    echo "Setting up the server venv (one-time, using $py) ..." >&2
+    "$py" -m venv "$RAD_ROOT/server/.venv" >&2 || {
+        echo "failed to create the venv with '$py -m venv' (venv module missing?)." >&2
+        echo "  On RHEL-family:  sudo dnf install -y python3.11 python3.11-pip" >&2
+        exit 1
+    }
     echo "  installing rad-mcp into the venv (pip install -e .) ..." >&2
     "$VENV_PYTHON" -m pip install --quiet --upgrade pip >&2 || true
     "$VENV_PYTHON" -m pip install --quiet -e "$RAD_ROOT/server" >&2 || {
