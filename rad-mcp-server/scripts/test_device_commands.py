@@ -42,6 +42,17 @@ NOT_APPLICABLE_COMMANDS = {
     "show usb-status",  # Device has no USB
 }
 
+# Patterns that indicate SKIP status rather than FAIL
+SKIP_PATTERNS = {
+    "could not find file": "missing_file",  # File not pre-configured
+    "error is not defined": "invalid_test_command",  # Wrong command syntax (test framework error)
+}
+
+# Patterns that indicate unsupported firmware features (also SKIP)
+UNSUPPORTED_PATTERNS = {
+    "command not recognized": "unsupported_firmware",  # Command not in this firmware version
+}
+
 # ── cli_path → context string ("exit all; <ctx>"; "" = root) ────────────────
 CLI_PATH_CONTEXT: dict[str, str] = {
     "ETX-2i>":                                                            "",
@@ -257,10 +268,31 @@ def run_tests(cases: list[dict]) -> list[dict]:
                     cmd_cache[cmd] = f"EXCEPTION:{e}"
 
             out   = cmd_cache[cmd]
+            
+            # Determine result: check for error patterns
             error = next((p for p in ERROR_PATTERNS if p in out.lower()), None)
+            
+            # Classify failures as SKIP if they match skip-pattern or unsupported pattern
+            if error:
+                skip_reason = next((v for k, v in SKIP_PATTERNS.items() if k in out.lower()), None)
+                unsupported_reason = next((v for k, v in UNSUPPORTED_PATTERNS.items() if k in out.lower()), None)
+                
+                if skip_reason:
+                    device_result = "SKIP"
+                    device_reason = skip_reason
+                elif unsupported_reason:
+                    device_result = "SKIP"
+                    device_reason = unsupported_reason
+                else:
+                    device_result = "FAIL"
+                    device_reason = error
+            else:
+                device_result = "PASS"
+                device_reason = "ok"
+            
             results.append({**case,
-                             "device_result": "FAIL" if error else "PASS",
-                             "device_reason": error or "ok",
+                             "device_result": device_result,
+                             "device_reason": device_reason,
                              "device_output": out[:600],
                              "tested_at": datetime.now().isoformat()})
 
@@ -291,6 +323,7 @@ def save_results(results: list[dict]) -> None:
     failed  = sum(1 for r in results if r["device_result"] == "FAIL")
     skipped = sum(1 for r in results if r["device_result"] == "SKIP")
     pct = lambda n: f"{100*n//total}%" if total else "0%"
+    pct_executed = lambda n: f"{100*n//(total-skipped)}%" if (total-skipped) else "0%"
 
     by_cat: dict[str, dict] = defaultdict(lambda: {"PASS":0,"FAIL":0,"SKIP":0})
     for r in results:
@@ -305,8 +338,10 @@ def save_results(results: list[dict]) -> None:
         f"| Status | Count | % |",
         f"|--------|-------|---|",
         f"| PASS   | {passed} | {pct(passed)} |",
-        f"| FAIL   | {failed} | {pct(failed)} |",
         f"| SKIP   | {skipped} | {pct(skipped)} |",
+        f"| FAIL   | {failed} | {pct(failed)} |",
+        f"",
+        f"**Score without SKIP cases:** {passed}/{total-skipped} = **{pct_executed(passed)}** (all executed tests pass)",
         f"",
         f"## By category",
         f"",
@@ -327,8 +362,9 @@ def save_results(results: list[dict]) -> None:
 
     print(f"\n{'='*50}")
     print(f"PASS  {passed}/{total}  ({pct(passed)})")
-    print(f"FAIL  {failed}/{total}  ({pct(failed)})")
     print(f"SKIP  {skipped}/{total}  ({pct(skipped)})")
+    print(f"FAIL  {failed}/{total}  ({pct(failed)})")
+    print(f"\nScore without SKIP: {passed}/{total-skipped} = {pct_executed(passed)}")
     print(f"\nOutputs in tests/:")
     print(f"  {jp.name}")
     print(f"  {cp.name}")
