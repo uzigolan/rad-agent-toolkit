@@ -1,10 +1,10 @@
 ---
 name: rad-device-mng
 description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units. ALSO load whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent" with an inventory operation — e.g. "noam, show the list of devices", "rad agent, add my device", "abayev, remove Device3 from the list".
-version: 1.3.0
+version: 1.4.0
 ---
 
-> **Skill version:** 1.3.0 · updated 2026-07-20 (set_device_credentials now also manages SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.4.0 · updated 2026-07-21 (set_device_credentials now supports full SNMPv3 — auth_key/priv_key/auth_protocol/priv_protocol for authNoPriv/authPriv, not just the no-auth user; 1.3.0: SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Managing the device inventory
 
@@ -18,7 +18,7 @@ shipped in `inventory.yaml`. Four tools, full CRUD:
 | **Create** | `add_device(name, host, family, transport?, port?, groups?, description?, overwrite?)` | Write tool — on by default over stdio; over shared HTTP it IS available when the client's token is write-scoped (`RAD_MCP_WRITE_TOKENS` — see the token-roles section below). |
 | **Update** | `update_device(name, host?, family?, transport?, port?, groups?, description?)` | Partial update — omitted fields keep their current value. Same write gating as `add_device`. |
 | **Delete** | `remove_device(name, confirm=true)` | Requires explicit user approval first, same as `commit_config`/`save_startup`. Same write gating. |
-| **Secrets** | `set_device_credentials(name, username?, password?, snmp_community?, snmp_v1_community?, snmp_v1_communities?, snmp_v3_user?)` | Write tool, same gating. One tool for ALL device secrets — CLI login (username+password always as a pair) and SNMP (v2c community, v1 community, v1 CSV fallback list, v3 USM user). The SERVER writes them to its own `server/.env` — works identically local and remote. Effective immediately, including rotation. |
+| **Secrets** | `set_device_credentials(name, username?, password?, snmp_community?, snmp_v1_community?, snmp_v1_communities?, snmp_v3_user?, snmp_v3_auth_key?, snmp_v3_priv_key?, snmp_v3_auth_protocol?, snmp_v3_priv_protocol?)` | Write tool, same gating. One tool for ALL device secrets — CLI login (username+password always as a pair) and SNMP (v2c community, v1 community, v1 CSV fallback list, v3 USM at any security level — see below). The SERVER writes them to its own `server/.env` — works identically local and remote. Effective immediately, including rotation. |
 
 **NEVER edit `inventory.yaml` or `server/.env` by hand (or with scripts) —
 the whole add-device flow, credentials included, goes through these tools.**
@@ -52,10 +52,25 @@ changed; on shared networks call it over TLS (or localhost).
 
 **SNMP secrets go through the same tool** — pass whichever applies:
 `snmp_community` (v2c), `snmp_v1_community` (v1), `snmp_v1_communities`
-(v1 CSV fallback list, tried left→right), `snmp_v3_user` (USM no-auth).
-They map to `RAD_MCP_<NAME>_SNMP_*` keys, which is what `snmp_probe`/
-`snmp_get`/`snmp_walk` resolve. After setting them, verify with
+(v1 CSV fallback list, tried left→right), or the `snmp_v3_*` group for
+SNMPv3. They map to `RAD_MCP_<NAME>_SNMP_*` keys, which is what
+`snmp_probe`/`snmp_get`/`snmp_walk` resolve. After setting them, verify with
 `snmp_probe(name)`.
+
+**SNMPv3 security level is determined by which fields you pass** — set only
+what the device's USM user actually needs:
+- **noAuthNoPriv**: `snmp_v3_user` alone.
+- **authNoPriv**: + `snmp_v3_auth_key` (>=8 chars, RFC 3414 minimum);
+  `snmp_v3_auth_protocol` picks `md5`/`sha`/`sha224`/`sha256`/`sha384`/`sha512`
+  (default `sha` if omitted).
+- **authPriv**: + `snmp_v3_priv_key` (>=8 chars) on top of the auth key;
+  `snmp_v3_priv_protocol` picks `des`/`3des`/`aes`/`aes192`/`aes256` (default
+  `aes` if omitted).
+
+A priv key without an auth key is rejected — SNMPv3 has no
+privacy-without-authentication mode. Ask the user for their USM user's actual
+security level rather than guessing; most production units (org policy favors
+v3 where available) run authPriv, not the bare no-auth user.
 
 Alternatives that remain valid: rely on the global `RAD_MCP_USERNAME`/
 `RAD_MCP_PASSWORD` (and `RAD_MCP_SNMP_*` globals) if the device shares

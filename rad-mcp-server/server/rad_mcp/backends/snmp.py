@@ -5,15 +5,25 @@ is a second, read-only window onto the device. Config writes stay exclusively
 on the CLI's staged-commit flow: this module never sends SET, by construction.
 
 Credentials (env only, same policy as SSH — never in inventory or tool args):
-  RAD_MCP_<NAME>_SNMP_COMMUNITY      v2c community           (per-device)
-  RAD_MCP_<NAME>_SNMP_V1_COMMUNITY   v1 community            (per-device —
-                                     MP-4100 answers ONLY v1; verified live)
+  RAD_MCP_<NAME>_SNMP_COMMUNITY        v2c community              (per-device)
+  RAD_MCP_<NAME>_SNMP_V1_COMMUNITY     v1 community               (per-device —
+                                       MP-4100 answers ONLY v1; verified live)
     RAD_MCP_<NAME>_SNMP_V1_COMMUNITIES v1 fallback list (CSV, tried left->right)
-  RAD_MCP_<NAME>_SNMP_V3_USER        v3 USM user, no-auth    (per-device)
-    RAD_MCP_SNMP_COMMUNITY / _SNMP_V1_COMMUNITY /
-    RAD_MCP_SNMP_V1_COMMUNITIES / _SNMP_V3_USER (global fallbacks)
+  RAD_MCP_<NAME>_SNMP_V3_USER          v3 USM username            (per-device)
+  RAD_MCP_<NAME>_SNMP_V3_AUTH_KEY      v3 auth passphrase (>=8 chars) — with
+                                       this set, security level is authNoPriv
+  RAD_MCP_<NAME>_SNMP_V3_PRIV_KEY      v3 priv passphrase (>=8 chars) — with
+                                       this ALSO set, security level is
+                                       authPriv (requires AUTH_KEY too; SNMPv3
+                                       has no privacy-without-auth mode)
+  RAD_MCP_<NAME>_SNMP_V3_AUTH_PROTOCOL md5|sha|sha224|sha256|sha384|sha512
+                                       (default sha when AUTH_KEY is set)
+  RAD_MCP_<NAME>_SNMP_V3_PRIV_PROTOCOL des|3des|aes|aes192|aes256
+                                       (default aes when PRIV_KEY is set)
+    RAD_MCP_SNMP_COMMUNITY / _SNMP_V1_COMMUNITY / _SNMP_V1_COMMUNITIES /
+    _SNMP_V3_USER / _SNMP_V3_AUTH_KEY / _SNMP_V3_PRIV_KEY /
+    _SNMP_V3_AUTH_PROTOCOL / _SNMP_V3_PRIV_PROTOCOL (global fallbacks)
 Per-device beats global; precedence v1 > v2c > v3 when several are set.
-(v3 auth/priv keys can be added here when a lab unit actually uses them.)
 
 Agent lessons baked in (verified live 2026-07-16 on minid-1 + etx2v-1 — see
 skills/rad-cli-operations/references/snmp-support.md):
@@ -150,6 +160,42 @@ def _family_supported_versions(device: Device) -> set[str]:
     return {"v1", "v2c", "v3"}
 
 
+def _v3_protocol_maps():
+    from pysnmp.hlapi.v3arch.asyncio import (
+        usmHMACMD5AuthProtocol, usmHMACSHAAuthProtocol,
+        usmHMAC128SHA224AuthProtocol, usmHMAC192SHA256AuthProtocol,
+        usmHMAC256SHA384AuthProtocol, usmHMAC384SHA512AuthProtocol,
+        usmDESPrivProtocol, usm3DESEDEPrivProtocol,
+        usmAesCfb128Protocol, usmAesCfb192Protocol, usmAesCfb256Protocol,
+    )
+    auth = {
+        "md5": usmHMACMD5AuthProtocol,
+        "sha": usmHMACSHAAuthProtocol, "sha1": usmHMACSHAAuthProtocol,
+        "sha224": usmHMAC128SHA224AuthProtocol,
+        "sha256": usmHMAC192SHA256AuthProtocol,
+        "sha384": usmHMAC256SHA384AuthProtocol,
+        "sha512": usmHMAC384SHA512AuthProtocol,
+    }
+    priv = {
+        "des": usmDESPrivProtocol,
+        "3des": usm3DESEDEPrivProtocol,
+        "aes": usmAesCfb128Protocol, "aes128": usmAesCfb128Protocol,
+        "aes192": usmAesCfb192Protocol,
+        "aes256": usmAesCfb256Protocol,
+    }
+    return auth, priv
+
+
+def _resolve_v3_protocol(kind: str, name: str, mapping: dict, default: str, device_name: str):
+    key = (name or default).strip().lower()
+    if key not in mapping:
+        valid = ", ".join(sorted(mapping))
+        raise RuntimeError(
+            f"Unknown SNMPv3 {kind} protocol '{name}' for '{device_name}': use one of {valid}"
+        )
+    return mapping[key]
+
+
 def _auth_candidates_for(device: Device):
     """Resolve pysnmp auth candidates from env, ordered by default preference.
 
@@ -167,7 +213,11 @@ def _auth_candidates_for(device: Device):
         or os.environ.get("RAD_MCP_SNMP_V1_COMMUNITIES")
     )
     v2c = os.environ.get(f"{prefix}_SNMP_COMMUNITY") or os.environ.get("RAD_MCP_SNMP_COMMUNITY")
-    v3 = os.environ.get(f"{prefix}_SNMP_V3_USER") or os.environ.get("RAD_MCP_SNMP_V3_USER")
+    v3_user = os.environ.get(f"{prefix}_SNMP_V3_USER") or os.environ.get("RAD_MCP_SNMP_V3_USER")
+    v3_auth_key = os.environ.get(f"{prefix}_SNMP_V3_AUTH_KEY") or os.environ.get("RAD_MCP_SNMP_V3_AUTH_KEY")
+    v3_priv_key = os.environ.get(f"{prefix}_SNMP_V3_PRIV_KEY") or os.environ.get("RAD_MCP_SNMP_V3_PRIV_KEY")
+    v3_auth_proto = os.environ.get(f"{prefix}_SNMP_V3_AUTH_PROTOCOL") or os.environ.get("RAD_MCP_SNMP_V3_AUTH_PROTOCOL")
+    v3_priv_proto = os.environ.get(f"{prefix}_SNMP_V3_PRIV_PROTOCOL") or os.environ.get("RAD_MCP_SNMP_V3_PRIV_PROTOCOL")
 
     v1_candidates: list[str] = []
     seen_v1: set[str] = set()
@@ -182,15 +232,26 @@ def _auth_candidates_for(device: Device):
             out.append((CommunityData(comm, mpModel=0), f"v1:{comm}"))
     if "v2c" in supported and v2c:
         out.append((CommunityData(v2c, mpModel=1), "v2c"))
-    if "v3" in supported and v3:
-        out.append((UsmUserData(v3), "v3"))  # no-auth-no-priv
+    if "v3" in supported and v3_user:
+        if v3_auth_key:
+            auth_maps, priv_maps = _v3_protocol_maps()
+            auth_protocol = _resolve_v3_protocol("auth", v3_auth_proto, auth_maps, "sha", device.name)
+            if v3_priv_key:
+                priv_protocol = _resolve_v3_protocol("priv", v3_priv_proto, priv_maps, "aes", device.name)
+                out.append((UsmUserData(v3_user, authKey=v3_auth_key, authProtocol=auth_protocol,
+                                        privKey=v3_priv_key, privProtocol=priv_protocol), "v3:authPriv"))
+            else:
+                out.append((UsmUserData(v3_user, authKey=v3_auth_key, authProtocol=auth_protocol), "v3:authNoPriv"))
+        else:
+            out.append((UsmUserData(v3_user), "v3:noAuthNoPriv"))
     if out:
         return out
 
     raise RuntimeError(
         f"No SNMP credentials for '{device.name}': set {prefix}_SNMP_V1_COMMUNITY "
         f"(v1), optionally {prefix}_SNMP_V1_COMMUNITIES (v1 CSV fallback), "
-        f"{prefix}_SNMP_COMMUNITY (v2c), or {prefix}_SNMP_V3_USER (v3 no-auth) "
+        f"{prefix}_SNMP_COMMUNITY (v2c), or {prefix}_SNMP_V3_USER — optionally with "
+        f"{prefix}_SNMP_V3_AUTH_KEY / _SNMP_V3_PRIV_KEY for authNoPriv/authPriv (v3) "
         "in server/.env (or the RAD_MCP_SNMP_* globals)."
     )
 

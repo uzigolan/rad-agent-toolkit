@@ -132,9 +132,11 @@ def _env_quote(value: str) -> str:
 def set_device_credentials(name: str, username: str = "", password: str = "",
                            snmp_community: str = "", snmp_v1_community: str = "",
                            snmp_v1_communities: str = "", snmp_v3_user: str = "",
+                           snmp_v3_auth_key: str = "", snmp_v3_priv_key: str = "",
+                           snmp_v3_auth_protocol: str = "", snmp_v3_priv_protocol: str = "",
                            env_path: str | Path | None = None) -> dict:
-    """Write a device's secrets (CLI login and/or SNMP communities) into
-    server/.env ON THIS HOST and refresh the process environment, so the
+    """Write a device's secrets (CLI login and/or SNMP communities/USM keys)
+    into server/.env ON THIS HOST and refresh the process environment, so the
     change is effective on the next connection — including rotation of an
     existing value (the os.environ update overrides the loaded-at-startup
     value, closing the 'changed keys need a restart' gap for this path).
@@ -142,8 +144,25 @@ def set_device_credentials(name: str, username: str = "", password: str = "",
     Only the fields provided are written; username/password must come as a
     pair. The device must already exist in the inventory (add_device first).
     Values are never returned or logged by this function.
+
+    SNMPv3: `snmp_v3_user` alone is noAuthNoPriv. Add `snmp_v3_auth_key`
+    (>=8 chars, RFC 3414) for authNoPriv; add `snmp_v3_priv_key` (>=8 chars)
+    on top of that for authPriv — SNMPv3 has no privacy-without-auth mode, so
+    a priv key without an auth key is rejected. `snmp_v3_auth_protocol` /
+    `snmp_v3_priv_protocol` pick the algorithm (default sha / aes when a key
+    is given but the protocol isn't); backends/snmp.py validates the actual
+    protocol names against pysnmp's supported set.
     """
     get_device(name)  # raises KeyError with the known-device list if unknown
+    if snmp_v3_priv_key and not snmp_v3_auth_key:
+        raise ValueError(
+            "snmp_v3_priv_key requires snmp_v3_auth_key — SNMPv3 has no "
+            "privacy-without-authentication mode"
+        )
+    for label, value in (("snmp_v3_auth_key", snmp_v3_auth_key), ("snmp_v3_priv_key", snmp_v3_priv_key)):
+        if value and len(value) < 8:
+            raise ValueError(f"{label} must be at least 8 characters (RFC 3414 USM minimum)")
+
     prefix = "RAD_MCP_" + name.upper().replace("-", "_")
     keys: dict[str, str] = {}
     if username or password:
@@ -154,13 +173,18 @@ def set_device_credentials(name: str, username: str = "", password: str = "",
     for suffix, value in (("_SNMP_COMMUNITY", snmp_community),
                           ("_SNMP_V1_COMMUNITY", snmp_v1_community),
                           ("_SNMP_V1_COMMUNITIES", snmp_v1_communities),
-                          ("_SNMP_V3_USER", snmp_v3_user)):
+                          ("_SNMP_V3_USER", snmp_v3_user),
+                          ("_SNMP_V3_AUTH_KEY", snmp_v3_auth_key),
+                          ("_SNMP_V3_PRIV_KEY", snmp_v3_priv_key),
+                          ("_SNMP_V3_AUTH_PROTOCOL", snmp_v3_auth_protocol),
+                          ("_SNMP_V3_PRIV_PROTOCOL", snmp_v3_priv_protocol)):
         if value:
             keys[prefix + suffix] = value
     if not keys:
         raise ValueError("nothing to set — provide username+password and/or "
                          "an SNMP field (snmp_community, snmp_v1_community, "
-                         "snmp_v1_communities, snmp_v3_user)")
+                         "snmp_v1_communities, snmp_v3_user, snmp_v3_auth_key, "
+                         "snmp_v3_priv_key, snmp_v3_auth_protocol, snmp_v3_priv_protocol)")
 
     env_file = Path(env_path or SERVER_ENV_PATH)
     env_file.parent.mkdir(parents=True, exist_ok=True)

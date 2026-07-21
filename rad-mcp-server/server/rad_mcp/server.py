@@ -901,18 +901,30 @@ if WRITE_TOOLS_ENABLED:
     @mcp.tool()
     def set_device_credentials(name: str, username: str = "", password: str = "",
                                snmp_community: str = "", snmp_v1_community: str = "",
-                               snmp_v1_communities: str = "", snmp_v3_user: str = "") -> dict:
+                               snmp_v1_communities: str = "", snmp_v3_user: str = "",
+                               snmp_v3_auth_key: str = "", snmp_v3_priv_key: str = "",
+                               snmp_v3_auth_protocol: str = "", snmp_v3_priv_protocol: str = "") -> dict:
         """Set (or rotate) an inventory device's secrets — CLI login and/or
-        SNMP communities. The server writes the RAD_MCP_<NAME>_* keys into its
-        OWN server/.env — this is how secrets are managed when the server runs
-        on another host, where clients cannot reach that file. Effective
-        immediately on the next connection, including rotation (no restart
-        needed via this path). The device must already exist (add_device first).
+        SNMP communities/USM keys. The server writes the RAD_MCP_<NAME>_* keys
+        into its OWN server/.env — this is how secrets are managed when the
+        server runs on another host, where clients cannot reach that file.
+        Effective immediately on the next connection, including rotation (no
+        restart needed via this path). The device must already exist
+        (add_device first).
 
         Provide only what you're setting: `username`+`password` (always as a
         pair) for the CLI; `snmp_community` (v2c), `snmp_v1_community` (v1),
         `snmp_v1_communities` (v1 CSV fallback list, tried left->right), or
-        `snmp_v3_user` (USM no-auth) for SNMP.
+        the `snmp_v3_*` group for SNMPv3.
+
+        SNMPv3 security levels — set only what the level needs:
+          noAuthNoPriv: `snmp_v3_user` alone.
+          authNoPriv:   + `snmp_v3_auth_key` (>=8 chars); `snmp_v3_auth_protocol`
+                        picks md5/sha/sha224/sha256/sha384/sha512 (default sha).
+          authPriv:     + `snmp_v3_priv_key` (>=8 chars) on top of auth;
+                        `snmp_v3_priv_protocol` picks des/3des/aes/aes192/aes256
+                        (default aes). A priv key without an auth key is
+                        rejected — SNMPv3 has no privacy-without-auth mode.
 
         Write-gated like add_device (stdio, or HTTP with a write-scoped
         token). Secrets transit this tool call, so on shared networks use it
@@ -923,7 +935,9 @@ if WRITE_TOOLS_ENABLED:
         res = _set_device_credentials(
             name, username, password, snmp_community=snmp_community,
             snmp_v1_community=snmp_v1_community,
-            snmp_v1_communities=snmp_v1_communities, snmp_v3_user=snmp_v3_user)
+            snmp_v1_communities=snmp_v1_communities, snmp_v3_user=snmp_v3_user,
+            snmp_v3_auth_key=snmp_v3_auth_key, snmp_v3_priv_key=snmp_v3_priv_key,
+            snmp_v3_auth_protocol=snmp_v3_auth_protocol, snmp_v3_priv_protocol=snmp_v3_priv_protocol)
         audit("set_device_credentials", name,
               detail=f"keys {'+'.join(res['created'] + res['replaced'])} (values redacted)")
         action = "rotated" if res["replaced"] else "created"

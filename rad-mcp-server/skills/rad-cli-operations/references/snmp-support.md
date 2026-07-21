@@ -138,6 +138,9 @@ Agent lessons (verified live 2026-07-16, both units):
    minid path), `snmp_walk` (capped GETNEXT, silence-tolerant). Env creds:
   `RAD_MCP_<NAME>_SNMP_V1_COMMUNITY` (default path), optional
   `RAD_MCP_<NAME>_SNMP_V1_COMMUNITIES` (CSV fallback list), plus
-  `RAD_MCP_<NAME>_SNMP_COMMUNITY` / `_SNMP_V3_USER`. Never SET.
+  `RAD_MCP_<NAME>_SNMP_COMMUNITY` (v2c) and, for v3, `_SNMP_V3_USER` alone
+  (noAuthNoPriv) or with `_SNMP_V3_AUTH_KEY`/`_SNMP_V3_PRIV_KEY` (+ optional
+  `_SNMP_V3_AUTH_PROTOCOL`/`_SNMP_V3_PRIV_PROTOCOL`) for authNoPriv/authPriv
+  — see `set_device_credentials` in the `rad-device-mng` skill. Never SET.
 5. Fusion cross-links: alarm dictionary ↔ manual alarm chapters ↔
    `configure reporting`; IF-MIB rows ↔ `configure port`.
