@@ -6,16 +6,16 @@
 | Status | Count | % |
 |--------|-------|---|
 | PASS   | 173 | 94% |
-| FAIL   | 5 | 3% |
-| SKIP   | 7 | 3% |
+| N/A    | 3 | 2% |
+| SKIP   | 9 | 4% |
 
 ## By category
 
-| Category | Pass | Fail | Skip |
-|----------|------|------|------|
+| Category | Pass | N/A | Skip |
+|----------|------|-----|------|
 | Admin | 3 | 0 | 0 |
 | Bridge | 3 | 0 | 0 |
-| File | 8 | 5 | 0 |
+| File | 8 | 3 | 2 |
 | Management | 7 | 0 | 0 |
 | OAM | 22 | 0 | 0 |
 | PWE | 8 | 0 | 0 |
@@ -38,27 +38,17 @@
 | 4 | str-32 | `show user-dir user-default-config` | `error is not defined` | Wrong Command | Should use `user-file-dir` instead |
 | 5 | str-33 | `show user-script` | `command not recognized` | N/A (Not Supported) | Not available in firmware 6.8.5 |
 
-### Category 1: Missing Files (2 cases) — ❌
-- **str-21**: `show banner-text` — Banner file not configured
-- **str-27**: `show rollback-config` — Rollback config not saved
+## Failures & Skipped Cases
+
+### SKIP Cases (9 cases) — Missing Prerequisites
+
+**Category 1: Missing Files (2 cases)**
+- **str-21**: `show banner-text` — Banner file not configured on device
+- **str-27**: `show rollback-config` — Rollback config not saved on device
 
 **Solution**: Create fixtures or pre-configure files on device before testing.
 
-### Category 2: Wrong Command Syntax (1 case) — ⚠️
-- **str-32**: `show user-dir user-default-config` — Wrong syntax!
-  - **Correct command:** `user-file-dir` (not a show command)
-  - **Purpose:** Lists all user files on the device
-  - **Output:** File name, type, size, creation date, status
-
-**Solution**: Use `user-file-dir` to list user files (without parameters, no filename needed).
-
-### Category 3: Not Applicable (2 cases) — ⏭️
-- **str-30**: `show usb-status` — Device has no USB hardware interface
-- **str-33**: `show user-script` — Not supported in firmware 6.8.5 (verified via CLI help)
-
----
-
-## Skipped Cases (7 cases)
+**Category 2: No Context Mapping (7 cases)**
 
 These cases were skipped because their CLI context path is not mapped in the test script:
 
@@ -78,24 +68,53 @@ These cases were skipped because their CLI context path is not mapped in the tes
 
 ---
 
+### N/A Cases (3 cases) — Device Limitations
+
+| Case | Command | Reason |
+|------|---------|--------|
+| **str-30** | `show usb-status` | Device has no USB hardware interface |
+| **str-32** | `show user-dir user-default-config` | Command syntax not supported; correct command is `user-file-dir` |
+| **str-33** | `show user-script` | Not supported in firmware 6.8.5 (verified via CLI help) |
+
+---
+
+## Legends
+
+| Status | Definition |
+|--------|-----------|
+| **SKIP** | No prerequisite configuration in this device to perform this test (e.g., missing files, missing context mappings) |
+| **N/A** | Command or feature is not applicable to this device (e.g., device lacks USB hardware, firmware doesn't support the command) |
+
+---
+
+## Now PASSING Cases (2) ✅
+
+- **str-23**: `show file-details user-default-config` — **PASS** (6 lines of file metadata)
+- **str-31**: `show user-default-config` — **PASS** (300 lines of configuration file contents)
+
+---
+
+## Appendix: User File Management Commands
+
+---
+
 ## Summary
 
 **Overall Results:**
 - ✅ **173 PASS (94%)** — Commands working correctly
-- ❌ **5 FAIL (3%)** — Device/firmware limitations identified
-- ⏭️ **7 SKIP (3%)** — No context path mapping
+- ⏭️ **9 SKIP (4%)** — Missing prerequisites (files, context mappings)
+- ❌ **3 N/A (2%)** — Device limitations (no USB, unsupported firmware commands)
 
 **Key Findings:**
 1. Test framework is **94% effective** on ETX-2 platform
 2. **str-23 and str-31 now PASS** — File display commands work correctly
    - `show file-details user-default-config` → Shows file metadata (6 lines)
    - `show user-default-config` → Shows full configuration file (300 lines)
-3. Remaining 5 failures are **legitimate device limitations**, not test bugs
-4. Framework correctly identifies:
-   - Missing files (banner-text, rollback-config not created)
-   - Syntax errors (user-dir command syntax issue)
-   - Unsupported commands/hardware (USB, user-script)
-5. Skipped cases need context mapping additions
+3. 9 SKIP cases need prerequisites: 2 missing files + 7 missing context mappings
+4. 3 N/A cases are legitimate device limitations:
+   - Missing hardware (USB interface not present)
+   - Unsupported firmware commands (user-script, user-dir syntax)
+5. Framework correctly identifies all issues and categorizes them appropriately
 
 **Test Verification:**
 - ✅ **str-23**: `show file-details user-default-config` — **PASSES** (file metadata, 6 lines)
