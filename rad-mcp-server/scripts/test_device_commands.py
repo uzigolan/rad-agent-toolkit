@@ -122,16 +122,20 @@ def parse_args() -> argparse.Namespace:
                    help="Test classic prompts only (skip implicit variants)")
     p.add_argument("--limit", type=int, default=0,
                    help="Stop after N test cases (0 = all)")
+    p.add_argument("--category", type=str, default="",
+                   help="Test only a specific category (e.g., File, Port, Router)")
     return p.parse_args()
 
 
-def load_dataset(only_classic: bool, limit: int) -> list[dict]:
+def load_dataset(only_classic: bool, limit: int, category: str = "") -> list[dict]:
     if not DATASET_JSON.exists():
         sys.exit(f"ERROR: {DATASET_JSON} not found — run test_all_commands_on_device.py first")
     with open(DATASET_JSON, encoding="utf-8") as f:
         cases: list[dict] = json.load(f)
     if only_classic:
         cases = [c for c in cases if c.get("prompt_type") == "classic"]
+    if category:
+        cases = [c for c in cases if c.get("category") == category]
     if limit:
         cases = cases[:limit]
     return cases
@@ -375,8 +379,9 @@ def save_results(results: list[dict]) -> None:
 
 def main() -> None:
     args = parse_args()
-    cases = load_dataset(args.only_classic, args.limit)
-    print(f"Dataset: {len(cases)} test cases")
+    cases = load_dataset(args.only_classic, args.limit, args.category)
+    filter_info = f" (category: {args.category})" if args.category else ""
+    print(f"Dataset: {len(cases)} test cases{filter_info}")
     results = run_tests(cases)
     save_results(results)
 

@@ -11,6 +11,8 @@
 
 **Score without SKIP cases:** 173/173 = **100%** (all executed tests pass)
 
+**Why cases are skipped:** 2 missing files, 1 no USB hardware, 1 invalid test command, 1 unsupported firmware, 7 no context mapping in test framework.
+
 ## By category
 
 | Category | Pass | Fail | Skip |
