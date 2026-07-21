@@ -35,30 +35,31 @@
 | 1 | str-21 | `show banner-text` | `Could not find file` | Missing File |
 | 2 | str-27 | `show rollback-config` | `Could not find file` | Missing File |
 | 3 | str-30 | `show usb-status` | `command not recognized` | N/A (No USB) |
-| 4 | str-31 | `show user-default-config` | `Could not find file` | Missing File |
+| 4 | str-31 | `show user-default-config` | `cannot open file` | Cannot Display |
 | 5 | str-32 | `show user-dir user-default-config` | `error is not defined` | Syntax Error |
 | 6 | str-33 | `show user-script` | `command not recognized` | N/A (Not Supported) |
 
-### Category 1: Missing Files (3 cases) — ❌
+### Category 1: Missing Files (2 cases) — ❌
 - **str-21**: `show banner-text` — Banner file not configured
 - **str-27**: `show rollback-config` — Rollback config not saved
-- **str-31**: `show user-default-config` — Command requires parameters
 
 **Solution**: Create fixtures or pre-configure files on device before testing.
 
-### Category 2: Syntax/Parameters Error (1 case) — ⚠️
+### Category 2: Cannot Display File (1 case) — ⚠️
+- **str-31**: `show user-default-config` — File exists but command fails to display contents
+
+**Note**: File confirmed to exist via `show file-details user-default-config` which PASSES. The display command has an error.
+
+### Category 3: Syntax/Parameters Error (1 case) — ⚠️
 - **str-32**: `show user-dir user-default-config` — Wrong command syntax/parameters
 
 **Solution**: Verify correct syntax for user-dir command (may not be the right command for file display).
 
-### Category 3: Not Applicable (2 cases) — ⏭️
+### Category 4: Not Applicable (2 cases) — ⏭️
 - **str-30**: `show usb-status` — Device has no USB hardware interface
 - **str-33**: `show user-script` — Not supported in this firmware version
 
 **Solution**: Mark as N/A or skip for this device configuration.
-
-### Fixed Case:
-✅ **str-23**: `show file-details user-default-config` — **NOW PASSES** (verified on device)
 
 ---
 
@@ -100,6 +101,6 @@ These cases were skipped because their CLI context path is not mapped in the tes
 5. Skipped cases need context mapping additions
 
 **Test Verification:**
-- Extraction function updated to replace `<filename>` placeholders with `user-default-config`
-- Manual device testing confirmed `show file-details user-default-config` PASSES
-- Device has `user-default-config` file pre-configured (created 2026-07-21 17:23:42)
+- ✅ **str-23**: `show file-details user-default-config` — **PASSES** (verified on Yossi-ETX2)
+- ❌ **str-31**: `show user-default-config` — **FAILS** with "cannot open file" error (file exists but display fails)
+- Device has `user-default-config` file confirmed: 9,629 bytes, created 2026-07-21 17:23:42
