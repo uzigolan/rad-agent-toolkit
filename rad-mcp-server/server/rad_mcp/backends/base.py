@@ -38,6 +38,14 @@ class Backend(ABC):
         capability."""
         raise NotImplementedError(f"{type(self).__name__} does not support debug_logon_submit")
 
+    def debug_menu(self, device: Device, commands: list[str], timeout: int = 30,
+                   reset: bool = False) -> str:
+        """Run commands inside the already-unlocked `debug` tree. By default
+        continues from wherever the previous call left off (no
+        re-grounding); reset=True forces `exit all` back to the top RAD CLI
+        first. Optional capability."""
+        raise NotImplementedError(f"{type(self).__name__} does not support debug_menu")
+
     def enter_debug_shell(self, device: Device, timeout: int = 15) -> str:
         """Drop an already-debug_logon'd session into the device's real OS
         shell (VxWorks/Linux, per driver). Optional capability."""

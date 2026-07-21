@@ -1122,20 +1122,28 @@ if WRITE_TOOLS_ENABLED:
         return f"Debug mode unlocked on {device}."
 
     @mcp.tool()
-    def debug_menu(device: str, commands: list[str], confirm: bool = False) -> str:
-        """Run a scripted sequence of commands inside the already-unlocked
-        `debug` tree (call debug_logon first), e.g. ["debug mea", "?"].
-        Submenu trees (mea/alarms/db/...) are family- and FPGA-specific and
-        not whitelisted like run_show — if a family's debug tree hasn't
-        been harvested into its CLI reference yet, explore it with `?` one
-        command at a time, same as normal CLI navigation.
+    def debug_menu(device: str, commands: list[str], confirm: bool = False,
+                   reset: bool = False) -> str:
+        """Run commands inside the already-unlocked `debug` tree (call
+        debug_logon_request/submit first).
+
+        By default (reset=False) this CONTINUES from wherever the previous
+        debug_menu call on this device left off — no re-grounding. Submenu
+        trees (mea/alarms/db/...) are family- and FPGA-specific, undocumented,
+        and not whitelisted like run_show, so expect to explore them with
+        `?` one command at a time (e.g. call 1: ["debug mea"], call 2:
+        ["?"], call 3: ["version"] once you see the right subcommand) —
+        each call picks up right where the last one left off, so probing
+        step by step does NOT cost you your place in the menu. Pass
+        reset=True only when you want to abandon the current navigation and
+        force `exit all` back to the top RAD CLI first.
         """
         _require_write_scope()
         if not confirm:
             return "REFUSED: debug_menu requires confirm=true."
         dev = get_device(device)
-        out = get_backend().debug_menu(dev, commands)
-        audit("debug_menu", device, detail="\n".join(commands))
+        out = get_backend().debug_menu(dev, commands, reset=reset)
+        audit("debug_menu", device, detail=f"reset={reset} " + "\n".join(commands))
         return redact(out)
 
     @mcp.tool()

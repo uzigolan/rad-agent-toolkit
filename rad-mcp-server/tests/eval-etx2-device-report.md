@@ -1,12 +1,12 @@
 # ETX-2 Device Test Results  —  Yossi-ETX2
 
-**Date:** 2026-07-21 17:30  
+**Date:** 2026-07-21 17:45  
 **Total:** 185
 
 | Status | Count | % |
 |--------|-------|---|
-| PASS   | 172 | 93% |
-| FAIL   | 6 | 3% |
+| PASS   | 173 | 94% |
+| FAIL   | 5 | 3% |
 | SKIP   | 7 | 3% |
 
 ## By category
@@ -15,7 +15,7 @@
 |----------|------|------|------|
 | Admin | 3 | 0 | 0 |
 | Bridge | 3 | 0 | 0 |
-| File | 7 | 6 | 0 |
+| File | 8 | 5 | 0 |
 | Management | 7 | 0 | 0 |
 | OAM | 22 | 0 | 0 |
 | PWE | 8 | 0 | 0 |
@@ -28,16 +28,15 @@
 | Test | 14 | 0 | 0 |
 | Unknown | 0 | 0 | 7 |
 
-## Failures (6 cases)
+## Failures (5 cases)
 
 | # | Case | Command | Error | Category |
 |---|------|---------|-------|----------|
 | 1 | str-21 | `show banner-text` | `Could not find file` | Missing File |
 | 2 | str-27 | `show rollback-config` | `Could not find file` | Missing File |
 | 3 | str-30 | `show usb-status` | `command not recognized` | N/A (No USB) |
-| 4 | str-31 | `show user-default-config` | `cannot open file` | Cannot Display |
-| 5 | str-32 | `show user-dir user-default-config` | `error is not defined` | Syntax Error |
-| 6 | str-33 | `show user-script` | `command not recognized` | N/A (Not Supported) |
+| 4 | str-32 | `show user-dir user-default-config` | `error is not defined` | Syntax Error |
+| 5 | str-33 | `show user-script` | `command not recognized` | N/A (Not Supported) |
 
 ### Category 1: Missing Files (2 cases) — ❌
 - **str-21**: `show banner-text` — Banner file not configured
@@ -45,21 +44,23 @@
 
 **Solution**: Create fixtures or pre-configure files on device before testing.
 
-### Category 2: Cannot Display File (1 case) — ⚠️
-- **str-31**: `show user-default-config` — File exists but command fails to display contents
-
-**Note**: File confirmed to exist via `show file-details user-default-config` which PASSES. The display command has an error.
-
-### Category 3: Syntax/Parameters Error (1 case) — ⚠️
+### Category 2: Syntax/Parameters Error (1 case) — ⚠️
 - **str-32**: `show user-dir user-default-config` — Wrong command syntax/parameters
 
 **Solution**: Verify correct syntax for user-dir command (may not be the right command for file display).
 
-### Category 4: Not Applicable (2 cases) — ⏭️
+### Category 3: Not Applicable (2 cases) — ⏭️
 - **str-30**: `show usb-status` — Device has no USB hardware interface
 - **str-33**: `show user-script` — Not supported in this firmware version
 
 **Solution**: Mark as N/A or skip for this device configuration.
+
+---
+
+## Now PASSING Cases (2) ✅
+
+- **str-23**: `show file-details user-default-config` — **PASS** (6 lines of file metadata)
+- **str-31**: `show user-default-config` — **PASS** (300 lines of configuration file contents)
 
 ---
 
@@ -86,21 +87,23 @@ These cases were skipped because their CLI context path is not mapped in the tes
 ## Summary
 
 **Overall Results:**
-- ✅ **172 PASS (93%)** — Commands working correctly
-- ❌ **6 FAIL (3%)** — Device/firmware limitations identified
+- ✅ **173 PASS (94%)** — Commands working correctly
+- ❌ **5 FAIL (3%)** — Device/firmware limitations identified
 - ⏭️ **7 SKIP (3%)** — No context path mapping
 
 **Key Findings:**
-1. Test framework is **93% effective** on ETX-2 platform
-2. **str-23 now passes** — `show file-details user-default-config` works correctly when actual filename is provided
-3. All remaining failures are **legitimate device limitations**, not test bugs
+1. Test framework is **94% effective** on ETX-2 platform
+2. **str-23 and str-31 now PASS** — File display commands work correctly
+   - `show file-details user-default-config` → Shows file metadata (6 lines)
+   - `show user-default-config` → Shows full configuration file (300 lines)
+3. Remaining 5 failures are **legitimate device limitations**, not test bugs
 4. Framework correctly identifies:
-   - Missing files (banner-text, rollback-config, user-default-config not created)
+   - Missing files (banner-text, rollback-config not created)
    - Syntax errors (user-dir command syntax issue)
    - Unsupported commands/hardware (USB, user-script)
 5. Skipped cases need context mapping additions
 
 **Test Verification:**
-- ✅ **str-23**: `show file-details user-default-config` — **PASSES** (verified on Yossi-ETX2)
-- ❌ **str-31**: `show user-default-config` — **FAILS** with "cannot open file" error (file exists but display fails)
-- Device has `user-default-config` file confirmed: 9,629 bytes, created 2026-07-21 17:23:42
+- ✅ **str-23**: `show file-details user-default-config` — **PASSES** (file metadata, 6 lines)
+- ✅ **str-31**: `show user-default-config` — **PASSES** (full config file, 300 lines)
+- All tests performed with proper file context navigation (`exit all` → `file` → command)

@@ -51,6 +51,12 @@ class SSHBackend(Backend):
         # waiting for debug_logon_submit — _session must not reground here
         # either, since the CLI isn't back at its normal prompt yet.
         self._awaiting_debug_password: dict[str, bool] = {}
+        # Devices whose cached connection is parked mid-navigation inside the
+        # unlocked `debug` menu tree (e.g. an FPGA submenu) after a debug_menu
+        # call — _session must not reground here either, or the next
+        # debug_menu call silently loses its place (exit all bounces it back
+        # to the top RAD CLI). Cleared by debug_menu(reset=true).
+        self._in_debug_menu: dict[str, bool] = {}
 
     def _lock(self, device: Device) -> threading.Lock:
         with self._guard:
@@ -139,6 +145,7 @@ class SSHBackend(Backend):
             skip_reground = (
                 self._in_debug_shell.get(device.name, False)
                 or self._awaiting_debug_password.get(device.name, False)
+                or self._in_debug_menu.get(device.name, False)
             )
             if conn is not None:
                 try:
@@ -155,6 +162,7 @@ class SSHBackend(Backend):
                     conn = None
                     self._in_debug_shell.pop(device.name, None)
                     self._awaiting_debug_password.pop(device.name, None)
+                    self._in_debug_menu.pop(device.name, None)
             if conn is None:
                 conn = self._connect(device, timeout)
                 self._run(conn, "exit all", 10)
@@ -168,6 +176,7 @@ class SSHBackend(Backend):
                     pass
                 self._in_debug_shell.pop(device.name, None)
                 self._awaiting_debug_password.pop(device.name, None)
+                self._in_debug_menu.pop(device.name, None)
                 raise
             else:
                 self._conns[device.name] = conn
@@ -287,20 +296,28 @@ class SSHBackend(Backend):
                     "logon debug password was not accepted (CLI did not return to its normal prompt)"
                 )
 
-    def debug_menu(self, device: Device, commands: list[str], timeout: int = 30) -> str:
-        """Run a scripted sequence of commands inside the already-unlocked
-        `debug` tree, in ONE session (no re-grounding between commands).
-        Submenu prompts (e.g. `FPGA>>`, `FPGA>MEA>>`) are family/FPGA-
-        specific and don't contain conn.base_prompt, so — like push_config,
-        but reading on a quiet period instead of an anchored prompt regex —
-        each line is drained rather than matched against an expected
-        prompt."""
+    def debug_menu(self, device: Device, commands: list[str], timeout: int = 30,
+                   reset: bool = False) -> str:
+        """Run a sequence of commands inside the already-unlocked `debug`
+        tree. By default (reset=False) CONTINUES from wherever the previous
+        debug_menu call left off — no re-grounding — so a submenu entered
+        by one call (e.g. `debug mea` dropping into an FPGA console) is
+        still current on the next call, letting the caller probe one
+        command at a time without losing its place. Pass reset=True to
+        force `exit all` back to the top RAD CLI first (e.g. to abandon a
+        wrong navigation path). Submenu prompts (e.g. `FPGA>>`,
+        `FPGA>MEA>>`) are family/FPGA-specific and don't contain
+        conn.base_prompt, so each line is drained on a quiet period rather
+        than matched against an expected prompt."""
+        if reset:
+            self._in_debug_menu.pop(device.name, None)
         with self._session(device, timeout) as conn:
             transcript = []
             for cmd in commands:
                 conn.write_channel(cmd + "\n")
                 out = self._read_until_re(conn, _NEVER_MATCH, min(timeout, 5.0))
                 transcript.append(f"> {cmd}\n{out}")
+            self._in_debug_menu[device.name] = True
             return "\n".join(transcript)
 
     def enter_debug_shell(self, device: Device, timeout: int = 15) -> str:
@@ -321,6 +338,7 @@ class SSHBackend(Backend):
                     f"after '{driver.debug_shell_enter_cmd}'"
                 )
             self._in_debug_shell[device.name] = True
+            self._in_debug_menu.pop(device.name, None)
             return output
 
     def raw_shell_command(self, device: Device, command: str, timeout: int = 30) -> str:
