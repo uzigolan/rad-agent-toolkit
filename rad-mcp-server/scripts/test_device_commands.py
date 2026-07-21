@@ -122,12 +122,34 @@ def load_dataset(only_classic: bool, limit: int) -> list[dict]:
 
 
 def extract_show_command(expected: str) -> str:
-    """'ETX-2i>config>port# show summary' → 'show summary'"""
+    """'ETX-2i>config>port# show summary' → 'show summary'
+    
+    Removes placeholders like <sec>, {opt1|opt2}, [all] from commands
+    because device CLI doesn't accept literal placeholder syntax.
+    """
     m = re.search(r"(?:#|>)\s*(show\b.+)", expected, re.IGNORECASE)
-    if m:
-        return m.group(1).strip()
-    parts = expected.rsplit(">", 1)
-    return parts[-1].strip() if len(parts) > 1 else expected.strip()
+    if not m:
+        parts = expected.rsplit(">", 1)
+        cmd = parts[-1].strip() if len(parts) > 1 else expected.strip()
+    else:
+        cmd = m.group(1).strip()
+    
+    # Remove angle-bracket placeholders: <sec>, <port>, <n>, <ip>, etc. → remove entirely
+    cmd = re.sub(r'\s*<[^>]+>\s*', ' ', cmd)
+    
+    # Remove curly-bracket options: { active | history | all } → use first option
+    def use_first_option(match):
+        options = match.group(1).split('|')
+        return ' ' + options[0].strip() + ' '
+    cmd = re.sub(r'\{\s*([^}]+)\s*\}', use_first_option, cmd)
+    
+    # Remove square-bracket optionals: [all] → remove entirely
+    cmd = re.sub(r'\s*\[[^\]]+\]\s*', ' ', cmd)
+    
+    # Clean up multiple spaces
+    cmd = re.sub(r'\s+', ' ', cmd).strip()
+    
+    return cmd
 
 
 # ── main test runner ──────────────────────────────────────────────────────────
