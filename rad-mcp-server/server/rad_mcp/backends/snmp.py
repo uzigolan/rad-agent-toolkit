@@ -226,24 +226,34 @@ def _auth_candidates_for(device: Device):
             seen_v1.add(candidate)
             v1_candidates.append(candidate)
 
-    out = []
-    if "v1" in supported:
-        for comm in v1_candidates:
-            out.append((CommunityData(comm, mpModel=0), f"v1:{comm}"))
-    if "v2c" in supported and v2c:
-        out.append((CommunityData(v2c, mpModel=1), "v2c"))
-    if "v3" in supported and v3_user:
-        if v3_auth_key:
-            auth_maps, priv_maps = _v3_protocol_maps()
-            auth_protocol = _resolve_v3_protocol("auth", v3_auth_proto, auth_maps, "sha", device.name)
-            if v3_priv_key:
-                priv_protocol = _resolve_v3_protocol("priv", v3_priv_proto, priv_maps, "aes", device.name)
-                out.append((UsmUserData(v3_user, authKey=v3_auth_key, authProtocol=auth_protocol,
-                                        privKey=v3_priv_key, privProtocol=priv_protocol), "v3:authPriv"))
+    def _build(versions: set[str]) -> list:
+        cands = []
+        if "v1" in versions:
+            for comm in v1_candidates:
+                cands.append((CommunityData(comm, mpModel=0), f"v1:{comm}"))
+        if "v2c" in versions and v2c:
+            cands.append((CommunityData(v2c, mpModel=1), "v2c"))
+        if "v3" in versions and v3_user:
+            if v3_auth_key:
+                auth_maps, priv_maps = _v3_protocol_maps()
+                auth_protocol = _resolve_v3_protocol("auth", v3_auth_proto, auth_maps, "sha", device.name)
+                if v3_priv_key:
+                    priv_protocol = _resolve_v3_protocol("priv", v3_priv_proto, priv_maps, "aes", device.name)
+                    cands.append((UsmUserData(v3_user, authKey=v3_auth_key, authProtocol=auth_protocol,
+                                              privKey=v3_priv_key, privProtocol=priv_protocol), "v3:authPriv"))
+                else:
+                    cands.append((UsmUserData(v3_user, authKey=v3_auth_key, authProtocol=auth_protocol), "v3:authNoPriv"))
             else:
-                out.append((UsmUserData(v3_user, authKey=v3_auth_key, authProtocol=auth_protocol), "v3:authNoPriv"))
-        else:
-            out.append((UsmUserData(v3_user), "v3:noAuthNoPriv"))
+                cands.append((UsmUserData(v3_user), "v3:noAuthNoPriv"))
+        return cands
+
+    out = _build(supported)
+    if not out:
+        # A credential the user explicitly stored beats the family's
+        # verified-versions gate: fall back to any version we have creds for
+        # (e.g. a unit whose only working access is v3 while the family
+        # profile has only v1 live-verified).
+        out = _build({"v1", "v2c", "v3"} - supported)
     if out:
         return out
 
