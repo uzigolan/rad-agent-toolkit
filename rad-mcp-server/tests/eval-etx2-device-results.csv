@@ -37,7 +37,7 @@ str-29-classic-1,29,File,ETX-2i>file#,classic,ETX-2i>file# show startup-config,P
 str-30-classic-1,30,File,ETX-2i>file#,classic,ETX-2i>file# show usb-status,FAIL,cli error
 str-31-classic-1,31,File,ETX-2i>file#,classic,ETX-2i>file# show user-default-config,FAIL,cli error
 str-32-classic-1,32,File,ETX-2i>file#,classic,ETX-2i>file# show user-dir,FAIL,cli error
-str-33-classic-1,33,File,ETX-2i>file#,classic,ETX-2i>file# show user-script,PASS,ok
+str-33-classic-1,33,File,ETX-2i>file#,classic,ETX-2i>file# show user-script,FAIL,cli error
 str-34-classic-1,34,Admin,ETX-2i>admin>scheduler#,classic,ETX-2i>admin>scheduler# show scheduler,PASS,ok
 str-35-classic-1,35,Admin,ETX-2i>admin>scheduler#,classic,ETX-2i>admin>scheduler# show scheduler-details,PASS,ok
 str-36-classic-1,36,Admin,ETX-2i>admin>license#,classic,ETX-2i>admin>license# show summary,PASS,ok
@@ -64,8 +64,8 @@ str-56-classic-1,56,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>por
 str-57-classic-1,57,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show loopback,PASS,ok
 str-58-classic-1,58,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show rate,PASS,ok
 str-59-classic-1,59,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show l2cp-statistics,PASS,ok
-str-60-classic-1,60,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm,FAIL,cli error
-str-61-classic-1,61,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm-statistics,FAIL,cli error
+str-60-classic-1,60,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm,PASS,ok
+str-61-classic-1,61,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm-statistics,PASS,ok
 str-62-classic-1,62,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show fat-pipe-list { active | history | all },FAIL,cli error
 str-63-classic-1,63,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show sfp-extended-information,PASS,ok
 str-64-classic-1,64,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show neighbors-details,PASS,ok
@@ -75,23 +75,23 @@ str-68-classic-1,68,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>l
 str-69-classic-1,69,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show statistics running,PASS,ok
 str-70-classic-1,70,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show lacp-status ethernet <port>,FAIL,cli error
 str-71-classic-1,71,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show lacp-statistics ethernet <port>,FAIL,cli error
-str-72-classic-1,72,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show status,FAIL,"NAV_ERROR:#                              ^
+str-72-classic-1,72,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show status,FAIL,"NAV_ERROR:#                          ^
 # cli error: Entry instance doesn't exist"
-str-73-classic-1,73,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show statistics interval <n>,FAIL,"NAV_ERROR:#                              ^
+str-73-classic-1,73,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show statistics interval <n>,FAIL,"NAV_ERROR:#                          ^
 # cli error: Entry instance doesn't exist"
-str-74-classic-1,74,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show status,FAIL,"NAV_ERROR:#                           ^
+str-74-classic-1,74,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show status,FAIL,"NAV_ERROR:#                       ^
 # cli error: command not recognized"
-str-75-classic-1,75,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show statistics current,FAIL,"NAV_ERROR:#                           ^
+str-75-classic-1,75,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show statistics current,FAIL,"NAV_ERROR:#                       ^
 # cli error: command not recognized"
-str-76-classic-1,76,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show status,FAIL,"NAV_ERROR:#                                ^
+str-76-classic-1,76,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show status,FAIL,"NAV_ERROR:#                            ^
 # cli error: Entry instance doesn't exist"
-str-77-classic-1,77,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show statistics current,FAIL,"NAV_ERROR:#                                ^
+str-77-classic-1,77,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show statistics current,FAIL,"NAV_ERROR:#                            ^
 # cli error: Entry instance doesn't exist"
 str-78-classic-1,78,Port,ETX-2i>config>port>gfp(n)#,classic,ETX-2i>config>port>gfp(n)# show status,PASS,ok
 str-79-classic-1,79,Port,ETX-2i>config>port>gfp(n)#,classic,ETX-2i>config>port>gfp(n)# show bind,PASS,ok
 str-80-classic-1,80,Port,ETX-2i>config>port>ppp(n)#,classic,ETX-2i>config>port>ppp(n)# show status,PASS,ok
 str-81-classic-1,81,Port,ETX-2i>config>port>ppp(n)>pppoe#,classic,ETX-2i>config>port>ppp(n)>pppoe# show status,PASS,ok
-str-82-classic-1,82,Port,ETX-2i>config>port>pcs(n)#,classic,ETX-2i>config>port>pcs(n)# show statistics running,FAIL,"NAV_ERROR:#                           ^
+str-82-classic-1,82,Port,ETX-2i>config>port>pcs(n)#,classic,ETX-2i>config>port>pcs(n)# show statistics running,FAIL,"NAV_ERROR:#                       ^
 # cli error: command not recognized"
 str-83-classic-1,83,Port,ETX-2i>config>port>log-mac(n)#,classic,ETX-2i>config>port>log-mac(n)# show status,PASS,ok
 str-84-classic-1,84,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show mac-address-table { static | dynamic | all },FAIL,cli error
@@ -99,26 +99,26 @@ str-85-classic-1,85,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge
 str-86-classic-1,86,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show vlans,PASS,ok
 str-87-classic-1,87,PWE,ETX-2i>config>pwe#,classic,ETX-2i>config>pwe# show summary,PASS,ok
 str-88-classic-1,88,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show status,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-89-classic-1,89,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show statistics current,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-90-classic-1,90,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show statistics interval <n>,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-91-classic-1,91,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show statistics total,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-92-classic-1,92,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show statistics all-intervals,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-93-classic-1,93,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show statistics all,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-95-classic-1,95,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show connectivity-statistics interval <n>,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
-#                         ^
-# cli error: Incorrect paramete"
+#                     ^
+# cli error: Incorrect parameter va"
 str-96-classic-1,96,QoS,ETX-2i>config>qos>policer-profile(n)#,classic,ETX-2i>config>qos>policer-profile(n)# show status,PASS,ok
 str-97-classic-1,97,QoS,ETX-2i>config>qos>envelope-profile(n)#,classic,ETX-2i>config>qos>envelope-profile(n)# show status,PASS,ok
 str-98-classic-1,98,QoS,ETX-2i>config>qos>shaper-profile(name)#,classic,ETX-2i>config>qos>shaper-profile(name)# show status,PASS,ok
@@ -130,30 +130,33 @@ str-104-classic-1,104,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>rout
 str-105-classic-1,105,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show bfd-neighbors,PASS,ok
 str-106-classic-1,106,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show bfd-neighbors-details,PASS,ok
 str-107-classic-1,107,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show statistics ipv4 traffic,PASS,ok
-str-108-classic-1,108,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show statistics ipv4 access-list,PASS,ok
-str-109-classic-1,109,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show statistics ipv6 access-list,PASS,ok
+str-108-classic-1,108,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show statistics ipv4 access-list,FAIL,cli error
+str-109-classic-1,109,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show statistics ipv6 access-list,FAIL,cli error
 str-110-classic-1,110,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show access-list summary,PASS,ok
 str-111-classic-1,111,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show vrrp-summary,PASS,ok
 str-112-classic-1,112,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show nat-translations,FAIL,cli error
 str-113-classic-1,113,Router,ETX-2i>config>router(n)#,classic,ETX-2i>config>router(n)# show nat-statistics,FAIL,cli error
-str-114-classic-1,114,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show summary,PASS,ok
-str-115-classic-1,115,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show rib { ipv4 | ipv6 },FAIL,cli error
-str-116-classic-1,116,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show community { ipv4 | ipv6 },FAIL,cli error
-str-117-classic-1,117,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show advertised-route,FAIL,"NAV_ERROR:#                                                             ^
+str-114-classic-1,114,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show summary,FAIL,"NAV_ERROR:#                              ^
+# cli error: Cannot set; AS number change requires deletion of all BGP entities"
+str-115-classic-1,115,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show rib { ipv4 | ipv6 },FAIL,"NAV_ERROR:#                              ^
+# cli error: Cannot set; AS number change requires deletion of all BGP entities"
+str-116-classic-1,116,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show community { ipv4 | ipv6 },FAIL,"NAV_ERROR:#                              ^
+# cli error: Cannot set; AS number change requires deletion of all BGP entities"
+str-117-classic-1,117,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show advertised-route,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-118-classic-1,118,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show received-route,FAIL,"NAV_ERROR:#                                                             ^
+str-118-classic-1,118,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show received-route,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-119-classic-1,119,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show prefix-list,FAIL,"NAV_ERROR:#                                                             ^
+str-119-classic-1,119,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show prefix-list,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-120-classic-1,120,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show route-map,FAIL,"NAV_ERROR:#                                                             ^
+str-120-classic-1,120,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show route-map,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-122-classic-1,122,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show advertised-route,FAIL,"NAV_ERROR:#                                                             ^
+str-122-classic-1,122,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show advertised-route,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-123-classic-1,123,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show received-route,FAIL,"NAV_ERROR:#                                                             ^
+str-123-classic-1,123,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show received-route,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-124-classic-1,124,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show prefix-list,FAIL,"NAV_ERROR:#                                                             ^
+str-124-classic-1,124,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show prefix-list,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
-str-125-classic-1,125,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show route-map,FAIL,"NAV_ERROR:#                                                             ^
+str-125-classic-1,125,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show route-map,FAIL,"NAV_ERROR:#                                                         ^
 # cli error: Entry instance doesn't exist"
 str-126-classic-1,126,Router,ETX-2i>config>router(n)>interface(n)#,classic,ETX-2i>config>router(n)>interface(n)# show status,PASS,ok
 str-128-classic-1,128,Router,ETX-2i>config>router(n)>interface(n)#,classic,ETX-2i>config>router(n)# show summary-interface,FAIL,cli error
@@ -173,21 +176,21 @@ str-143-classic-1,143,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>de
 str-144-classic-1,144,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)#,classic,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)# show statistics total,FAIL,cli error
 str-145-classic-1,145,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)#,classic,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)# show statistics running,FAIL,cli error
 str-146-classic-1,146,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)#,classic,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)# show delay-measurement-bins,FAIL,cli error
-str-147-classic-1,147,OAM,ETX-2i>config>oam>twamp>controller(n)#,classic,ETX-2i>config>oam>twamp>controller(n)# show status,FAIL,"NAV_ERROR:#                                          ^
+str-147-classic-1,147,OAM,ETX-2i>config>oam>twamp>controller(n)#,classic,ETX-2i>config>oam>twamp>controller(n)# show status,FAIL,"NAV_ERROR:#                                      ^
 # cli error: License required"
-str-148-classic-1,148,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show status,FAIL,"NAV_ERROR:#                                                 ^
+str-148-classic-1,148,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show status,FAIL,"NAV_ERROR:#                                             ^
 # cli error: License required"
-str-149-classic-1,149,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> all,FAIL,"NAV_ERROR:#                                                 ^
+str-149-classic-1,149,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> all,FAIL,"NAV_ERROR:#                                             ^
 # cli error: License required"
-str-150-classic-1,150,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> current,FAIL,"NAV_ERROR:#                                                 ^
+str-150-classic-1,150,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> current,FAIL,"NAV_ERROR:#                                             ^
 # cli error: License required"
-str-151-classic-1,151,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> interval,FAIL,"NAV_ERROR:#                                                 ^
+str-151-classic-1,151,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> interval,FAIL,"NAV_ERROR:#                                             ^
 # cli error: License required"
-str-152-classic-1,152,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show summary-report,FAIL,"NAV_ERROR:#                                                 ^
+str-152-classic-1,152,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show summary-report,FAIL,"NAV_ERROR:#                                             ^
 # cli error: License required"
-str-153-classic-1,153,OAM,ETX-2i>config>oam>twamp>responder(n)#,classic,ETX-2i>config>oam>twamp>responder(n)# show status,FAIL,"NAV_ERROR:#                                           ^
+str-153-classic-1,153,OAM,ETX-2i>config>oam>twamp>responder(n)#,classic,ETX-2i>config>oam>twamp>responder(n)# show status,FAIL,"NAV_ERROR:#                                       ^
 # cli error: parameter or keyword missing or wrong
- - responder <name> [<n"
+ - responder <name> [<numbe"
 str-154-classic-1,154,Test,ETX-2i>config>test>y1564>generator(n)#,classic,ETX-2i>config>test>y1564>generator(n)# show status,PASS,ok
 str-155-classic-1,155,Test,ETX-2i>config>test>y1564>generator(n)#,classic,ETX-2i>config>test>y1564>generator(n)# show mef46-ll-status,FAIL,cli error
 str-156-classic-1,156,Test,ETX-2i>config>test>y1564>generator(n)#,classic,ETX-2i>config>test>y1564>generator(n)# show report summary,FAIL,cli error
@@ -214,17 +217,17 @@ str-176-classic-1,176,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>r
 str-177-classic-1,177,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-list,PASS,ok
 str-178-classic-1,178,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-inputs [all],FAIL,cli error
 str-179-classic-1,179,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-information <source-type> <alarm-list>,FAIL,cli error
-str-180-classic-1,180,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show status,FAIL,"NAV_ERROR:#                              ^
+str-180-classic-1,180,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show status,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"
-str-181-classic-1,181,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show statistics,FAIL,"NAV_ERROR:#                              ^
+str-181-classic-1,181,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show statistics,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"
-str-182-classic-1,182,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show status,FAIL,"NAV_ERROR:#                              ^
+str-182-classic-1,182,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show status,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"
-str-183-classic-1,183,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics current,FAIL,"NAV_ERROR:#                              ^
+str-183-classic-1,183,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics current,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"
-str-184-classic-1,184,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics interval <n>,FAIL,"NAV_ERROR:#                              ^
+str-184-classic-1,184,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics interval <n>,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"
-str-185-classic-1,185,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics all,FAIL,"NAV_ERROR:#                              ^
+str-185-classic-1,185,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics all,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"
-str-186-classic-1,186,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics allintervals,FAIL,"NAV_ERROR:#                              ^
+str-186-classic-1,186,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics allintervals,FAIL,"NAV_ERROR:#                          ^
 # cli error: command not recognized"

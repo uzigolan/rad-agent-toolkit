@@ -13,7 +13,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728743"
+    "tested_at": "2026-07-21T16:29:37.566046"
   },
   {
     "id": "str-94-classic-1",
@@ -29,7 +29,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728801"
+    "tested_at": "2026-07-21T16:29:37.566127"
   },
   {
     "id": "str-100-classic-1",
@@ -45,7 +45,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728808"
+    "tested_at": "2026-07-21T16:29:37.566139"
   },
   {
     "id": "str-121-classic-1",
@@ -61,7 +61,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728820"
+    "tested_at": "2026-07-21T16:29:37.566163"
   },
   {
     "id": "str-127-classic-1",
@@ -77,7 +77,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728826"
+    "tested_at": "2026-07-21T16:29:37.566173"
   },
   {
     "id": "str-137-classic-1",
@@ -93,7 +93,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728833"
+    "tested_at": "2026-07-21T16:29:37.566186"
   },
   {
     "id": "str-140-classic-1",
@@ -109,7 +109,7 @@
     "device_result": "SKIP",
     "device_reason": "no_context_map:",
     "device_output": "",
-    "tested_at": "2026-07-21T16:04:58.728837"
+    "tested_at": "2026-07-21T16:29:37.566195"
   },
   {
     "id": "str-2-classic-1",
@@ -124,8 +124,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "1970-01-03   05:50:53  UTC  +00:00    \n",
-    "tested_at": "2026-07-21T16:05:03.132849"
+    "device_output": "21-07-2026   16:29:29  UTC  +03:00    \n",
+    "tested_at": "2026-07-21T16:29:41.971576"
   },
   {
     "id": "str-3-classic-1",
@@ -140,8 +140,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Description                : ETX-2I-x86 Hw: 0.1/, Sw: 6.5.1(0.79l1)                                                                                                                                                                                                                         \nName                       : ETX-2I-x86                                                                                                                                                                                                                                                     \nLocation                   : T",
-    "tested_at": "2026-07-21T16:05:05.335558"
+    "device_output": "Description                : ETX-2I Hw: 0.2/D, Sw: 6.8.5(1.116)                                                                                                                                                                                                                             \nName                       : ETX-2I                                                                                                                                                                                                                                                         \nLocation                   : T",
+    "tested_at": "2026-07-21T16:29:44.275001"
   },
   {
     "id": "str-4-classic-1",
@@ -156,8 +156,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\nSlot              : Memory              \nKernel Total(KB)    : 231911              Free        : 98757       \n\n",
-    "tested_at": "2026-07-21T16:05:07.538167"
+    "device_output": "\nSlot              : Memory              \nKernel Total(KB)    : 389503              Free        : 281303      \n\n",
+    "tested_at": "2026-07-21T16:29:46.477447"
   },
   {
     "id": "str-5-classic-1",
@@ -173,7 +173,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Pool       Buffers    Total      Free    Allocation     Free    \nName         Size    Buffers   Buffers    Failures    Failures  \n           (Bytes)                                              \n----------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:05:09.740487"
+    "tested_at": "2026-07-21T16:29:48.680029"
   },
   {
     "id": "str-6-classic-1",
@@ -188,8 +188,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Index Physical Class Name                     HW Ver    SW Ver            FW Ver           \n-------------------------------------------------------------------------------------------\n1001  Chassis        ETX-2I-x86               0.1/      6.5.1(0.79l1)     5.8.0.1.0        \n3001  Container      Slot 1                                                                \n3002  Container      Slot 2                                                                \n4001  Fan            Fan 1                                                                 \n4002  Fan            Fan 2                      ",
-    "tested_at": "2026-07-21T16:05:11.942187"
+    "device_output": "Index Physical Class Name                     HW Ver    SW Ver            FW Ver           \n-------------------------------------------------------------------------------------------\n1001  Chassis        ETX-2I                   0.2/D     6.8.5(1.116)      5.7.0.1.0        \n4001  Fan            Fan 1                                                                 \n4002  Fan            Fan 2                                                                 \n4003  Sensor         Temperature Sensor 1                                                  \n4004  Power Supply   PS-AC 1                    ",
+    "tested_at": "2026-07-21T16:29:50.883102"
   },
   {
     "id": "str-7-classic-1",
@@ -204,8 +204,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Name           Version      Creation Time          Actual         \n------------------------------------------------------------------\nsw-pack-1      6.5.1(0.79l1)2020-09-01   16:34:19  active         \n\n\nsw-pack-1 Size (Bytes)  : 31188657    \n\nType      Name           Version      H/W Ver   Size        \n                                                (Bytes)     \n------------------------------------------------------------\nmain      main.bin       6.5.1(0.79l1)0.0       23434225    \nyang      yang.bin       6.5.1(0.79l1)0.0       712928      \nVDSL_IO_ReVDSL_IO_Rev1.0.6.5.1(0.79l1)0.0       7041",
-    "tested_at": "2026-07-21T16:05:14.144574"
+    "device_output": "Name           Version      Creation Time          Actual         \n------------------------------------------------------------------\nsw-pack-1      6.8.5(1.116) 30-09-2025   08:00:00  active         \n\n\nsw-pack-1 Size (Bytes)  : 26454852    \n\nType      Name           Version      H/W Ver   Size        \n                                                (Bytes)     \n------------------------------------------------------------\nmain      main.bin       6.8.5(1.116) 0.0       18682218    \nyang      yang.bin       6.8.5(1.116) 0.0       731130      \nVDSL_IO_ReVDSL_IO_Rev1.0.6.8.5(1.116) 0.0       7041",
+    "tested_at": "2026-07-21T16:29:53.084590"
   },
   {
     "id": "str-8-classic-1",
@@ -220,8 +220,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "                                                                                                                                                                                                                                                                                \n                                                                                                                                                                                                                                                                                \n                                                      ",
-    "tested_at": "2026-07-21T16:05:16.346286"
+    "device_output": "Local, Ended OK                                                                                                                                                                                                                                                                 \nSrc: running-config                                                                                                                                                                                                                                                             \nDst: startup-config                                   ",
+    "tested_at": "2026-07-21T16:29:55.285837"
   },
   {
     "id": "str-9-classic-1",
@@ -236,8 +236,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Port           Number         Name                     Admin    Oper      Speed       \n--------------------------------------------------------------------------------------\nEthernet       0/1            ETH-0/1                  Up       Up        1000000000  \nEthernet       0/2            ETH-0/2                  Up       Down      1000000000  \nEthernet       0/3            ETH-0/3                  Up       Down      1000000000  \nEthernet       0/4            ETH-0/4                  Up       Down      1000000000  \nEthernet       0/101          MNG-ETH                  Up       Up        1000",
-    "tested_at": "2026-07-21T16:05:18.648720"
+    "device_output": "Port           Number         Name                     Admin    Oper      Speed       \n--------------------------------------------------------------------------------------\nEthernet       0/1            ETH-0/1                  Up       Down      1000000000  \nEthernet       0/2            ETH-0/2                  Up       Down      1000000000  \nEthernet       0/3            ETH-0/3                  Up       Down      1000000000  \nEthernet       0/4            ETH-0/4                  Up       Down      1000000000  \nEthernet       0/5            ETH-0/5                  Up       Down      1000",
+    "tested_at": "2026-07-21T16:29:57.487698"
   },
   {
     "id": "str-10-classic-1",
@@ -253,7 +253,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Slot    Actual         Provisioned    Admin   Oper        \n----------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:05:20.850637"
+    "tested_at": "2026-07-21T16:29:59.690082"
   },
   {
     "id": "str-11-classic-1",
@@ -269,7 +269,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:05:23.052512"
+    "tested_at": "2026-07-21T16:30:01.891688"
   },
   {
     "id": "str-12-classic-1",
@@ -285,7 +285,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "\nName               : mng_access_default_in                                            \nType               :                                                                  \nAdmin Status       : Up                                                               \nOperational Status : Up                                                               \nService Name       :                                                                  \nTest               : Off                                                              \nClassifier         : mng_untagged                                            ",
-    "tested_at": "2026-07-21T16:05:25.253726"
+    "tested_at": "2026-07-21T16:30:04.195187"
   },
   {
     "id": "str-13-classic-1",
@@ -301,7 +301,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "                                      md  slot/  classifi admin  mep ok/total   \nmd/ma/mepid    md/ma name              lvl port   cation   status def r.meps    \n\n0001/0001/0001 MD1/MA1                 3   INVALID untagged disable             \n                                                                                \n",
-    "tested_at": "2026-07-21T16:05:27.455612"
+    "tested_at": "2026-07-21T16:30:06.397697"
   },
   {
     "id": "str-14-classic-1",
@@ -317,7 +317,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:05:29.659146"
+    "tested_at": "2026-07-21T16:30:08.599327"
   },
   {
     "id": "str-15-classic-1",
@@ -333,7 +333,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Ring Type  R-APS Bridge East  East      West  West      State        \n                        Port  Physical  Port  Physical               \n---------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:05:31.860492"
+    "tested_at": "2026-07-21T16:30:10.800783"
   },
   {
     "id": "str-16-classic-1",
@@ -348,8 +348,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "IP Address          MAC Address         Status    \n--------------------------------------------------\n172.17.160.73       E0-2F-6D-12-95-42   Dynamic   \n172.17.161.65       98-25-4A-5C-2B-41   Dynamic   \n172.17.161.67       00-60-E0-03-41-0F   Dynamic   \n172.17.161.99       00-19-D1-89-78-B3   Dynamic   \n172.17.161.109      74-46-A0-B7-C6-BF   Dynamic   \n172.17.161.110      74-46-A0-B1-2C-2F   Dynamic   \n172.17.161.113      00-1A-C5-01-33-9C   Dynamic   \n172.17.161.115      00-0E-0C-D0-1F-98   Dynamic   \n172.17.161.119      80-CE-62-21-4A-22   Dynamic   \n172.17.161.125      00-21-9B-81-58-0D  ",
-    "tested_at": "2026-07-21T16:05:34.063101"
+    "device_output": "IP Address          MAC Address         Status    \n--------------------------------------------------\n172.17.160.73       E0-2F-6D-12-95-42   Dynamic   \n172.17.160.167      E0-2F-6D-12-95-42   Dynamic   \n172.17.161.65       98-25-4A-5C-2B-41   Dynamic   \n172.17.161.67       00-60-E0-03-41-0F   Dynamic   \n172.17.161.99       00-19-D1-89-78-B3   Dynamic   \n172.17.161.109      74-46-A0-B7-C6-BF   Dynamic   \n172.17.161.110      74-46-A0-B1-2C-2F   Dynamic   \n172.17.161.115      00-0E-0C-D0-1F-98   Dynamic   \n172.17.161.119      80-CE-62-21-4A-22   Dynamic   \n172.17.161.125      00-21-9B-81-58-0D  ",
+    "tested_at": "2026-07-21T16:30:13.003242"
   },
   {
     "id": "str-17-classic-1",
@@ -364,8 +364,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "IP Address/Prefix Length Next Hop         Interface      Protocol   Metric    \n------------------------------------------------------------------------------\n169.254.0.0/16           0.0.0.0          31             Local      0         \n172.17.0.0/16            0.0.0.0          31             Local      0         \n\nIPv6 Address/Prefix Length   via Next Hop       Interface  Protocol    Metric\n-----------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:05:36.265433"
+    "device_output": "IP Address/Prefix Length Next Hop         Interface      Protocol   Metric    \n------------------------------------------------------------------------------\n0.0.0.0/0                172.17.163.1     31             Static     1         \n172.17.0.0/16            0.0.0.0          31             Local      0         \n\nIPv6 Address/Prefix Length   via Next Hop       Interface  Protocol    Metric\n-----------------------------------------------------------------------------\n",
+    "tested_at": "2026-07-21T16:30:15.205485"
   },
   {
     "id": "str-18-classic-1",
@@ -380,8 +380,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "User:su  Level:su  Popup:Enabled  \n\tFrom:Serial  For(sec):1188      \nUser:debug  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):820      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):304      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):45      \n",
-    "tested_at": "2026-07-21T16:05:38.467091"
+    "device_output": "User:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.167/SSH  For(sec):396      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):124      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):44      \n",
+    "tested_at": "2026-07-21T16:30:17.406800"
   },
   {
     "id": "str-19-classic-1",
@@ -396,8 +396,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Total        : 6         Critical  : 0         Major  : 5         Minor  : 1         \nTotal Masked : 0         Critical  : 0         Major  : 0         Minor  : 0         \n\n1     Ethernet 0/2                       los                              Maj   Unmasked\n2     Ethernet 0/3                       los                              Maj   Unmasked\n3     Ethernet 0/4                       los                              Maj   Unmasked\n4     Ethernet 1/1                       los                              Maj   Unmasked\n5     Ethernet 1/2                       los                           ",
-    "tested_at": "2026-07-21T16:05:40.669059"
+    "device_output": "Total        : 8         Critical  : 0         Major  : 7         Minor  : 1         \nTotal Masked : 0         Critical  : 0         Major  : 0         Minor  : 0         \n\n1     Ethernet 0/1                       los                              Maj   Unmasked\n2     Ethernet 0/2                       los                              Maj   Unmasked\n3     Ethernet 0/4                       los                              Maj   Unmasked\n4     Ethernet 0/5                       los                              Maj   Unmasked\n5     Ethernet 0/6                       los                           ",
+    "tested_at": "2026-07-21T16:30:19.608985"
   },
   {
     "id": "str-20-classic-1",
@@ -412,8 +412,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Name ETH-0/1  \n\nAdministrative Status        : Up                                                                              \nOperational Status           : Up                                                                              \nConnector Type               : Combo RJ45+SFP Out - RJ45 Active                                                \nAuto Negotiation (RJ45)      : Complete                                                                        \nSpeed And Duplex (RJ45)      : 1000 Full Duplex                                                                \nMAC Address             ",
-    "tested_at": "2026-07-21T16:05:42.871423"
+    "device_output": "Name ETH-0/1  \n\nAdministrative Status        : Up                                      \nOperational Status           : Down                                    \nConnector Type               : Combo RJ45+SFP Out - RJ45 Active        \nAuto Negotiation (RJ45)      : --                                      \nMAC Address                  : 00-20-D2-62-2E-DB                       \n",
+    "tested_at": "2026-07-21T16:30:21.810816"
   },
   {
     "id": "str-21-classic-1",
@@ -429,7 +429,7 @@
     "device_result": "FAIL",
     "device_reason": "cli error",
     "device_output": "# cli error: Could not find file",
-    "tested_at": "2026-07-21T16:05:49.477360"
+    "tested_at": "2026-07-21T16:30:28.417207"
   },
   {
     "id": "str-22-classic-1",
@@ -444,8 +444,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Configuration         Last Modified       Valid\n-----------------------------------------------\nstartup-config        1970-05-11 02:59:32 Yes  \nfactory-default-config1970-01-01 00:01:06 Yes  \nrunning-config        1970-01-03 05:40:34 Yes  \nbinary-startup-config 1970-01-01 00:01:22 Yes  \n\nDevice loaded from : startup-config        \n\nrunning-config has been modified since last time it was equal to startup-config    \n",
-    "tested_at": "2026-07-21T16:05:51.679454"
+    "device_output": "Configuration         Last Modified       Valid\n-----------------------------------------------\nstartup-config        05-07-2026 15:55:22 Yes  \nfactory-default-config01-01-1970 00:00:56 Yes  \nrunning-config        12-07-2026 16:13:10 Yes  \n\nDevice loaded from : startup-config        \n\nrunning-config has been modified since last time it was equal to startup-config    \n",
+    "tested_at": "2026-07-21T16:30:30.619363"
   },
   {
     "id": "str-23-classic-1",
@@ -461,7 +461,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Name         : <filename>                           \nSize (bytes)                     \nCreated                          \nStatus                           \nDescription                                                                                                                                                                                                                                                                 \n",
-    "tested_at": "2026-07-21T16:05:53.881532"
+    "tested_at": "2026-07-21T16:30:32.821326"
   },
   {
     "id": "str-24-classic-1",
@@ -476,8 +476,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Name           Version      Creation Time          Actual         \n------------------------------------------------------------------\nsw-pack-1      6.5.1(0.79l1)2020-09-01   16:34:19  active         \n\n\nsw-pack-1 Size (Bytes)  : 31188657    \n\nType      Name           Version      H/W Ver   Size        \n                                                (Bytes)     \n------------------------------------------------------------\nmain      main.bin       6.5.1(0.79l1)0.0       23434225    \nyang      yang.bin       6.5.1(0.79l1)0.0       712928      \nVDSL_IO_ReVDSL_IO_Rev1.0.6.5.1(0.79l1)0.0       7041",
-    "tested_at": "2026-07-21T16:05:56.084283"
+    "device_output": "Name           Version      Creation Time          Actual         \n------------------------------------------------------------------\nsw-pack-1      6.8.5(1.116) 30-09-2025   08:00:00  active         \n\n\nsw-pack-1 Size (Bytes)  : 26454852    \n\nType      Name           Version      H/W Ver   Size        \n                                                (Bytes)     \n------------------------------------------------------------\nmain      main.bin       6.8.5(1.116) 0.0       18682218    \nyang      yang.bin       6.8.5(1.116) 0.0       731130      \nVDSL_IO_ReVDSL_IO_Rev1.0.6.8.5(1.116) 0.0       7041",
+    "tested_at": "2026-07-21T16:30:35.024386"
   },
   {
     "id": "str-25-classic-1",
@@ -492,8 +492,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "                                                                                                                                                                                                                                                                                \n                                                                                                                                                                                                                                                                                \n                                                      ",
-    "tested_at": "2026-07-21T16:05:58.286846"
+    "device_output": "Local, Ended OK                                                                                                                                                                                                                                                                 \nSrc: running-config                                                                                                                                                                                                                                                             \nDst: startup-config                                   ",
+    "tested_at": "2026-07-21T16:30:37.227077"
   },
   {
     "id": "str-26-classic-1",
@@ -508,8 +508,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "#header device-name \"ETX-2I-x86\"\n\n# Factory Default File\nconfigure\n    port\n        svi 96\n            no shutdown\n        exit\n    exit\n    flows\n        classifier-profile mng_untagged match-any\n            match untagged\n        exit\n        classifier-profile mng_all match-any\n            match all\n        exit\n        flow mng_access_default_in\n            classifier mng_untagged\n            no policer\n            ingress-port ethernet 0/101\n            egress-port svi 96\n            no shutdown\n        exit\n        flow mng_access_default_out\n            classifier mng_all\n            no",
-    "tested_at": "2026-07-21T16:06:00.490067"
+    "device_output": "#header device-name \"ETX-2I\"\n\n# Factory Default File\nconfigure\n    port\n        svi 96\n            no shutdown\n        exit\n    exit\n    flows\n        classifier-profile mng_untagged match-any\n            match untagged\n        exit\n        classifier-profile mng_all match-any\n            match all\n        exit\n        flow mng_access_default_in\n            classifier mng_untagged\n            no policer\n            ingress-port ethernet 0/101\n            egress-port svi 96\n            no shutdown\n        exit\n        flow mng_access_default_out\n            classifier mng_all\n            no pol",
+    "tested_at": "2026-07-21T16:30:39.428585"
   },
   {
     "id": "str-27-classic-1",
@@ -525,7 +525,7 @@
     "device_result": "FAIL",
     "device_reason": "cli error",
     "device_output": "# cli error: Could not find file",
-    "tested_at": "2026-07-21T16:06:02.692295"
+    "tested_at": "2026-07-21T16:30:41.631204"
   },
   {
     "id": "str-28-classic-1",
@@ -540,8 +540,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***Reboot***\n\n\nETX-2I-x86# \n\n***R",
-    "tested_at": "2026-07-21T16:06:04.995646"
+    "device_output": "\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n\n***Reboot***\n\n\nETX-2I# \n",
+    "tested_at": "2026-07-21T16:30:43.935109"
   },
   {
     "id": "str-29-classic-1",
@@ -556,8 +556,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "#header device-name \"ETX-2I-x86\"\n\n# Factory Default File\nconfigure\n    port\n        svi 96\n            no shutdown\n        exit\n    exit\n    flows\n        classifier-profile mng_untagged match-any\n            match untagged\n        exit\n        classifier-profile mng_all match-any\n            match all\n        exit\n        flow mng_access_default_in\n            classifier mng_untagged\n            no policer\n            ingress-port ethernet 0/101\n            egress-port svi 96\n            no shutdown\n        exit\n        flow mng_access_default_out\n            classifier mng_all\n            no",
-    "tested_at": "2026-07-21T16:06:07.199378"
+    "device_output": "# configuration file\nexit all\n    version \"3.01A14\" sw \"6.8.5(1.116)\" \n    configure \n#       System Configuration\n        system \n            date-and-time \n                date-format dd-mm-yyyy \n                zone utc +03:00 \n#               NTP (Network Time Protocol)\n                ntp \n                    server 1 \n                        address 172.17.171.141 \n                        no shutdown \n                        key 13 \n                    exit\n                    server 2 \n                        address 216.239.35.0 \n                        no shutdown \n                   ",
+    "tested_at": "2026-07-21T16:30:46.138880"
   },
   {
     "id": "str-30-classic-1",
@@ -572,8 +572,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                       ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:06:09.402048"
+    "device_output": "#                   ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:30:48.340693"
   },
   {
     "id": "str-31-classic-1",
@@ -589,7 +589,7 @@
     "device_result": "FAIL",
     "device_reason": "cli error",
     "device_output": "# cli error: Could not find file",
-    "tested_at": "2026-07-21T16:06:11.603336"
+    "tested_at": "2026-07-21T16:30:50.542690"
   },
   {
     "id": "str-32-classic-1",
@@ -604,8 +604,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                              ^\n# cli error: parameter or keyword missing or wrong\n - show user-dir <filename>\n <filename>                                 : [string]\n",
-    "tested_at": "2026-07-21T16:06:13.805233"
+    "device_output": "#                          ^\n# cli error: parameter or keyword missing or wrong\n - show user-dir <filename>\n <filename>                                 : [string]\n",
+    "tested_at": "2026-07-21T16:30:52.743969"
   },
   {
     "id": "str-33-classic-1",
@@ -618,10 +618,10 @@
     "test1_baseline": "",
     "test2_post_training": "",
     "test3_optimized": "",
-    "device_result": "PASS",
-    "device_reason": "ok",
-    "device_output": "# configuration file\nexit all\n   \n    configure \n#       Terminal Configuration\n        terminal \n            console-timeout forever \n        exit\n#       System Configuration\n        system \n            name \"RouterA\" \n            no cpu-rate-limiter \n            router \n                vrrp-version 3 \n            exit\n        exit\n#       QoS - Configuration\n        qos \n            policer-profile \"cir10m\" \n                bandwidth cir 10000 cbs 32000 eir 0 ebs 0 \n            exit\n            policer-profile \"cir100m\" \n                bandwidth cir 100000 cbs 1000000 eir 0 ebs 0 \n        ",
-    "tested_at": "2026-07-21T16:06:17.129982"
+    "device_result": "FAIL",
+    "device_reason": "cli error",
+    "device_output": "#                      ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:30:54.945539"
   },
   {
     "id": "str-34-classic-1",
@@ -636,8 +636,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Current date:   3 January 1970     05:52:13  UTC  +00:00    \n\nGeneral schedules not configured                                         \n\nSummer time not configured                                           \n\nReboot is not scheduled   \n",
-    "tested_at": "2026-07-21T16:06:23.736332"
+    "device_output": "Current date:   21 July 2026       16:30:48  UTC  +03:00    \n\nGeneral schedules not configured                                         \n\nSummer time not configured                                           \n\nReboot is not scheduled   \n",
+    "tested_at": "2026-07-21T16:31:01.551424"
   },
   {
     "id": "str-35-classic-1",
@@ -652,8 +652,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Current date:   3 January 1970     05:52:15  UTC  +00:00    \n\nGeneral schedules not configured                                         \n\n\nSummer time not configured                                           \n\nReboot is not scheduled   \n",
-    "tested_at": "2026-07-21T16:06:25.938327"
+    "device_output": "Current date:   21 July 2026       16:30:51  UTC  +03:00    \n\nGeneral schedules not configured                                         \n\n\nSummer time not configured                                           \n\nReboot is not scheduled   \n",
+    "tested_at": "2026-07-21T16:31:03.754078"
   },
   {
     "id": "str-36-classic-1",
@@ -668,8 +668,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Type      Name                                    Status    Amount    In Use\n----------------------------------------------------------------------------\nCustomer  Custom Configuration B                  Disabled  --        --    \nFeature   TWAMP                                   Disabled  --        --    \nFeature   Traffic Management Fault Propaga        Disabled  --        --    \n",
-    "tested_at": "2026-07-21T16:06:32.544784"
+    "device_output": "Type      Name                                    Status    Amount    In Use\n----------------------------------------------------------------------------\nFeature   TWAMP                                   Disabled  --        --    \nFeature   Traffic Management Fault Propaga        Disabled  --        --    \n",
+    "tested_at": "2026-07-21T16:31:10.361817"
   },
   {
     "id": "str-37-classic-1",
@@ -684,8 +684,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "1970-01-03   05:52:29  UTC  +00:00    \n",
-    "tested_at": "2026-07-21T16:06:39.152894"
+    "device_output": "21-07-2026   16:31:04  UTC  +03:00    \n",
+    "tested_at": "2026-07-21T16:31:16.969091"
   },
   {
     "id": "str-38-classic-1",
@@ -700,8 +700,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "CPU Utilization\n-----------------------------------------------------------------------------\nCurrent (%)                  : 28   \nIn Last 15-minute Window (%)        Min  : 24   Max  : 87   Average  : 30   \n",
-    "tested_at": "2026-07-21T16:06:41.354548"
+    "device_output": "CPU Utilization\n-----------------------------------------------------------------------------\nCurrent (%) : 37        Min (%)  : 0         Max (%)  : 100       Average (%)  : 37        \n",
+    "tested_at": "2026-07-21T16:31:19.170789"
   },
   {
     "id": "str-39-classic-1",
@@ -716,8 +716,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "                       Kernel      Kernel   \n                     Total (KB)  Free (KB)  \n--------------------------------------------\nMemory                 231911      98751    \n",
-    "tested_at": "2026-07-21T16:06:43.557145"
+    "device_output": "                       Kernel      Kernel   \n                     Total (KB)  Free (KB)  \n--------------------------------------------\nMemory                 389503      281302   \n",
+    "tested_at": "2026-07-21T16:31:21.372104"
   },
   {
     "id": "str-40-classic-1",
@@ -732,8 +732,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\nSlot              : Memory              \nKernel Total(KB)    : 231911              Free        : 98751       \n\n",
-    "tested_at": "2026-07-21T16:06:45.759523"
+    "device_output": "\nSlot              : Memory              \nKernel Total(KB)    : 389503              Free        : 281302      \n\n",
+    "tested_at": "2026-07-21T16:31:23.573595"
   },
   {
     "id": "str-41-classic-1",
@@ -748,8 +748,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Index Physical Class Name                     HW Ver    SW Ver            FW Ver           \n-------------------------------------------------------------------------------------------\n1001  Chassis        ETX-2I-x86               0.1/      6.5.1(0.79l1)     5.8.0.1.0        \n3001  Container      Slot 1                                                                \n3002  Container      Slot 2                                                                \n4001  Fan            Fan 1                                                                 \n4002  Fan            Fan 2                      ",
-    "tested_at": "2026-07-21T16:06:47.961723"
+    "device_output": "Index Physical Class Name                     HW Ver    SW Ver            FW Ver           \n-------------------------------------------------------------------------------------------\n1001  Chassis        ETX-2I                   0.2/D     6.8.5(1.116)      5.7.0.1.0        \n4001  Fan            Fan 1                                                                 \n4002  Fan            Fan 2                                                                 \n4003  Sensor         Temperature Sensor 1                                                  \n4004  Power Supply   PS-AC 1                    ",
+    "tested_at": "2026-07-21T16:31:25.776073"
   },
   {
     "id": "str-42-classic-1",
@@ -764,8 +764,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Description                : ETX-2I-x86 Hw: 0.1/, Sw: 6.5.1(0.79l1)                                                                                                                                                                                                                         \nName                       : ETX-2I-x86                                                                                                                                                                                                                                                     \nLocation                   : T",
-    "tested_at": "2026-07-21T16:06:50.163434"
+    "device_output": "Description                : ETX-2I Hw: 0.2/D, Sw: 6.8.5(1.116)                                                                                                                                                                                                                             \nName                       : ETX-2I                                                                                                                                                                                                                                                         \nLocation                   : T",
+    "tested_at": "2026-07-21T16:31:27.977836"
   },
   {
     "id": "str-43-classic-1",
@@ -780,8 +780,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Power Supply   Type      Status         \n----------------------------------------\n1              --        Not exist      \n2              --        OK             \n\nFAN       Status    Speed     % of max rpm \n                    (rpm)                  \n-------------------------------------------\n2         OK        42949556234294967222   \n3         OK        42949556234294967222   \n4         OK                               \n\nSensor    Value                         Status         \n-------------------------------------------------------\n1.        40             Celsius        OK             \n",
-    "tested_at": "2026-07-21T16:06:56.771569"
+    "device_output": "Power Supply   Type      Status         \n----------------------------------------\n1              AC        OK             \n2              --        Not exist      \n\nFAN       Status    \n--------------------\n3         OK        \n4         OK        \n\nSensor    Value                         Status         \n-------------------------------------------------------\n1.        37             Celsius        OK             \n",
+    "tested_at": "2026-07-21T16:31:34.582171"
   },
   {
     "id": "str-44-classic-1",
@@ -796,8 +796,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Num       User                          Access Level  Source    IP Address                              \n--------------------------------------------------------------------------------------------------------\n1.        su                            Su            Terminal  0.0.0.0                                 \n2.        debug                         Su            SSH       172.17.160.73                           \n3.        su                            Su            SSH       172.17.160.73                           \n4.        su                            Su            SSH       172.17.160.",
-    "tested_at": "2026-07-21T16:07:03.378686"
+    "device_output": "Num       User                          Access Level  Source    IP Address                              \n--------------------------------------------------------------------------------------------------------\n1.        su                            Su            SSH       172.17.160.167                          \n2.        su                            Su            SSH       172.17.160.73                           \n3.        su                            Su            SSH       172.17.160.73                           \n",
+    "tested_at": "2026-07-21T16:31:41.190128"
   },
   {
     "id": "str-45-classic-1",
@@ -812,8 +812,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "User:su  Level:su  Popup:Enabled  \n\tFrom:Serial  For(sec):1275      \nUser:debug  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):907      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):391      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):132      \n",
-    "tested_at": "2026-07-21T16:07:05.580675"
+    "device_output": "User:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.167/SSH  For(sec):482      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):210      \nUser:su  Level:su  Popup:Enabled  \n\tFrom:172.17.160.73/SSH  For(sec):130      \n",
+    "tested_at": "2026-07-21T16:31:43.391480"
   },
   {
     "id": "str-46-classic-1",
@@ -829,7 +829,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "source                                  Attempts            First Attempt       Blocked for         \n----------------------------------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:07:07.782302"
+    "tested_at": "2026-07-21T16:31:45.592875"
   },
   {
     "id": "str-47-classic-1",
@@ -844,8 +844,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "RSA key fingerprint is 9d:5d:71:2d:7c:79:aa:53:b0:1e:37:59:c8:04:56:dd          \n",
-    "tested_at": "2026-07-21T16:07:09.983957"
+    "device_output": "RSA key fingerprint is e9:70:26:51:0e:17:0c:24:84:b6:22:8d:22:ef:ab:02          \n",
+    "tested_at": "2026-07-21T16:31:47.794656"
   },
   {
     "id": "str-48-classic-1",
@@ -861,7 +861,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "                 Server 1   Server 2   Server 3   Server 4\n-----------------------------------------------------------------------------\nAccess Requests       0          0          0          0         \nAccess Retransmits    0          0          0          0         \nAccess Accepts        0          0          0          0         \nAccess Rejects        0          0          0          0         \nAccess Challenges     0          0          0          0         \nMalformed Response    0          0          0          0         \nBad Authenticators    0          0          0          0         \nP",
-    "tested_at": "2026-07-21T16:07:16.590193"
+    "tested_at": "2026-07-21T16:31:54.400549"
   },
   {
     "id": "str-49-classic-1",
@@ -876,8 +876,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "SNMPv3           : enable                                                          \nBoots            : 690                                                             \nBoots Time (sec) : 193952                                                          \nEngineID         : 800000a4030020d25443a3                                          \n",
-    "tested_at": "2026-07-21T16:07:23.196230"
+    "device_output": "SNMPv3           : enable                                                          \nBoots            : 32                                                              \nBoots Time (sec) : 1987816                                                         \nEngineID         : 800000a4030020d2622edb                                          \n",
+    "tested_at": "2026-07-21T16:32:01.006886"
   },
   {
     "id": "str-50-classic-1",
@@ -893,7 +893,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Group ID  Member                                                          \n--------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:07:25.398737"
+    "tested_at": "2026-07-21T16:32:03.209515"
   },
   {
     "id": "str-51-classic-1",
@@ -909,7 +909,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Overflow Discarded Frames : 0                   \n",
-    "tested_at": "2026-07-21T16:07:32.004220"
+    "tested_at": "2026-07-21T16:32:09.817646"
   },
   {
     "id": "str-52-classic-1",
@@ -924,8 +924,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Port           Number         Name                     Admin    Oper      Speed       \n--------------------------------------------------------------------------------------\nEthernet       0/1            ETH-0/1                  Up       Up        1000000000  \nEthernet       0/2            ETH-0/2                  Up       Down      1000000000  \nEthernet       0/3            ETH-0/3                  Up       Down      1000000000  \nEthernet       0/4            ETH-0/4                  Up       Down      1000000000  \nEthernet       0/101          MNG-ETH                  Up       Up        1000",
-    "tested_at": "2026-07-21T16:07:34.206469"
+    "device_output": "Port           Number         Name                     Admin    Oper      Speed       \n--------------------------------------------------------------------------------------\nEthernet       0/1            ETH-0/1                  Up       Down      1000000000  \nEthernet       0/2            ETH-0/2                  Up       Down      1000000000  \nEthernet       0/3            ETH-0/3                  Up       Down      1000000000  \nEthernet       0/4            ETH-0/4                  Up       Down      1000000000  \nEthernet       0/5            ETH-0/5                  Up       Down      1000",
+    "tested_at": "2026-07-21T16:32:12.119177"
   },
   {
     "id": "str-53-classic-1",
@@ -940,8 +940,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\nPort : Ethernet       Number  : 0/1            \n\nName : ETH-0/1                                                                                                                                                                                                                                                         \n\nAdmin : Up          \nOper  : Up          \nSpeed : 1Gbps       \n\n\nPort : Ethernet       Number  : 0/2            \n\nName : ETH-0/2                                                                                                                                                             ",
-    "tested_at": "2026-07-21T16:07:36.408917"
+    "device_output": "\nPort : Ethernet       Number  : 0/1            \n\nName : ETH-0/1                                                                                                                                                                                                                                                         \n\nAdmin : Up          \nOper  : Down        \nSpeed : 1Gbps       \n\n\nPort : Ethernet       Number  : 0/2            \n\nName : ETH-0/2                                                                                                                                                             ",
+    "tested_at": "2026-07-21T16:32:14.422857"
   },
   {
     "id": "str-54-classic-1",
@@ -956,8 +956,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Name ETH-0/1  \n\nAdministrative Status        : Up                                                                              \nOperational Status           : Up                                                                              \nConnector Type               : Combo RJ45+SFP Out - RJ45 Active                                                \nAuto Negotiation (RJ45)      : Complete                                                                        \nSpeed And Duplex (RJ45)      : 1000 Full Duplex                                                                \nMAC Address             ",
-    "tested_at": "2026-07-21T16:07:43.014538"
+    "device_output": "Name ETH-0/1  \n\nAdministrative Status        : Up                                      \nOperational Status           : Down                                    \nConnector Type               : Combo RJ45+SFP Out - RJ45 Active        \nAuto Negotiation (RJ45)      : --                                      \nMAC Address                  : 00-20-D2-62-2E-DB                       \n",
+    "tested_at": "2026-07-21T16:32:21.028348"
   },
   {
     "id": "str-55-classic-1",
@@ -972,8 +972,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                    ^\n# cli error: invalid refresh timeout input\n - show status\n",
-    "tested_at": "2026-07-21T16:07:45.216179"
+    "device_output": "#                                                ^\n# cli error: invalid refresh timeout input\n - show status\n",
+    "tested_at": "2026-07-21T16:32:23.229639"
   },
   {
     "id": "str-56-classic-1",
@@ -988,8 +988,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Rates Sampling Window\n-----------------------------------------------------------------------------\nWindow Size [Min.]        : 15                  \nWindow Remain Time [Min.] : 9                   \n                                                \n\nRunning\n-----------------------------------------------------------------------------\nCounter                    Rx                   Tx                  \nTotal Frames               3                    0                   \nTotal Octets               303                  0                   \nTotal Frames/Sec           0                    0          ",
-    "tested_at": "2026-07-21T16:07:47.418793"
+    "device_output": "Rates Sampling Window\n-----------------------------------------------------------------------------\nWindow Size [Min.]        : 15                  \nWindow Remain Time [Min.] : 10                  \n                                                \n\nRunning\n-----------------------------------------------------------------------------\nCounter                    Rx                   Tx                  \nTotal Frames               100899164702         13498670            \nTotal Octets               12915093081984       1734501728          \nTotal Frames/Sec           0                    0          ",
+    "tested_at": "2026-07-21T16:32:25.431389"
   },
   {
     "id": "str-57-classic-1",
@@ -1005,7 +1005,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Loopback : Off            \n",
-    "tested_at": "2026-07-21T16:07:49.621445"
+    "tested_at": "2026-07-21T16:32:27.634569"
   },
   {
     "id": "str-58-classic-1",
@@ -1021,7 +1021,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:07:51.823818"
+    "tested_at": "2026-07-21T16:32:29.836996"
   },
   {
     "id": "str-59-classic-1",
@@ -1037,7 +1037,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Protocol              Encapsulated   Decapsulated   \n----------------------------------------------------\nLACP                  0              0              \nSTP                   0              0              \nCDP                   0              0              \nVTP                   0              0              \nLLDP                  0              0              \nPVSTP                 0              0              \nPAGP                  0              0              \nUDLD                  0              0              \nDTP                   0              0              \nLAMP             ",
-    "tested_at": "2026-07-21T16:07:54.026444"
+    "tested_at": "2026-07-21T16:32:32.039634"
   },
   {
     "id": "str-60-classic-1",
@@ -1050,10 +1050,10 @@
     "test1_baseline": "",
     "test2_post_training": "",
     "test3_optimized": "",
-    "device_result": "FAIL",
-    "device_reason": "cli error",
-    "device_output": "#                                     ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:07:56.228984"
+    "device_result": "PASS",
+    "device_reason": "ok",
+    "device_output": "Administrative Status : Enabled                                 \nOperational Status    : Link Fault                              \nLoopback Status       : Off                                     \n\nOAM EFM Information\n-----------------------------------------------------------------------------\n                 Local                     Remote                   \nMAC Address    : 00-20-D2-62-2E-DB         --                       \nMode           : Active                    --                       \nUnidirectional : Not Supported             --                       \nVars Retrieval : Not Supported",
+    "tested_at": "2026-07-21T16:32:34.241754"
   },
   {
     "id": "str-61-classic-1",
@@ -1066,10 +1066,10 @@
     "test1_baseline": "",
     "test2_post_training": "",
     "test3_optimized": "",
-    "device_result": "FAIL",
-    "device_reason": "cli error",
-    "device_output": "#                                     ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:07:58.431652"
+    "device_result": "PASS",
+    "device_reason": "ok",
+    "device_output": "\nOAM EFM Statistics\n-----------------------------------------------------------------------------\n                        Rx         Tx        \nInformation           : 0          695873    \nEvent Notification    : 0          0         \nLoopback Control      : 0          0         \nVariable Request      : 0          0         \nVariable Response     : 0          0         \nOrganization Specific : 0          0         \nUnsupported Codes     : 0                    \n\nOAM EFM Statistics\n-----------------------------------------------------------------------------\n              Rx         Tx        \n",
+    "tested_at": "2026-07-21T16:32:36.443306"
   },
   {
     "id": "str-62-classic-1",
@@ -1084,8 +1084,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                              ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:08:00.633752"
+    "device_output": "#                                          ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:32:38.645631"
   },
   {
     "id": "str-63-classic-1",
@@ -1101,7 +1101,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:02.836057"
+    "tested_at": "2026-07-21T16:32:40.847576"
   },
   {
     "id": "str-64-classic-1",
@@ -1117,7 +1117,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:09.443590"
+    "tested_at": "2026-07-21T16:32:47.451416"
   },
   {
     "id": "str-66-classic-1",
@@ -1133,7 +1133,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Num Device ID                       Chassis ID          Port ID     Bridge Type    Device Name         \n-------------------------------------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:08:11.645498"
+    "tested_at": "2026-07-21T16:32:49.654158"
   },
   {
     "id": "str-67-classic-1",
@@ -1149,7 +1149,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "                      Nearest-Bridge       Customer-Bridge      Non-Tpmr            \nTotal Neighbors     : 0                    0                    0                   \nTotal Tx Frames     : 0                                                             \nTotal Rx Frames     : 0                                                             \nValid Rx Frames     : 0                    0                    0                   \nDiscarded Rx Frames : 0                                                             \nUnrecognized Tlvs   : 0                                                             \nDisca",
-    "tested_at": "2026-07-21T16:08:13.848218"
+    "tested_at": "2026-07-21T16:32:51.856866"
   },
   {
     "id": "str-68-classic-1",
@@ -1164,8 +1164,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Group\n-----------------------------------------------------------------------------\nName : LAG 1                                                       \n\nAdministrative Status : Down                          \nOperational Status    : Down                          \nMode                  : Redundancy                    \nSpeed                 : Not Applicable                \nMAC Address           : 00-20-D2-54-43-A3             \n\nLinks\n-----------------------------------------------------------------------------\nPort      Admin   Oper            LACP      Redundancy  \n------------------------------",
-    "tested_at": "2026-07-21T16:08:20.453537"
+    "device_output": "Group\n-----------------------------------------------------------------------------\nName : LAG 1                                                       \n\nAdministrative Status : Down                          \nOperational Status    : Down                          \nMode                  : Redundancy                    \nSpeed                 : Not Applicable                \nMAC Address           : 00-20-D2-62-2E-DB             \n\nLinks\n-----------------------------------------------------------------------------\nPort      Admin   Oper            LACP      Redundancy  \n------------------------------",
+    "tested_at": "2026-07-21T16:32:58.462734"
   },
   {
     "id": "str-69-classic-1",
@@ -1181,7 +1181,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Running\n-----------------------------------------------------------------------------\nCounter                    Rx                   Tx                              \nTotal Frames               0                    0                               \nTotal Octets               0                    0                               \nTotal Frames/Sec           0                    0                               \nTotal Bits/Sec (L1)        0                    0                               \nMinimum Bits/Sec (L1)      0                    0                               \nMaximum Bits/Sec (L1)      0",
-    "tested_at": "2026-07-21T16:08:22.655469"
+    "tested_at": "2026-07-21T16:33:00.664189"
   },
   {
     "id": "str-70-classic-1",
@@ -1196,8 +1196,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                        ^\n# cli error: invalid parameter value\n - show lacp-status ethernet <port-id>\n\n",
-    "tested_at": "2026-07-21T16:08:24.857529"
+    "device_output": "#                                                    ^\n# cli error: invalid parameter value\n - show lacp-status ethernet <port-id>\n\n",
+    "tested_at": "2026-07-21T16:33:02.865867"
   },
   {
     "id": "str-71-classic-1",
@@ -1212,8 +1212,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                            ^\n# cli error: invalid parameter value\n - show lacp-statistics ethernet <port-id>\n\n",
-    "tested_at": "2026-07-21T16:08:27.059779"
+    "device_output": "#                                                        ^\n# cli error: invalid parameter value\n - show lacp-statistics ethernet <port-id>\n\n",
+    "tested_at": "2026-07-21T16:33:05.067307"
   },
   {
     "id": "str-72-classic-1",
@@ -1227,9 +1227,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:31.463540"
+    "tested_at": "2026-07-21T16:33:09.471398"
   },
   {
     "id": "str-73-classic-1",
@@ -1243,9 +1243,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:31.463584"
+    "tested_at": "2026-07-21T16:33:09.471411"
   },
   {
     "id": "str-74-classic-1",
@@ -1259,9 +1259,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                           ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                       ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:35.867921"
+    "tested_at": "2026-07-21T16:33:13.875209"
   },
   {
     "id": "str-75-classic-1",
@@ -1275,9 +1275,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                           ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                       ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:35.867943"
+    "tested_at": "2026-07-21T16:33:13.875218"
   },
   {
     "id": "str-76-classic-1",
@@ -1291,9 +1291,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                            ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:40.272970"
+    "tested_at": "2026-07-21T16:33:18.279309"
   },
   {
     "id": "str-77-classic-1",
@@ -1307,9 +1307,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                            ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:08:40.272981"
+    "tested_at": "2026-07-21T16:33:18.279322"
   },
   {
     "id": "str-78-classic-1",
@@ -1325,7 +1325,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Name             : GFP 1                                             \nOperation Status : Up                                                \n",
-    "tested_at": "2026-07-21T16:08:46.879585"
+    "tested_at": "2026-07-21T16:33:24.888147"
   },
   {
     "id": "str-79-classic-1",
@@ -1341,7 +1341,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Higher Layer\n-----------------------------------------------------------------------------\n\nLower Layer\n-----------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:08:49.081615"
+    "tested_at": "2026-07-21T16:33:27.089720"
   },
   {
     "id": "str-80-classic-1",
@@ -1356,8 +1356,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Name : PPP 1                                                       \n\nPPP is not bound to an interface\n",
-    "tested_at": "2026-07-21T16:08:55.688727"
+    "device_output": "Name : PPP 1                                                       \n\nRouter Interface : Router 1/If 1  \nPhysical Port    : svi 1          \n\nLCP\n-----------------------------------------------------------------------------\nState     : Starting            \nMRU Local : 0                   Peer  : 0           \n\n\nAuthentication\n-----------------------------------------------------------------------------\nOf Us       : None                \n\n\n\nIPCP\n-----------------------------------------------------------------------------\nState : Initial             \n\n\n\nIPV6CP\n-------------------------------------",
+    "tested_at": "2026-07-21T16:33:33.697340"
   },
   {
     "id": "str-81-classic-1",
@@ -1372,8 +1372,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "PPP is not bound to an interface\n",
-    "tested_at": "2026-07-21T16:09:02.297047"
+    "device_output": "Router Interface       : Router 1/If 1                 \nPhysical Port          : svi 1                         \nState                  : Down                          \nService Name Requested :                               \n",
+    "tested_at": "2026-07-21T16:33:40.303319"
   },
   {
     "id": "str-82-classic-1",
@@ -1387,9 +1387,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                           ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                       ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:06.701446"
+    "tested_at": "2026-07-21T16:33:44.707401"
   },
   {
     "id": "str-83-classic-1",
@@ -1404,8 +1404,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Administrative Status : Down                          \nOperational Status    : Down                          \nMAC Address           : 00-20-D2-54-43-A3             \n",
-    "tested_at": "2026-07-21T16:09:13.408700"
+    "device_output": "Administrative Status : Down                          \nOperational Status    : Down                          \nMAC Address           : 00-20-D2-62-2E-DB             \n",
+    "tested_at": "2026-07-21T16:33:51.315336"
   },
   {
     "id": "str-84-classic-1",
@@ -1420,8 +1420,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                   ^\n# cli error: invalid parameter value\n - show mac-address-table static\n - show mac-address-table dynamic\n - show mac-address-table all\n\n <static>                                   : Static MAC addresses\n <dynamic>                                  : Dynamic MAC addresses\n <all>                                      : All MAC addresses\n",
-    "tested_at": "2026-07-21T16:09:20.015597"
+    "device_output": "#                                               ^\n# cli error: invalid parameter value\n - show mac-address-table static\n - show mac-address-table dynamic\n - show mac-address-table all\n\n <static>                                   : Static MAC addresses\n <dynamic>                                  : Dynamic MAC addresses\n <all>                                      : All MAC addresses\n",
+    "tested_at": "2026-07-21T16:33:57.923578"
   },
   {
     "id": "str-85-classic-1",
@@ -1437,7 +1437,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "\nMAC Not Found\n-----------------------------------------------------------------------------\n          \n",
-    "tested_at": "2026-07-21T16:09:24.317809"
+    "tested_at": "2026-07-21T16:34:02.227072"
   },
   {
     "id": "str-86-classic-1",
@@ -1453,7 +1453,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:26.520385"
+    "tested_at": "2026-07-21T16:34:04.428168"
   },
   {
     "id": "str-87-classic-1",
@@ -1469,7 +1469,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:33.126016"
+    "tested_at": "2026-07-21T16:34:11.034789"
   },
   {
     "id": "str-88-classic-1",
@@ -1483,9 +1483,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530200"
+    "tested_at": "2026-07-21T16:34:15.439675"
   },
   {
     "id": "str-89-classic-1",
@@ -1499,9 +1499,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530210"
+    "tested_at": "2026-07-21T16:34:15.439687"
   },
   {
     "id": "str-90-classic-1",
@@ -1515,9 +1515,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530213"
+    "tested_at": "2026-07-21T16:34:15.439691"
   },
   {
     "id": "str-91-classic-1",
@@ -1531,9 +1531,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530216"
+    "tested_at": "2026-07-21T16:34:15.439694"
   },
   {
     "id": "str-92-classic-1",
@@ -1547,9 +1547,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530219"
+    "tested_at": "2026-07-21T16:34:15.439704"
   },
   {
     "id": "str-93-classic-1",
@@ -1563,9 +1563,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530221"
+    "tested_at": "2026-07-21T16:34:15.439707"
   },
   {
     "id": "str-95-classic-1",
@@ -1579,9 +1579,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                         ^\n# cli error: Incorrect paramete",
+    "device_reason": "NAV_ERROR:# cli error: PW creation failed: PW type must be configured.\n#                     ^\n# cli error: Incorrect parameter va",
     "device_output": "",
-    "tested_at": "2026-07-21T16:09:37.530223"
+    "tested_at": "2026-07-21T16:34:15.439709"
   },
   {
     "id": "str-96-classic-1",
@@ -1597,7 +1597,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Bandwidth\n-----------------------------------------------------------------------------\n\nCurrent Rounding : Down                \n\nParameter     Provisioned Value    Actual Value\n-----------------------------------------------------------------------------\nCIR [Kbps]  : 0                    0                   \nCBS [Bytes] : 0                    0                   \nEIR [Kbps]  : 1000000              1000000             \nEBS [Bytes] : 32767                32767               \n\n",
-    "tested_at": "2026-07-21T16:09:44.143904"
+    "tested_at": "2026-07-21T16:34:22.046308"
   },
   {
     "id": "str-97-classic-1",
@@ -1613,7 +1613,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "\nCurrent Rounding : Down                \n\n\n",
-    "tested_at": "2026-07-21T16:09:50.751517"
+    "tested_at": "2026-07-21T16:34:28.651571"
   },
   {
     "id": "str-98-classic-1",
@@ -1629,7 +1629,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Bandwidth\n-----------------------------------------------------------------------------\n\nCurrent Rounding : Down                \n\nParameter     Provisioned Value    Actual Value\n-----------------------------------------------------------------------------\nCIR [Kbps]  : 999936               999920              \nCBS [Bytes] : 16000000             16000000            \n\n",
-    "tested_at": "2026-07-21T16:09:57.358857"
+    "tested_at": "2026-07-21T16:34:35.258655"
   },
   {
     "id": "str-99-classic-1",
@@ -1644,8 +1644,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "* = Active Route  \n\n   Network              > Next Hop               RI    Proto      Metric\n-----------------------------------------------------------------------------\n*  169.254.0.0/16       > 169.254.1.1            31    Local      0  \n*  172.17.0.0/16        > 172.17.163.20          31    Local      0  \n",
-    "tested_at": "2026-07-21T16:10:03.966304"
+    "device_output": "* = Active Route  \n\n   Network              > Next Hop               RI    Proto      Metric\n-----------------------------------------------------------------------------\n*  0.0.0.0/0            > 172.17.163.1                 Static     1  \n*  172.17.0.0/16        > 172.17.163.240         31    Local      0  \n",
+    "tested_at": "2026-07-21T16:34:41.864606"
   },
   {
     "id": "str-101-classic-1",
@@ -1660,8 +1660,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "IP Address/Prefix Length Next Hop         Interface      Protocol   Metric    \n------------------------------------------------------------------------------\n169.254.0.0/16           0.0.0.0          31             Local      0         \n172.17.0.0/16            0.0.0.0          31             Local      0         \n\nIPv6 Address/Prefix Length   via Next Hop       Interface  Protocol    Metric\n-----------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:10:06.169699"
+    "device_output": "IP Address/Prefix Length Next Hop         Interface      Protocol   Metric    \n------------------------------------------------------------------------------\n0.0.0.0/0                172.17.163.1     31             Static     1         \n172.17.0.0/16            0.0.0.0          31             Local      0         \n\nIPv6 Address/Prefix Length   via Next Hop       Interface  Protocol    Metric\n-----------------------------------------------------------------------------\n",
+    "tested_at": "2026-07-21T16:34:44.066718"
   },
   {
     "id": "str-102-classic-1",
@@ -1677,7 +1677,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "IPv6 Address                            MAC Address       State     Interface \n------------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:10:08.372129"
+    "tested_at": "2026-07-21T16:34:46.269746"
   },
   {
     "id": "str-103-classic-1",
@@ -1693,7 +1693,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:10.574906"
+    "tested_at": "2026-07-21T16:34:48.472095"
   },
   {
     "id": "str-104-classic-1",
@@ -1708,8 +1708,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "IP Address          MAC Address         Status    \n--------------------------------------------------\n172.17.160.73       E0-2F-6D-12-95-42   Dynamic   \n172.17.161.65       98-25-4A-5C-2B-41   Dynamic   \n172.17.161.67       00-60-E0-03-41-0F   Dynamic   \n172.17.161.99       00-19-D1-89-78-B3   Dynamic   \n172.17.161.109      74-46-A0-B7-C6-BF   Dynamic   \n172.17.161.110      74-46-A0-B1-2C-2F   Dynamic   \n172.17.161.113      00-1A-C5-01-33-9C   Dynamic   \n172.17.161.115      00-0E-0C-D0-1F-98   Dynamic   \n172.17.161.119      80-CE-62-21-4A-22   Dynamic   \n172.17.161.125      00-21-9B-81-58-0D  ",
-    "tested_at": "2026-07-21T16:10:12.777327"
+    "device_output": "IP Address          MAC Address         Status    \n--------------------------------------------------\n172.17.160.73       E0-2F-6D-12-95-42   Dynamic   \n172.17.160.167      E0-2F-6D-12-95-42   Dynamic   \n172.17.161.65       98-25-4A-5C-2B-41   Dynamic   \n172.17.161.67       00-60-E0-03-41-0F   Dynamic   \n172.17.161.99       00-19-D1-89-78-B3   Dynamic   \n172.17.161.109      74-46-A0-B7-C6-BF   Dynamic   \n172.17.161.110      74-46-A0-B1-2C-2F   Dynamic   \n172.17.161.115      00-0E-0C-D0-1F-98   Dynamic   \n172.17.161.119      80-CE-62-21-4A-22   Dynamic   \n172.17.161.125      00-21-9B-81-58-0D  ",
+    "tested_at": "2026-07-21T16:34:50.674752"
   },
   {
     "id": "str-105-classic-1",
@@ -1725,7 +1725,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Ip Address                              Interface State     Up Time             \n--------------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:10:14.979579"
+    "tested_at": "2026-07-21T16:34:52.876232"
   },
   {
     "id": "str-106-classic-1",
@@ -1741,7 +1741,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:17.182881"
+    "tested_at": "2026-07-21T16:34:55.078172"
   },
   {
     "id": "str-107-classic-1",
@@ -1756,8 +1756,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\nIPv4 Statistics: \n  \n\nIn\n-----------------------------------------------------------------------------\nReceives           : 0                   In Octects            : 0                   \nMulticast Packets  : 0                   Multicast Octets      : 0                   \nBroadcast Packets  : 9559                Header Errors         : 0                   \nNo Routes Discards : 0                   Address Errors        : 0                   \nUnknown Protocols  : 0                   Truncated Packets     : 0                   \nForward Packets    : 0                   Reassembled Required  : 0",
-    "tested_at": "2026-07-21T16:10:19.385746"
+    "device_output": "\nIPv4 Statistics: \n  \n\nIn\n-----------------------------------------------------------------------------\nReceives          : 0                   In Octects            : 0                   \nMulticast Packets : 0                   Multicast Octets      : 0                   \nBroadcast Packets : 55966               Header Errors         : 0                   \nNo Routes         : 0                   Address Errors        : 0                   \nUnknown Protocols : 0                   Truncated Packets     : 0                   \nForward Packets   : 0                   Reassembled Required  : 0      ",
+    "tested_at": "2026-07-21T16:34:57.281016"
   },
   {
     "id": "str-108-classic-1",
@@ -1770,10 +1770,10 @@
     "test1_baseline": "",
     "test2_post_training": "",
     "test3_optimized": "",
-    "device_result": "PASS",
-    "device_reason": "ok",
-    "device_output": "",
-    "tested_at": "2026-07-21T16:10:21.587160"
+    "device_result": "FAIL",
+    "device_reason": "cli error",
+    "device_output": "#                                                         ^\n# cli error: parameter or keyword missing or wrong\n - show statistics ipv4 access-list  in\n - show statistics ipv4 traffic \n - show statistics ipv6 access-list  in\n - show statistics ipv6 traffic \n\n <ipv4>                                     : ipv4\n <access-list>                              : ACL statistics\n <in>                                       : inbound\n <traffic>                                  : Traffic statistics\n <ipv6>                                     : IPv6\n",
+    "tested_at": "2026-07-21T16:34:59.482265"
   },
   {
     "id": "str-109-classic-1",
@@ -1786,10 +1786,10 @@
     "test1_baseline": "",
     "test2_post_training": "",
     "test3_optimized": "",
-    "device_result": "PASS",
-    "device_reason": "ok",
-    "device_output": "",
-    "tested_at": "2026-07-21T16:10:23.789992"
+    "device_result": "FAIL",
+    "device_reason": "cli error",
+    "device_output": "#                                                         ^\n# cli error: parameter or keyword missing or wrong\n - show statistics ipv4 access-list  in\n - show statistics ipv4 traffic \n - show statistics ipv6 access-list  in\n - show statistics ipv6 traffic \n\n <ipv4>                                     : ipv4\n <access-list>                              : ACL statistics\n <in>                                       : inbound\n <traffic>                                  : Traffic statistics\n <ipv6>                                     : IPv6\n",
+    "tested_at": "2026-07-21T16:35:01.684420"
   },
   {
     "id": "str-110-classic-1",
@@ -1805,7 +1805,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "ACL Name                        Type  Bound to                      Direction\n-----------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:10:25.992085"
+    "tested_at": "2026-07-21T16:35:03.887407"
   },
   {
     "id": "str-111-classic-1",
@@ -1821,7 +1821,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Rtr If    Phys If        Group     Pri  Own  Pre  State     Primary Address                         \n----------------------------------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:10:28.194175"
+    "tested_at": "2026-07-21T16:35:06.090012"
   },
   {
     "id": "str-112-classic-1",
@@ -1836,8 +1836,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                    ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:10:30.395719"
+    "device_output": "#                                ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:35:08.293044"
   },
   {
     "id": "str-113-classic-1",
@@ -1852,8 +1852,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                    ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:10:32.597907"
+    "device_output": "#                                ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:35:10.494217"
   },
   {
     "id": "str-114-classic-1",
@@ -1866,10 +1866,10 @@
     "test1_baseline": "",
     "test2_post_training": "",
     "test3_optimized": "",
-    "device_result": "PASS",
-    "device_reason": "ok",
-    "device_output": "Neighbor                                AS        Up / Down      State      \n----------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:10:39.204860"
+    "device_result": "FAIL",
+    "device_reason": "NAV_ERROR:#                              ^\n# cli error: Cannot set; AS number change requires deletion of all BGP entities",
+    "device_output": "",
+    "tested_at": "2026-07-21T16:35:14.898883"
   },
   {
     "id": "str-115-classic-1",
@@ -1883,9 +1883,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "cli error",
-    "device_output": "#                                            ^\n# cli error: invalid parameter value\n - show rib {ipv4|ipv6}\n",
-    "tested_at": "2026-07-21T16:10:41.406948"
+    "device_reason": "NAV_ERROR:#                              ^\n# cli error: Cannot set; AS number change requires deletion of all BGP entities",
+    "device_output": "",
+    "tested_at": "2026-07-21T16:35:14.898927"
   },
   {
     "id": "str-116-classic-1",
@@ -1899,9 +1899,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "cli error",
-    "device_output": "#                                                  ^\n# cli error: invalid parameter value\n - show community {ipv4|ipv6}\n",
-    "tested_at": "2026-07-21T16:10:43.609573"
+    "device_reason": "NAV_ERROR:#                              ^\n# cli error: Cannot set; AS number change requires deletion of all BGP entities",
+    "device_output": "",
+    "tested_at": "2026-07-21T16:35:14.898938"
   },
   {
     "id": "str-117-classic-1",
@@ -1915,9 +1915,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:48.014519"
+    "tested_at": "2026-07-21T16:35:19.304479"
   },
   {
     "id": "str-118-classic-1",
@@ -1931,9 +1931,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:48.014532"
+    "tested_at": "2026-07-21T16:35:19.304489"
   },
   {
     "id": "str-119-classic-1",
@@ -1947,9 +1947,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:48.014537"
+    "tested_at": "2026-07-21T16:35:19.304491"
   },
   {
     "id": "str-120-classic-1",
@@ -1963,9 +1963,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:48.014541"
+    "tested_at": "2026-07-21T16:35:19.304494"
   },
   {
     "id": "str-122-classic-1",
@@ -1979,9 +1979,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:52.419112"
+    "tested_at": "2026-07-21T16:35:23.708612"
   },
   {
     "id": "str-123-classic-1",
@@ -1995,9 +1995,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:52.419122"
+    "tested_at": "2026-07-21T16:35:23.708647"
   },
   {
     "id": "str-124-classic-1",
@@ -2011,9 +2011,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:52.419125"
+    "tested_at": "2026-07-21T16:35:23.708678"
   },
   {
     "id": "str-125-classic-1",
@@ -2027,9 +2027,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                             ^\n# cli error: Entry instance doesn't exist",
+    "device_reason": "NAV_ERROR:#                                                         ^\n# cli error: Entry instance doesn't exist",
     "device_output": "",
-    "tested_at": "2026-07-21T16:10:52.419128"
+    "tested_at": "2026-07-21T16:35:23.708694"
   },
   {
     "id": "str-126-classic-1",
@@ -2044,8 +2044,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\nAdmin:Down        Oper: Down        \n\nIp Addresses:            \n\n\nIPv4 Default Router : --                                                \n",
-    "tested_at": "2026-07-21T16:10:59.025306"
+    "device_output": "\nAdmin:Up          Oper: LLD         \n\nIp Addresses:            \n\n\nIPv4 Default Router : 172.17.163.1                                      \nIPv6 Default Router : --                                                \n",
+    "tested_at": "2026-07-21T16:35:30.313241"
   },
   {
     "id": "str-128-classic-1",
@@ -2060,8 +2060,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                               ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:01.226900"
+    "device_output": "#                                           ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:35:32.515428"
   },
   {
     "id": "str-129-classic-1",
@@ -2076,8 +2076,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "\nIPv4 Statistics: \n  \n\nIn\n-----------------------------------------------------------------------------\nReceives           : 0                   In Octects            : 0                   \nMulticast Packets  : 0                   Multicast Octets      : 0                   \nBroadcast Packets  : 0                   Header Errors         : 0                   \nNo Routes Discards : 0                   Address Errors        : 0                   \nUnknown Protocols  : 0                   Truncated Packets     : 0                   \nForward Packets    : 0                   Reassembled Required  : 0",
-    "tested_at": "2026-07-21T16:11:03.429977"
+    "device_output": "\nIPv4 Statistics: \n  \n\nIn\n-----------------------------------------------------------------------------\nReceives          : 0                   In Octects            : 0                   \nMulticast Packets : 0                   Multicast Octets      : 0                   \nBroadcast Packets : 0                   Header Errors         : 0                   \nNo Routes         : 0                   Address Errors        : 0                   \nUnknown Protocols : 0                   Truncated Packets     : 0                   \nForward Packets   : 0                   Reassembled Required  : 0      ",
+    "tested_at": "2026-07-21T16:35:34.718050"
   },
   {
     "id": "str-130-classic-1",
@@ -2093,7 +2093,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "                                      md  slot/  classifi admin  mep ok/total   \nmd/ma/mepid    md/ma name              lvl port   cation   status def r.meps    \n\n0001/0001/0001 MD1/MA1                 3   INVALID untagged disable             \n                                                                                \n",
-    "tested_at": "2026-07-21T16:11:10.038359"
+    "tested_at": "2026-07-21T16:35:41.324458"
   },
   {
     "id": "str-131-classic-1",
@@ -2109,7 +2109,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "MD Name               : MD1                                     \nMA Name               : MA1                                     \nAdministrative Status : Down                                    \nTest Status           : Off                                     \n\nRemote MEP Type : Static              \n",
-    "tested_at": "2026-07-21T16:11:16.645733"
+    "tested_at": "2026-07-21T16:35:47.931914"
   },
   {
     "id": "str-132-classic-1",
@@ -2124,8 +2124,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                          ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:18.847308"
+    "device_output": "#                                                      ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:35:50.133945"
   },
   {
     "id": "str-133-classic-1",
@@ -2140,8 +2140,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                                    ^\n# cli error: invalid parameter value\n - show remote-mep-status remote-mep-id <remote-mep-id>\n - show remote-mep-status all\n\n <remote-mep-id>                            : Remote MEP ID [number]\n",
-    "tested_at": "2026-07-21T16:11:21.049698"
+    "device_output": "#                                                                ^\n# cli error: invalid parameter value\n - show remote-mep-status remote-mep-id <remote-mep-id>\n - show remote-mep-status all\n\n <remote-mep-id>                            : Remote MEP ID [number]\n",
+    "tested_at": "2026-07-21T16:35:52.335499"
   },
   {
     "id": "str-134-classic-1",
@@ -2157,7 +2157,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Destination Address       : 00-00-00-00-00-00             \nMessages Sent             : 0                             \nReplies In Order          : 0                             \nReplies Out Of Order      : 0                             \nMessages Lost/Timed Out   : 0                             \nMessages Lost/Timed Out % : 0                             \n",
-    "tested_at": "2026-07-21T16:11:23.251628"
+    "tested_at": "2026-07-21T16:35:54.537955"
   },
   {
     "id": "str-135-classic-1",
@@ -2173,7 +2173,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Ingress\n-----------------------------------------------------------------------------\n\nEgress\n-----------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:11:25.453598"
+    "tested_at": "2026-07-21T16:35:56.739828"
   },
   {
     "id": "str-136-classic-1",
@@ -2188,8 +2188,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                              ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:32.060484"
+    "device_output": "#                                                          ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:03.348094"
   },
   {
     "id": "str-138-classic-1",
@@ -2204,8 +2204,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                              ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:34.262541"
+    "device_output": "#                                                          ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:05.550647"
   },
   {
     "id": "str-139-classic-1",
@@ -2220,8 +2220,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                              ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:36.465943"
+    "device_output": "#                                                          ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:07.752900"
   },
   {
     "id": "str-141-classic-1",
@@ -2236,8 +2236,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                              ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:38.667939"
+    "device_output": "#                                                          ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:09.954507"
   },
   {
     "id": "str-142-classic-1",
@@ -2252,8 +2252,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                                        ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:45.276594"
+    "device_output": "#                                                                    ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:16.558882"
   },
   {
     "id": "str-143-classic-1",
@@ -2268,8 +2268,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                                        ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:47.478848"
+    "device_output": "#                                                                    ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:18.761552"
   },
   {
     "id": "str-144-classic-1",
@@ -2284,8 +2284,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                                        ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:49.682571"
+    "device_output": "#                                                                    ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:20.963671"
   },
   {
     "id": "str-145-classic-1",
@@ -2300,8 +2300,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                                        ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:51.885528"
+    "device_output": "#                                                                    ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:23.166815"
   },
   {
     "id": "str-146-classic-1",
@@ -2316,8 +2316,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                                                             ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:11:54.087913"
+    "device_output": "#                                                                                         ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:25.369229"
   },
   {
     "id": "str-147-classic-1",
@@ -2331,9 +2331,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                          ^\n# cli error: License required",
+    "device_reason": "NAV_ERROR:#                                      ^\n# cli error: License required",
     "device_output": "",
-    "tested_at": "2026-07-21T16:11:58.493852"
+    "tested_at": "2026-07-21T16:36:29.773872"
   },
   {
     "id": "str-148-classic-1",
@@ -2347,9 +2347,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                 ^\n# cli error: License required",
+    "device_reason": "NAV_ERROR:#                                             ^\n# cli error: License required",
     "device_output": "",
-    "tested_at": "2026-07-21T16:12:02.897033"
+    "tested_at": "2026-07-21T16:36:34.178041"
   },
   {
     "id": "str-149-classic-1",
@@ -2363,9 +2363,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                 ^\n# cli error: License required",
+    "device_reason": "NAV_ERROR:#                                             ^\n# cli error: License required",
     "device_output": "",
-    "tested_at": "2026-07-21T16:12:02.897042"
+    "tested_at": "2026-07-21T16:36:34.178055"
   },
   {
     "id": "str-150-classic-1",
@@ -2379,9 +2379,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                 ^\n# cli error: License required",
+    "device_reason": "NAV_ERROR:#                                             ^\n# cli error: License required",
     "device_output": "",
-    "tested_at": "2026-07-21T16:12:02.897045"
+    "tested_at": "2026-07-21T16:36:34.178059"
   },
   {
     "id": "str-151-classic-1",
@@ -2395,9 +2395,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                 ^\n# cli error: License required",
+    "device_reason": "NAV_ERROR:#                                             ^\n# cli error: License required",
     "device_output": "",
-    "tested_at": "2026-07-21T16:12:02.897051"
+    "tested_at": "2026-07-21T16:36:34.178066"
   },
   {
     "id": "str-152-classic-1",
@@ -2411,9 +2411,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                                 ^\n# cli error: License required",
+    "device_reason": "NAV_ERROR:#                                             ^\n# cli error: License required",
     "device_output": "",
-    "tested_at": "2026-07-21T16:12:02.897053"
+    "tested_at": "2026-07-21T16:36:34.178069"
   },
   {
     "id": "str-153-classic-1",
@@ -2427,9 +2427,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                                           ^\n# cli error: parameter or keyword missing or wrong\n - responder <name> [<n",
+    "device_reason": "NAV_ERROR:#                                       ^\n# cli error: parameter or keyword missing or wrong\n - responder <name> [<numbe",
     "device_output": "",
-    "tested_at": "2026-07-21T16:12:07.301837"
+    "tested_at": "2026-07-21T16:36:38.581607"
   },
   {
     "id": "str-154-classic-1",
@@ -2445,7 +2445,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Status : Idle                          \n",
-    "tested_at": "2026-07-21T16:12:13.909513"
+    "tested_at": "2026-07-21T16:36:45.188909"
   },
   {
     "id": "str-155-classic-1",
@@ -2460,8 +2460,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                               ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:16.112344"
+    "device_output": "#                                           ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:47.391664"
   },
   {
     "id": "str-156-classic-1",
@@ -2476,8 +2476,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                               ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:18.313763"
+    "device_output": "#                                           ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:49.592979"
   },
   {
     "id": "str-157-classic-1",
@@ -2492,8 +2492,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                               ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:20.515258"
+    "device_output": "#                                           ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:36:51.794911"
   },
   {
     "id": "str-158-classic-1",
@@ -2509,7 +2509,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Status : Idle                          \n\n\nMEP   Service   P-BIT     \n--------------------------\n\n",
-    "tested_at": "2026-07-21T16:12:27.122672"
+    "tested_at": "2026-07-21T16:36:58.401457"
   },
   {
     "id": "str-159-classic-1",
@@ -2525,7 +2525,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Activity Status            : Admin Off                     \n",
-    "tested_at": "2026-07-21T16:12:33.727894"
+    "tested_at": "2026-07-21T16:37:05.011971"
   },
   {
     "id": "str-160-classic-1",
@@ -2540,8 +2540,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                            ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:35.929382"
+    "device_output": "#                                        ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:37:07.214840"
   },
   {
     "id": "str-161-classic-1",
@@ -2556,8 +2556,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                            ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:38.132682"
+    "device_output": "#                                        ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:37:09.417299"
   },
   {
     "id": "str-162-classic-1",
@@ -2573,7 +2573,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Iteration Start       Start     Duration Duration  \n          Date        Time      Days     Time      \n---------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:12:40.334975"
+    "tested_at": "2026-07-21T16:37:11.618622"
   },
   {
     "id": "str-163-classic-1",
@@ -2589,7 +2589,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Application Type             : Pure L3                                                          \nRouter Entity                : 1                                                                \nRouter Interface             : ---                                                              \nGenerator Status             : Shutdown                                                         \n",
-    "tested_at": "2026-07-21T16:12:46.941431"
+    "tested_at": "2026-07-21T16:37:18.225456"
   },
   {
     "id": "str-164-classic-1",
@@ -2605,7 +2605,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Last Connectivity Sub-test : Not Applicable                \nLast MTU Sub-test          : Not Applicable                \n                                                           \nResponder Type             : Unknown                       \nTOD Status                 : Unknown                       \n\nTest Name                        LM UDP Ports   DM UDP Ports   Status         \n------------------------------------------------------------------------------\n",
-    "tested_at": "2026-07-21T16:12:53.547601"
+    "tested_at": "2026-07-21T16:37:24.831441"
   },
   {
     "id": "str-165-classic-1",
@@ -2620,8 +2620,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                             ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:55.750206"
+    "device_output": "#                                                         ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:37:27.033245"
   },
   {
     "id": "str-166-classic-1",
@@ -2636,8 +2636,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                             ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:12:57.952286"
+    "device_output": "#                                                         ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:37:29.235876"
   },
   {
     "id": "str-167-classic-1",
@@ -2653,7 +2653,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "Application Type             : Pure L3                                                          \nRouter Entity                : 1                                                                \nRouter Interface             : ---                                                              \nResponder Status             : Shutdown                                                         \nTotal LM / DM Rx. Packets    : 0 / 0                                                            \n",
-    "tested_at": "2026-07-21T16:13:04.558396"
+    "tested_at": "2026-07-21T16:37:35.842360"
   },
   {
     "id": "str-168-classic-1",
@@ -2669,7 +2669,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "LED Blinking Status         : Off                 \n                                                  \n",
-    "tested_at": "2026-07-21T16:13:11.164492"
+    "tested_at": "2026-07-21T16:37:42.448440"
   },
   {
     "id": "str-169-classic-1",
@@ -2685,7 +2685,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "\n***End of file***\n",
-    "tested_at": "2026-07-21T16:13:13.367038"
+    "tested_at": "2026-07-21T16:37:44.751358"
   },
   {
     "id": "str-170-classic-1",
@@ -2700,8 +2700,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Total        : 6         Critical  : 0         Major  : 5         Minor  : 1         \nTotal Masked : 0         Critical  : 0         Major  : 0         Minor  : 0         \n\n1     Ethernet 0/2                       los                              Maj   Unmasked\n2     Ethernet 0/3                       los                              Maj   Unmasked\n3     Ethernet 0/4                       los                              Maj   Unmasked\n4     Ethernet 1/1                       los                              Maj   Unmasked\n5     Ethernet 1/2                       los                           ",
-    "tested_at": "2026-07-21T16:13:15.569346"
+    "device_output": "Total        : 8         Critical  : 0         Major  : 7         Minor  : 1         \nTotal Masked : 0         Critical  : 0         Major  : 0         Minor  : 0         \n\n1     Ethernet 0/1                       los                              Maj   Unmasked\n2     Ethernet 0/2                       los                              Maj   Unmasked\n3     Ethernet 0/4                       los                              Maj   Unmasked\n4     Ethernet 0/5                       los                              Maj   Unmasked\n5     Ethernet 0/6                       los                           ",
+    "tested_at": "2026-07-21T16:37:46.953138"
   },
   {
     "id": "str-171-classic-1",
@@ -2716,8 +2716,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Total        : 6         Critical  : 0         Major  : 5         Minor  : 1         \nTotal Masked : 0         Critical  : 0         Major  : 0         Minor  : 0         \n\n\n1     Loss of signal (LOS)                                                                                                                                                                                                                                           \n\n1970-01-01   Ethernet 0/2                       los                              Major    \n00:01:11.00                                                             ",
-    "tested_at": "2026-07-21T16:13:17.771817"
+    "device_output": "Total        : 8         Critical  : 0         Major  : 7         Minor  : 1         \nTotal Masked : 0         Critical  : 0         Major  : 0         Minor  : 0         \n\n\n1     Loss of signal (LOS)                                                                                                                                                                                                                                           \n\n2026-07-13   Ethernet 0/1                       los                              Major    \n11:15:01.00                                                             ",
+    "tested_at": "2026-07-21T16:37:49.154656"
   },
   {
     "id": "str-172-classic-1",
@@ -2732,8 +2732,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Last Acknowledge On : --           --        \n\n\n38    System average CPU utilization (63%) below threshold (70%)                                                                                                                                                                                                     \n\n1970-01-01   System                             cpu_util_above_threshold         Cleared       \n05:09:00.00                                                                      Resolved      \n\n\n41    System average CPU utilization (71%) above threshold (70%)                               ",
-    "tested_at": "2026-07-21T16:13:19.973797"
+    "device_output": "Last Acknowledge On : --           --        \n\n\n10    Loss of signal (LOS)                                                                                                                                                                                                                                           \n\n2026-07-21   Ethernet 0/101                     los                              Cleared       \n16:20:42.00                                                                      Resolved      \n\n\n13    Loss of signal (LOS)                                                                     ",
+    "tested_at": "2026-07-21T16:37:52.063764"
   },
   {
     "id": "str-173-classic-1",
@@ -2748,8 +2748,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Last Acknowledge On : --           --        \n\n              Critical   Major      Minor     \nTotal     :   0          5          1         \nSince Ack :   0          5          1         \n\n\nSource                 Name                             Last Raised  Last Cleared Total Times\n                       Severity                                                   Since Ack  \n\nSystem                             ntp_accuracy_out_of_limit        1970-01-01   --           1      \n                                   Minor                            00:01:26.00  --           1      \nSystem           ",
-    "tested_at": "2026-07-21T16:13:22.176033"
+    "device_output": "Last Acknowledge On : --           --        \n\n              Critical   Major      Minor     \nTotal     :   0          7          1         \nSince Ack :   0          7          1         \n\n\nSource                 Name                             Last Raised  Last Cleared Total Times\n                       Severity                                                   Since Ack  \n\nSystem                             ntp_accuracy_out_of_limit        1970-01-01   --           1      \n                                   Minor                            03:01:11.00  --           1      \nEthernet 0/1     ",
+    "tested_at": "2026-07-21T16:37:54.265943"
   },
   {
     "id": "str-174-classic-1",
@@ -2764,8 +2764,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Last Acknowledge On : --           --        \n\n              Critical Major    Minor    Events  \nTotal     :   0        5        1        48      \nSince Ack :   0        5        1        48      \n\n\nSource                 Name                             Last Raised  Last Cleared Total Times\n                       Severity                                                   Since Ack  \n\nSystem                             ntp_accuracy_out_of_limit        1970-01-01   --           1      \n                                   Minor                            00:01:26.00  --           1      \nSystem  ",
-    "tested_at": "2026-07-21T16:13:24.378393"
+    "device_output": "Last Acknowledge On : --           --        \n\n              Critical Major    Minor    Events  \nTotal     :   0        7        1        549     \nSince Ack :   0        7        1        549     \n\n\nSource                 Name                             Last Raised  Last Cleared Total Times\n                       Severity                                                   Since Ack  \n\nSystem                             ntp_accuracy_out_of_limit        1970-01-01   --           1      \n                                   Minor                            03:01:11.00  --           1      \nSystem  ",
+    "tested_at": "2026-07-21T16:37:56.468088"
   },
   {
     "id": "str-175-classic-1",
@@ -2780,8 +2780,8 @@
     "test3_optimized": "",
     "device_result": "PASS",
     "device_reason": "ok",
-    "device_output": "Last Acknowledge On : --           --        \n\n\n1     su logout  from local terminal due to inactivity timeout                                                                                                                                                                                                       \n\n1970-01-03   System                             logout                           Event         \n05:57:30.00                                                                      not-applicable\n\n\n2     su logout from 172.17.160.73 (SSH) due to inactivity timeout                             ",
-    "tested_at": "2026-07-21T16:13:26.683273"
+    "device_output": "Last Acknowledge On : --           --        \n\n\n1     su logout from 172.17.160.167 (SSH) due to inactivity timeout                                                                                                                                                                                                  \n\n2026-07-21   System                             logout                           Event         \n16:33:18.00                                                                      not-applicable\n\n\n2     su login from 172.17.160.73 (SSH)                                                        ",
+    "tested_at": "2026-07-21T16:38:04.365779"
   },
   {
     "id": "str-176-classic-1",
@@ -2797,7 +2797,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "\nSource                         Name                             ID      Logged         \n\n\nSystem                                sw_install_start                 1020001 No      (Default) \n\n\n\nSystem                                sw_install_end                   1020002 No      (Default) \n\n\n\nSystem                                download_end                     1020003 No      (Default) \n\n\n\nSystem                                user_reset                       1020004 No      (Default) \n\n\n\nSystem                                alternate_configuration_loaded   1020005 No      (Default) \n\n\n\nSyst",
-    "tested_at": "2026-07-21T16:13:29.088399"
+    "tested_at": "2026-07-21T16:38:06.870030"
   },
   {
     "id": "str-177-classic-1",
@@ -2813,7 +2813,7 @@
     "device_result": "PASS",
     "device_reason": "ok",
     "device_output": "\nSource                         Name                             ID      Severity  Logged         \n\n\nSystem                                license_invalid                  20001   Critical  No      (Default) \n\n\n\nSystem                                device_temperature_ora           20002   Critical  No      (Default) \n\n\n\nSystem                                emergency_license_active         20003   Critical  No      (Default) \n\n\n\nSystem                                configuration_mismatch           20004   Critical  No      (Default) \n\n\n\nSystem                                hardware_failure ",
-    "tested_at": "2026-07-21T16:13:31.491398"
+    "tested_at": "2026-07-21T16:38:09.275904"
   },
   {
     "id": "str-178-classic-1",
@@ -2828,8 +2828,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                            ^\n# cli error: command not recognized",
-    "tested_at": "2026-07-21T16:13:33.693017"
+    "device_output": "#                                        ^\n# cli error: command not recognized",
+    "tested_at": "2026-07-21T16:38:11.477842"
   },
   {
     "id": "str-179-classic-1",
@@ -2844,8 +2844,8 @@
     "test3_optimized": "",
     "device_result": "FAIL",
     "device_reason": "cli error",
-    "device_output": "#                                                   ^\n# cli error: invalid parameter value\n - show alarm-information system {all|system-license-invalid|temperature-ora|\n   emergency-license-active|configuration-mismatch|hardware-failure|\n   interface-mismatch|no-interface|sw-pack-corrupted|\n   trac-msg-proto-mem-alloc-err|pm-process-disabled|main-cards-sync|\n   source-clock-failure|ntp-accuracy-out-of-limit|low-memory|critical-low-memory\n   |power-delivery-exceeded|new-sw-from-boot-mismatch|alarm-storm|\n   cpu-util-above-threshold}\n - show alarm-information mirroring\n - show alarm-information ",
-    "tested_at": "2026-07-21T16:13:35.895282"
+    "device_output": "#                                               ^\n# cli error: invalid parameter value\n - show alarm-information system {all|system-license-invalid|temperature-ora|\n   emergency-license-active|configuration-mismatch|hardware-failure|\n   interface-mismatch|no-interface|sw-pack-corrupted|\n   trac-msg-proto-mem-alloc-err|pm-process-disabled|main-cards-sync|\n   source-clock-failure|ntp-accuracy-out-of-limit|low-memory|critical-low-memory\n   |power-delivery-exceeded|new-sw-from-boot-mismatch|alarm-storm|\n   cpu-util-above-threshold}\n - show alarm-information mirroring\n - show alarm-information fan ",
+    "tested_at": "2026-07-21T16:38:13.682044"
   },
   {
     "id": "str-180-classic-1",
@@ -2859,9 +2859,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:40.298826"
+    "tested_at": "2026-07-21T16:38:18.087003"
   },
   {
     "id": "str-181-classic-1",
@@ -2875,9 +2875,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:40.298836"
+    "tested_at": "2026-07-21T16:38:18.087047"
   },
   {
     "id": "str-182-classic-1",
@@ -2891,9 +2891,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:44.702752"
+    "tested_at": "2026-07-21T16:38:22.490969"
   },
   {
     "id": "str-183-classic-1",
@@ -2907,9 +2907,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:44.702761"
+    "tested_at": "2026-07-21T16:38:22.490989"
   },
   {
     "id": "str-184-classic-1",
@@ -2923,9 +2923,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:44.702764"
+    "tested_at": "2026-07-21T16:38:22.490992"
   },
   {
     "id": "str-185-classic-1",
@@ -2939,9 +2939,9 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:44.702766"
+    "tested_at": "2026-07-21T16:38:22.490996"
   },
   {
     "id": "str-186-classic-1",
@@ -2955,8 +2955,8 @@
     "test2_post_training": "",
     "test3_optimized": "",
     "device_result": "FAIL",
-    "device_reason": "NAV_ERROR:#                              ^\n# cli error: command not recognized",
+    "device_reason": "NAV_ERROR:#                          ^\n# cli error: command not recognized",
     "device_output": "",
-    "tested_at": "2026-07-21T16:13:44.702768"
+    "tested_at": "2026-07-21T16:38:22.490999"
   }
 ]
