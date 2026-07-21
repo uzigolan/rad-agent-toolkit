@@ -30,13 +30,13 @@
 
 ## Failures (5 cases)
 
-| # | Case | Command | Error | Category |
-|---|------|---------|-------|----------|
-| 1 | str-21 | `show banner-text` | `Could not find file` | Missing File |
-| 2 | str-27 | `show rollback-config` | `Could not find file` | Missing File |
-| 3 | str-30 | `show usb-status` | `command not recognized` | N/A (No USB) |
-| 4 | str-32 | `show user-dir user-default-config` | `error is not defined` | Syntax Error |
-| 5 | str-33 | `show user-script` | `command not recognized` | N/A (Not Supported) |
+| # | Case | Command | Error | Category | Note |
+|---|------|---------|-------|----------|------|
+| 1 | str-21 | `show banner-text` | `Could not find file` | Missing File | Banner not configured |
+| 2 | str-27 | `show rollback-config` | `Could not find file` | Missing File | Rollback not created |
+| 3 | str-30 | `show usb-status` | `command not recognized` | N/A (No USB) | Device has no USB interface |
+| 4 | str-32 | `show user-dir user-default-config` | `error is not defined` | Wrong Command | Should use `user-file-dir` instead |
+| 5 | str-33 | `show user-script` | `command not recognized` | N/A (Not Supported) | Not available in firmware 6.8.5 |
 
 ### Category 1: Missing Files (2 cases) — ❌
 - **str-21**: `show banner-text` — Banner file not configured
@@ -44,23 +44,17 @@
 
 **Solution**: Create fixtures or pre-configure files on device before testing.
 
-### Category 2: Syntax/Parameters Error (1 case) — ⚠️
-- **str-32**: `show user-dir user-default-config` — Wrong command syntax/parameters
+### Category 2: Wrong Command Syntax (1 case) — ⚠️
+- **str-32**: `show user-dir user-default-config` — Wrong syntax!
+  - **Correct command:** `user-file-dir` (not a show command)
+  - **Purpose:** Lists all user files on the device
+  - **Output:** File name, type, size, creation date, status
 
-**Solution**: Verify correct syntax for user-dir command (may not be the right command for file display).
+**Solution**: Use `user-file-dir` to list user files (without parameters, no filename needed).
 
 ### Category 3: Not Applicable (2 cases) — ⏭️
 - **str-30**: `show usb-status` — Device has no USB hardware interface
-- **str-33**: `show user-script` — Not supported in this firmware version
-
-**Solution**: Mark as N/A or skip for this device configuration.
-
----
-
-## Now PASSING Cases (2) ✅
-
-- **str-23**: `show file-details user-default-config` — **PASS** (6 lines of file metadata)
-- **str-31**: `show user-default-config` — **PASS** (300 lines of configuration file contents)
+- **str-33**: `show user-script` — Not supported in firmware 6.8.5 (verified via CLI help)
 
 ---
 
