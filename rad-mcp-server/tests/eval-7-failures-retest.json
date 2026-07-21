@@ -1,0 +1,58 @@
+[
+  {
+    "id": "str-21",
+    "context": "file",
+    "command": "show banner-text",
+    "status": "RETEST_REQUIRED",
+    "reason": "banner file missing",
+    "note": "Marked for manual testing or fixture creation"
+  },
+  {
+    "id": "str-23",
+    "context": "file",
+    "command": "show file-details config.txt",
+    "status": "RETEST_REQUIRED",
+    "reason": "requires actual filename",
+    "note": "Marked for manual testing or fixture creation"
+  },
+  {
+    "id": "str-27",
+    "context": "file",
+    "command": "show rollback-config",
+    "status": "RETEST_REQUIRED",
+    "reason": "rollback config missing",
+    "note": "Marked for manual testing or fixture creation"
+  },
+  {
+    "id": "str-30",
+    "context": "file",
+    "command": "show usb-status",
+    "status": "N/A",
+    "reason": "N/A: device has no USB",
+    "note": "Marked for manual testing or fixture creation"
+  },
+  {
+    "id": "str-31",
+    "context": "file",
+    "command": "show user-default-config",
+    "status": "RETEST_REQUIRED",
+    "reason": "user-default-config missing",
+    "note": "Marked for manual testing or fixture creation"
+  },
+  {
+    "id": "str-32",
+    "context": "file",
+    "command": "show user-dir config.txt",
+    "status": "RETEST_REQUIRED",
+    "reason": "requires actual filename",
+    "note": "Marked for manual testing or fixture creation"
+  },
+  {
+    "id": "str-33",
+    "context": "file",
+    "command": "show user-script",
+    "status": "RETEST_REQUIRED",
+    "reason": "N/A: command not supported",
+    "note": "Marked for manual testing or fixture creation"
+  }
+]

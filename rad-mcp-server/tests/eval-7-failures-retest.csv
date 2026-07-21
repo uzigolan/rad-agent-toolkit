@@ -1,0 +1,8 @@
+id,context,command,status,reason,note
+str-21,file,show banner-text,RETEST_REQUIRED,banner file missing,Marked for manual testing or fixture creation
+str-23,file,show file-details config.txt,RETEST_REQUIRED,requires actual filename,Marked for manual testing or fixture creation
+str-27,file,show rollback-config,RETEST_REQUIRED,rollback config missing,Marked for manual testing or fixture creation
+str-30,file,show usb-status,N/A,N/A: device has no USB,Marked for manual testing or fixture creation
+str-31,file,show user-default-config,RETEST_REQUIRED,user-default-config missing,Marked for manual testing or fixture creation
+str-32,file,show user-dir config.txt,RETEST_REQUIRED,requires actual filename,Marked for manual testing or fixture creation
+str-33,file,show user-script,RETEST_REQUIRED,N/A: command not supported,Marked for manual testing or fixture creation
