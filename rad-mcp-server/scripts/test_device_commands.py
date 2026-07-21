@@ -35,7 +35,7 @@ if str(SERVER_DIR) not in sys.path:
 REPO    = Path(__file__).resolve().parents[1]   # rad-mcp-server/
 OUT_DIR = REPO / "tests"
 DATASET_JSON = OUT_DIR / "eval-etx2-full-dataset.json"
-DEVICE_NAME  = "Raviv-Etx2-Telnet"
+DEVICE_NAME  = "RavivETX2-SSH"
 
 # ── cli_path → context string ("exit all; <ctx>"; "" = root) ────────────────
 CLI_PATH_CONTEXT: dict[str, str] = {

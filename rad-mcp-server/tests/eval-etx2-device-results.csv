@@ -38,801 +38,66 @@ str-30-classic-1,30,File,ETX-2i>file#,classic,ETX-2i>file# show usb-status,FAIL,
 str-31-classic-1,31,File,ETX-2i>file#,classic,ETX-2i>file# show user-default-config,FAIL,cli error
 str-32-classic-1,32,File,ETX-2i>file#,classic,ETX-2i>file# show user-dir,FAIL,cli error
 str-33-classic-1,33,File,ETX-2i>file#,classic,ETX-2i>file# show user-script,PASS,ok
-str-34-classic-1,34,Admin,ETX-2i>admin>scheduler#,classic,ETX-2i>admin>scheduler# show scheduler,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-35-classic-1,35,Admin,ETX-2i>admin>scheduler#,classic,ETX-2i>admin>scheduler# show scheduler-details,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-36-classic-1,36,Admin,ETX-2i>admin>license#,classic,ETX-2i>admin>license# show summary,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-37-classic-1,37,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show system-date,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-38-classic-1,38,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show cpu-utilization,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-39-classic-1,39,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show memory,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-40-classic-1,40,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show memory-details,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-41-classic-1,41,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show summary-inventory,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-42-classic-1,42,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show device-information,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-43-classic-1,43,System,ETX-2i>config>chassis#,classic,ETX-2i>config>chassis# show environment,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-44-classic-1,44,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show users,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-45-classic-1,45,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show users-details,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-46-classic-1,46,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show failed-login-attempts,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-47-classic-1,47,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show ssh-server fingerprint,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-48-classic-1,48,Management,ETX-2i>config>mngmnt>radius#,classic,ETX-2i>config>mngmnt>radius# show statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-49-classic-1,49,Management,ETX-2i>config>mngmnt>snmp#,classic,ETX-2i>config>mngmnt>snmp# show snmpv3 information,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-50-classic-1,50,Management,ETX-2i>config>mngmnt>snmp#,classic,ETX-2i>config>mngmnt>snmp# show trap-sync,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-51-classic-1,51,Port,ETX-2i>config>port#,classic,ETX-2i>config>port# show statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-52-classic-1,52,Port,ETX-2i>config>port#,classic,ETX-2i>config>port# show summary,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-53-classic-1,53,Port,ETX-2i>config>port#,classic,ETX-2i>config>port# show summary-full-name,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-54-classic-1,54,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-55-classic-1,55,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show status refresh <sec>,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-56-classic-1,56,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-57-classic-1,57,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show loopback,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-58-classic-1,58,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show rate,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-59-classic-1,59,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show l2cp-statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-60-classic-1,60,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-61-classic-1,61,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm-statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-62-classic-1,62,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show fat-pipe-list { active | history | all },FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-63-classic-1,63,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show sfp-extended-information,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-64-classic-1,64,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show neighbors-details,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-66-classic-1,66,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show neighbors-summary,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-67-classic-1,67,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-68-classic-1,68,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-69-classic-1,69,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show statistics running,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-70-classic-1,70,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show lacp-status ethernet <port>,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-71-classic-1,71,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show lacp-statistics ethernet <port>,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-72-classic-1,72,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-73-classic-1,73,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show statistics interval <n>,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-74-classic-1,74,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-75-classic-1,75,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show statistics current,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-76-classic-1,76,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-77-classic-1,77,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show statistics current,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-78-classic-1,78,Port,ETX-2i>config>port>gfp(n)#,classic,ETX-2i>config>port>gfp(n)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-79-classic-1,79,Port,ETX-2i>config>port>gfp(n)#,classic,ETX-2i>config>port>gfp(n)# show bind,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-80-classic-1,80,Port,ETX-2i>config>port>ppp(n)#,classic,ETX-2i>config>port>ppp(n)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-81-classic-1,81,Port,ETX-2i>config>port>ppp(n)>pppoe#,classic,ETX-2i>config>port>ppp(n)>pppoe# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-82-classic-1,82,Port,ETX-2i>config>port>pcs(n)#,classic,ETX-2i>config>port>pcs(n)# show statistics running,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-83-classic-1,83,Port,ETX-2i>config>port>log-mac(n)#,classic,ETX-2i>config>port>log-mac(n)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-84-classic-1,84,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show mac-address-table { static | dynamic | all },FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-85-classic-1,85,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show mac-table [vlan <vlan>] [mac-address <mac>],FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-86-classic-1,86,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show vlans,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-87-classic-1,87,PWE,ETX-2i>config>pwe#,classic,ETX-2i>config>pwe# show summary,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
+str-34-classic-1,34,Admin,ETX-2i>admin>scheduler#,classic,ETX-2i>admin>scheduler# show scheduler,PASS,ok
+str-35-classic-1,35,Admin,ETX-2i>admin>scheduler#,classic,ETX-2i>admin>scheduler# show scheduler-details,PASS,ok
+str-36-classic-1,36,Admin,ETX-2i>admin>license#,classic,ETX-2i>admin>license# show summary,PASS,ok
+str-37-classic-1,37,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show system-date,PASS,ok
+str-38-classic-1,38,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show cpu-utilization,PASS,ok
+str-39-classic-1,39,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show memory,PASS,ok
+str-40-classic-1,40,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show memory-details,PASS,ok
+str-41-classic-1,41,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show summary-inventory,PASS,ok
+str-42-classic-1,42,System,ETX-2i>config>system#,classic,ETX-2i>config>system# show device-information,PASS,ok
+str-43-classic-1,43,System,ETX-2i>config>chassis#,classic,ETX-2i>config>chassis# show environment,PASS,ok
+str-44-classic-1,44,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show users,PASS,ok
+str-45-classic-1,45,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show users-details,PASS,ok
+str-46-classic-1,46,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show failed-login-attempts,PASS,ok
+str-47-classic-1,47,Management,ETX-2i>config>mngmnt#,classic,ETX-2i>config>mngmnt# show ssh-server fingerprint,PASS,ok
+str-48-classic-1,48,Management,ETX-2i>config>mngmnt>radius#,classic,ETX-2i>config>mngmnt>radius# show statistics,PASS,ok
+str-49-classic-1,49,Management,ETX-2i>config>mngmnt>snmp#,classic,ETX-2i>config>mngmnt>snmp# show snmpv3 information,PASS,ok
+str-50-classic-1,50,Management,ETX-2i>config>mngmnt>snmp#,classic,ETX-2i>config>mngmnt>snmp# show trap-sync,PASS,ok
+str-51-classic-1,51,Port,ETX-2i>config>port#,classic,ETX-2i>config>port# show statistics,PASS,ok
+str-52-classic-1,52,Port,ETX-2i>config>port#,classic,ETX-2i>config>port# show summary,PASS,ok
+str-53-classic-1,53,Port,ETX-2i>config>port#,classic,ETX-2i>config>port# show summary-full-name,PASS,ok
+str-54-classic-1,54,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show status,PASS,ok
+str-55-classic-1,55,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show status refresh <sec>,FAIL,cli error
+str-56-classic-1,56,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show statistics,PASS,ok
+str-57-classic-1,57,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show loopback,PASS,ok
+str-58-classic-1,58,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show rate,PASS,ok
+str-59-classic-1,59,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show l2cp-statistics,PASS,ok
+str-60-classic-1,60,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm,FAIL,cli error
+str-61-classic-1,61,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show oam-efm-statistics,FAIL,cli error
+str-62-classic-1,62,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show fat-pipe-list { active | history | all },FAIL,cli error
+str-63-classic-1,63,Port,ETX-2i>config>port>eth(port)#,classic,ETX-2i>config>port>eth(port)# show sfp-extended-information,PASS,ok
+str-64-classic-1,64,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show neighbors-details,PASS,ok
+str-66-classic-1,66,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show neighbors-summary,PASS,ok
+str-67-classic-1,67,Port,ETX-2i>config>port>eth(port)>lldp#,classic,ETX-2i>config>port>eth(port)>lldp# show statistics,PASS,ok
+str-68-classic-1,68,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show status,PASS,ok
+str-69-classic-1,69,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show statistics running,PASS,ok
+str-70-classic-1,70,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show lacp-status ethernet <port>,FAIL,cli error
+str-71-classic-1,71,Port,ETX-2i>config>port>lag(n)#,classic,ETX-2i>config>port>lag(n)# show lacp-statistics ethernet <port>,FAIL,cli error
+str-72-classic-1,72,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show status,FAIL,"NAV_ERROR:#                              ^
+# cli error: Entry instance doesn't exist"
+str-73-classic-1,73,Port,ETX-2i>config>port>e1(slot/port)#,classic,ETX-2i>config>port>e1(slot/port)# show statistics interval <n>,FAIL,"NAV_ERROR:#                              ^
+# cli error: Entry instance doesn't exist"
+str-74-classic-1,74,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show status,FAIL,"NAV_ERROR:#                           ^
+# cli error: command not recognized"
+str-75-classic-1,75,Port,ETX-2i>config>port>shdsl(slot/port)#,classic,ETX-2i>config>port>shdsl(slot/port)# show statistics current,FAIL,"NAV_ERROR:#                           ^
+# cli error: command not recognized"
+str-76-classic-1,76,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show status,FAIL,"NAV_ERROR:#                                ^
+# cli error: Entry instance doesn't exist"
+str-77-classic-1,77,Port,ETX-2i>config>port>vdsl2(slot/port)#,classic,ETX-2i>config>port>vdsl2(slot/port)# show statistics current,FAIL,"NAV_ERROR:#                                ^
+# cli error: Entry instance doesn't exist"
+str-78-classic-1,78,Port,ETX-2i>config>port>gfp(n)#,classic,ETX-2i>config>port>gfp(n)# show status,PASS,ok
+str-79-classic-1,79,Port,ETX-2i>config>port>gfp(n)#,classic,ETX-2i>config>port>gfp(n)# show bind,PASS,ok
+str-80-classic-1,80,Port,ETX-2i>config>port>ppp(n)#,classic,ETX-2i>config>port>ppp(n)# show status,PASS,ok
+str-81-classic-1,81,Port,ETX-2i>config>port>ppp(n)>pppoe#,classic,ETX-2i>config>port>ppp(n)>pppoe# show status,PASS,ok
+str-82-classic-1,82,Port,ETX-2i>config>port>pcs(n)#,classic,ETX-2i>config>port>pcs(n)# show statistics running,FAIL,"NAV_ERROR:#                           ^
+# cli error: command not recognized"
+str-83-classic-1,83,Port,ETX-2i>config>port>log-mac(n)#,classic,ETX-2i>config>port>log-mac(n)# show status,PASS,ok
+str-84-classic-1,84,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show mac-address-table { static | dynamic | all },FAIL,cli error
+str-85-classic-1,85,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show mac-table [vlan <vlan>] [mac-address <mac>],PASS,ok
+str-86-classic-1,86,Bridge,ETX-2i>config>bridge(n)#,classic,ETX-2i>config>bridge(n)# show vlans,PASS,ok
+str-87-classic-1,87,PWE,ETX-2i>config>pwe#,classic,ETX-2i>config>pwe# show summary,PASS,ok
 str-88-classic-1,88,PWE,ETX-2i>config>pwe>pw(n)#,classic,ETX-2i>config>pwe>pw(n)# show status,FAIL,"NAV_ERROR:# cli error: PW creation failed: PW type must be configured.
 #                         ^
 # cli error: Incorrect paramete"
@@ -875,29 +140,21 @@ str-114-classic-1,114,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>conf
 str-115-classic-1,115,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show rib { ipv4 | ipv6 },FAIL,cli error
 str-116-classic-1,116,Router,ETX-2i>config>router(n)>bgp(n)#,classic,ETX-2i>config>router(n)>bgp(n)# show community { ipv4 | ipv6 },FAIL,cli error
 str-117-classic-1,117,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show advertised-route,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-118-classic-1,118,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show received-route,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-119-classic-1,119,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show prefix-list,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-120-classic-1,120,Router,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv4-unicast-af>neighbor(ip)# show route-map,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-122-classic-1,122,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show advertised-route,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-123-classic-1,123,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show received-route,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-124-classic-1,124,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show prefix-list,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-125-classic-1,125,Router,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)#,classic,ETX-2i>config>router(n)>bgp(n)>ipv6-unicast-af>neighbor(ip)# show route-map,FAIL,"NAV_ERROR:#                                                             ^
-# cli error: Entry instance doesn't exist
-ETX-2I-x86#"
+# cli error: Entry instance doesn't exist"
 str-126-classic-1,126,Router,ETX-2i>config>router(n)>interface(n)#,classic,ETX-2i>config>router(n)>interface(n)# show status,PASS,ok
 str-128-classic-1,128,Router,ETX-2i>config>router(n)>interface(n)#,classic,ETX-2i>config>router(n)# show summary-interface,FAIL,cli error
 str-129-classic-1,129,Router,ETX-2i>config>router(n)>interface(n)#,classic,ETX-2i>config>router(n)>interface(n)# show statistics ipv4 traffic,PASS,ok
@@ -917,23 +174,17 @@ str-144-classic-1,144,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>de
 str-145-classic-1,145,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)#,classic,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)# show statistics running,FAIL,cli error
 str-146-classic-1,146,OAM,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)#,classic,ETX-2i>config>oam>cfm>md(n)>ma(n)>mep(n)>service(n)>dest-ne(n)# show delay-measurement-bins,FAIL,cli error
 str-147-classic-1,147,OAM,ETX-2i>config>oam>twamp>controller(n)#,classic,ETX-2i>config>oam>twamp>controller(n)# show status,FAIL,"NAV_ERROR:#                                          ^
-# cli error: License required
-ETX-2I-x86#"
+# cli error: License required"
 str-148-classic-1,148,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show status,FAIL,"NAV_ERROR:#                                                 ^
-# cli error: License required
-ETX-2I-x86#"
+# cli error: License required"
 str-149-classic-1,149,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> all,FAIL,"NAV_ERROR:#                                                 ^
-# cli error: License required
-ETX-2I-x86#"
+# cli error: License required"
 str-150-classic-1,150,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> current,FAIL,"NAV_ERROR:#                                                 ^
-# cli error: License required
-ETX-2I-x86#"
+# cli error: License required"
 str-151-classic-1,151,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show report <n> interval,FAIL,"NAV_ERROR:#                                                 ^
-# cli error: License required
-ETX-2I-x86#"
+# cli error: License required"
 str-152-classic-1,152,OAM,ETX-2i>config>oam>twamp>controller(n)>peer(ip)#,classic,ETX-2i>config>oam>twamp>controller(n)>peer(ip)# show summary-report,FAIL,"NAV_ERROR:#                                                 ^
-# cli error: License required
-ETX-2I-x86#"
+# cli error: License required"
 str-153-classic-1,153,OAM,ETX-2i>config>oam>twamp>responder(n)#,classic,ETX-2i>config>oam>twamp>responder(n)# show status,FAIL,"NAV_ERROR:#                                           ^
 # cli error: parameter or keyword missing or wrong
  - responder <name> [<n"
@@ -961,110 +212,19 @@ str-174-classic-1,174,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>r
 str-175-classic-1,175,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show log,PASS,ok
 str-176-classic-1,176,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show event-list,PASS,ok
 str-177-classic-1,177,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-list,PASS,ok
-str-178-classic-1,178,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-inputs [all],PASS,ok
-str-179-classic-1,179,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-information <source-type> <alarm-list>,PASS,ok
-str-180-classic-1,180,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-181-classic-1,181,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show statistics,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-182-classic-1,182,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show status,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-183-classic-1,183,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics current,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-184-classic-1,184,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics interval <n>,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-185-classic-1,185,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics all,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
-str-186-classic-1,186,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics allintervals,FAIL,"NAV_ERROR:
-
-read_channel_timing's absolute timer expired.
-
-The network device was continually outputting data for longer than 10
-seconds.
-
-If this is expected i.e. the command you are executing is continually emitting
-data for a long period of time, then you can set 'read_timeout=x' seconds. If
-you want Netmiko to keep reading indefinitely (i.e. to only stop when there is
-no new data), then you can set 'read_timeout=0'.
-
-You can look at the Netmiko session_log or debug log for more information.
-
-"
+str-178-classic-1,178,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-inputs [all],FAIL,cli error
+str-179-classic-1,179,Reporting,ETX-2i>config>reporting#,classic,ETX-2i>config>reporting# show alarm-information <source-type> <alarm-list>,FAIL,cli error
+str-180-classic-1,180,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show status,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
+str-181-classic-1,181,System,ETX-2i>config>system>clock>domain(n)>source(n)#,classic,ETX-2i>config>system>clock>domain(n)>source(n)# show statistics,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
+str-182-classic-1,182,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show status,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
+str-183-classic-1,183,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics current,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
+str-184-classic-1,184,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics interval <n>,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
+str-185-classic-1,185,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics all,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
+str-186-classic-1,186,System,ETX-2i>config>system>clock>recovered(port/ptp)#,classic,ETX-2i>config>system>clock>recovered(port/ptp)# show network-metrics allintervals,FAIL,"NAV_ERROR:#                              ^
+# cli error: command not recognized"
