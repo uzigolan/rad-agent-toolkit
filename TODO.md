@@ -125,9 +125,8 @@ for the full design.
   auto-create, restart-free `.env` pickup.
 - [ ] `update_device`/`remove_device` still untested outside code-level
   calls.
-- [ ] Decide whether a slash command (e.g. `/rad-device`) is also wanted
-  alongside the skill — currently skill-only (conversational trigger, no
-  explicit command).
+- [x] Decide whether a slash command (e.g. `/rad-device`) is also wanted
+  alongside the skill — **yes**: `commands/rad-device.md` added (2026-07-21).
 
 ### Harvester / eval gaps (from the etx2i case study)
 - [ ] Teach the harvester to supply a second argument for `pw` (`type

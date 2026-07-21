@@ -159,11 +159,12 @@ harvest gap always comes with a reason (missing argument, license gate, or
 genuinely no live instance), not a guess. Full method + a real case study:
 `docs/architecture.md` and `tests/eval-report.md`.
 
-**Slash commands** (Claude Code only): `/rad-health`, `/rad-backup`, and the
-knowledge pipelines `/rad-harvest`, `/rad-load-manual`, `/rad-load-datasheet`
-— composed one-time by `/rad-onboard-family` (new family end-to-end: driver →
-probe → harvest → manual → MIBs/catalog → registration; the pipelines stay
-independently runnable for their lifetime triggers).
+**Slash commands** (Claude Code only): `/rad-device` (list inventory, optional
+group/family filter), `/rad-health`, `/rad-backup`, and the knowledge pipelines
+`/rad-harvest`, `/rad-load-manual`, `/rad-load-datasheet` — composed one-time
+by `/rad-onboard-family` (new family end-to-end: driver → probe → harvest →
+manual → MIBs/catalog → registration; the pipelines stay independently runnable
+for their lifetime triggers).
 
 ## Safety model
 
