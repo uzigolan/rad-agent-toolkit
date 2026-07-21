@@ -1,10 +1,10 @@
 ---
 name: rad-device-mng
 description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units. ALSO load whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent" with an inventory operation — e.g. "noam, show the list of devices", "rad agent, add my device", "abayev, remove Device3 from the list".
-version: 1.5.0
+version: 1.6.0
 ---
 
-> **Skill version:** 1.5.0 · updated 2026-07-21 (stored SNMP credentials now override the family's verified-versions gate — a per-device v3 user (or v2c community) is used even when the family profile only has another version live-verified, instead of failing with "No SNMP credentials"; 1.4.0: set_device_credentials now supports full SNMPv3 — auth_key/priv_key/auth_protocol/priv_protocol for authNoPriv/authPriv, not just the no-auth user; 1.3.0: SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.6.0 · updated 2026-07-21 (write-tool gating list now names the 6 debug-tree tools — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — alongside the config-write tools, same stdio/HTTP-write-token gating; 1.5.0: stored SNMP credentials now override the family's verified-versions gate — a per-device v3 user (or v2c community) is used even when the family profile only has another version live-verified, instead of failing with "No SNMP credentials"; 1.4.0: set_device_credentials now supports full SNMPv3 — auth_key/priv_key/auth_protocol/priv_protocol for authNoPriv/authPriv, not just the no-auth user; 1.3.0: SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Managing the device inventory
 
@@ -162,8 +162,10 @@ Rules:
 ## Why these are write tools, not always-on
 
 `add_device`/`update_device`/`remove_device`/`set_device_credentials` (and
-the config-write tools
-`stage_config`/`commit_config`/`save_startup`) are gated by transport:
+the config-write tools `stage_config`/`commit_config`/`save_startup`, plus
+the debug-tree tools `debug_logon_request`/`debug_logon_submit`/
+`debug_menu`/`enter_debug_shell`/`debug_shell_command`/`exit_debug_shell`)
+are gated by transport:
 
 - **stdio (local):** on by default — full toolset. `RAD_MCP_READONLY=true`
   turns them off.

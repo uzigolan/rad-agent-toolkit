@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.5.0
+version: 1.6.0
 ---
 
-> **Skill version:** 1.5.0 · updated 2026-07-20 (datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.6.0 · updated 2026-07-21 (new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — never whitelisted, never called without an explicit in-conversation request; disambiguated from the unrelated VxWorks boot-loader recovery menu; 1.5.0: datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -542,6 +542,29 @@ config leaves. `configure router <n>` has `clear-arp-table`,
 `clear-neighbor-table`, `clear-bfd-statistics`, `nat clear-nat-translations`,
 and `delete` under `prefix-list`/`route-map`. Treat any `clear-*`/`delete`
 token as a write: never send one via a read tool or without the staged flow.
+
+## ⚠ The hidden `debug` tree — a separate, unrestricted escape hatch
+
+RAD units also gate a hidden `debug` command tree (menu-driven diagnostics
+like `debug mea`, and beneath some of those menus, the device's real
+VxWorks/Linux OS shell) behind a `logon debug` challenge/response — the
+device presents a numeric key code, something outside rad-mcp decrypts it
+into a one-time password, and submitting that password unlocks the tree.
+This is unrelated to the `[boot]:`/VxWorks recovery menu documented in the
+software-upgrade manual sections (`manual-mp1/13-...`,
+`manual-mp4100/33-...`, `manual-etx2/03-...`) — that's a boot-time
+firmware-recovery prompt, not this CLI-level tree.
+
+`debug_logon_request`/`debug_logon_submit`/`debug_menu`/`enter_debug_shell`/
+`debug_shell_command`/`exit_debug_shell` are **never** in the read
+whitelist and never part of the staged-commit flow — call none of them
+unless the user explicitly asked, in this conversation, to enter debug or
+shell mode on a named device. `debug_logon_request` hands you a key code
+you cannot decrypt yourself; ask the user for the password their own
+(confidential) decryptor produces rather than guessing. Once inside,
+`debug_shell_command` runs arbitrary OS commands with no whitelist at
+all — the audit log is the only safety net, so keep commands narrowly
+scoped to what the user actually asked for.
 
 ## Health interpretation
 

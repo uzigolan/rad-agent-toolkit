@@ -24,7 +24,9 @@ into the MCP ecosystem.
         │                 tools: list_devices · test_connectivity · run_show ·
         │                 run_show_in_context · cli_help · get_config ·
         │                 health_check · backup_config · stage_config ·
-        │                 commit_config · save_startup
+        │                 commit_config · save_startup · debug_logon_request ·
+        │                 debug_logon_submit · debug_menu · enter_debug_shell ·
+        │                 debug_shell_command · exit_debug_shell
         │                 resources: rad://inventory · rad://backups[/name] ·
         │                 rad://command-tree/{family}
         │
@@ -75,6 +77,20 @@ dangerous until a human approves it.
    before trying) and in the server (the tool refuses if asked anyway).
    Dangerous CLI areas (`admin` reboot/factory-default, `file` delete) are
    documented as no-go zones and are not whitelisted.
+8. **Debug shell access is a separate, unrestricted escape hatch** —
+   `debug_logon_request`/`debug_logon_submit`/`debug_menu`/
+   `enter_debug_shell`/`debug_shell_command`/`exit_debug_shell` unlock a RAD
+   unit's hidden `debug` tree (and, beneath it, its real VxWorks/Linux OS
+   shell) via the device's own `logon debug` challenge/response. rad-mcp
+   never performs or stores the key-code-to-password decryption itself:
+   `debug_logon_request` sends `logon debug` and hands the device's raw
+   numeric key code back to the caller; the password is computed entirely
+   outside the server (algorithm confidential, not rad-mcp's concern) and
+   handed back via `debug_logon_submit`, which is the only thing that
+   touches the device again. Every one of these tools requires
+   `confirm=true` and write scope, none are whitelisted, and
+   `debug_shell_command` runs arbitrary OS commands with no safety net
+   beyond the audit log — treat it like root access, because it is.
 
 ## Knowledge layers (how Claude "knows" the CLI)
 

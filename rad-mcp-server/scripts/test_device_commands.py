@@ -37,6 +37,11 @@ OUT_DIR = REPO / "tests"
 DATASET_JSON = OUT_DIR / "eval-etx2-full-dataset.json"
 DEVICE_NAME  = "Yossi-ETX2"
 
+# Commands not applicable to this device (e.g., no USB hardware)
+NOT_APPLICABLE_COMMANDS = {
+    "show usb-status",  # Device has no USB
+}
+
 # ── cli_path → context string ("exit all; <ctx>"; "" = root) ────────────────
 CLI_PATH_CONTEXT: dict[str, str] = {
     "ETX-2i>":                                                            "",
@@ -124,8 +129,12 @@ def load_dataset(only_classic: bool, limit: int) -> list[dict]:
 def extract_show_command(expected: str) -> str:
     """'ETX-2i>config>port# show summary' → 'show summary'
     
-    Removes placeholders like <sec>, {opt1|opt2}, [all] from commands
+    Replaces/removes placeholders like <sec>, {opt1|opt2}, [all] from commands
     because device CLI doesn't accept literal placeholder syntax.
+    - <filename> → user-default-config (tested on device)
+    - <sec>, <port>, <n>, etc. → remove
+    - {opt1|opt2} → use first option
+    - [all], etc. → remove
     """
     m = re.search(r"(?:#|>)\s*(show\b.+)", expected, re.IGNORECASE)
     if not m:
@@ -134,7 +143,10 @@ def extract_show_command(expected: str) -> str:
     else:
         cmd = m.group(1).strip()
     
-    # Remove angle-bracket placeholders: <sec>, <port>, <n>, <ip>, etc. → remove entirely
+    # Replace <filename> with actual filename on device
+    cmd = re.sub(r'<filename>', 'user-default-config', cmd, flags=re.IGNORECASE)
+    
+    # Remove other angle-bracket placeholders: <sec>, <port>, <n>, <ip>, etc.
     cmd = re.sub(r'\s*<[^>]+>\s*', ' ', cmd)
     
     # Remove curly-bracket options: { active | history | all } → use first option
@@ -173,7 +185,7 @@ def run_tests(cases: list[dict]) -> list[dict]:
         timeout=30,
         conn_timeout=15,
     )
-    print(f"Connected  →  {conn.find_prompt()!r}\n")
+    print(f"Connected to {conn.find_prompt()!r}\n")
 
     # Group by context; unknown paths get a SKIP result immediately
     by_ctx: dict[str, list[dict]] = defaultdict(list)
@@ -225,6 +237,15 @@ def run_tests(cases: list[dict]) -> list[dict]:
                 results.append({**case,
                                  "device_result": "SKIP",
                                  "device_reason": "parse_failed",
+                                 "device_output": "",
+                                 "tested_at": datetime.now().isoformat()})
+                continue
+
+            # Check if command is not applicable to this device
+            if cmd in NOT_APPLICABLE_COMMANDS:
+                results.append({**case,
+                                 "device_result": "SKIP",
+                                 "device_reason": "not_applicable_device_hw",
                                  "device_output": "",
                                  "tested_at": datetime.now().isoformat()})
                 continue

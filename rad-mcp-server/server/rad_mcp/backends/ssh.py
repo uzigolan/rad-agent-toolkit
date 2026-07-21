@@ -10,11 +10,20 @@ import threading
 import time
 from contextlib import contextmanager
 
+from fastmcp.exceptions import ToolError
 from netmiko import ConnectHandler
 
 from ..drivers import get_driver
 from ..inventory import Device
 from .base import Backend
+
+# Trailing \s*\n is required (not just \s*(\d+)) so a key code that arrives
+# split across two channel reads can't get matched — and its digits
+# captured — before the rest of the number has actually landed.
+_KEY_CODE_RE = re.compile(r"Key code:\s*(\d+)\s*\n")
+# Regex that never matches — forces _read_until_re to always fall through to
+# its quiet-period drain, for callers with no anchored end-of-output pattern.
+_NEVER_MATCH = re.compile(r"(?!)")
 
 
 class SSHBackend(Backend):
@@ -34,6 +43,14 @@ class SSHBackend(Backend):
         self._locks: dict[str, threading.Lock] = {}
         self._last_used: dict[str, float] = {}
         self._guard = threading.Lock()
+        # Devices whose cached connection currently sits inside the debug OS
+        # shell (VxWorks/Linux), not the normal RAD CLI — while set, _session
+        # must not send RAD-CLI re-grounding ("exit all") into a foreign shell.
+        self._in_debug_shell: dict[str, bool] = {}
+        # Devices sitting at the `password>` prompt after debug_logon_request,
+        # waiting for debug_logon_submit — _session must not reground here
+        # either, since the CLI isn't back at its normal prompt yet.
+        self._awaiting_debug_password: dict[str, bool] = {}
 
     def _lock(self, device: Device) -> threading.Lock:
         with self._guard:
@@ -115,18 +132,29 @@ class SSHBackend(Backend):
     def _session(self, device: Device, timeout: int):
         with self._lock(device):
             conn = self._conns.pop(device.name, None)
+            # Inside the debug OS shell, or mid-way through the logon debug
+            # challenge (sitting at "password>"), "exit all" and RAD-style
+            # liveness probing are meaningless (or harmful) — the caller
+            # drives the channel directly instead.
+            skip_reground = (
+                self._in_debug_shell.get(device.name, False)
+                or self._awaiting_debug_password.get(device.name, False)
+            )
             if conn is not None:
                 try:
                     conn.read_channel()  # drop residue from a previous call
-                    if time.monotonic() - self._last_used.get(device.name, 0.0) > 60:
-                        conn.find_prompt()  # liveness probe — raises if it died
-                    self._run(conn, "exit all", 10)
+                    if not skip_reground:
+                        if time.monotonic() - self._last_used.get(device.name, 0.0) > 60:
+                            conn.find_prompt()  # liveness probe — raises if it died
+                        self._run(conn, "exit all", 10)
                 except Exception:
                     try:
                         conn.disconnect()
                     except Exception:
                         pass
                     conn = None
+                    self._in_debug_shell.pop(device.name, None)
+                    self._awaiting_debug_password.pop(device.name, None)
             if conn is None:
                 conn = self._connect(device, timeout)
                 self._run(conn, "exit all", 10)
@@ -138,6 +166,8 @@ class SSHBackend(Backend):
                     conn.disconnect()
                 except Exception:
                     pass
+                self._in_debug_shell.pop(device.name, None)
+                self._awaiting_debug_password.pop(device.name, None)
                 raise
             else:
                 self._conns[device.name] = conn
@@ -194,3 +224,121 @@ class SSHBackend(Backend):
                 out = self._run(conn, line, timeout)
                 transcript.append(f"> {line}\n{out}")
             return "\n".join(transcript)
+
+    @staticmethod
+    def _read_until_re(conn, pattern: re.Pattern, timeout: float) -> str:
+        """Poll the channel until `pattern` matches the accumulated output,
+        or give up once output has gone quiet for a bit. Same shape as
+        interactive_help's loop, generalized to an arbitrary end pattern
+        instead of one fixed end-of-help signature."""
+        output = ""
+        deadline = time.monotonic() + timeout
+        quiet = 0.0
+        while time.monotonic() < deadline:
+            time.sleep(0.1)
+            chunk = conn.read_channel()
+            if chunk:
+                output += chunk
+                quiet = 0.0
+                if pattern.search(output):
+                    break
+            elif output:
+                quiet += 0.1
+                if quiet >= 0.6:
+                    break
+        return output
+
+    def debug_logon_request(self, device: Device, timeout: int = 15) -> str:
+        """Send `logon debug` and return the raw numeric key-code challenge.
+        Decryption is NOT done here — the caller (the model, or whoever/
+        whatever it hands the code to) computes the password out-of-band
+        and returns it via debug_logon_submit.
+
+        The connection is left parked at the device's `password>` prompt,
+        cached under this device's name same as any other session — the
+        awaiting-password flag just tells _session not to reground it in
+        the meantime. Nothing else should be run against this device until
+        debug_logon_submit (or a failure) clears that flag."""
+        with self._session(device, timeout) as conn:
+            conn.write_channel("logon debug\n")
+            challenge = self._read_until_re(conn, _KEY_CODE_RE, timeout)
+            match = _KEY_CODE_RE.search(challenge)
+            if not match:
+                raise ToolError(
+                    "logon debug did not present a 'Key code:' challenge — unexpected CLI response"
+                )
+            self._awaiting_debug_password[device.name] = True
+            return match.group(1)
+
+    def debug_logon_submit(self, device: Device, password: str, timeout: int = 15) -> None:
+        """Submit the password for a pending debug_logon_request challenge
+        and confirm the CLI is back at its normal prompt."""
+        if not self._awaiting_debug_password.get(device.name):
+            raise ToolError(
+                f"{device.name} has no pending debug logon challenge — call debug_logon_request first"
+            )
+        with self._session(device, timeout) as conn:
+            conn.write_channel(password + "\n")
+            prompt_re = re.compile(self._prompt_re(conn))
+            confirm = self._read_until_re(conn, prompt_re, timeout)
+            self._awaiting_debug_password.pop(device.name, None)
+            if not prompt_re.search(confirm):
+                raise ToolError(
+                    "logon debug password was not accepted (CLI did not return to its normal prompt)"
+                )
+
+    def debug_menu(self, device: Device, commands: list[str], timeout: int = 30) -> str:
+        """Run a scripted sequence of commands inside the already-unlocked
+        `debug` tree, in ONE session (no re-grounding between commands).
+        Submenu prompts (e.g. `FPGA>>`, `FPGA>MEA>>`) are family/FPGA-
+        specific and don't contain conn.base_prompt, so — like push_config,
+        but reading on a quiet period instead of an anchored prompt regex —
+        each line is drained rather than matched against an expected
+        prompt."""
+        with self._session(device, timeout) as conn:
+            transcript = []
+            for cmd in commands:
+                conn.write_channel(cmd + "\n")
+                out = self._read_until_re(conn, _NEVER_MATCH, min(timeout, 5.0))
+                transcript.append(f"> {cmd}\n{out}")
+            return "\n".join(transcript)
+
+    def enter_debug_shell(self, device: Device, timeout: int = 15) -> str:
+        driver = get_driver(device.family)
+        if not driver.debug_shell_enter_cmd or not driver.debug_shell_prompt_re:
+            raise ToolError(
+                f"debug shell not yet characterized for family '{device.family}' — "
+                "populate debug_shell_enter_cmd/exit_cmd/prompt_re on its driver "
+                "once confirmed on real hardware"
+            )
+        with self._session(device, timeout) as conn:
+            conn.write_channel(driver.debug_shell_enter_cmd + "\n")
+            prompt_re = re.compile(driver.debug_shell_prompt_re, re.MULTILINE)
+            output = self._read_until_re(conn, prompt_re, timeout)
+            if not prompt_re.search(output):
+                raise ToolError(
+                    f"did not see the expected debug-shell prompt for '{device.family}' "
+                    f"after '{driver.debug_shell_enter_cmd}'"
+                )
+            self._in_debug_shell[device.name] = True
+            return output
+
+    def raw_shell_command(self, device: Device, command: str, timeout: int = 30) -> str:
+        if not self._in_debug_shell.get(device.name):
+            raise ToolError(f"{device.name} is not inside a debug shell — call enter_debug_shell first")
+        driver = get_driver(device.family)
+        prompt_re = re.compile(driver.debug_shell_prompt_re, re.MULTILINE)
+        with self._session(device, timeout) as conn:
+            conn.write_channel(command + "\n")
+            return self._read_until_re(conn, prompt_re, timeout)
+
+    def exit_debug_shell(self, device: Device, timeout: int = 15) -> str:
+        driver = get_driver(device.family)
+        with self._session(device, timeout) as conn:
+            output = ""
+            if driver.debug_shell_exit_cmd:
+                conn.write_channel(driver.debug_shell_exit_cmd + "\n")
+                output = self._read_until_re(conn, re.compile(self._prompt_re(conn)), timeout)
+            self._in_debug_shell.pop(device.name, None)
+            self._run(conn, "exit all", 10)  # re-ground now that we're back in the RAD CLI
+            return output

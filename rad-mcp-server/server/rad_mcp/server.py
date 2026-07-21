@@ -1080,6 +1080,104 @@ if WRITE_TOOLS_ENABLED:
         audit("save_startup", device)
         return out or "Saved."
 
+    @mcp.tool()
+    def debug_logon_request(device: str, confirm: bool = False) -> dict:
+        """Start unlocking a device's hidden `debug` command tree: sends
+        `logon debug` and returns the device's numeric key-code challenge.
+        This tool does NOT decrypt it — compute the password for the
+        returned key_code (however that's done — the algorithm is
+        confidential and lives outside this server) and pass it to
+        debug_logon_submit to finish.
+
+        The device is left waiting at its `password>` prompt; don't run
+        other tools against it until debug_logon_submit (or a failure)
+        clears that. The debug tree includes dangerous commands (reboot,
+        factory reset, the raw OS shell) — write-gated + confirm=true like
+        commit_config.
+        """
+        _require_write_scope()
+        if not confirm:
+            return {"status": "REFUSED: debug_logon_request requires confirm=true — this begins unlocking reboot/shell/factory-reset access."}
+        dev = get_device(device)
+        key_code = get_backend().debug_logon_request(dev)
+        audit("debug_logon_request", device, detail="key code issued", ok=True)
+        return {
+            "key_code": key_code,
+            "next_step": f"Compute the password for this key_code, then call "
+                         f"debug_logon_submit('{device}', password=<value>, confirm=true).",
+        }
+
+    @mcp.tool()
+    def debug_logon_submit(device: str, password: str, confirm: bool = False) -> str:
+        """Finish a debug_logon_request challenge: submits `password` (the
+        value computed for the key_code that call returned) and confirms
+        the device is back at its normal CLI prompt, debug mode unlocked.
+        The password is never logged."""
+        _require_write_scope()
+        if not confirm:
+            return "REFUSED: debug_logon_submit requires confirm=true."
+        dev = get_device(device)
+        get_backend().debug_logon_submit(dev, password)
+        audit("debug_logon_submit", device, detail="debug mode unlocked", ok=True)
+        return f"Debug mode unlocked on {device}."
+
+    @mcp.tool()
+    def debug_menu(device: str, commands: list[str], confirm: bool = False) -> str:
+        """Run a scripted sequence of commands inside the already-unlocked
+        `debug` tree (call debug_logon first), e.g. ["debug mea", "?"].
+        Submenu trees (mea/alarms/db/...) are family- and FPGA-specific and
+        not whitelisted like run_show — if a family's debug tree hasn't
+        been harvested into its CLI reference yet, explore it with `?` one
+        command at a time, same as normal CLI navigation.
+        """
+        _require_write_scope()
+        if not confirm:
+            return "REFUSED: debug_menu requires confirm=true."
+        dev = get_device(device)
+        out = get_backend().debug_menu(dev, commands)
+        audit("debug_menu", device, detail="\n".join(commands))
+        return redact(out)
+
+    @mcp.tool()
+    def enter_debug_shell(device: str, confirm: bool = False) -> str:
+        """Drop an already-debug_logon'd session into the device's real OS
+        shell (VxWorks or Linux, depending on family). Only works for
+        families whose driver has debug_shell_enter_cmd/prompt_re populated
+        (confirmed on real hardware) — refuses cleanly otherwise. Once
+        inside, use debug_shell_command to run raw commands and
+        exit_debug_shell to return to the normal CLI.
+        """
+        _require_write_scope()
+        if not confirm:
+            return "REFUSED: enter_debug_shell requires confirm=true — this is unrestricted OS-level access."
+        dev = get_device(device)
+        out = get_backend().enter_debug_shell(dev)
+        audit("enter_debug_shell", device)
+        return redact(out) or f"Entered debug shell on {device}."
+
+    @mcp.tool()
+    def debug_shell_command(device: str, command: str, confirm: bool = False) -> str:
+        """Run one raw command inside an already-entered debug OS shell
+        (call enter_debug_shell first). No whitelist — this is the device's
+        real VxWorks/Linux shell, use with care."""
+        _require_write_scope()
+        if not confirm:
+            return "REFUSED: debug_shell_command requires confirm=true."
+        dev = get_device(device)
+        out = get_backend().raw_shell_command(dev, command)
+        audit("debug_shell_command", device, detail=command)
+        return redact(out)
+
+    @mcp.tool()
+    def exit_debug_shell(device: str) -> str:
+        """Leave the debug OS shell, returning the session to the normal
+        RAD CLI. Always safe to call."""
+        _require_write_scope()
+        dev = get_device(device)
+        out = get_backend().exit_debug_shell(dev)
+        audit("exit_debug_shell", device)
+        return redact(out) or f"Exited debug shell on {device}."
+
 
 def main() -> None:
     mode = "read-write (staged commits)" if WRITE_TOOLS_ENABLED else "READ-ONLY"

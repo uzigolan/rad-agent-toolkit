@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.2.0
+version: 1.3.0
 ---
 
-> **Skill version:** 1.2.0 · updated 2026-07-18 (session self-check for skill/server version drift) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.3.0 · updated 2026-07-21 (golden rule 7: debug_logon_request/submit/debug_menu/enter_debug_shell/debug_shell_command require an explicit user request, never inferred) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, at session start)
 
@@ -32,6 +32,17 @@ silently.
 6. If anything looks wrong after a commit, the pre-commit backup path is in the
    commit output — offer to restore rather than iterating blind fixes on a
    possibly-degraded device.
+7. **Never call `debug_logon_request`, `debug_logon_submit`, `debug_menu`,
+   `enter_debug_shell`, or `debug_shell_command` unless the user has
+   explicitly asked to enter debug/shell mode on a specific device in this
+   conversation.** These unlock a RAD unit's hidden `debug` tree and, beyond
+   it, its real OS shell — completely outside the read whitelist and the
+   staged-commit flow, with no safety net but the audit log.
+   `debug_logon_request` returns a key code you cannot decrypt yourself —
+   ask the user for the resulting password (computed by their own
+   confidential tool) rather than guessing or inventing one, then pass it to
+   `debug_logon_submit`. See `rad-cli-operations`'s dangerous-areas section
+   for the full rationale.
 
 ## Inventory
 

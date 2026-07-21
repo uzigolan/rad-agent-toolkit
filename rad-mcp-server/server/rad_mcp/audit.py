@@ -17,6 +17,10 @@ _SECRET_PATTERNS = [
 
 
 def redact(text: str) -> str:
+    # Note: the debug_logon_request/submit challenge/response (server.py,
+    # backends/ssh.py) never passes the submitted password through audit()'s
+    # `detail` in the first place — it's a plain tool argument that stays
+    # local to the one call. Don't start threading it through here.
     for pat in _SECRET_PATTERNS:
         text = pat.sub(r"\1<redacted>", text)
     # Redact any literal occurrence of configured credentials

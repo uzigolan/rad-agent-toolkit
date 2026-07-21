@@ -23,3 +23,32 @@ class Backend(ABC):
         this; API backends (RADview) have no `?` keypress to relay.
         """
         raise NotImplementedError(f"{type(self).__name__} does not support interactive help")
+
+    def debug_logon_request(self, device: Device, timeout: int = 15) -> str:
+        """Send `logon debug` and return the raw numeric key-code
+        challenge. Decryption happens outside the backend — see
+        debug_logon_submit. Optional capability: only interactive-terminal
+        backends (SSH) can relay this challenge/response.
+        """
+        raise NotImplementedError(f"{type(self).__name__} does not support debug_logon_request")
+
+    def debug_logon_submit(self, device: Device, password: str, timeout: int = 15) -> None:
+        """Submit the password for a pending debug_logon_request challenge,
+        unlocking the device's hidden `debug` command tree. Optional
+        capability."""
+        raise NotImplementedError(f"{type(self).__name__} does not support debug_logon_submit")
+
+    def enter_debug_shell(self, device: Device, timeout: int = 15) -> str:
+        """Drop an already-debug_logon'd session into the device's real OS
+        shell (VxWorks/Linux, per driver). Optional capability."""
+        raise NotImplementedError(f"{type(self).__name__} does not support enter_debug_shell")
+
+    def raw_shell_command(self, device: Device, command: str, timeout: int = 30) -> str:
+        """Run one command inside an already-entered OS shell, no whitelist.
+        Optional capability."""
+        raise NotImplementedError(f"{type(self).__name__} does not support raw_shell_command")
+
+    def exit_debug_shell(self, device: Device, timeout: int = 15) -> str:
+        """Leave the OS shell, returning to the normal RAD CLI. Optional
+        capability."""
+        raise NotImplementedError(f"{type(self).__name__} does not support exit_debug_shell")

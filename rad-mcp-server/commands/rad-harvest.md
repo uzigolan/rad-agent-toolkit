@@ -69,3 +69,9 @@ that context's "not entered" reference entry, so a gap always comes with
 its own device-confirmed reason attached, not a guess. The harvester never
 enters `admin`/`file` danger contexts and never sends
 `clear-*`/`delete`/`reboot` tokens with Enter. Safe to re-run at any time.
+The harvester also never attempts to unlock or enumerate the hidden
+`debug` tree (`debug mea`/`alarms`/etc. submenus, or the OS shell beneath
+it) — that requires the separate `debug_logon_request`/`debug_logon_submit`
+challenge/response and is out of scope here. If a family's debug tree ever
+gets documented, it belongs in its own reference file, harvested
+separately and only after `debug_logon_request`/`debug_logon_submit`.
