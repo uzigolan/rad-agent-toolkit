@@ -321,34 +321,32 @@ class SSHBackend(Backend):
             return "\n".join(transcript)
 
     def enter_debug_shell(self, device: Device, timeout: int = 15) -> str:
+        """Send the family's debug-tree shell-entry command (e.g. `debug
+        shell`) and drain the response. Same shape as debug_menu: the
+        resulting OS prompt (VxWorks `->`, a Linux `root@host:~#`, etc.) is
+        family-specific and not matched against an expected regex — this
+        just gets you in and hands back whatever the device printed."""
         driver = get_driver(device.family)
-        if not driver.debug_shell_enter_cmd or not driver.debug_shell_prompt_re:
+        if not driver.debug_shell_enter_cmd:
             raise ToolError(
-                f"debug shell not yet characterized for family '{device.family}' — "
-                "populate debug_shell_enter_cmd/exit_cmd/prompt_re on its driver "
-                "once confirmed on real hardware"
+                f"debug shell not yet supported for family '{device.family}' — "
+                "populate debug_shell_enter_cmd/exit_cmd on its driver once confirmed"
             )
         with self._session(device, timeout) as conn:
             conn.write_channel(driver.debug_shell_enter_cmd + "\n")
-            prompt_re = re.compile(driver.debug_shell_prompt_re, re.MULTILINE)
-            output = self._read_until_re(conn, prompt_re, timeout)
-            if not prompt_re.search(output):
-                raise ToolError(
-                    f"did not see the expected debug-shell prompt for '{device.family}' "
-                    f"after '{driver.debug_shell_enter_cmd}'"
-                )
+            output = self._read_until_re(conn, _NEVER_MATCH, min(timeout, 5.0))
             self._in_debug_shell[device.name] = True
             self._in_debug_menu.pop(device.name, None)
             return output
 
     def raw_shell_command(self, device: Device, command: str, timeout: int = 30) -> str:
+        """Run one command inside an already-entered debug OS shell — no
+        whitelist, no anchored prompt, just drained like debug_menu."""
         if not self._in_debug_shell.get(device.name):
             raise ToolError(f"{device.name} is not inside a debug shell — call enter_debug_shell first")
-        driver = get_driver(device.family)
-        prompt_re = re.compile(driver.debug_shell_prompt_re, re.MULTILINE)
         with self._session(device, timeout) as conn:
             conn.write_channel(command + "\n")
-            return self._read_until_re(conn, prompt_re, timeout)
+            return self._read_until_re(conn, _NEVER_MATCH, min(timeout, 5.0))
 
     def exit_debug_shell(self, device: Device, timeout: int = 15) -> str:
         driver = get_driver(device.family)

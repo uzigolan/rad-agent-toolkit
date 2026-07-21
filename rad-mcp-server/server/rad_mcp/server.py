@@ -43,6 +43,7 @@ from fastmcp.server.dependencies import get_access_token
 from . import __version__
 from .audit import audit, redact
 from .backends import get_backend
+from . import debug_tree_log
 from .drivers import _DRIVERS, get_driver
 from .inventory import (add_device_entry, get_device, load_inventory,
                         remove_device_entry, set_device_credentials as _set_device_credentials,
@@ -386,6 +387,25 @@ def cli_help(device: str, context: str = "", prefix: str = "") -> str:
     while lines and (not lines[-1].strip() or lines[-1].rstrip().endswith(("#", "# " + prefix.strip(), prefix))):
         lines = lines[:-1]
     return "\n".join(lines).strip() or out.strip()
+
+
+@mcp.tool()
+def debug_tree_history(family: str, limit: int = 20) -> list[dict]:
+    """Look up what's already been discovered in a family's hidden `debug`
+    tree — both the menu-driven diagnostics (debug_menu) and the raw OS
+    shell beneath it (enter_debug_shell/debug_shell_command) — before
+    probing it live.
+
+    Neither is hardcoded or pre-documented anywhere in this codebase — every
+    debug_menu / enter_debug_shell / debug_shell_command call auto-records
+    its commands and output here, keyed by family (each entry's `kind` is
+    "menu" or "shell"), so a later session (or a later step in this one) can
+    check prior navigation instead of rediscovering the same path blind.
+    Returns the most recent entries first; empty if nothing's been recorded
+    yet for this family. Read-only, no write scope required.
+    """
+    get_driver(family)  # raises with the valid-family list if unknown
+    return debug_tree_log.history(family, limit=limit)
 
 
 @mcp.tool()
@@ -1144,16 +1164,20 @@ if WRITE_TOOLS_ENABLED:
         dev = get_device(device)
         out = get_backend().debug_menu(dev, commands, reset=reset)
         audit("debug_menu", device, detail=f"reset={reset} " + "\n".join(commands))
-        return redact(out)
+        out = redact(out)
+        debug_tree_log.record(dev.family, device, commands, out, reset)
+        return out
 
     @mcp.tool()
     def enter_debug_shell(device: str, confirm: bool = False) -> str:
         """Drop an already-debug_logon'd session into the device's real OS
-        shell (VxWorks or Linux, depending on family). Only works for
-        families whose driver has debug_shell_enter_cmd/prompt_re populated
-        (confirmed on real hardware) — refuses cleanly otherwise. Once
-        inside, use debug_shell_command to run raw commands and
-        exit_debug_shell to return to the normal CLI.
+        shell (VxWorks or Ubuntu Linux, depending on family — currently
+        confirmed for secflow and etx1p; other families refuse cleanly
+        until their driver's debug_shell_enter_cmd is populated and
+        confirmed on real hardware). Once inside, use debug_shell_command
+        to run raw commands and exit_debug_shell to return to the normal
+        CLI. Like debug_menu, every call auto-records to that family's
+        debug-tree log — check debug_tree_history(family) first.
         """
         _require_write_scope()
         if not confirm:
@@ -1161,20 +1185,26 @@ if WRITE_TOOLS_ENABLED:
         dev = get_device(device)
         out = get_backend().enter_debug_shell(dev)
         audit("enter_debug_shell", device)
-        return redact(out) or f"Entered debug shell on {device}."
+        out = redact(out)
+        enter_cmd = get_driver(dev.family).debug_shell_enter_cmd
+        debug_tree_log.record(dev.family, device, [enter_cmd], out, reset=False, kind="shell")
+        return out or f"Entered debug shell on {device}."
 
     @mcp.tool()
     def debug_shell_command(device: str, command: str, confirm: bool = False) -> str:
         """Run one raw command inside an already-entered debug OS shell
         (call enter_debug_shell first). No whitelist — this is the device's
-        real VxWorks/Linux shell, use with care."""
+        real VxWorks/Linux shell, use with care. Auto-recorded to that
+        family's debug-tree log, same as debug_menu."""
         _require_write_scope()
         if not confirm:
             return "REFUSED: debug_shell_command requires confirm=true."
         dev = get_device(device)
         out = get_backend().raw_shell_command(dev, command)
         audit("debug_shell_command", device, detail=command)
-        return redact(out)
+        out = redact(out)
+        debug_tree_log.record(dev.family, device, [command], out, reset=False, kind="shell")
+        return out
 
     @mcp.tool()
     def exit_debug_shell(device: str) -> str:

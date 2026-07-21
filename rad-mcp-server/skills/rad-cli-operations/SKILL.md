@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.6.0
+version: 1.8.0
 ---
 
-> **Skill version:** 1.6.0 · updated 2026-07-21 (new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — never whitelisted, never called without an explicit in-conversation request; disambiguated from the unrelated VxWorks boot-loader recovery menu; 1.5.0: datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.8.0 · updated 2026-07-21 (enter_debug_shell/debug_shell_command now actually work — confirmed for secflow and etx1p (Ubuntu Linux, `debug shell`/`exit`); VxWorks families (etx2/mp1/mp4100) and etx2v/minid still refuse cleanly until confirmed. Same drain-based reading as debug_menu (no anchored OS prompt regex), and both now auto-record to debug_tree_history too, tagged by kind ("menu" vs "shell"); 1.7.0: debug_menu now auto-records every call per family and the new debug_tree_history(family) tool looks that up — check it before probing the hidden debug tree live; debug_menu continues from the previous call by default (reset=false), don't resend earlier navigation steps; 1.6.0: new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — never whitelisted, never called without an explicit in-conversation request; disambiguated from the unrelated VxWorks boot-loader recovery menu; 1.5.0: datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -565,6 +565,26 @@ you cannot decrypt yourself; ask the user for the password their own
 `debug_shell_command` runs arbitrary OS commands with no whitelist at
 all — the audit log is the only safety net, so keep commands narrowly
 scoped to what the user actually asked for.
+
+The debug tree's menu shape is undiscoverable ahead of time (no static
+reference exists for it, unlike the normal CLI), so every `debug_menu` /
+`enter_debug_shell` / `debug_shell_command` call auto-records its commands
+and output, keyed by the device's family — call `debug_tree_history(family)`
+first to see whether this family's tree (or shell) has already been
+explored before probing it live with `?`, and expect to navigate with
+several small `debug_menu` calls otherwise. `debug_menu` continues from
+wherever the previous call on that device left off by default
+(`reset=false`) — don't resend earlier navigation steps on follow-up calls;
+only pass `reset=true` to deliberately abandon the current path and start
+over from the top RAD CLI.
+
+`enter_debug_shell`/`raw_shell_command` work the same way as `debug_menu` —
+output is drained on a quiet period, not matched against an anchored
+prompt, since the actual OS prompt varies by family. They currently only
+work for families whose driver has `debug_shell_enter_cmd` populated and
+confirmed on real hardware (today: secflow and etx1p, both Ubuntu Linux) —
+any other family refuses cleanly rather than guessing at an unconfirmed
+shell command.
 
 ## Health interpretation
 

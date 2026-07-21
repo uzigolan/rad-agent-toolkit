@@ -16,6 +16,11 @@ class SecFlowDriver(RadCliDriver):
     family = "secflow"
     version = "1.0"
 
+    # Debug OS shell: Ubuntu Linux, same as ETX-1p — `debug shell` from an
+    # already-debug_logon'd session, `exit` returns to the RAD CLI.
+    debug_shell_enter_cmd = "debug shell"
+    debug_shell_exit_cmd = "exit"
+
     # ── Override points (all inherited from RadCliDriver) ──────────────────
     # SecFlow matches the shared context-CLI dialect today. To diverge, set a
     # knob below — extend tuples via `RadCliDriver.<knob> + (...)` rather than

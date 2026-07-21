@@ -27,6 +27,10 @@ one package.
   ETX-2i 10G and 100G variants differ — ports, timing, ordering?"`.
 - **Onboarding a new device type:** `"rad agent, harvest the new device CLI"` or
   `"abayev, add these MIB files to the SNMP knowledge layer"`.
+- **Debug tree & OS shell (explicit request required):** `"rad agent, unlock
+  debug mode on lab-etx2 and check the MEA FPGA version"` or `"abayev, unlock
+  debug mode on lab-sf1p, enter the debug shell, and check the L2TP/IPsec
+  tunnel status"`.
 
 The agent answers from family-specific CLI references, manuals, product
 datasheets (hardware specs, interfaces, variants, ordering), and SNMP maps.
@@ -104,6 +108,10 @@ to the [client installer scripts](rad-mcp-server/scripts/install/skills_and_mcp/
 - Reboot, factory-default, and similar dangerous operations are out of scope.
 - Credentials stay in the gitignored `.env` file and are redacted from logs.
 - `RAD_MCP_READONLY=true` removes all write tools.
+- The hidden `debug` command tree and OS shell are a separate, unrestricted
+  escape hatch — unlocked only via the device's own `logon debug` challenge
+  (rad-mcp never decrypts it), and every debug-tree tool requires an
+  explicit, named request plus `confirm=true`.
 
 See the full [safety and architecture model](rad-mcp-server/docs/architecture.md).
 

@@ -103,12 +103,13 @@
   .s6 .medal { background: linear-gradient(135deg, var(--c4), #5a2b80); }
   .s7 .medal { background: linear-gradient(135deg, var(--c1), #0a4f8a); }
   .s8 .medal { background: linear-gradient(135deg, var(--c2), #075a43); }
-  .s9 .medal { background: linear-gradient(135deg, var(--c5), #8a1750); }
+  .s9 .medal { background: linear-gradient(135deg, var(--c3), #8a3f0e); }
+  .s10 .medal { background: linear-gradient(135deg, var(--c5), #8a1750); }
   .s1 .card { border-left-color: var(--c6); } .s2 .card { border-left-color: var(--c3); }
   .s3 .card { border-left-color: var(--c1); } .s4 .card { border-left-color: var(--c2); }
   .s5 .card { border-left-color: var(--c5); } .s6 .card { border-left-color: var(--c4); }
   .s7 .card { border-left-color: var(--c1); } .s8 .card { border-left-color: var(--c2); }
-  .s9 .card { border-left-color: var(--c5); }
+  .s9 .card { border-left-color: var(--c3); } .s10 .card { border-left-color: var(--c5); }
 
   .card {
     background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c1);
@@ -168,11 +169,11 @@
     the safety flow: reads wait for your <i>"run it now?"</i>, writes go backup → preview →
     <b>your explicit approval</b> → commit → verify.</p>
     <div class="chips">
-      <span class="chip"><b>30</b> prompts</span>
-      <span class="chip"><b>9</b> categories</span>
+      <span class="chip"><b>33</b> prompts</span>
+      <span class="chip"><b>10</b> categories</span>
       <span class="chip"><b>3</b> trigger names</span>
       <span class="chip"><b>7</b> device families verified live</span>
-      <span class="chip"><b>CLI + manual + SNMP + datasheets</b> fused knowledge</span>
+      <span class="chip"><b>CLI + manual + SNMP + datasheets + debug shell</b> fused knowledge</span>
     </div>
   </div>
 </div>
@@ -180,7 +181,8 @@
 <div class="bar"><div class="bar-in">
   <a href="#s1">1 · Manual</a><a href="#s2">2 · Datasheets</a><a href="#s3">3 · Management</a>
   <a href="#s4">4 · Operations</a><a href="#s5">5 · SNMP</a><a href="#s6">6 · Engineering</a>
-  <a href="#s7">7 · Advanced</a><a href="#s8">8 · Onboarding</a><a href="#s9">9 · Fusion</a>
+  <a href="#s7">7 · Advanced</a><a href="#s8">8 · Onboarding</a><a href="#s9">9 · Debug shell</a>
+  <a href="#s10">10 · Fusion</a>
   <span class="sep"></span>
   <button class="pfilter" data-p="agent"><span class="dot d-agent"></span>rad agent</button>
   <button class="pfilter" data-p="abayev"><span class="dot d-abayev"></span>abayev</button>
@@ -381,20 +383,47 @@
 
 <section class="s9" id="s9">
   <div class="sec-head"><div class="medal">9</div>
+    <div><h2>Debug tree &amp; OS shell</h2><div class="sec-sub">hidden menu-driven diagnostics and the real OS shell beneath them — unlocked via <code>logon debug</code>, never hardcoded, explicit request + confirm required</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">9.1</span>Menu-driven debug tree — FPGA version</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">unlock debug mode on lab-etx2 and check the MEA FPGA version</span><button class="copy">copy</button></div>
+    <p class="what"><code>debug_logon_request</code> returns the device's key code → you supply the password
+    your own decryptor computes → <code>debug_logon_submit</code> unlocks the tree →
+    <code>debug_menu(["debug mea"])</code> drops into the FPGA console, then <code>debug_menu(["version"])</code>
+    reads the software/hardware/FPGA version — continuing from the same submenu, no renavigation needed.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">9.2</span>Menu-driven debug tree — queue cluster status</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">with debug mode already unlocked on lab-etx2, check the queue cluster status under the MEA menu</span><button class="copy">copy</button></div>
+    <p class="what"><code>queue</code> and <code>Cluster</code> are submenus, not flat keywords — probed with <code>?</code>
+    first, then read directly: <code>debug_menu(["queue", "Cluster", "show"])</code>.
+    <code>debug_tree_history("etx2")</code> surfaces this path if it's already been explored on this family,
+    so it doesn't need rediscovering every time.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">9.3</span>Debug OS shell — L2TP/IPsec diagnostics</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">unlock debug mode on lab-sf1p, enter the debug shell, and check the L2TP/IPsec tunnel status</span><button class="copy">copy</button></div>
+    <p class="what">Drops into the real Ubuntu Linux shell (secflow/etx1p today) via <code>enter_debug_shell</code>,
+    then runs representative diagnostics one at a time via <code>debug_shell_command</code>:
+    <code>systemctl status openl2tpd</code>, <code>l2tpconfig</code>, <code>ipsec statusall</code>,
+    <code>tcpdump -nni l2tpeth0</code>, <code>bridge vlan show</code> — then <code>exit_debug_shell</code> to
+    return to the normal CLI.</p></div>
+</section>
+
+<section class="s10" id="s10">
+  <div class="sec-head"><div class="medal">10</div>
     <div><h2>Fusion — every layer in one prompt</h2><div class="sec-sub">capstone prompts spanning datasheets · manual · inventory · CLI · SNMP · backups — same safety flow at every step</div></div></div>
 
-  <div class="card" data-p="agent"><h3><span class="n">9.1</span>Commission a new unit, zero to managed</h3>
+  <div class="card" data-p="agent"><h3><span class="n">10.1</span>Commission a new unit, zero to managed</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">we just unboxed a SecFlow-1p — confirm its power and temperature specs from the datasheet, add it to the inventory as sf-new at 172.17.163.200 (family secflow, group lab, user su, password 1234), run a health check, verify its identity over SNMP, and set its location to "OT cabinet 2"</span><button class="copy">copy</button></div>
     <p class="what">One prompt, every layer in order: datasheet lookup (offline) → the six-fact intake
     gate → <code>health_check</code> → <code>snmp_probe</code> identity cross-check → the staged config flow for the
     location write.</p></div>
 
-  <div class="card" data-p="noam"><h3><span class="n">9.2</span>Full-stack status report</h3>
+  <div class="card" data-p="noam"><h3><span class="n">10.2</span>Full-stack status report</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">give me a full status report on marks-mp4 — what its active alarms mean per the manual, port status from the CLI, IF-MIB error counters over SNMP, and whether the config drifted since the last backup</span><button class="copy">copy</button></div>
     <p class="what">Fuses events (<code>show active-alarms</code> + the manual's alarm meanings), live state (CLI
     port reads), trends (SNMP counters), and drift (backup diff) into one operator-grade report.</p></div>
 
-  <div class="card" data-p="abayev"><h3><span class="n">9.3</span>From datasheet to running ring</h3>
+  <div class="card" data-p="abayev"><h3><span class="n">10.3</span>From datasheet to running ring</h3>
     <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">we're rolling out a 3-unit ETX-2 ERP ring — pick the right ETX-2i variant from the datasheets, design the ring from the manual and CLI reference, stage the configuration for each unit, and after I approve verify the ring by CLI and SNMP</span><button class="copy">copy</button></div>
     <p class="what">Hardware selection (datasheet variants/ordering) → grounded design (manual chapter +
     <code>configure protection erp</code> reference) → per-unit staged commits, each with your explicit

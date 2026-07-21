@@ -25,8 +25,9 @@ into the MCP ecosystem.
         │                 run_show_in_context · cli_help · get_config ·
         │                 health_check · backup_config · stage_config ·
         │                 commit_config · save_startup · debug_logon_request ·
-        │                 debug_logon_submit · debug_menu · enter_debug_shell ·
-        │                 debug_shell_command · exit_debug_shell
+        │                 debug_logon_submit · debug_menu · debug_tree_history ·
+        │                 enter_debug_shell · debug_shell_command ·
+        │                 exit_debug_shell
         │                 resources: rad://inventory · rad://backups[/name] ·
         │                 rad://command-tree/{family}
         │
@@ -91,6 +92,48 @@ dangerous until a human approves it.
    `confirm=true` and write scope, none are whitelisted, and
    `debug_shell_command` runs arbitrary OS commands with no safety net
    beyond the audit log — treat it like root access, because it is.
+   `enter_debug_shell`/`raw_shell_command` read on a quiet-period drain
+   (same as `debug_menu`), not an anchored prompt regex — the actual OS
+   prompt (VxWorks `->`, a Linux `root@host:~#`, etc.) is family-specific
+   and not worth pinning down in advance. Only `debug_shell_enter_cmd`/
+   `_exit_cmd` are populated per family, once confirmed on real hardware;
+   currently that's secflow and etx1p (`debug shell` / `exit`, Ubuntu
+   Linux) — etx2/mp1/mp4100 (VxWorks) and etx2v/minid refuse cleanly until
+   confirmed. Every `debug_menu`/`enter_debug_shell`/`debug_shell_command`
+   call auto-records to `debug_tree_log` (see `debug_tree_history`) — the
+   tree is never hardcoded or hand-documented, only discovered and
+   remembered.
+
+### Debug tree examples
+
+Illustrative only — none of this is hardcoded in the tool implementation
+(that's the point of `debug_tree_log`/`debug_tree_history` above); it's
+just what's actually been explored on real hardware so far.
+
+**Menu-driven diagnostics** (`debug_menu`, ETX-2 MEA FPGA — `mea` is a
+leaf debug command, not a submenu prefix; what's under it varies by
+FPGA/firmware and needs its own `?` probe per branch):
+
+```
+debug_menu(device, ["debug mea", "?"])       # discover the MEA submenu
+debug_menu(device, ["version"])              # -> MEA software/hardware/FPGA version
+debug_menu(device, ["queue", "?"], reset=true)
+debug_menu(device, ["queue", "Cluster", "show"])   # -> queue cluster status
+```
+
+**Raw OS shell** (`enter_debug_shell`/`debug_shell_command`, secflow/etx1p
+— Ubuntu Linux; representative L2TP/IPsec diagnostics, not an exhaustive
+list):
+
+```
+enter_debug_shell(device)
+debug_shell_command(device, "systemctl status openl2tpd")
+debug_shell_command(device, "l2tpconfig")
+debug_shell_command(device, "ipsec statusall")
+debug_shell_command(device, "tcpdump -nni l2tpeth0")
+debug_shell_command(device, "bridge vlan show")
+exit_debug_shell(device)
+```
 
 ## Knowledge layers (how Claude "knows" the CLI)
 

@@ -124,6 +124,9 @@ by design.
 | `get_config` / `backup_config` | Full config export / snapshot to local archive |
 | `stage_config` → `commit_config` | Staged writes: preview, explicit confirm, auto pre-commit backup |
 | `save_startup` | Persist running config (confirm required) |
+| `debug_logon_request` → `debug_logon_submit` | Unlock the hidden `debug` tree via the device's own `logon debug` challenge/response — rad-mcp relays the key code out and the password back in, never decrypts it itself |
+| `debug_menu` / `debug_tree_history` | Navigate the unlocked menu-driven debug tree (family/FPGA-specific, never hardcoded); every call auto-records so later sessions can look it up instead of rediscovering it |
+| `enter_debug_shell` / `debug_shell_command` / `exit_debug_shell` | Drop into the device's real OS shell beneath the debug tree (currently secflow/etx1p, Ubuntu Linux) — unrestricted, confirm required, audit-logged |
 
 **Try it (gold-standard MIB prompt):**
 > rad agent, describe RAD-EthIf-MIB::erpNodeState — exact OID, enum values, and description
@@ -132,6 +135,18 @@ A correct answer (enterprise OID `1.3.6.1.4.1.164.*`, enum values, a source
 `sha256`) proves the semantic catalog is live: that RAD-proprietary detail can
 only come from `rad-knowledge.sqlite`, never from model memory. More SNMP/MIB
 prompts in [docs/examples.md](docs/examples.md).
+
+**Try it (debug tree — explicit user request + `confirm=true` required, see
+Safety model):**
+> rad agent, unlock debug mode on lab-etx2 and check the MEA FPGA version
+>
+> rad agent, unlock debug mode on lab-sf1p, enter the debug shell, and run `ipsec statusall`
+
+The first drives the menu-driven debug tree (`debug_menu` → `debug mea` →
+`version`); the second drops into the real Ubuntu Linux shell beneath it
+(`enter_debug_shell` → `debug_shell_command`). Neither path is hardcoded —
+see `docs/architecture.md`'s Debug tree examples for the fuller list and
+how `debug_tree_history` avoids rediscovering the same path twice.
 
 **Resources:** `rad://inventory`, `rad://backups`, `rad://backups/{file}`,
 `rad://command-tree/{family}`.

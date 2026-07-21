@@ -1,8 +1,8 @@
 # Example prompts — what to ask, exactly as you'd type it
 
-Ready-to-paste prompts across the nine usage categories — knowledge-first
-(user manual, datasheets), then device work, and a closing **fusion** set
-that spans every layer in one prompt — each addressed to
+Ready-to-paste prompts across the ten usage categories — knowledge-first
+(user manual, datasheets), then device work, the hidden debug tree, and a
+closing **fusion** set that spans every layer in one prompt — each addressed to
 one of the agent's trigger names — **"rad agent"** (generic), **"abayev"** or
 **"noam"** (the CLI-expert personas; same rules, personal sign-off). Every
 device action still passes the safety flow: reads wait for your "run it now?"
@@ -19,7 +19,8 @@ commit → verify. Unit names below are the lab inventory — substitute yours.
 6. [Network engineering](#6-network-engineering)
 7. [Advanced](#7-advanced)
 8. [Onboarding a new device type](#8-onboarding-a-new-device-type)
-9. [Fusion — every layer in one prompt](#9-fusion--every-layer-in-one-prompt)
+9. [Debug tree & OS shell](#9-debug-tree--os-shell)
+10. [Fusion — every layer in one prompt](#10-fusion--every-layer-in-one-prompt)
 
 ## 1. User manual — feature & concept knowledge
 
@@ -252,28 +253,67 @@ Drop them in the workspace MIB directory and recompile
 captures the family's `sysObjectID` for the auto-detect map and a capped
 walk produces its `snmp-map-<family>.md` capability map.
 
-## 9. Fusion — every layer in one prompt
+## 9. Debug tree & OS shell
+
+RAD units gate a hidden `debug` command tree — menu-driven diagnostics, and
+beneath some of those menus, the device's real OS shell (VxWorks or Ubuntu
+Linux, depending on family) — behind a `logon debug` challenge/response.
+rad-mcp never performs the key-code-to-password decryption itself: it
+relays the device's key code out and takes the resulting password back in.
+Every debug-tree tool requires `confirm=true` and an explicit, named
+request — never inferred from a general troubleshooting ask. Neither the
+menu tree nor the shell is hardcoded anywhere; every call auto-records so a
+later session can look up what's already been discovered instead of
+rediscovering it blind (`debug_tree_history`).
+
+**9.1 Menu-driven debug tree — FPGA version**
+> rad agent, unlock debug mode on lab-etx2 and check the MEA FPGA version
+
+`debug_logon_request` returns the device's key code → you supply the
+password your own decryptor computes → `debug_logon_submit` unlocks the
+tree → `debug_menu(["debug mea"])` drops into the FPGA console, then
+`debug_menu(["version"])` reads the software/hardware/FPGA version —
+continuing from the same submenu, no renavigation needed.
+
+**9.2 Menu-driven debug tree — queue cluster status**
+> noam, with debug mode already unlocked on lab-etx2, check the queue cluster status under the MEA menu
+
+`queue` and `Cluster` are submenus, not flat keywords — probed with `?`
+first, then read directly: `debug_menu(["queue", "Cluster", "show"])`.
+`debug_tree_history("etx2")` surfaces this path if it's already been
+explored on this family, so it doesn't need rediscovering every time.
+
+**9.3 Debug OS shell — L2TP/IPsec diagnostics**
+> abayev, unlock debug mode on lab-sf1p, enter the debug shell, and check the L2TP/IPsec tunnel status
+
+Drops into the real Ubuntu Linux shell (secflow/etx1p today) via
+`enter_debug_shell`, then runs representative diagnostics one at a time via
+`debug_shell_command`: `systemctl status openl2tpd`, `l2tpconfig`,
+`ipsec statusall`, `tcpdump -nni l2tpeth0`, `bridge vlan show` — then
+`exit_debug_shell` to return to the normal CLI.
+
+## 10. Fusion — every layer in one prompt
 
 Capstone prompts that deliberately span the whole toolkit — datasheets,
 manual knowledge, inventory, CLI, SNMP, and backups — in a single request.
 Each step still passes the same safety flow: reads wait for your
 confirmation, writes go backup → preview → approval → commit → verify.
 
-**9.1 Commission a new unit, zero to managed**
+**10.1 Commission a new unit, zero to managed**
 > rad agent, we just unboxed a SecFlow-1p — confirm its power and temperature specs from the datasheet, add it to the inventory as sf-new at 172.17.163.200 (family secflow, group lab, user su, password 1234), run a health check, verify its identity over SNMP, and set its location to "OT cabinet 2"
 
 One prompt, every layer in order: datasheet lookup (offline) → the six-fact
 intake gate → `health_check` → `snmp_probe` identity cross-check → the
 staged config flow for the location write.
 
-**9.2 Full-stack status report**
+**10.2 Full-stack status report**
 > noam, give me a full status report on marks-mp4 — what its active alarms mean per the manual, port status from the CLI, IF-MIB error counters over SNMP, and whether the config drifted since the last backup
 
 Fuses events (`show active-alarms` + the manual's alarm meanings), live
 state (CLI port reads), trends (SNMP counters), and drift (backup diff)
 into one operator-grade report.
 
-**9.3 From datasheet to running ring**
+**10.3 From datasheet to running ring**
 > abayev, we're rolling out a 3-unit ETX-2 ERP ring — pick the right ETX-2i variant from the datasheets, design the ring from the manual and CLI reference, stage the configuration for each unit, and after I approve verify the ring by CLI and SNMP
 
 Hardware selection (datasheet variants/ordering) → grounded design (manual

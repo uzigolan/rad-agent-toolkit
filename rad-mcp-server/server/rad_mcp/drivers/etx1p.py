@@ -17,6 +17,11 @@ class Etx1pDriver(RadCliDriver):
     family = "etx1p"
     version = "1.0"
 
+    # Debug OS shell: Ubuntu Linux, same as SecFlow — `debug shell` from an
+    # already-debug_logon'd session, `exit` returns to the RAD CLI.
+    debug_shell_enter_cmd = "debug shell"
+    debug_shell_exit_cmd = "exit"
+
     # ── Override points (all inherited from RadCliDriver) ──────────────────
     # ETX-1p speaks the modern shared dialect (NOT the legacy etx1 menu CLI)
     # and matches it today. To diverge, set a knob below — extend tuples via

@@ -48,7 +48,9 @@ class Backend(ABC):
 
     def enter_debug_shell(self, device: Device, timeout: int = 15) -> str:
         """Drop an already-debug_logon'd session into the device's real OS
-        shell (VxWorks/Linux, per driver). Optional capability."""
+        shell (VxWorks/Linux, per driver's debug_shell_enter_cmd) — drained
+        like debug_menu, no anchored prompt regex required. Optional
+        capability."""
         raise NotImplementedError(f"{type(self).__name__} does not support enter_debug_shell")
 
     def raw_shell_command(self, device: Device, command: str, timeout: int = 30) -> str:

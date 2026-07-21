@@ -49,12 +49,13 @@ class RadDriver(ABC):
     connect_backoff: float = 2.0   # seconds; delay before retry N is backoff * N
 
     # Debug OS shell (VxWorks/Linux, beneath `logon debug` -> `debug shell`),
-    # populated per family only once its exact command/prompt is confirmed
-    # on real hardware. Empty = not yet supported for this family — the
+    # populated per family only once its exact command is confirmed on real
+    # hardware. Output is drained like debug_menu, not matched against an
+    # anchored prompt — the resulting OS prompt varies too much to pin down
+    # in advance. Empty enter_cmd = not yet supported for this family — the
     # backend refuses cleanly rather than guessing.
     debug_shell_enter_cmd: str = ""
     debug_shell_exit_cmd: str = ""
-    debug_shell_prompt_re: str = ""
 
     def is_show_allowed(self, command: str) -> bool:
         cmd = command.strip().lower()
