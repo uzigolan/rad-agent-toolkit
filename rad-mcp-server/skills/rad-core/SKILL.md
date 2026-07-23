@@ -108,3 +108,43 @@ Render **two markdown tables** — *Skills* (name · version) and *Drivers*
 `version:` (and its top-of-body line) on any skill edit, and a driver's
 `version` on any change to that family's behavior; mismatched versions across
 copies flag drift.
+
+## MCP tools status checker
+
+When the user asks for MCP status (examples: "rad agent, what is MCP tools
+status", "show MCP status", "is MCP working"), return a compact status table
+with explicit terms:
+
+- `OK` — check succeeded.
+- `DEGRADED` — MCP is reachable but a capability is limited (for example,
+   served mode without an available knowledge catalog).
+- `MISSING` — expected capability/tool data is unavailable.
+
+Run these checks in order and include them in one markdown table:
+
+1. `list_versions` — proves MCP server reachability and reports server/skills/drivers.
+2. `knowledge_status` — reports knowledge-catalog availability.
+3. `list_devices` — verifies inventory read path.
+
+Table columns (always):
+
+- `Check`
+- `Status`
+- `Evidence`
+- `Action`
+
+Status mapping:
+
+- If `list_versions` fails: mark `MCP server` as `MISSING`, and mark dependent
+   rows as `MISSING` with reason "MCP not reachable".
+- If `list_versions` works but `knowledge_status` reports no catalog or fails:
+   mark `Knowledge catalog` as `DEGRADED` (served may be limited) or `MISSING`
+   (hard unavailable), and state that core device tools can still work.
+- If `list_devices` fails while server is reachable: mark `Inventory read` as
+   `DEGRADED` and include the returned error.
+
+Always finish with a one-line overall state:
+
+- `Overall: OK`
+- `Overall: DEGRADED`
+- `Overall: MISSING`

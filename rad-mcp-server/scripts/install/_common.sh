@@ -115,12 +115,40 @@ resolve_knowledge_mode() {
         case "$ans" in 1|bundled|Bundled) mode=bundled ;; *) mode=served ;; esac
     fi
     mode="$(printf '%s' "$mode" | tr 'A-Z' 'a-z')"
-    if [ "$mode" = "served" ] && [ ! -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
-        echo "  WARNING: served mode needs the knowledge catalog, but build/rad-knowledge.sqlite is missing." >&2
-        echo "           Build it: python scripts/build_knowledge_catalog.py --mib-root \"MIBs2:priority=200\" --mib-root \"MIBS:priority=100\"" >&2
-    fi
     echo "  knowledge mode: $mode" >&2
     printf '%s' "$mode"
+}
+
+show_served_catalog_hint() {
+    # Warn about a missing local catalog only when transport is local
+    # (stdio or localhost http). For remote http URLs, local catalog files are
+    # not required on this client machine.
+    # $1 = knowledge mode, $2 = transport mode (stdio|http), $3 = url
+    local knowledge="$1" mode="$2" url="${3:-}"
+    if [ "$knowledge" != "served" ]; then
+        echo "  checker status: OK (bundled knowledge mode)" >&2
+        return 0
+    fi
+
+    local is_local=1
+    if [ "$mode" = "http" ]; then
+        case "$url" in
+            http://localhost*|https://localhost*|http://127.0.0.1*|https://127.0.0.1*|http://[::1]*|https://[::1]*) is_local=1 ;;
+            *) is_local=0 ;;
+        esac
+    fi
+    if [ "$is_local" != "1" ]; then
+        echo "  checker status: OK (served via remote MCP; catalog expected on server)" >&2
+        return 0
+    fi
+
+    if [ ! -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
+        echo "  checker status: DEGRADED (served selected, local catalog missing)" >&2
+        echo "  WARNING: served mode needs the knowledge catalog, but build/rad-knowledge.sqlite is missing." >&2
+        echo "           Build it: python scripts/build_knowledge_catalog.py --mib-root \"MIBs2:priority=200\" --mib-root \"MIBS:priority=100\"" >&2
+    else
+        echo "  checker status: OK (served local catalog found)" >&2
+    fi
 }
 
 # First non-loopback IPv4 of this host (best-effort, Linux/macOS). Empty if none.

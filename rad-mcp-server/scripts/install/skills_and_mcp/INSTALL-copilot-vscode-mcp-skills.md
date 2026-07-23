@@ -65,6 +65,15 @@ The script prompts for:
    then configure the SAME value on the server via `RAD_MCP_TOKENS` /
    `RAD_MCP_WRITE_TOKENS`).
 
+Note: a missing local `build/rad-knowledge.sqlite` warning is relevant only
+for local MCP usage (`stdio` or localhost HTTP). If your MCP server is remote,
+the catalog is expected on that server machine, not on this client PC.
+
+Checker terms used by installers:
+- `OK`: setup is valid for the selected mode/transport.
+- `DEGRADED`: served mode selected but local catalog is missing in a local MCP setup.
+  Core MCP usage still works, but catalog-backed knowledge is limited until the catalog is built.
+
 Non-interactive flags (PowerShell shown; bash uses `--http --url --token
 --knowledge --reconfigure`):
 

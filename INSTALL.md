@@ -130,6 +130,11 @@ From section 5 (SNMP operations):
 rad agent, check SNMP on etx2v-1 and report its exact firmware, sysObjectID, and detected family
 ```
 
+Post-install MCP checker:
+```text
+rad agent, what is MCP tools status? show a table with OK / DEGRADED / MISSING
+```
+
 Full prompt catalog:
 - `rad-mcp-server/docs/examples.md`
 

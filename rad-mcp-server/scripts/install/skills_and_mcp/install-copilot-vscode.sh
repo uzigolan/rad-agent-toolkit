@@ -47,6 +47,7 @@ else
     fi
     set_json_mcp_entry "$CFG" servers "$ENTRY" "$NAME"
 fi
+show_served_catalog_hint "$KMODE" "$MODE" "${HTTP_URL:-}"
 copy_skills_to "$HOME/.copilot/skills" "$KMODE"
 
 echo ""

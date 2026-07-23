@@ -49,6 +49,13 @@ as suspicious (usually a mis-registration) and asked back.
 Requires explicit confirmation; only forgets the inventory entry — never
 touches the device, its backups, or its audit history.
 
+**1.5 MCP tools status check (post-install)**
+> rad agent, what is MCP tools status? show a table with OK / DEGRADED / MISSING
+
+Returns a compact table for server reachability, knowledge-catalog state, and
+inventory read path so you can quickly see whether setup is fully working or
+partially limited.
+
 ## 2. User manual — feature & concept knowledge
 
 "How does it work?" questions are answered offline from each family's

@@ -70,6 +70,8 @@ if ($mode -eq 'http') {
     }
 }
 
+Show-ServedCatalogHint -Knowledge $Knowledge -Mode $mode -Url $u
+
 Set-JsonMcpEntry -Path $cfgPath -RootKey 'servers' -Entry $entry -Name $Name
 # The embedded Copilot CLI agent inside the IDE chat ignores intellij\mcp.json
 # and reads the Copilot CLI config — write the same server there too.

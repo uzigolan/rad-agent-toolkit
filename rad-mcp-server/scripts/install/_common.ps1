@@ -173,7 +173,7 @@ function Copy-SkillsTo {
 
 function Resolve-KnowledgeMode {
     # Returns 'bundled' or 'served'. A -Knowledge flag wins; otherwise prompt
-    # (served is the default). Warns in served mode if the catalog is absent.
+    # (served is the default).
     param([string]$Knowledge)
     $mode = if ($Knowledge) { $Knowledge.ToLower() } else { '' }
     if (-not $mode) {
@@ -184,15 +184,41 @@ function Resolve-KnowledgeMode {
         $ans = Read-Host "Choice [2]"
         $mode = if ($ans -match '^1$|^bundled') { 'bundled' } else { 'served' }
     }
-    if ($mode -eq 'served') {
-        $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'
-        if (-not (Test-Path $db)) {
-            Write-Host "  WARNING: served mode needs the knowledge catalog, but $db is missing."
-            Write-Host "           Build it: python scripts\build_knowledge_catalog.py --mib-root `"MIBs2:priority=200`" --mib-root `"MIBS:priority=100`""
-        }
-    }
     Write-Host "  knowledge mode: $mode"
     return $mode
+}
+
+function Show-ServedCatalogHint {
+    # Warn about a missing local catalog only when the selected transport uses
+    # a local MCP server (stdio or localhost http). For remote http URLs, local
+    # catalog files are not required on this client machine.
+    param(
+        [ValidateSet('bundled', 'served')][string]$Knowledge,
+        [ValidateSet('stdio', 'http')][string]$Mode,
+        [string]$Url = ''
+    )
+    if ($Knowledge -ne 'served') {
+        Write-Host "  checker status: OK (bundled knowledge mode)"
+        return
+    }
+
+    $isLocal = $true
+    if ($Mode -eq 'http') {
+        $isLocal = $Url -match '^https?://(localhost|127\.0\.0\.1|\[::1\])(:|/|$)'
+    }
+    if (-not $isLocal) {
+        Write-Host "  checker status: OK (served via remote MCP; catalog expected on server)"
+        return
+    }
+
+    $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'
+    if (-not (Test-Path $db)) {
+        Write-Host "  checker status: DEGRADED (served selected, local catalog missing)"
+        Write-Host "  WARNING: served mode needs the knowledge catalog, but $db is missing."
+        Write-Host "           Build it: python scripts\build_knowledge_catalog.py --mib-root `"MIBs2:priority=200`" --mib-root `"MIBS:priority=100`""
+    } else {
+        Write-Host "  checker status: OK (served local catalog found)"
+    }
 }
 
 function New-StdioEntry {

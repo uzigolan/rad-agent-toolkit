@@ -65,6 +65,15 @@ knowledge mode (`served` default / `bundled`), transport (`stdio` default /
 `http` URL + token), `-Http -Url <u> -Token <t>`, `-Knowledge`, `-Reconfigure`
 (bash: `--http --url --token --knowledge --reconfigure`).
 
+Note: a missing local `build/rad-knowledge.sqlite` warning is relevant only
+for local MCP usage (`stdio` or localhost HTTP). If your MCP server is remote,
+the catalog is expected on that server machine, not on this client PC.
+
+Checker terms used by installers:
+- `OK`: setup is valid for the selected mode/transport.
+- `DEGRADED`: served mode selected but local catalog is missing in a local MCP setup.
+  Core MCP usage still works, but catalog-backed knowledge is limited until the catalog is built.
+
 ### This lab's setup — what to answer at the prompts
 
 Served knowledge + the shared http server. Interactive run:

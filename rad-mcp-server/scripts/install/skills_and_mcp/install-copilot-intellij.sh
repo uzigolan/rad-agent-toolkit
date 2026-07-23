@@ -79,6 +79,7 @@ PY
         set_json_mcp_entry "$cli_cfg" mcpServers "$CLI_ENTRY" "$NAME"
     done
 fi
+show_served_catalog_hint "$KMODE" "$MODE" "${HTTP_URL:-}"
 copy_skills_to "$HOME/.copilot/skills" "$KMODE"
 
 echo ""
