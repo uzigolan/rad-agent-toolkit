@@ -122,16 +122,20 @@ get_installed_knowledge_mode() {
 }
 
 resolve_knowledge_mode() {
-    # echoes 'bundled' or 'served'. $1 = flag value ('' to prompt).
+    # echoes 'bundled' or 'served'.
+    # $1 = flag value ('' to prompt), $2 = "skip-installed" to force prompt.
     local mode="$1"
+    local skip_installed="${2:-}"
     if [ -z "$mode" ]; then
-        local installed
-        installed="$(get_installed_knowledge_mode)"
-        if [ -n "$installed" ]; then
-            mode="$installed"
-            echo "  knowledge mode: $mode (reused from existing skills install)" >&2
-            printf '%s' "$mode"
-            return 0
+        if [ "$skip_installed" != "skip-installed" ]; then
+            local installed
+            installed="$(get_installed_knowledge_mode)"
+            if [ -n "$installed" ]; then
+                mode="$installed"
+                echo "  knowledge mode: $mode (reused from existing skills install)" >&2
+                printf '%s' "$mode"
+                return 0
+            fi
         fi
         echo "Knowledge distribution mode:" >&2
         echo "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection" >&2

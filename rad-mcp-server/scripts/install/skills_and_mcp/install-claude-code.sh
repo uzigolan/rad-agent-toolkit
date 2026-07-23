@@ -26,7 +26,6 @@ while [ $# -gt 0 ]; do
     esac
 done
 NAME="${NAME:-rad-mcp}"
-KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 if ! command -v claude >/dev/null 2>&1; then
     echo "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)" >&2
@@ -39,6 +38,7 @@ fi
 if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECONFIGURE:-}" != "1" ]; then
     MCP_GET="$(claude mcp get "$NAME" 2>/dev/null || true)"
     if [ -n "$MCP_GET" ] || claude plugin list 2>/dev/null | grep -q 'rad-mcp'; then
+        KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
         echo "$NAME is already configured with Claude Code - keeping the MCP config."
         if printf '%s' "$MCP_GET" | grep -qi 'http'; then
             copy_skills_to "$HOME/.claude/skills" "$KMODE"
@@ -54,6 +54,8 @@ if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECO
         exit 0
     fi
 fi
+
+KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}" skip-installed)"
 
 prompt_transport
 

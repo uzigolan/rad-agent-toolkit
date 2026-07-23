@@ -25,12 +25,12 @@ while [ $# -gt 0 ]; do
     esac
 done
 NAME="${NAME:-rad-mcp}"
-KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 CFG_PATH="$HOME/.codex/config.toml"
 if [ -f "$CFG_PATH" ] && grep -q "\[mcp_servers\.${NAME}\]" "$CFG_PATH"; then
     # By default keep the existing MCP config and just refresh the skills.
     if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECONFIGURE:-}" != "1" ]; then
+        KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
         echo "$NAME is already configured in $CFG_PATH: keeping it (pass --reconfigure to replace)."
         copy_skills_to "$HOME/.agents/skills" "$KMODE"
         echo ""
@@ -42,6 +42,8 @@ if [ -f "$CFG_PATH" ] && grep -q "\[mcp_servers\.${NAME}\]" "$CFG_PATH"; then
     echo "text, so remove that section by hand first, then rerun." >&2
     exit 1
 fi
+
+KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}" skip-installed)"
 
 # Backup before modifying
 if [ -f "$CFG_PATH" ]; then

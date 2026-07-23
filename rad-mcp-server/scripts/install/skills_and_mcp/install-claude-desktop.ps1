@@ -19,7 +19,6 @@ the skill zips are rebuilt either way. Pass -Reconfigure to replace the entry.
 #>
 param([ValidateSet('bundled','served','')][string]$Knowledge = '', [string]$Name = 'rad-mcp', [switch]$Reconfigure)
 . (Join-Path $PSScriptRoot '..\_common.ps1')
-$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 Assert-CommonSetup
 
@@ -30,13 +29,17 @@ if (-not (Test-Path (Split-Path $cfgPath))) {
 }
 
 # Keep an existing MCP entry unless -Reconfigure. Skills are rebuilt regardless.
+$keptExisting = $false
 if ((-not $Reconfigure) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name)) {
+  $keptExisting = $true
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
 } else {
     Backup-JsonConfig -Path $cfgPath
     $entry = New-StdioEntry
     Set-JsonMcpEntry -Path $cfgPath -RootKey 'mcpServers' -Entry $entry -Name $Name
 }
+
+$Knowledge = if ($keptExisting) { Resolve-KnowledgeMode $Knowledge } else { Resolve-KnowledgeMode $Knowledge -SkipInstalledReuse }
 
 # Skills are rebuilt no matter what (kept or reconfigured MCP).
 & $VenvPython (Join-Path $RadRoot 'scripts\build_desktop_skills.py') --knowledge $Knowledge

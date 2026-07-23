@@ -25,7 +25,6 @@ while [ $# -gt 0 ]; do
 done
 
 assert_common_setup
-KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 case "$(uname -s)" in
     Darwin) CFG_PATH="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
@@ -45,8 +44,10 @@ esac
 # Keep an existing MCP entry unless --reconfigure. Skills are rebuilt regardless.
 maybe_keep_existing "$CFG_PATH" mcpServers "$NAME"
 if [ -n "$KEEP_EXISTING" ]; then
+    KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
     echo "  mcp   -> kept existing $NAME entry in $CFG_PATH"
 else
+    KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}" skip-installed)"
     backup_json_config "$CFG_PATH"
     set_json_mcp_entry "$CFG_PATH" mcpServers "$(new_stdio_entry)" "$NAME"
 fi

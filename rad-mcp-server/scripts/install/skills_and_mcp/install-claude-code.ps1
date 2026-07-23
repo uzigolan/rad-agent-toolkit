@@ -19,7 +19,6 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
-$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
     throw "the 'claude' CLI is not on PATH - install Claude Code first (https://claude.com/claude-code)"
@@ -35,6 +34,7 @@ if (-not $explicit) {
     $mcpOk  = ($LASTEXITCODE -eq 0 -and $mcpGet.Trim())
     $pluginOk = ((claude plugin list 2>$null | Out-String) -match 'rad-mcp')
     if ($mcpOk -or $pluginOk) {
+        $Knowledge = Resolve-KnowledgeMode $Knowledge
         Write-Host "$Name is already configured with Claude Code - keeping the MCP config."
         if ($mcpOk -and $mcpGet -match 'http') {
             Copy-SkillsTo "$env:USERPROFILE\.claude\skills" -Knowledge $Knowledge
@@ -50,6 +50,8 @@ if (-not $explicit) {
         return
     }
 }
+
+$Knowledge = Resolve-KnowledgeMode $Knowledge -SkipInstalledReuse
 
 if (-not ($Http -or $Url -or $Token)) {
     # Interactive transport prompt when no flags given

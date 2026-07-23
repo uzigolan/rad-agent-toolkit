@@ -19,7 +19,6 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
-$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 $cfgPath = "$env:USERPROFILE\.codex\config.toml"
 $sectionRe = "\[mcp_servers\.$([regex]::Escape($Name))\]"
@@ -27,6 +26,7 @@ $exists = (Test-Path $cfgPath) -and ((Get-Content $cfgPath -Raw) -match $section
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
 if ($exists -and -not $explicit) {
     # Keep the existing MCP config untouched; still refresh the skills.
+    $Knowledge = Resolve-KnowledgeMode $Knowledge
     Write-Host "$Name is already configured in ${cfgPath}: keeping it (pass -Reconfigure to replace)."
     Copy-SkillsTo "$env:USERPROFILE\.agents\skills" -Knowledge $Knowledge
     Write-Host ""
@@ -37,6 +37,8 @@ if ($exists) {
     throw ("$cfgPath already has a [mcp_servers.$Name] section - TOML is edited " +
            "as text, so remove that section by hand first, then rerun.")
 }
+
+$Knowledge = Resolve-KnowledgeMode $Knowledge -SkipInstalledReuse
 
 # Backup before changes
 if (Test-Path $cfgPath) {

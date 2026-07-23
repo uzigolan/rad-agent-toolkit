@@ -27,7 +27,6 @@ while [ $# -gt 0 ]; do
     esac
 done
 NAME="${NAME:-rad-mcp}"
-KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
 
 # Both filenames the CLI has used; kept in sync (mcp-config.json is what the
 # JetBrains-embedded CLI agent reads).
@@ -35,8 +34,10 @@ CFG="$HOME/.copilot/mcp-config.json"
 CFG_ALT="$HOME/.copilot/mcp.json"
 maybe_keep_existing "$CFG" mcpServers "$NAME"
 if [ -n "$KEEP_EXISTING" ]; then
+    KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}")"
     echo "  mcp   -> kept existing $NAME entry in $CFG"
 else
+    KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}" skip-installed)"
     prompt_transport
 
     if [ "$MODE" = http ]; then

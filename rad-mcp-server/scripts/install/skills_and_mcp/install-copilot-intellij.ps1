@@ -27,7 +27,6 @@ param(
     [switch]$Reconfigure
 )
 . (Join-Path $PSScriptRoot '..\_common.ps1')
-$Knowledge = Resolve-KnowledgeMode $Knowledge
 
 $cfgPath = Join-Path $env:LOCALAPPDATA 'github-copilot\intellij\mcp.json'
 New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
@@ -35,12 +34,15 @@ Backup-JsonConfig -Path $cfgPath
 
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
 if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -Name $Name)) {
+    $Knowledge = Resolve-KnowledgeMode $Knowledge
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
     Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
     Write-Host ""
     Write-Host "Done. Existing MCP config kept; skills refreshed. Restart the IDE."
     return
 }
+
+$Knowledge = Resolve-KnowledgeMode $Knowledge -SkipInstalledReuse
 
 $mode = 'stdio'; $u = ''; $t = ''
 if (-not ($Http -or $Url -or $Token)) {

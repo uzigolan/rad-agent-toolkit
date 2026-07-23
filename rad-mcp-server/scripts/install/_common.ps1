@@ -196,14 +196,19 @@ function Resolve-KnowledgeMode {
     # Returns 'bundled' or 'served'. A -Knowledge flag wins; otherwise prompt
     # (served is the default). If a prior skills install exists, reuse that
     # mode silently as the default behavior.
-    param([string]$Knowledge)
+    param(
+        [string]$Knowledge,
+        [switch]$SkipInstalledReuse
+    )
     $mode = if ($Knowledge) { $Knowledge.ToLower() } else { '' }
     if (-not $mode) {
-        $installed = Get-InstalledKnowledgeMode
-        if ($installed) {
-            $mode = $installed
-            Write-Host "  knowledge mode: $mode (reused from existing skills install)"
-            return $mode
+        if (-not $SkipInstalledReuse) {
+            $installed = Get-InstalledKnowledgeMode
+            if ($installed) {
+                $mode = $installed
+                Write-Host "  knowledge mode: $mode (reused from existing skills install)"
+                return $mode
+            }
         }
         Write-Host ""
         Write-Host "Knowledge distribution mode:"
