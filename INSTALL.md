@@ -13,9 +13,9 @@ For all other install flows, use:
 Before anything else:
 - Choose your IDE path: VS Code or IntelliJ.
 - Download/install (or update) only the IDE you plan to use.
-- Install only the official GitHub Copilot add-on for each IDE:
-  - VS Code: `GitHub Copilot` + `GitHub Copilot Chat` by GitHub (verified publisher).
-  - IntelliJ: `GitHub Copilot` by GitHub from JetBrains Marketplace.
+- Install only the official GitHub Copilot Chat experience by GitHub for your IDE path:
+  - VS Code: install `GitHub Copilot Chat` by GitHub (verified publisher).
+  - IntelliJ: install the official `GitHub Copilot` plugin by GitHub from JetBrains Marketplace (this is the Copilot chat path in JetBrains).
 - For Copilot update checks and management, use Copilot extension/plugin update actions and Copilot settings/UI in each IDE.
 - Do not use non-Copilot AI plugins for this flow (for example JetBrains AI Assistant / Junie).
 
@@ -25,6 +25,10 @@ Before anything else:
 git clone https://github.com/uzigolan/rad-agent-toolkit.git
 cd rad-agent-toolkit
 ```
+
+If you already cloned the repository:
+- From any directory inside the repo, run `git pull` to update it.
+- Then continue with the rest of this guide.
 
 ## 3) Install MCP server first (command only)
 
