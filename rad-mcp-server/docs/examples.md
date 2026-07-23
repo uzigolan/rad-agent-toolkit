@@ -337,4 +337,5 @@ spot drift between the loaded client-side skills and the connected server.
 > rad agent, show MCP tools status for all RAD MCP tools (no exceptions). Use table columns: Tool, Status, Evidence, Dependencies / Prerequisites.
 
 Returns a full tools-status matrix (OK / DEGRADED / MISSING) with explicit
-dependencies and prerequisites per tool.
+dependencies and prerequisites per tool. If inventory is empty, add a
+temporary demo device for the test and remove it after the check.

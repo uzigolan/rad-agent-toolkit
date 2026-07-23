@@ -127,6 +127,17 @@ Run these checks in order and include them in one markdown table:
 3. `list_devices` — verifies inventory read path.
 4. Then report **every RAD MCP tool (no exceptions)** with its own row.
 
+If `list_devices` returns empty during this test flow, run a temporary device
+cycle so device-bound tools can be probed:
+
+1. `add_device` a demo entry (for example `rad-toolcheck-demo`, family `etx2`,
+   host `192.0.2.10`, group `toolcheck`, description `temporary status check`).
+2. Run the device-bound tool probes against that demo device.
+3. Always clean up at the end with `remove_device(name, confirm=true)`.
+
+Treat connectivity/auth failures on the demo unit as `DEGRADED` evidence,
+not as missing tools.
+
 Expected tool inventory for the table (include all rows even when unavailable):
 
 - `check_skill_version`
