@@ -414,12 +414,11 @@ PY
     [ -z "$summary" ] && return
     echo "$name is already configured in $path:"
     echo "    $summary"
-    echo "  1) Keep existing configuration (leave it unchanged)"
-    echo "  2) Reconfigure from scratch (re-run the prompts and replace it)"
+    echo "Keep this configuration? [Y/n]"
     local ans
-    read -r -p "Choice [1]: " ans || ans=""
+    read -r -p "Answer: " ans || ans=""
     case "$ans" in
-        2|r|R|reconfigure) KEEP_EXISTING="" ;;
+        n|N|no|No|NO|2|r|R|reconfigure) KEEP_EXISTING="" ;;
         *) KEEP_EXISTING=1 ;;
     esac
 }

@@ -486,13 +486,10 @@ function Test-KeepExisting {
     }
     Write-Host "$Name is already configured in ${Path}:"
     Write-Host "    $summary"
-    Write-Host "  1) Keep existing configuration (leave it unchanged)"
-    Write-Host "  2) Reconfigure from scratch (re-run setup and replace it)"
-    $ans = Read-Host "Choice [1]"
-    switch ($ans) {
-        '2' { return $false }
-        'r' { return $false }
-        'reconfigure' { return $false }
-        default { return $true }
+    Write-Host "Keep this configuration? [Y/n]"
+    $ans = Read-Host "Answer"
+    switch -Regex ($ans) {
+        '^(n|no|2|r|reconfigure)$' { return $false }
+        default                    { return $true }
     }
 }
