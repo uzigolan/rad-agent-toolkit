@@ -80,10 +80,10 @@ TOOL_VERSIONS = {
     # Inventory tools (v0.1.0)
     "list_devices": "0.1.0",
     "add_device": "0.1.0",
-    "remove_device": "0.1.0",
+    "remove_device": "0.1.1",
     "update_device": "0.1.0",
     "run_demo_device": "0.1.0",
-    "stop_demo_device": "0.1.0",
+    "stop_demo_device": "0.1.1",
     
     # Metadata tools
     "check_skill_version": "0.6.0",
@@ -103,7 +103,7 @@ TOOL_VERSIONS = {
     "snmp_probe": "0.2.0",
     "snmp_get": "0.2.0",
     "snmp_walk": "0.2.0",
-    "snmp_build_poll_plan": "0.4.0",
+    "snmp_build_poll_plan": "0.4.1",
     
     # Knowledge/Reference tools
     "knowledge_status": "0.3.0",
@@ -120,15 +120,15 @@ TOOL_VERSIONS = {
     
     # Write/Config tools (v0.1.0)
     "stage_config": "0.1.0",
-    "commit_config": "0.1.0",
-    "save_startup": "0.1.0",
+    "commit_config": "0.1.1",
+    "save_startup": "0.1.1",
     
     # Debug tools (v0.1.0)
-    "debug_logon_request": "0.1.0",
-    "debug_logon_submit": "0.1.0",
-    "debug_menu": "0.1.0",
-    "enter_debug_shell": "0.1.0",
-    "debug_shell_command": "0.1.0",
+    "debug_logon_request": "0.1.1",
+    "debug_logon_submit": "0.1.1",
+    "debug_menu": "0.1.1",
+    "enter_debug_shell": "0.1.1",
+    "debug_shell_command": "0.1.1",
     "exit_debug_shell": "0.1.0",
 }
 
@@ -195,9 +195,24 @@ _STAGES: dict[str, dict] = {}
 # SNMP read tools return deterministic demo answers instead of touching network.
 _DEMO_DEVICES: dict[str, dict] = {}
 
+_DEMO_SNMP_REF_OIDS = {
+    "sysdescr": "1.3.6.1.2.1.1.1.0",
+    "sysobjectid": "1.3.6.1.2.1.1.2.0",
+    "sysuptime": "1.3.6.1.2.1.1.3.0",
+    "sysuptimeinstance": "1.3.6.1.2.1.1.3.0",
+    "sysname": "1.3.6.1.2.1.1.5.0",
+    "syslocation": "1.3.6.1.2.1.1.6.0",
+}
+
 
 def _demo_state(device_name: str) -> dict | None:
     return _DEMO_DEVICES.get(device_name)
+
+
+def _demo_confirm_bypass(device_name: str) -> bool:
+    """Allow confirm-gated operations only for active in-process demo units.
+    Real inventory devices always keep explicit-confirm protection."""
+    return _demo_state(device_name) is not None
 
 
 def _demo_start(dev, *, cli_user: str, snmp_v1: str) -> dict:
@@ -210,6 +225,9 @@ def _demo_start(dev, *, cli_user: str, snmp_v1: str) -> dict:
         "started": datetime.now(timezone.utc).isoformat(),
         "cli_user": cli_user,
         "snmp_v1_configured": bool(snmp_v1),
+        "debug_unlocked": False,
+        "debug_in_shell": False,
+        "debug_key_code": "424242",
     }
     _DEMO_DEVICES[dev.name] = state
     return state
@@ -246,6 +264,44 @@ def _demo_snmp_scalars(dev) -> dict[str, str]:
         "1.3.6.1.2.1.1.5.0": dev.name,
         "1.3.6.1.2.1.1.6.0": "Demo Lab",
     }
+
+
+def _fallback_snmp_plan(refs: list[str], out: dict) -> dict:
+    """Provide a minimal GET plan for common system scalars when the
+    knowledge catalog cannot resolve refs (useful for demo/tool-check flows)."""
+    if out.get("operations"):
+        return out
+    selected: list[str] = []
+    unresolved: list[str] = []
+    for ref in refs[:32]:
+        raw = (ref or "").strip()
+        key = raw.lower().replace("-", "").replace("_", "").replace(" ", "")
+        oid = _DEMO_SNMP_REF_OIDS.get(key)
+        if oid:
+            selected.append(oid)
+            continue
+        if raw.startswith("1.3."):
+            selected.append(raw if raw.endswith(".0") else raw + ".0")
+            continue
+        unresolved.append(ref)
+    unique = list(dict.fromkeys(selected))[:64]
+    if not unique:
+        return out
+    ops = list(out.get("operations") or [])
+    ops.insert(0, {
+        "tool": "snmp_get",
+        "oids": unique,
+        "reason": "catalog fallback for demo/tool-check system scalars",
+    })
+    notes = list(out.get("notes") or [])
+    notes.append(
+        "Fallback SNMP plan applied: catalog could not resolve requested refs, "
+        "so a system-scalar GET plan was generated for tool-check coverage."
+    )
+    out["operations"] = ops
+    out["unresolved"] = unresolved
+    out["notes"] = notes
+    return out
 
 
 def _write_backup_content(dev, config: str) -> Path:
@@ -742,6 +798,7 @@ def snmp_build_poll_plan(refs: list[str], family: str, max_rows_per_walk: int = 
     if not refs:
         raise ToolError("pass at least one concept/symbol/OID, e.g. ['erpTable', 'ERP R-APS counters']")
     out = _kcall(k.build_poll_plan, refs, family, max_rows_per_walk=max_rows_per_walk)
+    out = _fallback_snmp_plan(refs, out)
     audit("snmp_build_poll_plan", "-", detail=f"{family}: {len(refs)} refs")
     return out
 
@@ -1167,10 +1224,11 @@ if WRITE_TOOLS_ENABLED:
         When removing, confirm=true is required.
         """
         _require_write_scope()
+        was_demo = _demo_confirm_bypass(name)
         stopped = _demo_stop(name)
         removed = False
         if remove_from_inventory:
-            if not confirm:
+            if not confirm and not was_demo:
                 raise ToolError("remove_from_inventory=true requires confirm=true")
             get_device(name)
             remove_device_entry(name)
@@ -1274,7 +1332,7 @@ if WRITE_TOOLS_ENABLED:
         rad-mcp from knowing about it. Requires confirm=true after the user
         has approved removing this specific device."""
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(name):
             return "REFUSED: remove_device requires confirm=true after the user has approved removing this device."
         get_device(name)  # raises with the known-devices list if unknown
         was_demo = _demo_stop(name)
@@ -1338,9 +1396,9 @@ if WRITE_TOOLS_ENABLED:
         _require_write_scope()
         if stage_id not in _STAGES:
             return f"Unknown stage_id '{stage_id}'. Stage the change first with stage_config."
-        if not confirm:
-            return "REFUSED: commit_config requires confirm=true after the user has approved the staged preview."
         stage = _STAGES[stage_id]
+        if not confirm and not _demo_confirm_bypass(stage["device"]):
+            return "REFUSED: commit_config requires confirm=true after the user has approved the staged preview."
         dev = get_device(stage["device"])
         backup_path = _take_backup(dev)
         if _demo_state(dev.name):
@@ -1360,7 +1418,7 @@ if WRITE_TOOLS_ENABLED:
     def save_startup(device: str, confirm: bool = False) -> str:
         """Persist the running configuration to startup (survives reboot)."""
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(device):
             return "REFUSED: save_startup requires confirm=true after user approval."
         dev = get_device(device)
         if _demo_state(dev.name):
@@ -1387,9 +1445,17 @@ if WRITE_TOOLS_ENABLED:
         commit_config.
         """
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(device):
             return {"status": "REFUSED: debug_logon_request requires confirm=true — this begins unlocking reboot/shell/factory-reset access."}
         dev = get_device(device)
+        if _demo_state(dev.name):
+            state = _demo_state(dev.name) or {}
+            key_code = state.get("debug_key_code", "424242")
+            audit("debug_logon_request", device, detail="demo key code issued", ok=True)
+            return {
+                "key_code": key_code,
+                "next_step": f"Call debug_logon_submit('{device}', password=<value>) to unlock demo debug mode.",
+            }
         key_code = get_backend().debug_logon_request(dev)
         audit("debug_logon_request", device, detail="key code issued", ok=True)
         return {
@@ -1405,9 +1471,13 @@ if WRITE_TOOLS_ENABLED:
         the device is back at its normal CLI prompt, debug mode unlocked.
         The password is never logged."""
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(device):
             return "REFUSED: debug_logon_submit requires confirm=true."
         dev = get_device(device)
+        if _demo_state(dev.name):
+            _DEMO_DEVICES[dev.name]["debug_unlocked"] = True
+            audit("debug_logon_submit", device, detail="demo debug mode unlocked", ok=True)
+            return f"Debug mode unlocked on {device}. (demo)"
         get_backend().debug_logon_submit(dev, password)
         audit("debug_logon_submit", device, detail="debug mode unlocked", ok=True)
         return f"Debug mode unlocked on {device}."
@@ -1430,9 +1500,17 @@ if WRITE_TOOLS_ENABLED:
         force `exit all` back to the top RAD CLI first.
         """
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(device):
             return "REFUSED: debug_menu requires confirm=true."
         dev = get_device(device)
+        if _demo_state(dev.name):
+            state = _demo_state(dev.name) or {}
+            if not state.get("debug_unlocked"):
+                return "REFUSED: demo debug mode is locked; call debug_logon_request then debug_logon_submit first."
+            out = "DEMO DEBUG OK\n" + "\n".join(f"{cmd}\nOK" for cmd in commands)
+            audit("debug_menu", device, detail=f"demo reset={reset} " + "\\n".join(commands))
+            debug_tree_log.record(dev.family, device, commands, out, reset)
+            return out
         out = get_backend().debug_menu(dev, commands, reset=reset)
         audit("debug_menu", device, detail=f"reset={reset} " + "\n".join(commands))
         out = redact(out)
@@ -1451,9 +1529,19 @@ if WRITE_TOOLS_ENABLED:
         debug-tree log — check debug_tree_history(family) first.
         """
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(device):
             return "REFUSED: enter_debug_shell requires confirm=true — this is unrestricted OS-level access."
         dev = get_device(device)
+        if _demo_state(dev.name):
+            state = _demo_state(dev.name) or {}
+            if not state.get("debug_unlocked"):
+                return "REFUSED: demo debug mode is locked; unlock it first with debug_logon_request/debug_logon_submit."
+            _DEMO_DEVICES[dev.name]["debug_in_shell"] = True
+            out = "Entered debug shell on demo device."
+            audit("enter_debug_shell", device, detail="demo")
+            enter_cmd = get_driver(dev.family).debug_shell_enter_cmd
+            debug_tree_log.record(dev.family, device, [enter_cmd], out, reset=False, kind="shell")
+            return out
         out = get_backend().enter_debug_shell(dev)
         audit("enter_debug_shell", device)
         out = redact(out)
@@ -1468,9 +1556,17 @@ if WRITE_TOOLS_ENABLED:
         real VxWorks/Linux shell, use with care. Auto-recorded to that
         family's debug-tree log, same as debug_menu."""
         _require_write_scope()
-        if not confirm:
+        if not confirm and not _demo_confirm_bypass(device):
             return "REFUSED: debug_shell_command requires confirm=true."
         dev = get_device(device)
+        if _demo_state(dev.name):
+            state = _demo_state(dev.name) or {}
+            if not state.get("debug_in_shell"):
+                return "REFUSED: demo debug shell is not active; call enter_debug_shell first."
+            out = f"DEMO SHELL OK\n$ {command}\nOK"
+            audit("debug_shell_command", device, detail=f"demo::{command}")
+            debug_tree_log.record(dev.family, device, [command], out, reset=False, kind="shell")
+            return out
         out = get_backend().raw_shell_command(dev, command)
         audit("debug_shell_command", device, detail=command)
         out = redact(out)

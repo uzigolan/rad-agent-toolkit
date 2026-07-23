@@ -1,12 +1,37 @@
 ---
 name: rad-device-mng
 description: Manage the rad-mcp device inventory — list, add, update, and remove RAD/ETX/SecFlow devices. Load whenever the user wants to point this toolkit at their OWN equipment ("add my device", "register a new unit", "I want to manage my own devices", "remove that device from the list", "update the host/group for X"), not just the pre-configured lab units. ALSO load whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent" with an inventory operation — e.g. "noam, show the list of devices", "rad agent, add my device", "abayev, remove Device3 from the list".
-version: 1.6.0
+version: 1.8.0
 ---
 
-> **Skill version:** 1.6.0 · updated 2026-07-21 (write-tool gating list now names the 6 debug-tree tools — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — alongside the config-write tools, same stdio/HTTP-write-token gating; 1.5.0: stored SNMP credentials now override the family's verified-versions gate — a per-device v3 user (or v2c community) is used even when the family profile only has another version live-verified, instead of failing with "No SNMP credentials"; 1.4.0: set_device_credentials now supports full SNMPv3 — auth_key/priv_key/auth_protocol/priv_protocol for authNoPriv/authPriv, not just the no-auth user; 1.3.0: SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.8.0 · updated 2026-07-24 (demo-only confirm bypass: active in-process demo runtimes created by run_demo_device may skip confirm on confirm-gated cleanup/test calls; all non-demo devices still require confirm=true; 1.7.0: device matrix is now mandatory in every inventory-management response: always render a current list_devices table with at least name/host/family/groups plus a total count and explicit empty-state row; 1.6.0: write-tool gating list now names the 6 debug-tree tools — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — alongside the config-write tools, same stdio/HTTP-write-token gating; 1.5.0: stored SNMP credentials now override the family's verified-versions gate — a per-device v3 user (or v2c community) is used even when the family profile only has another version live-verified, instead of failing with "No SNMP credentials"; 1.4.0: set_device_credentials now supports full SNMPv3 — auth_key/priv_key/auth_protocol/priv_protocol for authNoPriv/authPriv, not just the no-auth user; 1.3.0: SNMP secrets — v2c/v1 communities, v1 CSV fallback list, v3 user; 1.2.0: server-managed credentials, remote clients never touch server/.env; 1.1.0: writes DO work over HTTP with a write-scoped token, never hand-edit inventory.yaml, all 7 driver families) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 # Managing the device inventory
+
+## Device matrix output (mandatory)
+
+For every inventory-management interaction (list/add/update/remove/credentials),
+always include a **Device Matrix** built from a fresh `list_devices()` call in
+the same response where you report the action outcome.
+
+Required matrix columns:
+
+- `Name`
+- `Host`
+- `Family`
+- `Groups`
+
+Required footer line:
+
+- `Total devices: <N>`
+
+Empty inventory rule:
+
+- If there are no devices, still render the matrix with one explicit row:
+  `No devices registered` and `Total devices: 0`.
+
+Do not claim matrix data from memory; always source it from the latest
+`list_devices()` result.
 
 This is what lets someone who receives this plugin (skills + MCP server) self
 onboard their own RAD equipment, instead of being limited to whatever devices
@@ -158,6 +183,9 @@ Rules:
   itself, and never deletes its backup archive or audit-log history. Ask
   for explicit confirmation before calling it with `confirm=true`, same
   gate as any other destructive-sounding write tool in this toolkit.
+- Exception for tool-check demo runtimes: when the target is an active
+  `run_demo_device` instance, confirm can be omitted for cleanup/testing
+  calls. Keep `confirm=true` mandatory for all non-demo devices.
 
 ## Why these are write tools, not always-on
 

@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.3.1
+version: 1.6.0
 ---
 
-> **Skill version:** 1.3.1 · updated 2026-07-24 (MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.6.0 · updated 2026-07-24 (demo-only confirmation policy for status checks: when probing confirm-gated tools on an active run_demo_device runtime, confirm may be omitted; for all non-demo devices confirm remains mandatory; SNMP poll-plan now uses a system-scalar fallback when the catalog cannot resolve refs during tool-check flows; 1.5.0: MCP tools requests now require a status matrix response by default: when asked to show/list MCP tools, render per-tool status evidence and dependencies, not just a plain tool list; 1.4.0: inventory and device-management responses must always include a live Device Matrix from list_devices, including explicit empty-state row and total count; 1.3.1: MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, at session start)
 
@@ -53,6 +53,11 @@ user wants to point this at their own equipment, not just the pre-configured
 lab units), load the **`rad-device-mng`** skill — it covers the
 `list_devices`/`add_device`/`update_device`/`remove_device` tools and the
 credentials-live-in-`.env`-not-inventory workflow in full.
+
+When answering inventory/device-management requests, always include a current
+**Device Matrix** sourced from a fresh `list_devices()` call, with columns
+`Name`, `Host`, `Family`, `Groups`, and a `Total devices: <N>` line. If empty,
+still render one explicit row `No devices registered`.
 
 ## Product families
 
@@ -111,9 +116,10 @@ copies flag drift.
 
 ## MCP tools status checker
 
-When the user asks for MCP status (examples: "rad agent, what is MCP tools
-status", "show MCP status", "is MCP working"), return a compact status table
-with explicit terms:
+When the user asks for MCP status OR asks to show/list MCP tools (examples:
+"rad agent, what is MCP tools status", "show MCP status", "is MCP working",
+"show all MCP tools", "list MCP tools"), return a status matrix with
+explicit terms. Do not return only a plain list.
 
 - `OK` — check succeeded.
 - `DEGRADED` — MCP is reachable but a capability is limited (for example,
@@ -127,14 +133,21 @@ Run these checks in order and include them in one markdown table:
 3. `list_devices` — verifies inventory read path.
 4. Then report **every RAD MCP tool (no exceptions)** with its own row.
 
+Tool-inventory source rule for MCP tools requests:
+
+1. Prefer `tool_versions` to enumerate the full current tool set.
+2. If `tool_versions` is unavailable, fall back to the expected inventory list
+   below and mark unavailable entries as `MISSING` with evidence.
+
 If `list_devices` returns empty during this test flow, run a temporary device
 cycle so device-bound tools can be probed:
 
 1. `run_demo_device` to create/start a demo entry with full attributes
    (inventory facts + CLI username/password + SNMP v1 community).
 2. Run the device-bound tool probes against that demo device.
-3. Always clean up at the end with `stop_demo_device(name, remove_from_inventory=true, confirm=true)`
-   or `remove_device(name, confirm=true)` (which also stops demo runtime).
+3. Always clean up at the end with `stop_demo_device(name, remove_from_inventory=true)`
+   or `remove_device(name)` for the active demo runtime. For non-demo devices,
+   keep `confirm=true` mandatory.
 
 Treat connectivity/auth failures on the demo unit as `DEGRADED` evidence,
 not as missing tools.
