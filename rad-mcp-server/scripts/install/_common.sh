@@ -103,10 +103,36 @@ copy_skills_to() {
     fi
 }
 
+get_installed_knowledge_mode() {
+    # Detect the previously installed skills mode from ~/.copilot/skills.
+    # served  -> marker present, or thin skill (no references dir)
+    # bundled -> references dir present
+    local root="$HOME/.copilot/skills/rad-cli-operations"
+    local md="$root/SKILL.md"
+    local refs="$root/references"
+
+    [ -f "$md" ] || { printf ''; return 0; }
+    if grep -q '<!--rad-mode:served-->' "$md" 2>/dev/null; then
+        printf 'served'; return 0
+    fi
+    if [ -d "$refs" ]; then
+        printf 'bundled'; return 0
+    fi
+    printf 'served'
+}
+
 resolve_knowledge_mode() {
     # echoes 'bundled' or 'served'. $1 = flag value ('' to prompt).
     local mode="$1"
     if [ -z "$mode" ]; then
+        local installed
+        installed="$(get_installed_knowledge_mode)"
+        if [ -n "$installed" ]; then
+            mode="$installed"
+            echo "  knowledge mode: $mode (reused from existing skills install)" >&2
+            printf '%s' "$mode"
+            return 0
+        fi
         echo "Knowledge distribution mode:" >&2
         echo "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection" >&2
         echo "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]" >&2

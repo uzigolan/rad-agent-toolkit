@@ -171,12 +171,40 @@ function Copy-SkillsTo {
     }
 }
 
+function Get-InstalledKnowledgeMode {
+    # Detect the previously installed skills mode from ~/.copilot/skills.
+    # served  -> marker present, or thin skill (no references dir)
+    # bundled -> references dir present
+    $homeDir = if ($env:USERPROFILE) { $env:USERPROFILE } elseif ($HOME) { $HOME } else { '' }
+    if (-not $homeDir) { return '' }
+
+    $skillRoot = Join-Path $homeDir '.copilot\skills\rad-cli-operations'
+    $skillMd = Join-Path $skillRoot 'SKILL.md'
+    $refs = Join-Path $skillRoot 'references'
+    if (-not (Test-Path $skillMd)) { return '' }
+
+    try {
+        $raw = Get-Content $skillMd -Raw
+        if ($raw -match '<!--rad-mode:served-->') { return 'served' }
+    } catch { }
+
+    if (Test-Path $refs) { return 'bundled' }
+    return 'served'
+}
+
 function Resolve-KnowledgeMode {
     # Returns 'bundled' or 'served'. A -Knowledge flag wins; otherwise prompt
-    # (served is the default).
+    # (served is the default). If a prior skills install exists, reuse that
+    # mode silently as the default behavior.
     param([string]$Knowledge)
     $mode = if ($Knowledge) { $Knowledge.ToLower() } else { '' }
     if (-not $mode) {
+        $installed = Get-InstalledKnowledgeMode
+        if ($installed) {
+            $mode = $installed
+            Write-Host "  knowledge mode: $mode (reused from existing skills install)"
+            return $mode
+        }
         Write-Host ""
         Write-Host "Knowledge distribution mode:"
         Write-Host "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection"
