@@ -12,6 +12,7 @@ For all other install flows, use:
 Before anything else:
 - Download and install the latest VS Code and the latest IntelliJ IDEA from their official websites, even if you already have them installed.
 - Install only the official GitHub Copilot add-on for each IDE (VS Code extension: `GitHub Copilot` + `GitHub Copilot Chat`; IntelliJ plugin: `GitHub Copilot`). Do not use other non-GitHub Copilot AI plugins for this setup.
+- For Copilot update checks and management, use Copilot extension/plugin update actions and Copilot commands in each IDE; do not rely on IDE-native AI assistant menus.
 
 ## 2) Clone the repository
 
@@ -67,18 +68,28 @@ Recommended answers:
 - Transport: `http`
 - URL/token: same MCP URL and token as above.
 
-## 6) Where to check in VS Code Copilot extension
+## 6) Verify in Copilot (both IDEs)
 
-After installation in VS Code:
+Do these checks inside Copilot tools/settings for your IDE.
+Do not use IDE-native AI assistant menus for this flow.
+
+VS Code:
 1. Run Command Palette -> `Developer: Reload Window`.
 2. Open Copilot Chat and switch to `Agent` mode.
 3. Run `MCP: List Servers` and verify `rad-mcp` appears/runs.
 4. In chat, type `/rad` and verify rad skills autocomplete.
 5. Test prompt: `rad agent, list the managed devices`.
 
+IntelliJ:
+1. Restart the IDE.
+2. Open GitHub Copilot Chat and switch to Agent mode.
+3. Run `/mcp list` and verify `rad-mcp` appears.
+4. Run `/skills list` and verify the rad skills are loaded.
+5. Test prompt: `rad agent, list the managed devices`.
+
 If needed:
-- Run `MCP: Open User Configuration` to inspect user MCP JSON.
-- Run `MCP: Reset Trust` if trust prompts were dismissed previously.
+- VS Code: run `MCP: Open User Configuration` or `MCP: Reset Trust`.
+- IntelliJ: re-run the installer with the same URL/token and restart the IDE.
 
 ---
 
