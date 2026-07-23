@@ -125,23 +125,48 @@ Run these checks in order and include them in one markdown table:
 1. `list_versions` — proves MCP server reachability and reports server/skills/drivers.
 2. `knowledge_status` — reports knowledge-catalog availability.
 3. `list_devices` — verifies inventory read path.
+4. Then report **every RAD MCP tool (no exceptions)** with its own row.
+
+Expected tool inventory for the table (include all rows even when unavailable):
+
+- `check_skill_version`
+- `list_versions`
+- `knowledge_status`
+- `manual_search`
+- `cli_search`
+- `mib_search`
+- `mib_notifications`
+- `list_devices`
+- `run_show`
+- `run_show_in_context`
+- `cli_help`
+- `health_check`
+- `snmp_walk`
+- `remove_device`
 
 Table columns (always):
 
-- `Check`
+- `Tool`
 - `Status`
 - `Evidence`
-- `Action`
+- `Dependencies / Prerequisites`
 
 Status mapping:
 
-- If `list_versions` fails: mark `MCP server` as `MISSING`, and mark dependent
-   rows as `MISSING` with reason "MCP not reachable".
-- If `list_versions` works but `knowledge_status` reports no catalog or fails:
-   mark `Knowledge catalog` as `DEGRADED` (served may be limited) or `MISSING`
-   (hard unavailable), and state that core device tools can still work.
-- If `list_devices` fails while server is reachable: mark `Inventory read` as
-   `DEGRADED` and include the returned error.
+- If `list_versions` fails: mark all tools `MISSING` with reason "MCP not reachable".
+- If a tool is not available in this runtime/transport: mark it `MISSING` and state
+  the missing capability under `Dependencies / Prerequisites`.
+- If a tool is available but blocked by setup state (for example empty inventory,
+  missing catalog data, missing confirm flag): mark it `DEGRADED` and list the
+  exact prerequisite(s) under `Dependencies / Prerequisites`.
+- If a tool call succeeds as expected: mark it `OK`.
+
+Prerequisites text should be explicit and actionable, for example:
+
+- "requires at least one registered device"
+- "requires knowledge catalog with MIB objects"
+- "requires user-approved confirm=true"
+- "depends on MCP server reachability"
 
 Always finish with a one-line overall state:
 

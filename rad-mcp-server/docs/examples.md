@@ -21,6 +21,7 @@ commit → verify. Unit names below are the lab inventory — substitute yours.
 8. [Onboarding a new device type](#8-onboarding-a-new-device-type)
 9. [Debug tree & OS shell](#9-debug-tree--os-shell)
 10. [Fusion — every layer in one prompt](#10-fusion--every-layer-in-one-prompt)
+11. [About](#11-about)
 
 ## 1. Device management
 
@@ -48,13 +49,6 @@ as suspicious (usually a mis-registration) and asked back.
 
 Requires explicit confirmation; only forgets the inventory entry — never
 touches the device, its backups, or its audit history.
-
-**1.5 MCP tools status check (post-install)**
-> rad agent, what is MCP tools status? show a table with OK / DEGRADED / MISSING
-
-Returns a compact table for server reachability, knowledge-catalog state, and
-inventory read path so you can quickly see whether setup is fully working or
-partially limited.
 
 ## 2. User manual — feature & concept knowledge
 
@@ -327,3 +321,20 @@ Hardware selection (datasheet variants/ordering) → grounded design (manual
 chapter + `configure protection erp` reference) → per-unit staged commits,
 each with your explicit approval → post-commit verification via
 `show erp status` and an IF-MIB walk.
+
+## 11. About
+
+Meta prompts about the toolkit itself: versions, capabilities, and current
+MCP readiness.
+
+**11.1 Check loaded versions**
+> rad agent, show skills and drivers versions
+
+Returns server version, skill versions, and family driver versions so you can
+spot drift between the loaded client-side skills and the connected server.
+
+**11.2 Check MCP tools status**
+> rad agent, show MCP tools status for all RAD MCP tools (no exceptions). Use table columns: Tool, Status, Evidence, Dependencies / Prerequisites.
+
+Returns a full tools-status matrix (OK / DEGRADED / MISSING) with explicit
+dependencies and prerequisites per tool.
