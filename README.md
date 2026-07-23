@@ -96,6 +96,9 @@ rad agent, list the managed devices
 Installers are available for Claude Code, Claude Desktop, GitHub Copilot, and
 OpenAI Codex.
 
+For VS Code + IntelliJ Copilot only, use the focused guide:
+[INSTALL.md](INSTALL.md).
+
 Start with the [installation guide](rad-mcp-server/INSTALL.md), or go directly
 to the [client installer scripts](rad-mcp-server/scripts/install/skills_and_mcp/README.md).
 
