@@ -445,8 +445,12 @@ if [ "$DO_BUILD" = "1" ]; then
         echo "  WARNING: '$MIB_DIR' not found - continuing without (re)building."
     fi
 elif [ "$CATALOG_PRESENT" != "1" ]; then
-    echo "  knowledge catalog: skipped - MIB tools disabled (CLI + bundled knowledge still work)."
-    echo "    Add later: re-run and answer y, or drop a prebuilt rad-knowledge.sqlite into build/."
+    echo "  building baseline knowledge catalog (CLI/manual/datasheets/reference docs; no extra MIB roots) ..."
+    if "$VENV_PYTHON" "$RAD_ROOT/scripts/build_knowledge_catalog.py" && [ -f "$CATALOG" ]; then
+        show_catalog_present
+    else
+        echo "  WARNING: baseline catalog build failed - continuing (see output above)."
+    fi
 fi
 echo "Starting $NAME on ${scheme}://${HOST}:${PORT}/mcp  (Ctrl-C to stop)"
 [ "$HOST" != "127.0.0.1" ] && echo "Reachable on the LAN — internal networks only, never a public interface."

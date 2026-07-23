@@ -427,8 +427,17 @@ if ($doBuild) {
         Write-Host "  WARNING: '$mibDir' not found - continuing without (re)building."
     }
 } elseif (-not $catalogPresent) {
-    Write-Host "  knowledge catalog: skipped - MIB tools disabled (CLI + bundled knowledge still work)."
-    Write-Host "    Add later: re-run and answer y, or drop a prebuilt rad-knowledge.sqlite into build\."
+    Write-Host "  building baseline knowledge catalog (CLI/manual/datasheets/reference docs; no extra MIB roots) ..."
+    $eapPrev = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & $VenvPython (Join-Path $RadRoot 'scripts\build_knowledge_catalog.py')
+        $buildOk = ($LASTEXITCODE -eq 0)
+    } finally {
+        $ErrorActionPreference = $eapPrev
+    }
+    if ($buildOk -and (Test-Path $catalog)) { Show-CatalogPresent }
+    else { Write-Host "  WARNING: baseline catalog build failed - continuing (see output above)." }
 }
 Write-Host "Starting $Name on ${scheme}://${BindHost}:${Port}/mcp  (Ctrl-C to stop)"
 if ($BindHost -ne '127.0.0.1') { Write-Host "Reachable on the LAN - internal networks only, never a public interface." }

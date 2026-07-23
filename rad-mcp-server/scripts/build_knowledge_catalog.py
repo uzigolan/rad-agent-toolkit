@@ -12,7 +12,7 @@ replaces the shipped map when the diff is reviewed.
 
 Usage (server venv python, from the repo root):
   python rad-mcp-server/scripts/build_knowledge_catalog.py \
-      --mib-root "MIBs2:priority=200" --mib-root "MIBS:priority=100" \
+    [--mib-root "MIBs2:priority=200" --mib-root "MIBS:priority=100"] \
       [--output rad-mcp-server/build/rad-knowledge.sqlite] \
       [--report rad-mcp-server/build/mib-catalog-report.json] \
       [--apply-compat] [--strict]
@@ -251,6 +251,15 @@ def select_sources(roots: list[tuple[Path, int]], report: dict):
 
 
 def compile_modules(selected: dict, stage: Path, jout: Path, report: dict):
+    if not selected:
+        stage.mkdir(parents=True, exist_ok=True)
+        jout.mkdir(parents=True, exist_ok=True)
+        report["pysmi_version"] = "not-run (no MIB roots selected)"
+        report["compile_results"] = {}
+        report["modules_compiled"] = 0
+        report["modules_failed"] = {}
+        return {}
+
     from pysmi.reader import FileReader, HttpReader
     from pysmi.writer import FileWriter
     from pysmi.parser import SmiStarParser
@@ -558,44 +567,49 @@ def validate(con: sqlite3.Connection, report: dict, strict: bool):
     fk = cur.execute("PRAGMA foreign_key_check").fetchall()
     if fk:
         problems.append(f"foreign key violations: {len(fk)}")
-    # fixtures
+    # fixtures (MIB-specific)
     fixture_results = []
-    for mod, sym, checks in FIXTURES:
-        row = cur.execute("SELECT id,oid,kind FROM mib_objects WHERE module=? AND symbol=?",
-                          (mod, sym)).fetchone()
-        errs = []
-        if not row:
-            errs.append("MISSING")
-        else:
-            obj_id, oid, kind = row
-            if "oid" in checks and oid != checks["oid"]:
-                errs.append(f"oid {oid} != {checks['oid']}")
-            if "kind" in checks and kind != checks["kind"]:
-                errs.append(f"kind {kind} != {checks['kind']}")
-            if "enum" in checks:
-                got = dict(cur.execute("SELECT label,value FROM mib_enum_values WHERE object_id=?",
-                                       (obj_id,)).fetchall())
-                for lbl, val in checks["enum"].items():
-                    if got.get(lbl) != val:
-                        errs.append(f"enum {lbl}={got.get(lbl)} != {val}")
-            if "index0" in checks:
-                got = cur.execute("SELECT index_object FROM mib_table_indexes WHERE object_id=? "
-                                  "ORDER BY position LIMIT 1", (obj_id,)).fetchone()
-                if not got or got[0] != checks["index0"]:
-                    errs.append(f"index0 {got} != {checks['index0']}")
-            if "augments" in checks:
-                got = cur.execute("SELECT base_module,base_object FROM mib_augments WHERE object_id=?",
-                                  (obj_id,)).fetchone()
-                if tuple(got or ()) != checks["augments"]:
-                    errs.append(f"augments {got} != {checks['augments']}")
-            if "payload_len_min" in checks:
-                n = cur.execute("SELECT count(*) FROM mib_notification_objects WHERE object_id=?",
-                                (obj_id,)).fetchone()[0]
-                if n < checks["payload_len_min"]:
-                    errs.append(f"payload {n} < {checks['payload_len_min']}")
-        fixture_results.append({"fixture": f"{mod}::{sym}", "ok": not errs, "errors": errs})
-        if errs:
-            problems.append(f"fixture {mod}::{sym}: {errs}")
+    mib_objects = cur.execute("SELECT count(*) FROM mib_objects").fetchone()[0]
+    report["mib_objects"] = mib_objects
+    if mib_objects > 0:
+        for mod, sym, checks in FIXTURES:
+            row = cur.execute("SELECT id,oid,kind FROM mib_objects WHERE module=? AND symbol=?",
+                              (mod, sym)).fetchone()
+            errs = []
+            if not row:
+                errs.append("MISSING")
+            else:
+                obj_id, oid, kind = row
+                if "oid" in checks and oid != checks["oid"]:
+                    errs.append(f"oid {oid} != {checks['oid']}")
+                if "kind" in checks and kind != checks["kind"]:
+                    errs.append(f"kind {kind} != {checks['kind']}")
+                if "enum" in checks:
+                    got = dict(cur.execute("SELECT label,value FROM mib_enum_values WHERE object_id=?",
+                                           (obj_id,)).fetchall())
+                    for lbl, val in checks["enum"].items():
+                        if got.get(lbl) != val:
+                            errs.append(f"enum {lbl}={got.get(lbl)} != {val}")
+                if "index0" in checks:
+                    got = cur.execute("SELECT index_object FROM mib_table_indexes WHERE object_id=? "
+                                      "ORDER BY position LIMIT 1", (obj_id,)).fetchone()
+                    if not got or got[0] != checks["index0"]:
+                        errs.append(f"index0 {got} != {checks['index0']}")
+                if "augments" in checks:
+                    got = cur.execute("SELECT base_module,base_object FROM mib_augments WHERE object_id=?",
+                                      (obj_id,)).fetchone()
+                    if tuple(got or ()) != checks["augments"]:
+                        errs.append(f"augments {got} != {checks['augments']}")
+                if "payload_len_min" in checks:
+                    n = cur.execute("SELECT count(*) FROM mib_notification_objects WHERE object_id=?",
+                                    (obj_id,)).fetchone()[0]
+                    if n < checks["payload_len_min"]:
+                        errs.append(f"payload {n} < {checks['payload_len_min']}")
+            fixture_results.append({"fixture": f"{mod}::{sym}", "ok": not errs, "errors": errs})
+            if errs:
+                problems.append(f"fixture {mod}::{sym}: {errs}")
+    else:
+        report["mib_validation_skipped"] = True
     report["fixtures"] = fixture_results
     # Phase 5 fixtures: every family carries CLI + manual knowledge, and two
     # known lookups answer.
@@ -622,11 +636,14 @@ def validate(con: sqlite3.Connection, report: dict, strict: bool):
             problems.append("datasheets: no mp4100 card sections (expected ~19 card datasheets)")
     report["phase5_fixtures"] = {"cli_families": sorted(fams), "manual_families": sorted(man_fams),
                                  "datasheet_products": ds_products}
-    # FTS smoke
-    hits = cur.execute("SELECT count(*) FROM obj_fts WHERE obj_fts MATCH 'ring protection'").fetchone()[0]
-    report["fts_smoke_hits"] = hits
-    if hits == 0:
-        problems.append("FTS smoke query returned 0 rows")
+    # MIB FTS smoke (only when MIB objects exist)
+    if mib_objects > 0:
+        hits = cur.execute("SELECT count(*) FROM obj_fts WHERE obj_fts MATCH 'ring protection'").fetchone()[0]
+        report["fts_smoke_hits"] = hits
+        if hits == 0:
+            problems.append("FTS smoke query returned 0 rows")
+    else:
+        report["fts_smoke_hits"] = 0
     # conflicts policy
     n_conf = len(report.get("oid_conflicts", []))
     if n_conf and strict:
@@ -677,8 +694,9 @@ def compat_map(con: sqlite3.Connection, report: dict, current_path: Path, out_pa
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--mib-root", action="append", required=True,
-                    help='e.g. "MIBs2:priority=200" (repo-relative)')
+    ap.add_argument("--mib-root", action="append", default=[],
+                    help='optional, e.g. "MIBs2:priority=200" (repo-relative). '
+                         'When omitted, build a baseline catalog with CLI/manual/datasheet/refdoc data only.')
     ap.add_argument("--output", default=str(RAD / "build" / "rad-knowledge.sqlite"))
     ap.add_argument("--report", default=str(RAD / "build" / "mib-catalog-report.json"))
     ap.add_argument("--work", default=str(RAD / "build" / "work"))
@@ -707,6 +725,8 @@ def main():
     report["corpus_sha256"] = corpus_hash
     print(f"selected {len(selected)} modules "
           f"({sum(1 for f in files_seen if not f['selected'])} shadowed/skipped files)")
+    if not roots:
+        print("no --mib-root provided: building baseline catalog without MIB semantic content")
 
     status = compile_modules(selected, stage, jout, report)
     print(f"compiled {report['modules_compiled']} modules "
