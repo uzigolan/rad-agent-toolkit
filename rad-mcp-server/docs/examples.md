@@ -1,7 +1,7 @@
 # Example prompts — what to ask, exactly as you'd type it
 
-Ready-to-paste prompts across the ten usage categories — knowledge-first
-(user manual, datasheets), then device work, the hidden debug tree, and a
+Ready-to-paste prompts across the ten usage categories — device management
+first, then knowledge (user manual, datasheets), device operations, the hidden debug tree, and a
 closing **fusion** set that spans every layer in one prompt — each addressed to
 one of the agent's trigger names — **"rad agent"** (generic), **"abayev"** or
 **"noam"** (the CLI-expert personas; same rules, personal sign-off). Every
@@ -11,9 +11,9 @@ commit → verify. Unit names below are the lab inventory — substitute yours.
 
 ## Contents
 
-1. [User manual — feature & concept knowledge](#1-user-manual--feature--concept-knowledge)
-2. [Datasheets — hardware & product knowledge](#2-datasheets--hardware--product-knowledge)
-3. [Device management](#3-device-management)
+1. [Device management](#1-device-management)
+2. [User manual — feature & concept knowledge](#2-user-manual--feature--concept-knowledge)
+3. [Datasheets — hardware & product knowledge](#3-datasheets--hardware--product-knowledge)
 4. [CLI operations](#4-cli-operations)
 5. [SNMP operations](#5-snmp-operations)
 6. [Network engineering](#6-network-engineering)
@@ -22,27 +22,54 @@ commit → verify. Unit names below are the lab inventory — substitute yours.
 9. [Debug tree & OS shell](#9-debug-tree--os-shell)
 10. [Fusion — every layer in one prompt](#10-fusion--every-layer-in-one-prompt)
 
-## 1. User manual — feature & concept knowledge
+## 1. Device management
+
+**1.1 Add a device**
+> rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234
+
+The intake gate requires all six facts before anything is written; facts go
+to `inventory.yaml`, credentials only to `server/.env`. If you omit a field,
+the agent asks for all missing ones in a single question.
+
+**1.2 List devices**
+> noam, show the list of devices
+
+Credential-free summaries (name/host/family/groups); filterable: *"noam,
+list only the mp1 family"*.
+
+**1.3 Change a device**
+> abayev, marks-mp4 moved — update its host to 172.17.161.95
+
+Partial update: only the named field changes. Changing `family` is treated
+as suspicious (usually a mis-registration) and asked back.
+
+**1.4 Remove a device**
+> rad agent, remove lab-etx2 from the list
+
+Requires explicit confirmation; only forgets the inventory entry — never
+touches the device, its backups, or its audit history.
+
+## 2. User manual — feature & concept knowledge
 
 "How does it work?" questions are answered offline from each family's
 ingested user manual (per-chapter markdown + CLI-topic cross-links):
 concepts from the manual, matching syntax from the harvested CLI
 reference — cited per layer, with no device contact.
 
-**1.1 Inquire about a topic**
+**2.1 Inquire about a topic**
 > rad agent, how does zero-touch provisioning work on the MiNID, and what are its limits?
 
 Concept questions come from the ingested manual (per-chapter markdown +
 cross-links), syntax from the CLI reference — cited per layer.
 
-**1.2 Understand a mechanism in depth**
+**2.2 Understand a mechanism in depth**
 > noam, according to the ETX-2 manual, what happens on an ERP ring when a link fails — which timers are involved, and is the recovery revertive?
 
 Answered from the manual's protection chapter, with the matching
 `configure protection erp` verbs cited from the harvested reference — a
 design-grade explanation, not a generic textbook answer.
 
-## 2. Datasheets — hardware & product knowledge
+## 3. Datasheets — hardware & product knowledge
 
 Specs, interfaces, variants and ordering come from the **datasheet layer**
 (39 products: every family's system datasheets + the Megaplex-4 card set),
@@ -51,27 +78,27 @@ matters in every answer: `system` is a standalone device, `card` is a
 plug-in module for its family's chassis, `accessory` is non-traffic
 hardware.
 
-**2.1 Pick the right card**
+**3.1 Pick the right card**
 > noam, which Megaplex-4 card gives me 16 E1 ports, and what are its ordering options?
 
 The M16E1/M16T1 card's interface specs and its RECOMMENDED CONFIGURATIONS
 ordering block — and because its `kind` is `card`, the answer says it plugs
 into a Megaplex-4 chassis (configuration happens on the `mp4100` CLI).
 
-**2.2 Compare product variants**
+**3.2 Compare product variants**
 > rad agent, how do the ETX-2i 10G and 100G variants differ — ports, timing, ordering?
 
 Side-by-side from the two variants' datasheet sections (INTERFACES, TIMING
 AND SYNCHRONIZATION, ORDERING OPTIONS) — same family (`etx2`), so the CLI
 reference applies to both; only the hardware differs.
 
-**2.3 Spec lookup on one product**
+**3.3 Spec lookup on one product**
 > abayev, what is the operating temperature range and power options of the SecFlow-1p?
 
 A bounded read of the `secflow-1p` sheet's ENVIRONMENTAL/PHYSICAL sections —
 cited with the section and page, no device contact and no web search.
 
-**2.4 Ingest new or updated datasheets**
+**3.4 Ingest new or updated datasheets**
 > rad agent, here are the datasheet PDFs for the new family — add them to the knowledge
 
 Drop the PDFs in `datasheets/`, add each one's entry to
@@ -79,33 +106,6 @@ Drop the PDFs in `datasheets/`, add each one's entry to
 system/card/accessory, read off the sheet's own first-page banner), then
 `/rad-load-datasheet --all`. Specs, variants and ordering become searchable
 per subject section; PDFs stay gitignored.
-
-## 3. Device management
-
-**3.1 Add a device**
-> rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234
-
-The intake gate requires all six facts before anything is written; facts go
-to `inventory.yaml`, credentials only to `server/.env`. If you omit a field,
-the agent asks for all missing ones in a single question.
-
-**3.2 List devices**
-> noam, show the list of devices
-
-Credential-free summaries (name/host/family/groups); filterable: *"noam,
-list only the mp1 family"*.
-
-**3.3 Change a device**
-> abayev, marks-mp4 moved — update its host to 172.17.161.95
-
-Partial update: only the named field changes. Changing `family` is treated
-as suspicious (usually a mis-registration) and asked back.
-
-**3.4 Remove a device**
-> rad agent, remove lab-etx2 from the list
-
-Requires explicit confirmation; only forgets the inventory entry — never
-touches the device, its backups, or its audit history.
 
 ## 4. CLI operations
 

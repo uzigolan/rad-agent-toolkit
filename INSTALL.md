@@ -98,6 +98,35 @@ If needed:
 - VS Code: run `MCP: Open User Configuration` or `MCP: Reset Trust`.
 - IntelliJ: re-run the installer with the same URL/token and restart the IDE.
 
+## 7) Usage prompts from examples
+
+Use these ready prompts after install (copied from `rad-mcp-server/docs/examples.md`):
+
+Start with device management (section 1):
+```text
+rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234
+```
+
+Then one prompt from each core area:
+
+From section 2 (User manual knowledge):
+```text
+rad agent, how does zero-touch provisioning work on the MiNID, and what are its limits?
+```
+
+From section 4 (CLI operations):
+```text
+abayev, show the active alarms on sf-163-187
+```
+
+From section 5 (SNMP operations):
+```text
+rad agent, check SNMP on etx2v-1 and report its exact firmware, sysObjectID, and detected family
+```
+
+Full prompt catalog:
+- `rad-mcp-server/docs/examples.md`
+
 ---
 
 Based on:
