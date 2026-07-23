@@ -137,7 +137,7 @@ function Assert-CommonSetup {
 
 function Copy-SkillsTo {
     # Knowledge distribution mode:
-    #   bundled (default) — skills carry their references/ (~14 MB); knowledge
+    #   bundled           — skills carry their references/ (~14 MB); knowledge
     #                       answers work with no MCP connection.
     #   served            — thin skills (SKILL.md only); the rad-cli-operations
     #                       references/ is omitted and served by the MCP
@@ -147,7 +147,7 @@ function Copy-SkillsTo {
     #                       present.
     param(
         [Parameter(Mandatory)][string]$Dest,
-        [ValidateSet('bundled', 'served')][string]$Knowledge = 'bundled'
+        [ValidateSet('bundled', 'served')][string]$Knowledge = 'served'
     )
     New-Item -ItemType Directory -Force $Dest | Out-Null
     foreach ($s in $script:SkillNames) {
@@ -173,16 +173,16 @@ function Copy-SkillsTo {
 
 function Resolve-KnowledgeMode {
     # Returns 'bundled' or 'served'. A -Knowledge flag wins; otherwise prompt
-    # (bundled is the default). Warns in served mode if the catalog is absent.
+    # (served is the default). Warns in served mode if the catalog is absent.
     param([string]$Knowledge)
     $mode = if ($Knowledge) { $Knowledge.ToLower() } else { '' }
     if (-not $mode) {
         Write-Host ""
         Write-Host "Knowledge distribution mode:"
-        Write-Host "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]"
-        Write-Host "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools"
-        $ans = Read-Host "Choice [1]"
-        $mode = if ($ans -match '^2$|^served') { 'served' } else { 'bundled' }
+        Write-Host "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection"
+        Write-Host "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]"
+        $ans = Read-Host "Choice [2]"
+        $mode = if ($ans -match '^1$|^bundled') { 'bundled' } else { 'served' }
     }
     if ($mode -eq 'served') {
         $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'

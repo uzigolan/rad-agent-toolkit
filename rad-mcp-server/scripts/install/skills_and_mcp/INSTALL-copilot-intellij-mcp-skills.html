@@ -98,7 +98,7 @@ PowerShell execution policy blocks it. Use the one-off bypass shown above
 (<code>PowerShell -ExecutionPolicy Bypass -File ./&lt;script&gt;.ps1</code>)
 — nothing needs fixing and no policy change persists.</div>
 <p>Prompts and non-interactive flags are identical to the VS Code installer:
-knowledge mode (<code>bundled</code> default / <code>served</code>),
+knowledge mode (<code>served</code> default / <code>bundled</code>),
 transport (<code>stdio</code> default / <code>http</code> URL + token),
 <code>-Http -Url &lt;u&gt; -Token &lt;t&gt;</code>, <code>-Knowledge</code>,
 <code>-Reconfigure</code> (bash: <code>--http --url --token --knowledge
@@ -107,9 +107,9 @@ transport (<code>stdio</code> default / <code>http</code> URL + token),
 <h3>This lab's setup — what to answer at the prompts</h3>
 <p>Served knowledge + the shared http server. Interactive run:</p>
 <pre><code>Knowledge distribution mode:
-  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]
-  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools
-Choice [1]: 2
+  1) bundled  - skills carry their references (~14 MB); works with no MCP connection
+  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]
+Choice [2]:
 
 Select MCP transport:
   1) stdio  - local; the client launches the server via command/args (full toolset)

@@ -56,9 +56,10 @@ cd <repo>/rad-mcp-server/scripts/install/skills_and_mcp
 
 The script prompts for:
 
-1. **Knowledge mode** — `bundled` (default; skills carry their references,
-   ~14 MB, works with no MCP connection) or `served` (thin skills; knowledge
-   served by the MCP catalog tools — needs a server with the catalog built).
+1. **Knowledge mode** — `served` (default; thin skills; knowledge served by
+  the MCP catalog tools — needs a server with the catalog built) or
+  `bundled` (skills carry their references, ~14 MB, works with no MCP
+  connection).
 2. **Transport** — `stdio` (default; VS Code launches the server locally,
    full toolset) or `http` (URL + bearer token; blank token = auto-generate,
    then configure the SAME value on the server via `RAD_MCP_TOKENS` /
@@ -68,7 +69,7 @@ Non-interactive flags (PowerShell shown; bash uses `--http --url --token
 --knowledge --reconfigure`):
 
 ```powershell
-./install-copilot-vscode.ps1 -Knowledge bundled -Http -Url http://127.0.0.1:8080/mcp -Token <token>
+./install-copilot-vscode.ps1 -Knowledge served -Http -Url http://127.0.0.1:8080/mcp -Token <token>
 ./install-copilot-vscode.ps1 -Reconfigure   # force-replace an existing rad-mcp entry
 ```
 
@@ -81,9 +82,9 @@ Served knowledge + the shared http server. Interactive run:
 
 ```text
 Knowledge distribution mode:
-  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]
-  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools
-Choice [1]: 2
+  1) bundled  - skills carry their references (~14 MB); works with no MCP connection
+  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]
+Choice [2]:
 
 Select MCP transport:
   1) stdio  - local; the client launches the server via command/args (full toolset)

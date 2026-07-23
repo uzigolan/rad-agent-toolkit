@@ -61,7 +61,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 ```
 
 Recommended answers:
-- Knowledge mode: `bundled` (default, easiest) or `served` (if you want catalog served by MCP).
+- Knowledge mode: `served` (default, recommended) or `bundled` (offline references inside skills).
 - Transport: `http`
 - URL: use your MCP URL (example: `http://127.0.0.1:8080/mcp`)
 - Token: paste the same bearer token configured for the MCP server.
@@ -73,7 +73,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 ```
 
 Recommended answers:
-- Knowledge mode: `bundled` (or `served` if you intentionally use served knowledge)
+- Knowledge mode: `served` (default, recommended) or `bundled` (offline references inside skills)
 - Transport: `http`
 - URL/token: same MCP URL and token as above.
 

@@ -76,12 +76,12 @@ assert_common_setup() {
 }
 
 copy_skills_to() {
-    # $1 = dest, $2 = knowledge mode (bundled|served; default bundled).
+    # $1 = dest, $2 = knowledge mode (bundled|served; default served).
     #   bundled — skills carry references/ (~14 MB); works with no MCP.
     #   served  — thin skills; rad-cli-operations/references/ omitted and served
     #             by the MCP catalog tools (needs the rad-mcp catalog present).
     local dest="$1"
-    local knowledge="${2:-bundled}"
+    local knowledge="${2:-served}"
     mkdir -p "$dest"
     local s
     for s in "${SKILL_NAMES[@]}"; do
@@ -108,11 +108,11 @@ resolve_knowledge_mode() {
     local mode="$1"
     if [ -z "$mode" ]; then
         echo "Knowledge distribution mode:" >&2
-        echo "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]" >&2
-        echo "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools" >&2
-        printf "Choice [1]: " >&2
+        echo "  1) bundled  - skills carry their references (~14 MB); works with no MCP connection" >&2
+        echo "  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]" >&2
+        printf "Choice [2]: " >&2
         read -r ans || ans=""
-        case "$ans" in 2|served|Served) mode=served ;; *) mode=bundled ;; esac
+        case "$ans" in 1|bundled|Bundled) mode=bundled ;; *) mode=served ;; esac
     fi
     mode="$(printf '%s' "$mode" | tr 'A-Z' 'a-z')"
     if [ "$mode" = "served" ] && [ ! -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then

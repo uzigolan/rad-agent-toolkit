@@ -91,10 +91,10 @@ PowerShell execution policy blocks it. Use the one-off bypass shown above
 — nothing needs fixing and no policy change persists.</div>
 <p>The script prompts for:</p>
 <ol>
-  <li><strong>Knowledge mode</strong> — <code>bundled</code> (default; skills
-      carry their references, ~14&nbsp;MB, works with no MCP connection) or
-      <code>served</code> (thin skills; knowledge served by the MCP catalog
-      tools — needs a server with the catalog built).</li>
+    <li><strong>Knowledge mode</strong> — <code>served</code> (default; thin
+      skills; knowledge served by the MCP catalog tools — needs a server with
+      the catalog built) or <code>bundled</code> (skills carry their
+      references, ~14&nbsp;MB, works with no MCP connection).</li>
   <li><strong>Transport</strong> — <code>stdio</code> (default; VS Code
       launches the server locally, full toolset) or <code>http</code> (URL +
       bearer token; blank token = auto-generate, then configure the SAME
@@ -103,7 +103,7 @@ PowerShell execution policy blocks it. Use the one-off bypass shown above
 </ol>
 <p>Non-interactive flags (PowerShell shown; bash uses <code>--http --url
 --token --knowledge --reconfigure</code>):</p>
-<pre><code>./install-copilot-vscode.ps1 -Knowledge bundled -Http -Url http://127.0.0.1:8080/mcp -Token &lt;token&gt;
+<pre><code>./install-copilot-vscode.ps1 -Knowledge served -Http -Url http://127.0.0.1:8080/mcp -Token &lt;token&gt;
 ./install-copilot-vscode.ps1 -Reconfigure   # force-replace an existing rad-mcp entry</code></pre>
 <p>If rad-mcp is already configured and no flags force a mode, the script
 offers to <strong>keep the existing entry</strong> and only refresh the
@@ -112,9 +112,9 @@ skills.</p>
 <h3>This lab's setup — what to answer at the prompts</h3>
 <p>Served knowledge + the shared http server. Interactive run:</p>
 <pre><code>Knowledge distribution mode:
-  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]
-  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools
-Choice [1]: 2
+  1) bundled  - skills carry their references (~14 MB); works with no MCP connection
+  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]
+Choice [2]:
 
 Select MCP transport:
   1) stdio  - local; the client launches the server via command/args (full toolset)

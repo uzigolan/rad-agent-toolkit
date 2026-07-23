@@ -61,7 +61,7 @@ cd <repo>/rad-mcp-server/scripts/install/skills_and_mcp
 > persists.
 
 Prompts and non-interactive flags are identical to the VS Code installer:
-knowledge mode (`bundled` default / `served`), transport (`stdio` default /
+knowledge mode (`served` default / `bundled`), transport (`stdio` default /
 `http` URL + token), `-Http -Url <u> -Token <t>`, `-Knowledge`, `-Reconfigure`
 (bash: `--http --url --token --knowledge --reconfigure`).
 
@@ -71,9 +71,9 @@ Served knowledge + the shared http server. Interactive run:
 
 ```text
 Knowledge distribution mode:
-  1) bundled  - skills carry their references (~14 MB); works with no MCP connection [default]
-  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools
-Choice [1]: 2
+  1) bundled  - skills carry their references (~14 MB); works with no MCP connection
+  2) served   - thin skills; all knowledge served by the rad-mcp catalog tools [default]
+Choice [2]:
 
 Select MCP transport:
   1) stdio  - local; the client launches the server via command/args (full toolset)
