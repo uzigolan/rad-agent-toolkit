@@ -1,6 +1,7 @@
-# INSTALL: VS Code + IntelliJ Copilot
+# INSTALL: VS Code or IntelliJ Copilot
 
-This guide is only for:
+This guide consolidates the two main Copilot install flows in one place.
+Use one path only, based on your IDE:
 - VS Code + GitHub Copilot extension
 - IntelliJ (JetBrains) + GitHub Copilot plugin
 
@@ -10,7 +11,8 @@ For all other install flows, use:
 ## 1) Mandatory first step (official Copilot only)
 
 Before anything else:
-- Download and install the latest VS Code and the latest IntelliJ IDEA from their official websites, even if you already have them installed.
+- Choose your IDE path: VS Code or IntelliJ.
+- Download/install (or update) only the IDE you plan to use.
 - Install only the official GitHub Copilot add-on for each IDE:
   - VS Code: `GitHub Copilot` + `GitHub Copilot Chat` by GitHub (verified publisher).
   - IntelliJ: `GitHub Copilot` by GitHub from JetBrains Marketplace.
@@ -46,7 +48,7 @@ Important safety note:
 - This installer creates and uses a Python virtual environment under the repo (`rad-mcp-server/server/.venv`, and portable Python may be placed under `server/.python` on Windows).
 - It does not install system-wide Python components and should not harm your PC.
 
-## 5) Install skills + MCP config for each IDE
+## 5) Install skills + MCP config (choose one IDE path)
 
 ### 5a) VS Code Copilot
 
@@ -71,9 +73,9 @@ Recommended answers:
 - Transport: `http`
 - URL/token: same MCP URL and token as above.
 
-## 6) Verify in Copilot (both IDEs)
+## 6) Verify in Copilot (for your chosen IDE)
 
-Do these checks in Copilot chat and/or Copilot settings/UI tools.
+Do these checks in Copilot chat and/or Copilot settings/UI tools for the IDE you chose.
 Using the Copilot UI is fully supported for this flow.
 
 VS Code:
