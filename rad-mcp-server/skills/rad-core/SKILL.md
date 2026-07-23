@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.3.0
+version: 1.3.1
 ---
 
-> **Skill version:** 1.3.0 · updated 2026-07-21 (golden rule 7: debug_logon_request/submit/debug_menu/enter_debug_shell/debug_shell_command require an explicit user request, never inferred) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.3.1 · updated 2026-07-24 (MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, at session start)
 
@@ -130,10 +130,11 @@ Run these checks in order and include them in one markdown table:
 If `list_devices` returns empty during this test flow, run a temporary device
 cycle so device-bound tools can be probed:
 
-1. `add_device` a demo entry (for example `rad-toolcheck-demo`, family `etx2`,
-   host `192.0.2.10`, group `toolcheck`, description `temporary status check`).
+1. `run_demo_device` to create/start a demo entry with full attributes
+   (inventory facts + CLI username/password + SNMP v1 community).
 2. Run the device-bound tool probes against that demo device.
-3. Always clean up at the end with `remove_device(name, confirm=true)`.
+3. Always clean up at the end with `stop_demo_device(name, remove_from_inventory=true, confirm=true)`
+   or `remove_device(name, confirm=true)` (which also stops demo runtime).
 
 Treat connectivity/auth failures on the demo unit as `DEGRADED` evidence,
 not as missing tools.
@@ -153,13 +154,15 @@ Expected tool inventory for the table (include all rows even when unavailable):
 - `cli_help`
 - `health_check`
 - `snmp_walk`
+- `run_demo_device`
+- `stop_demo_device`
 - `remove_device`
 
 Table columns (always):
 
 - `Tool`
-- `Status`
-- `Evidence`
+- `Status  `
+- `Eviden`
 - `Dependencies / Prerequisites`
 
 Status mapping:

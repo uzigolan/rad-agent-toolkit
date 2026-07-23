@@ -133,6 +133,71 @@ mcp = FastMCP(
 # In-memory staging area: stage_id -> {device, lines, created}
 _STAGES: dict[str, dict] = {}
 
+# In-memory demo-runtime state: device name -> metadata. When present, CLI and
+# SNMP read tools return deterministic demo answers instead of touching network.
+_DEMO_DEVICES: dict[str, dict] = {}
+
+
+def _demo_state(device_name: str) -> dict | None:
+    return _DEMO_DEVICES.get(device_name)
+
+
+def _demo_start(dev, *, cli_user: str, snmp_v1: str) -> dict:
+    state = {
+        "name": dev.name,
+        "host": dev.host,
+        "family": dev.family,
+        "transport": dev.transport,
+        "port": dev.port,
+        "started": datetime.now(timezone.utc).isoformat(),
+        "cli_user": cli_user,
+        "snmp_v1_configured": bool(snmp_v1),
+    }
+    _DEMO_DEVICES[dev.name] = state
+    return state
+
+
+def _demo_stop(device_name: str) -> bool:
+    return _DEMO_DEVICES.pop(device_name, None) is not None
+
+
+def _demo_config(dev) -> str:
+    return "\n".join([
+        f"! demo config for {dev.name}",
+        f"! family={dev.family} host={dev.host}",
+        "configure system",
+        " location DM",
+        " no shutdown",
+        "exit all",
+        "save",
+    ])
+
+
+def _demo_sys_object_id(family: str) -> str:
+    return {
+        "minid": "1.3.6.1.4.1.164.6.1.6.36",
+        "etx2v": "1.3.6.1.4.1.164.6.1.6.55",
+    }.get(family, "1.3.6.1.4.1.164.6.1.6.79")
+
+
+def _demo_snmp_scalars(dev) -> dict[str, str]:
+    return {
+        "1.3.6.1.2.1.1.1.0": f"RAD demo {dev.family} software 0.0.1",
+        "1.3.6.1.2.1.1.2.0": _demo_sys_object_id(dev.family),
+        "1.3.6.1.2.1.1.3.0": "123456",
+        "1.3.6.1.2.1.1.5.0": dev.name,
+        "1.3.6.1.2.1.1.6.0": "Demo Lab",
+    }
+
+
+def _write_backup_content(dev, config: str) -> Path:
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    path = BACKUP_DIR / f"{dev.name}-{stamp}.cfg"
+    path.write_text(config, encoding="utf-8")
+    audit("backup_config", dev.name, detail=str(path))
+    return path
+
 
 # ---------------------------------------------------------------- inventory
 
@@ -269,6 +334,9 @@ def list_versions() -> dict:
 def test_connectivity(device: str) -> str:
     """Verify SSH reachability and authentication against a device (runs no user commands)."""
     dev = get_device(device)
+    if _demo_state(dev.name):
+        audit("test_connectivity", device, ok=True, detail="demo runtime")
+        return f"OK: Demo session to {dev.name} ({dev.host}) is running."
     try:
         get_backend().execute(dev, "", timeout=20)
         audit("test_connectivity", device, ok=True)
@@ -288,6 +356,9 @@ def run_show(device: str, command: str) -> str:
     if not driver.is_show_allowed(command):
         allowed = ", ".join(driver.show_whitelist)
         return f"REFUSED: '{command}' is not whitelisted for {dev.family}. Allowed prefixes: {allowed}"
+    if _demo_state(dev.name):
+        audit("run_show", device, detail=f"demo::{command}")
+        return f"DEMO OK [{dev.family}] {command}\nNo active alarms."
     out = get_backend().execute(dev, command)
     audit("run_show", device, detail=command)
     return out
@@ -297,6 +368,9 @@ def run_show(device: str, command: str) -> str:
 def get_config(device: str) -> str:
     """Export the device's current configuration."""
     dev = get_device(device)
+    if _demo_state(dev.name):
+        audit("get_config", device, detail="demo")
+        return _demo_config(dev)
     driver = get_driver(dev.family)
     out = get_backend().execute(dev, driver.config_export_command, timeout=60)
     audit("get_config", device)
@@ -307,6 +381,13 @@ def get_config(device: str) -> str:
 def health_check(device: str) -> dict[str, str]:
     """Run the driver-defined health sweep (device info, active alarms, ...) over one session."""
     dev = get_device(device)
+    if _demo_state(dev.name):
+        audit("health_check", device, detail="demo")
+        return {
+            "show device-information": f"Demo device {dev.name} ({dev.family})",
+            "show active-alarms": "No active alarms",
+            "show system": "System status: OK",
+        }
     driver = get_driver(dev.family)
     results = get_backend().execute_many(dev, list(driver.health_sequence))
     audit("health_check", device)
@@ -339,6 +420,9 @@ def run_show_in_context(device: str, context: str, command: str) -> str:
         return "REFUSED: context tokens may only contain letters, digits, '-', '/', '.'"
 
     sequence = ["exit all", context.strip(), command.strip(), "exit all"]
+    if _demo_state(dev.name):
+        audit("run_show_in_context", device, detail=f"demo::{context} :: {command}")
+        return f"DEMO OK [{context}] {command}\nNo active alarms."
     results = get_backend().execute_many(dev, sequence)
     audit("run_show_in_context", device, detail=f"{context} :: {command}")
     nav_errors = [out for cmd, out in results if cmd != command.strip() and "cli error" in out.lower()]
@@ -377,6 +461,12 @@ def cli_help(device: str, context: str = "", prefix: str = "") -> str:
         if any(not t.replace("-", "").replace("/", "").replace(".", "").isalnum() for t in tokens):
             return "REFUSED: context tokens may only contain letters, digits, '-', '/', '.'"
         navigation.append(ctx)
+
+    if _demo_state(dev.name):
+        audit("cli_help", device, detail=f"demo::{ctx or '<root>'} :: {prefix or '<level>'}?")
+        if prefix.endswith(" "):
+            return "<CR>\n<string>"
+        return "show active-alarms\nshow system\nexit"
 
     out = get_backend().interactive_help(dev, navigation, prefix)
     audit("cli_help", device, detail=f"{ctx or '<root>'} :: {prefix or '<level>'}?")
@@ -417,14 +507,11 @@ def backup_config(device: str) -> str:
 
 
 def _take_backup(dev) -> Path:
+    if _demo_state(dev.name):
+        return _write_backup_content(dev, _demo_config(dev))
     driver = get_driver(dev.family)
     config = get_backend().execute(dev, driver.config_export_command, timeout=60)
-    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    path = BACKUP_DIR / f"{dev.name}-{stamp}.cfg"
-    path.write_text(config, encoding="utf-8")
-    audit("backup_config", dev.name, detail=str(path))
-    return path
+    return _write_backup_content(dev, config)
 
 
 # ------------------------------------------------------------- SNMP (reads)
@@ -451,8 +538,19 @@ def snmp_probe(device: str) -> dict[str, str]:
     """SNMP identity probe (read-only): MIB-II system group — exact firmware
     via sysDescr, plus a sysObjectID -> family hint. Works without any CLI/SSH
     session, so it is the safe first contact for fragile-SSH units."""
-    s = _snmp()
     dev = get_device(device)
+    if _demo_state(dev.name):
+        values = _demo_snmp_scalars(dev)
+        out = {
+            "sysDescr": values["1.3.6.1.2.1.1.1.0"],
+            "sysObjectID": values["1.3.6.1.2.1.1.2.0"],
+            "sysName": values["1.3.6.1.2.1.1.5.0"],
+            "sysLocation": values["1.3.6.1.2.1.1.6.0"],
+            "family_hint": dev.family,
+        }
+        audit("snmp_probe", device, detail="demo")
+        return out
+    s = _snmp()
     out = s.snmp_probe(dev)
     audit("snmp_probe", device)
     return out
@@ -501,12 +599,19 @@ def snmp_get(device: str, oids: list[str]) -> dict[str, str]:
     units) when the knowledge catalog is present. This — not snmp_walk — is
     the reliable way to poll families whose agent has a sparse GETNEXT chain
     (minid)."""
-    s = _snmp()
     dev = get_device(device)
     if not oids:
         raise ToolError("pass at least one OID, e.g. ['1.3.6.1.2.1.1.1.0']")
     if len(oids) > 64:
         raise ToolError("max 64 OIDs per call — split larger polls")
+    if _demo_state(dev.name):
+        scalars = _demo_snmp_scalars(dev)
+        out = {
+            f"{oid}  ({oid})": scalars.get(oid, "ERROR: noSuchObject") for oid in oids
+        }
+        audit("snmp_get", device, detail=f"demo::{len(oids)} oids")
+        return out
+    s = _snmp()
     raw = s.snmp_get(dev, oids)
     audit("snmp_get", device, detail=f"{len(oids)} oids")
     answered = sum(1 for v in raw.values() if not v.startswith(("ERROR", "PDU-ERROR")))
@@ -521,9 +626,21 @@ def snmp_walk(device: str, oid: str, max_rows: int = 200) -> dict:
     exists beyond max_rows, and RAD agents signal end-of-view by silence
     (reported in `note`, not an error). On minid prefer snmp_get: its agent's
     NEXT chain is sparse and walks under-report."""
-    s = _snmp()
     dev = get_device(device)
     max_rows = max(1, min(int(max_rows), 2000))
+    if _demo_state(dev.name):
+        scalars = _demo_snmp_scalars(dev)
+        rows = {k: v for k, v in scalars.items() if k.startswith(oid.rstrip("."))}
+        ordered = dict(sorted(rows.items())[:max_rows])
+        audit("snmp_walk", device, detail=f"demo::{oid} ({len(ordered)} rows)")
+        return {
+            "root": f"{oid}  ({oid})",
+            "rows": {f"{k}  ({k})": v for k, v in ordered.items()},
+            "row_count": len(ordered),
+            "capped": len(rows) > len(ordered),
+            "note": "demo data",
+        }
+    s = _snmp()
     rows, capped, note = s.snmp_walk(dev, oid, max_rows)
     audit("snmp_walk", device, detail=f"{oid} ({len(rows)} rows)")
     _log_observation(dev, "snmp_walk", f"walk {oid}",
@@ -919,6 +1036,77 @@ if WRITE_TOOLS_ENABLED:
         }
 
     @mcp.tool()
+    def run_demo_device(
+        name: str = "rad-toolcheck-demo",
+        host: str = "127.0.0.1",
+        family: str = "etx2",
+        transport: str = "ssh",
+        port: int | None = None,
+        groups: list[str] | None = None,
+        description: str = "temporary local demo for MCP status checks",
+        username: str = "demo",
+        password: str = "demo",
+        snmp_v1_community: str = "public",
+        overwrite: bool = True,
+    ) -> dict:
+        """Create/update and start a local in-process demo device.
+
+        This helper exists for MCP tool validation when no real hardware is
+        registered. It writes a normal inventory entry, stores CLI+SNMP secrets
+        via set_device_credentials semantics, and marks the device as demo-live
+        so CLI/SNMP read tools return deterministic OK responses.
+        """
+        _require_write_scope()
+        get_driver(family)
+        inv_path = add_device_entry(
+            name, host, family, transport=transport, port=port,
+            groups=groups or ["toolcheck", "demo"], description=description,
+            overwrite=overwrite,
+        )
+        _set_device_credentials(name, username, password, snmp_v1_community=snmp_v1_community)
+        dev = get_device(name)
+        state = _demo_start(dev, cli_user=username, snmp_v1=snmp_v1_community)
+        audit("run_demo_device", name, detail=f"family={family} host={host}")
+        return {
+            "status": f"Demo device '{name}' is running.",
+            "inventory": inv_path.name,
+            "device": dev.summary(),
+            "demo_runtime": {
+                "started": state["started"],
+                "cli_user": state["cli_user"],
+                "snmp_v1_configured": state["snmp_v1_configured"],
+            },
+            "next_steps": [
+                f"Run test_connectivity('{name}').",
+                f"Run health_check('{name}').",
+                f"Run snmp_probe('{name}').",
+            ],
+        }
+
+    @mcp.tool()
+    def stop_demo_device(name: str = "rad-toolcheck-demo", remove_from_inventory: bool = False,
+                         confirm: bool = False) -> dict:
+        """Stop an in-process demo device started by run_demo_device.
+
+        Set remove_from_inventory=true to also remove its inventory row.
+        When removing, confirm=true is required.
+        """
+        _require_write_scope()
+        stopped = _demo_stop(name)
+        removed = False
+        if remove_from_inventory:
+            if not confirm:
+                raise ToolError("remove_from_inventory=true requires confirm=true")
+            get_device(name)
+            remove_device_entry(name)
+            removed = True
+        audit("stop_demo_device", name, detail=f"stopped={stopped} removed={removed}")
+        return {
+            "status": f"Demo device '{name}' stopped." if stopped else f"No active demo runtime for '{name}'.",
+            "removed_from_inventory": removed,
+        }
+
+    @mcp.tool()
     def set_device_credentials(name: str, username: str = "", password: str = "",
                                snmp_community: str = "", snmp_v1_community: str = "",
                                snmp_v1_communities: str = "", snmp_v3_user: str = "",
@@ -1014,9 +1202,11 @@ if WRITE_TOOLS_ENABLED:
         if not confirm:
             return "REFUSED: remove_device requires confirm=true after the user has approved removing this device."
         get_device(name)  # raises with the known-devices list if unknown
+        was_demo = _demo_stop(name)
         remove_device_entry(name)
         audit("remove_device", name)
-        return f"Removed '{name}' from the inventory. (Credentials in server/.env, if any, were left in place — remove those manually if no longer needed.)"
+        demo_note = " Demo runtime stopped." if was_demo else ""
+        return f"Removed '{name}' from the inventory.{demo_note} (Credentials in server/.env, if any, were left in place — remove those manually if no longer needed.)"
 
     @mcp.tool()
     def stage_config(device: str, lines: list[str], purpose: str) -> dict:
@@ -1078,7 +1268,10 @@ if WRITE_TOOLS_ENABLED:
         stage = _STAGES[stage_id]
         dev = get_device(stage["device"])
         backup_path = _take_backup(dev)
-        transcript = get_backend().push_config(dev, stage["lines"])
+        if _demo_state(dev.name):
+            transcript = "\n".join([f"{line}\nOK" for line in stage["lines"]])
+        else:
+            transcript = get_backend().push_config(dev, stage["lines"])
         # Only consume the stage once the push has succeeded, so a connection
         # failure can be retried with the same stage_id.
         _STAGES.pop(stage_id, None)
@@ -1095,6 +1288,9 @@ if WRITE_TOOLS_ENABLED:
         if not confirm:
             return "REFUSED: save_startup requires confirm=true after user approval."
         dev = get_device(device)
+        if _demo_state(dev.name):
+            audit("save_startup", device, detail="demo")
+            return "Saved. (demo)"
         driver = get_driver(dev.family)
         out = get_backend().execute(dev, driver.save_command)
         audit("save_startup", device)
