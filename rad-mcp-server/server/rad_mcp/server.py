@@ -74,6 +74,64 @@ else:
 
 BACKUP_DIR = Path(__file__).resolve().parent.parent / "backups"
 
+# Tool version registry — bumped when tool behavior/signature changes.
+# Tools inherit the server version unless introduced in an earlier release.
+TOOL_VERSIONS = {
+    # Inventory tools (v0.1.0)
+    "list_devices": "0.1.0",
+    "add_device": "0.1.0",
+    "remove_device": "0.1.0",
+    "update_device": "0.1.0",
+    "run_demo_device": "0.1.0",
+    "stop_demo_device": "0.1.0",
+    
+    # Metadata tools
+    "check_skill_version": "0.6.0",
+    "list_versions": "0.5.1",
+    
+    # Read tools (v0.1.0)
+    "test_connectivity": "0.1.0",
+    "run_show": "0.1.0",
+    "get_config": "0.1.0",
+    "health_check": "0.1.0",
+    "run_show_in_context": "0.1.0",
+    "cli_help": "0.1.0",
+    "debug_tree_history": "0.1.0",
+    "backup_config": "0.1.0",
+    
+    # SNMP tools
+    "snmp_probe": "0.2.0",
+    "snmp_get": "0.2.0",
+    "snmp_walk": "0.2.0",
+    "snmp_build_poll_plan": "0.4.0",
+    
+    # Knowledge/Reference tools
+    "knowledge_status": "0.3.0",
+    "mib_search": "0.3.0",
+    "mib_describe": "0.3.0",
+    "mib_table": "0.3.0",
+    "mib_notifications": "0.3.0",
+    "cli_search": "0.5.0",
+    "manual_search": "0.5.0",
+    "datasheet_search": "0.7.0",
+    
+    # Credentials tool (NEW in v0.8.0)
+    "set_device_credentials": "0.8.0",
+    
+    # Write/Config tools (v0.1.0)
+    "stage_config": "0.1.0",
+    "commit_config": "0.1.0",
+    "save_startup": "0.1.0",
+    
+    # Debug tools (v0.1.0)
+    "debug_logon_request": "0.1.0",
+    "debug_logon_submit": "0.1.0",
+    "debug_menu": "0.1.0",
+    "enter_debug_shell": "0.1.0",
+    "debug_shell_command": "0.1.0",
+    "exit_debug_shell": "0.1.0",
+}
+
 
 def _build_auth():
     """Interlock 2: HTTP requires bearer tokens — refuse to serve unauthenticated.
@@ -328,6 +386,23 @@ def list_versions() -> dict:
         pass
     return {"server": __version__, "skills": skills, "drivers": drivers,
             "knowledge_catalog": catalog}
+
+
+@mcp.tool()
+def tool_versions() -> dict:
+    """Report all available MCP tools with their version history.
+    Lists each tool's introduction version and current status. Bumped when
+    tool behavior or signature changes; tools introduced in earlier server
+    versions report that version (e.g. mib_search @ 0.3.0 even in 0.8.0)."""
+    tools = [
+        {"name": name, "version": version}
+        for name, version in sorted(TOOL_VERSIONS.items())
+    ]
+    return {
+        "server": __version__,
+        "total_tools": len(tools),
+        "tools": tools,
+    }
 
 
 @mcp.tool()
