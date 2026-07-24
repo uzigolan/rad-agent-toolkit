@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.6.0
+version: 1.7.0
 ---
 
-> **Skill version:** 1.6.0 · updated 2026-07-24 (demo-only confirmation policy for status checks: when probing confirm-gated tools on an active run_demo_device runtime, confirm may be omitted; for all non-demo devices confirm remains mandatory; SNMP poll-plan now uses a system-scalar fallback when the catalog cannot resolve refs during tool-check flows; 1.5.0: MCP tools requests now require a status matrix response by default: when asked to show/list MCP tools, render per-tool status evidence and dependencies, not just a plain tool list; 1.4.0: inventory and device-management responses must always include a live Device Matrix from list_devices, including explicit empty-state row and total count; 1.3.1: MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.7.0 · updated 2026-07-24 (1.7.0: added "supported families with SW versions" lookup section — when user asks for device types/families with versions, call list_versions + manual_search per family and render the full matrix; 1.6.0: demo-only confirmation policy for status checks: when probing confirm-gated tools on an active run_demo_device runtime, confirm may be omitted; for all non-demo devices confirm remains mandatory; SNMP poll-plan now uses a system-scalar fallback when the catalog cannot resolve refs during tool-check flows; 1.5.0: MCP tools requests now require a status matrix response by default: when asked to show/list MCP tools, render per-tool status evidence and dependencies, not just a plain tool list; 1.4.0: inventory and device-management responses must always include a live Device Matrix from list_devices, including explicit empty-state row and total count; 1.3.1: MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, at session start)
 
@@ -113,6 +113,37 @@ Render **two markdown tables** — *Skills* (name · version) and *Drivers*
 `version:` (and its top-of-body line) on any skill edit, and a driver's
 `version` on any change to that family's behavior; mismatched versions across
 copies flag drift.
+
+## Supported families with SW versions
+
+When the user asks for **supported device types / families with their versions**
+(e.g. *"list all supported families with versions"*, *"what device versions are
+supported"*, *"show me the device types and SW versions"*) — do **not** just
+return the driver version (always 1.0). Produce a full matrix:
+
+1. Call `list_versions` to get the canonical family list and driver versions.
+2. For each family call `manual_search(query="new in this version software release", family=<family>, limit=2)` in parallel to surface the manual's covered SW range.
+3. Render one table with columns:
+   - **Family** — inventory key (`etx2`, `secflow`, …)
+   - **Product(s)** — full product name(s)
+   - **Manual / Doc SW Version** — SW version range covered by ingested manuals
+   - **Live-Verified SW** — version confirmed on lab hardware (see Product families section)
+   - **Driver** — driver version from `list_versions`
+4. Add a note: *"These are versions documented in ingested manuals and confirmed
+   during live lab probing. To see running firmware on your own devices, register
+   them with `add_device` and I will run `show version` live."*
+
+Known live-verified SW versions (update when re-verified on new firmware):
+
+| Family | Products | Live-Verified SW |
+|---|---|---|
+| `etx2` | ETX-2i, ETX-203AX, ETX-205A, ETX-220A | 6.8.5 (1.150) |
+| `etx1p` | ETX-1p | 6.x.x |
+| `secflow` | SecFlow-1p (SF-1p) | 6.x.x |
+| `mp4100` | Megaplex-4100 | Mn 4.91 |
+| `mp1` | MP-1 (Megaplex-1) | SW 2.20(0.61) |
+| `minid` | MiNID / SFP Sleeve | SW 2.6 |
+| `etx2v` | ETX-2V / uCPE-OS | uCPE-OS (719-node CLI tree) |
 
 ## MCP tools status checker
 
