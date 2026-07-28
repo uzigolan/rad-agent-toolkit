@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generic manual installer: skills + MCP snippets</title>
+<style>
+  :root { color-scheme: light dark;
+    --bg:#ffffff; --fg:#1f2328; --muted:#59636e; --border:#d1d9e0;
+    --code-bg:#f6f8fa; --accent:#0969da; --warn-bg:#fff8c5; --warn-border:#d4a72c; }
+  @media (prefers-color-scheme: dark) { :root {
+    --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --border:#3d444d;
+    --code-bg:#161b22; --accent:#4493f8; --warn-bg:#3a2d12; --warn-border:#9e6a03; } }
+  body { margin:0 auto; max-width:860px; padding:2rem 1.25rem 4rem;
+    background:var(--bg); color:var(--fg);
+    font:16px/1.6 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  h1 { font-size:1.7rem; line-height:1.3; border-bottom:1px solid var(--border); padding-bottom:.5rem; }
+  h2 { font-size:1.25rem; margin-top:2.2rem; border-bottom:1px solid var(--border); padding-bottom:.3rem; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+    font-size:.9em; background:var(--code-bg); border:1px solid var(--border);
+    border-radius:4px; padding:.1em .35em; }
+  pre { background:var(--code-bg); border:1px solid var(--border); border-radius:6px;
+    padding: .9rem 1rem; overflow-x:auto; }
+  pre code { background:none; border:none; padding:0; font-size:.85rem; }
+  a { color:var(--accent); }
+  ul, ol { padding-left:1.6rem; }
+  li { margin:.25rem 0; }
+  .warn { background:var(--warn-bg); border-left:4px solid var(--warn-border);
+    padding:.7rem 1rem; border-radius:0 6px 6px 0; margin:1rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Generic manual installer: skills + MCP snippets</h1>
+
+<p>This guide covers <code>install-generic.ps1</code> / <code>.sh</code>, a manual helper that does not
+modify client config files.</p>
+
+<p>Use it when you want interactive guidance and ready-to-paste snippets instead
+of automatic wiring.</p>
+
+<p>Meaning of "generic": you manually place the skills files and MCP
+configuration wherever your AI client application, IDE, or CLI expects them.
+This helper only prints what to copy and where.</p>
+
+<h2>What it does</h2>
+<ul>
+  <li>Skills mode <code>served</code>: shows where to take <code>SKILL.md</code> only (not full directories)</li>
+  <li>Skills mode <code>embedded</code>: builds desktop skill zip packages (same flow as Claude Desktop)</li>
+  <li>MCP mode <code>stdio</code>: prints stdio configuration snippets</li>
+  <li>MCP mode <code>http</code>: prints http configuration snippets with interactive URL/token prompts</li>
+</ul>
+
+<h2>Run</h2>
+<pre><code>.\install-generic.ps1
+.\install-generic.ps1 -Http -Url http://127.0.0.1:8080/mcp -Token &lt;token&gt;
+.\install-generic.ps1 -SkillMode embedded</code></pre>
+
+<pre><code>./install-generic.sh
+./install-generic.sh --http --url http://127.0.0.1:8080/mcp --token &lt;token&gt;
+./install-generic.sh --skill-mode embedded</code></pre>
+
+<div class="warn"><strong>Windows execution-policy note</strong>:
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\install-generic.ps1</code></pre></div>
+
+<h2>Interactive flow</h2>
+<ol>
+  <li>Choose skills delivery mode:
+    <ul>
+      <li>served: source <code>SKILL.md</code> paths are printed; use only <code>SKILL.md</code> for each skill</li>
+      <li>embedded: zip artifacts are built into <code>dist/claude-desktop-skills/</code></li>
+      <li>no extra knowledge prompt is shown</li>
+    </ul>
+  </li>
+  <li>If a previous setup exists, choose whether to keep it:
+    <ul>
+      <li>saved at <code>server/.rad-mcp-generic-config</code></li>
+      <li>keeps both skills settings (delivery mode + knowledge) and MCP settings</li>
+      <li>in http mode this keeps both URL and token</li>
+    </ul>
+  </li>
+  <li>If you do not keep the saved configuration, the installer asks everything again:
+    <ul>
+      <li>skills delivery mode</li>
+      <li>MCP transport</li>
+      <li>http URL/token (when http is selected)</li>
+    </ul>
+  </li>
+  <li>Choose MCP transport (only when not keeping saved config):
+    <ul>
+      <li>stdio: local launch configuration snippets</li>
+      <li>http: URL/token prompt and read-only transport snippets</li>
+    </ul>
+  </li>
+  <li>Copy the shown snippet into your client config file with the correct root key.</li>
+</ol>
+
+<h2>Output snippets include</h2>
+<ul>
+  <li>VS Code Copilot (<code>servers</code> root)</li>
+  <li>JetBrains Copilot classic MCP path (<code>servers</code> root; <code>requestInit</code> in http mode)</li>
+  <li>JetBrains embedded Copilot CLI agent (<code>mcpServers</code> root)</li>
+  <li>Claude Code / Claude Desktop shape (<code>mcpServers</code> root)</li>
+</ul>
+
+<p>Tokens are masked in the displayed output.</p>
+
+<h2>Notes</h2>
+<ul>
+  <li>This script does not write or merge config files.</li>
+  <li>You manually place skills and MCP config in your chosen target locations per client.</li>
+  <li>For fully automated target-specific setup, use the dedicated installers in this folder.</li>
+  <li>Optional advanced override: <code>-Knowledge served|bundled</code> (PowerShell) or <code>--knowledge served|bundled</code> (bash).</li>
+  <li>It writes local transport state to <code>server/.rad-mcp-generic-config</code> to support keep/reuse prompts.</li>
+</ul>
+
+</body>
+</html>

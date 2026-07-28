@@ -241,6 +241,7 @@ duplicating it; each ends by printing its client's restart/verify step):
 |---|---|---|
 | Claude Code (CLI + VS Code ext) | `scripts\install\skills_and_mcp\install-claude-code.ps1` | plugin/stdio (default), `-Http -Token <t>` |
 | Claude Desktop | `scripts\install\skills_and_mcp\install-claude-desktop.ps1` | local stdio only (no HTTP/HTTPS); zip upload stays manual |
+| Generic manual helper (any AI client / IDE / CLI) | `scripts\install\skills_and_mcp\install-generic.ps1` | interactive; manual placement of skills + MCP snippets (served/embedded + stdio/http) |
 | Copilot VS Code | `scripts\install\skills_and_mcp\install-copilot-vscode.ps1 [-Workspace <dir>]` | stdio (default), `-Http -Token <t>` |
 | Copilot JetBrains (IntelliJ, …) | `scripts\install\skills_and_mcp\install-copilot-intellij.ps1` | stdio (default), `-Http -Token <t>` |
 | Copilot CLI | `scripts\install\skills_and_mcp\install-copilot-cli.ps1` | stdio (default), `-Http -Token <t>` |
@@ -255,6 +256,10 @@ duplicating it; each ends by printing its client's restart/verify step):
 [scripts/install/skills_and_mcp/](scripts/install/skills_and_mcp/README.md)
 remain the reference for trust dialogs, org-policy gates, and
 troubleshooting.
+
+For manual cross-client wiring, see:
+[scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md](scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md)
+(also as `.html`).
 
 ## Windows: ChatGPT Codex app (HTTPS MCP + project skills plugin)
 

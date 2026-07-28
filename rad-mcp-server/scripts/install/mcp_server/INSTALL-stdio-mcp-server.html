@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rad-mcp stdio preparation: install dependencies and build catalog</title>
+<style>
+  :root { color-scheme: light dark;
+    --bg:#ffffff; --fg:#1f2328; --muted:#59636e; --border:#d1d9e0;
+    --code-bg:#f6f8fa; --accent:#0969da; --warn-bg:#fff8c5; --warn-border:#d4a72c; }
+  @media (prefers-color-scheme: dark) { :root {
+    --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --border:#3d444d;
+    --code-bg:#161b22; --accent:#4493f8; --warn-bg:#3a2d12; --warn-border:#9e6a03; } }
+  body { margin:0 auto; max-width:860px; padding:2rem 1.25rem 4rem;
+    background:var(--bg); color:var(--fg);
+    font:16px/1.6 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  h1 { font-size:1.7rem; line-height:1.3; border-bottom:1px solid var(--border); padding-bottom:.5rem; }
+  h2 { font-size:1.25rem; margin-top:2.2rem; border-bottom:1px solid var(--border); padding-bottom:.3rem; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+    font-size:.9em; background:var(--code-bg); border:1px solid var(--border);
+    border-radius:4px; padding:.1em .35em; }
+  pre { background:var(--code-bg); border:1px solid var(--border); border-radius:6px;
+    padding: .9rem 1rem; overflow-x:auto; }
+  pre code { background:none; border:none; padding:0; font-size:.85rem; }
+  a { color:var(--accent); }
+  ul { padding-left:1.6rem; }
+  li { margin:.25rem 0; }
+  .warn { background:var(--warn-bg); border-left:4px solid var(--warn-border);
+    padding:.7rem 1rem; border-radius:0 6px 6px 0; margin:1rem 0; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>rad-mcp stdio preparation: install dependencies and build catalog</h1>
+
+<p>This guide walks through <code>install-stdio-mcp-server.ps1</code> /
+<code>.sh</code>: what it does, what to run, and what it writes.</p>
+
+<p>This script prepares local stdio usage only. It does not start an HTTP server
+and it does not configure any IDE client entry.</p>
+
+<p>What it prepares:</p>
+<ul>
+  <li>Bootstraps <code>server/.venv</code> if missing</li>
+  <li>Installs server dependencies (<code>pip install -e server</code>)</li>
+  <li>Reuses saved MIB configuration by default and asks whether to keep it</li>
+  <li>Keeps the existing catalog unless you choose to rebuild</li>
+  <li>Optionally rebuilds the catalog from baseline or your MIB directory</li>
+</ul>
+
+<h2>0) Prerequisites</h2>
+<ul>
+  <li>Run from <code>rad-mcp-server/scripts/install/mcp_server/</code></li>
+  <li>Internet/PyPI access on first run (for venv dependency install)</li>
+  <li>If your MIBs are outside the repo, know the full path to that directory</li>
+</ul>
+
+<h2>1) Run the stdio preparation script</h2>
+
+<p>Interactive/default:</p>
+<pre><code>.\install-stdio-mcp-server.ps1
+./install-stdio-mcp-server.sh</code></pre>
+
+<p>With a custom MIB directory:</p>
+<pre><code>.\install-stdio-mcp-server.ps1 -MibDir C:\MIBS
+./install-stdio-mcp-server.sh --mib-dir /path/to/MIBS</code></pre>
+
+<p>Dependencies only (skip catalog build):</p>
+<pre><code>.\install-stdio-mcp-server.ps1 -SkipCatalog
+./install-stdio-mcp-server.sh --skip-catalog</code></pre>
+
+<h3>Keep previous MIB configuration (default flow)</h3>
+<p>When <code>server/.rad-mcp-stdio-config</code> exists and no flags are passed,
+the script shows the saved MIB setup and asks:</p>
+<p><code>Keep this configuration (MIBs)? [Y/n]</code></p>
+<ul>
+  <li><code>Y</code> (default): keep current catalog as-is (no rebuild)</li>
+  <li><code>n</code>: reconfigure and optionally rebuild MIB catalog</li>
+</ul>
+<p>If you choose rebuild, the script asks for build mode:</p>
+<ul>
+  <li>baseline (no extra MIB roots)</li>
+  <li>custom MIB directory</li>
+</ul>
+
+<div class="warn"><strong>Windows execution-policy note</strong>:
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\install-stdio-mcp-server.ps1</code></pre></div>
+
+<h2>2) What the script writes</h2>
+<ul>
+  <li><code>server/.venv/</code> (if not already present)</li>
+  <li>Installed editable package from <code>server/</code></li>
+  <li><code>server/.rad-mcp-stdio-config</code> (saved MIB mode and optional MIB root)</li>
+  <li><code>build/rad-knowledge.sqlite</code> (when kept existing or rebuilt)</li>
+</ul>
+
+<p>No HTTP token/config files are created by this script.</p>
+
+<h2>3) Next step: configure your IDE for stdio</h2>
+<p>After preparation, run your client installer in stdio mode (for example,
+Copilot VS Code installer with stdio/default transport) so the IDE can launch
+<code>rad_mcp.server</code> directly from <code>server/.venv</code>.</p>
+
+<p>Client installers are documented in
+<a href="../skills_and_mcp/README.md">../skills_and_mcp/README.md</a>.</p>
+
+<h2>4) Troubleshooting</h2>
+<ul>
+  <li><strong>MIB directory not found</strong>: verify the directory path and rerun with <code>-MibDir</code> / <code>--mib-dir</code>.</li>
+  <li><strong>pip install failed</strong>: usually network/proxy/PyPI access. Fix connectivity and rerun.</li>
+  <li><strong>Catalog build failed</strong>: check script output above the failure for parser/dependency details; rerun with <code>-SkipCatalog</code> if you want stdio runtime ready first.</li>
+</ul>
+
+<h2>5) Reset to a fresh-clone state</h2>
+<p>If you want to rebuild from scratch as if the repo was just cloned, remove the
+local runtime/build artifacts below.</p>
+
+<p><strong>Required for a clean rebuild:</strong></p>
+<ul>
+  <li><code>server/.venv/</code></li>
+  <li><code>build/rad-knowledge.sqlite</code></li>
+</ul>
+
+<p><strong>Recommended (remove previous generated/build state):</strong></p>
+<ul>
+  <li><code>build/mib-catalog-report.json</code></li>
+  <li><code>build/snmp-oid-map.generated.json</code></li>
+  <li><code>build/work/</code></li>
+  <li><code>server/.rad-mcp-stdio-config</code></li>
+  <li><code>server/.rad-mcp-http-config</code></li>
+  <li><code>server/.rad-mcp-tokens</code></li>
+</ul>
+
+<p><strong>Optional (remove local credentials/device configuration too):</strong></p>
+<ul>
+  <li><code>server/.env</code></li>
+  <li><code>inventory.yaml</code></li>
+</ul>
+
+<p>PowerShell example (from repo root):</p>
+<pre><code>Remove-Item -Recurse -Force "rad-mcp-server/server/.venv" -ErrorAction SilentlyContinue
+Remove-Item -Force "rad-mcp-server/build/rad-knowledge.sqlite","rad-mcp-server/build/mib-catalog-report.json","rad-mcp-server/build/snmp-oid-map.generated.json" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "rad-mcp-server/build/work" -ErrorAction SilentlyContinue
+Remove-Item -Force "rad-mcp-server/server/.rad-mcp-stdio-config","rad-mcp-server/server/.rad-mcp-http-config","rad-mcp-server/server/.rad-mcp-tokens" -ErrorAction SilentlyContinue
+# Optional:
+# Remove-Item -Force "rad-mcp-server/server/.env","rad-mcp-server/inventory.yaml" -ErrorAction SilentlyContinue</code></pre>
+
+</body>
+</html>

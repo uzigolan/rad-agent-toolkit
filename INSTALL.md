@@ -1,9 +1,10 @@
-# INSTALL: VS Code or IntelliJ Copilot
+# INSTALL: VS Code, IntelliJ, or Generic Copilot
 
-This guide consolidates the two main Copilot install flows in one place.
-Use one path only, based on your IDE:
+This guide consolidates the main Copilot install flows in one place.
+Use one path only, based on your client:
 - VS Code + GitHub Copilot extension
 - IntelliJ (JetBrains) + GitHub Copilot plugin
+- Generic manual helper (any AI client / IDE / CLI)
 
 For all other install flows, use:
 - `rad-mcp-server/scripts/install/`
@@ -30,13 +31,25 @@ If you already cloned the repository:
 - From any directory inside the repo, run `git pull` to update it.
 - Then continue with the rest of this guide.
 
-## 3) Install MCP server first (command only)
+## 3) Install MCP server first (choose transport)
 
-Run from repo root:
+Run from repo root.
+
+Option A: HTTP MCP server (shared endpoint)
 
 ```powershell
 PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1
 ```
+
+Option B: stdio MCP server prerequisites (local stdio flow)
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1
+```
+
+Based on your need, see the detailed MCP server guides:
+- HTTP flow: `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
+- stdio flow: `rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md`
 
 ## 4) Interactive choices (recommended)
 
@@ -52,7 +65,7 @@ Important safety note:
 - This installer creates and uses a Python virtual environment under the repo (`rad-mcp-server/server/.venv`, and portable Python may be placed under `server/.python` on Windows).
 - It does not install system-wide Python components and should not harm your PC.
 
-## 5) Install skills + MCP config (choose one IDE path)
+## 5) Install skills + MCP config (choose one option)
 
 ### 5a) VS Code Copilot
 
@@ -76,6 +89,26 @@ Recommended answers:
 - Knowledge mode: `served` (default, recommended) or `bundled` (offline references inside skills)
 - Transport: `http`
 - URL/token: same MCP URL and token as above.
+
+### 5c) Generic manual helper (any AI client / IDE / CLI)
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1
+```
+
+What this option does:
+- Guides you through `served` or `embedded` skills mode.
+- Guides you through MCP transport (`stdio` or `http`) and reuses saved URL/token when available.
+- Prints the MCP config snippet and skills placement instructions for your chosen client.
+- Does not auto-write client config; you place settings manually in your client/IDE/CLI.
+
+Reference guide:
+- `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md`
+
+Based on your need for skills setup, also see:
+- VS Code Copilot guide: `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
+- IntelliJ Copilot guide: `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
+- Generic manual guide: `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md`
 
 ## 6) Verify in Copilot (for your chosen IDE)
 
@@ -142,5 +175,7 @@ Full prompt catalog:
 
 Based on:
 - `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
+- `rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md`
 - `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
 - `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
+- `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md`

@@ -11,16 +11,58 @@ mode).
 > (also as [.html](INSTALL-http-mcp-server.html)) — prompts, what it writes,
 > connecting a client, security, and troubleshooting.
 
-You only need these for the **shared-server** modes — one local instance for
-several clients ([connecting-local-mcp.md](../../../docs/connecting-local-mcp.md))
-or hosting for other machines
+> **Stdio preparation guide:**
+> [INSTALL-stdio-mcp-server.md](INSTALL-stdio-mcp-server.md)
+> (also as [.html](INSTALL-stdio-mcp-server.html)) — dependency bootstrap and
+> optional catalog build for stdio-only IDE usage.
+
+You only need `install-and-start-http-mcp-server.*` for the **shared-server**
+modes — one local instance for several clients
+([connecting-local-mcp.md](../../../docs/connecting-local-mcp.md)) or hosting
+for other machines
 ([connecting-remote-mcp.md](../../../docs/connecting-remote-mcp.md)).
-The default stdio install needs no server script at all: the client spawns
-the server itself.
+The default stdio install still starts the server from the client itself,
+but you can now pre-build stdio prerequisites with a dedicated script.
+
+### Windows execution-policy bypass
+
+If PowerShell blocks script execution, run either script with a one-off bypass:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\install-stdio-mcp-server.ps1
+PowerShell -ExecutionPolicy Bypass -File .\install-and-start-http-mcp-server.ps1
+```
 
 | Script | What it does |
 |---|---|
+| `install-stdio-mcp-server.ps1` / `.sh` | Prepare local stdio usage only: bootstrap `server/.venv` + dependencies and build `build/rad-knowledge.sqlite` (baseline, or from `--mib-dir` / `-MibDir`) |
 | `install-and-start-http-mcp-server.ps1` / `.sh` | Verify common setup, then stop any existing server on the port and start the HTTP server (interactive prompts for anything not passed as flags) |
+
+### Prepare stdio only (no HTTP listener)
+
+Use this when your IDE runs rad-mcp in stdio mode and you want everything ready
+before adding the MCP entry:
+
+```powershell
+.\install-stdio-mcp-server.ps1
+.\install-stdio-mcp-server.ps1 -MibDir C:\MIBS
+.\install-stdio-mcp-server.ps1 -SkipCatalog
+```
+
+```bash
+./install-stdio-mcp-server.sh
+./install-stdio-mcp-server.sh --mib-dir /path/to/MIBS
+./install-stdio-mcp-server.sh --skip-catalog
+```
+
+Behavior:
+
+- always runs the common setup check (`server/.venv` + `pip install -e server`)
+- when saved stdio MIB config exists (`server/.rad-mcp-stdio-config`), asks whether to keep it
+- keeps the existing catalog by default unless you choose to rebuild
+- rebuild mode can be baseline (no extra MIB roots) or custom MIB directory
+- when a MIB directory is provided, installs `pysmi` if needed and rebuilds from that root
+- `-SkipCatalog` / `--skip-catalog` keeps dependency setup only
 
 ```powershell
 .\install-and-start-http-mcp-server.ps1                            # interactive prompts

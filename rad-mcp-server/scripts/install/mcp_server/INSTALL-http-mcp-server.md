@@ -114,3 +114,38 @@ read-write token.
   bundled knowledge still work, only the `mib_*` catalog tools are off. Re-run
   and answer `y` (or drop a prebuilt `rad-knowledge.sqlite` into `build/`) to
   enable them.
+
+## 6) Reset to a fresh-clone state
+
+If you want to rebuild from scratch as if the repo was just cloned, remove the
+local runtime/build artifacts below.
+
+Required for a clean rebuild:
+
+- `server/.venv/`
+- `build/rad-knowledge.sqlite`
+
+Recommended (remove previous generated/build state):
+
+- `build/mib-catalog-report.json`
+- `build/snmp-oid-map.generated.json`
+- `build/work/`
+- `server/.rad-mcp-http-config`
+- `server/.rad-mcp-tokens`
+- `server/.rad-mcp-stdio-config`
+
+Optional (remove local credentials/device configuration too):
+
+- `server/.env`
+- `inventory.yaml`
+
+PowerShell example (from repo root):
+
+```powershell
+Remove-Item -Recurse -Force "rad-mcp-server/server/.venv" -ErrorAction SilentlyContinue
+Remove-Item -Force "rad-mcp-server/build/rad-knowledge.sqlite","rad-mcp-server/build/mib-catalog-report.json","rad-mcp-server/build/snmp-oid-map.generated.json" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "rad-mcp-server/build/work" -ErrorAction SilentlyContinue
+Remove-Item -Force "rad-mcp-server/server/.rad-mcp-http-config","rad-mcp-server/server/.rad-mcp-tokens","rad-mcp-server/server/.rad-mcp-stdio-config" -ErrorAction SilentlyContinue
+# Optional:
+# Remove-Item -Force "rad-mcp-server/server/.env","rad-mcp-server/inventory.yaml" -ErrorAction SilentlyContinue
+```

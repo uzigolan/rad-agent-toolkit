@@ -198,5 +198,39 @@ token.</p>
       <code>build/</code>) to enable them.</li>
 </ul>
 
+<h2>6) Reset to a fresh-clone state</h2>
+<p>If you want to rebuild from scratch as if the repo was just cloned, remove the
+local runtime/build artifacts below.</p>
+
+<p><strong>Required for a clean rebuild:</strong></p>
+<ul>
+  <li><code>server/.venv/</code></li>
+  <li><code>build/rad-knowledge.sqlite</code></li>
+</ul>
+
+<p><strong>Recommended (remove previous generated/build state):</strong></p>
+<ul>
+  <li><code>build/mib-catalog-report.json</code></li>
+  <li><code>build/snmp-oid-map.generated.json</code></li>
+  <li><code>build/work/</code></li>
+  <li><code>server/.rad-mcp-http-config</code></li>
+  <li><code>server/.rad-mcp-tokens</code></li>
+  <li><code>server/.rad-mcp-stdio-config</code></li>
+</ul>
+
+<p><strong>Optional (remove local credentials/device configuration too):</strong></p>
+<ul>
+  <li><code>server/.env</code></li>
+  <li><code>inventory.yaml</code></li>
+</ul>
+
+<p>PowerShell example (from repo root):</p>
+<pre><code>Remove-Item -Recurse -Force "rad-mcp-server/server/.venv" -ErrorAction SilentlyContinue
+Remove-Item -Force "rad-mcp-server/build/rad-knowledge.sqlite","rad-mcp-server/build/mib-catalog-report.json","rad-mcp-server/build/snmp-oid-map.generated.json" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "rad-mcp-server/build/work" -ErrorAction SilentlyContinue
+Remove-Item -Force "rad-mcp-server/server/.rad-mcp-http-config","rad-mcp-server/server/.rad-mcp-tokens","rad-mcp-server/server/.rad-mcp-stdio-config" -ErrorAction SilentlyContinue
+# Optional:
+# Remove-Item -Force "rad-mcp-server/server/.env","rad-mcp-server/inventory.yaml" -ErrorAction SilentlyContinue</code></pre>
+
 </body>
 </html>

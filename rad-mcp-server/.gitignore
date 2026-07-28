@@ -1,6 +1,8 @@
 .env
 .rad-mcp-tokens
 .rad-mcp-http-config
+.rad-mcp-stdio-config
+.rad-mcp-generic-config
 *.jsonl.partial
 *.mib
 *.MIB

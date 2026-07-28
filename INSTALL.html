@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>INSTALL: VS Code, IntelliJ, or Generic Copilot</title>
+<style>
+  :root { color-scheme: light dark;
+    --bg:#ffffff; --fg:#1f2328; --muted:#59636e; --border:#d1d9e0;
+    --code-bg:#f6f8fa; --accent:#0969da; --warn-bg:#fff8c5; --warn-border:#d4a72c; }
+  @media (prefers-color-scheme: dark) { :root {
+    --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --border:#3d444d;
+    --code-bg:#161b22; --accent:#4493f8; --warn-bg:#3a2d12; --warn-border:#9e6a03; } }
+  body { margin:0 auto; max-width:900px; padding:2rem 1.25rem 4rem;
+    background:var(--bg); color:var(--fg);
+    font:16px/1.6 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  h1 { font-size:1.7rem; line-height:1.3; border-bottom:1px solid var(--border); padding-bottom:.5rem; }
+  h2 { font-size:1.25rem; margin-top:2.2rem; border-bottom:1px solid var(--border); padding-bottom:.3rem; }
+  h3 { font-size:1.05rem; margin-top:1.4rem; }
+  p { margin:.75rem 0; }
+  code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+    font-size:.9em; background:var(--code-bg); border:1px solid var(--border);
+    border-radius:4px; padding:.1em .35em; }
+  pre { background:var(--code-bg); border:1px solid var(--border); border-radius:6px;
+    padding:.9rem 1rem; overflow-x:auto; }
+  pre code { background:none; border:none; padding:0; font-size:.85rem; }
+  a { color:var(--accent); }
+  ul, ol { padding-left:1.6rem; }
+  li { margin:.25rem 0; }
+  .muted { color:var(--muted); }
+  .warn { background:var(--warn-bg); border-left:4px solid var(--warn-border);
+    padding:.7rem 1rem; border-radius:0 6px 6px 0; margin:1rem 0; }
+</style>
+</head>
+<body>
+
+<h1>INSTALL: VS Code, IntelliJ, or Generic Copilot</h1>
+
+<p>This guide consolidates the main Copilot install flows in one place.
+Use one path only, based on your client:</p>
+<ul>
+  <li>VS Code + GitHub Copilot extension</li>
+  <li>IntelliJ (JetBrains) + GitHub Copilot plugin</li>
+  <li>Generic manual helper (any AI client / IDE / CLI)</li>
+</ul>
+
+<p>For all other install flows, use:</p>
+<ul>
+  <li><code>rad-mcp-server/scripts/install/</code></li>
+</ul>
+
+<h2>1) Mandatory first step (official Copilot only)</h2>
+<p>Before anything else:</p>
+<ul>
+  <li>Choose your IDE path: VS Code or IntelliJ.</li>
+  <li>Download/install (or update) only the IDE you plan to use.</li>
+  <li>Install only the official GitHub Copilot Chat experience by GitHub for your IDE path:
+    <ul>
+      <li>VS Code: install <code>GitHub Copilot Chat</code> by GitHub (verified publisher).</li>
+      <li>IntelliJ: install the official <code>GitHub Copilot</code> plugin by GitHub from JetBrains Marketplace.</li>
+    </ul>
+  </li>
+  <li>For Copilot update checks and management, use Copilot extension/plugin update actions and Copilot settings/UI in each IDE.</li>
+  <li>Do not use non-Copilot AI plugins for this flow (for example JetBrains AI Assistant / Junie).</li>
+</ul>
+
+<h2>2) Clone the repository</h2>
+<pre><code>git clone https://github.com/uzigolan/rad-agent-toolkit.git
+cd rad-agent-toolkit</code></pre>
+
+<p>If you already cloned the repository:</p>
+<ul>
+  <li>From any directory inside the repo, run <code>git pull</code> to update it.</li>
+  <li>Then continue with the rest of this guide.</li>
+</ul>
+
+<h2>3) Install MCP server first (choose transport)</h2>
+<p>Run from repo root.</p>
+
+<h3>Option A: HTTP MCP server (shared endpoint)</h3>
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
+
+<h3>Option B: stdio MCP server prerequisites (local stdio flow)</h3>
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1</code></pre>
+
+<p>Based on your need, see the detailed MCP server guides:</p>
+<ul>
+  <li>HTTP flow: <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md</code></li>
+  <li>stdio flow: <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md</code></li>
+</ul>
+
+<h2>4) Interactive choices (recommended)</h2>
+<p>When the MCP server installer asks questions, use these recommendations:</p>
+<ul>
+  <li>Transport/bind usage: use HTTP mode (shared server flow).</li>
+  <li>TLS: choose <code>No TLS</code> for local/internal lab usage.</li>
+  <li>Tokens: create at least one token (required). Keep read-write token private.</li>
+  <li>MIBs prompt:
+    <ul>
+      <li>Choose <code>N</code> if you do not need MIB catalog tools right now.</li>
+      <li>Choose <code>Y</code> only if you need <code>mib_*</code> tools (<code>mib_search</code>, <code>mib_describe</code>, etc.).</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="warn"><strong>Important safety note</strong>
+<ul>
+  <li>This installer creates and uses a Python virtual environment under the repo (<code>rad-mcp-server/server/.venv</code>, and portable Python may be placed under <code>server/.python</code> on Windows).</li>
+  <li>It does not install system-wide Python components and should not harm your PC.</li>
+</ul>
+</div>
+
+<h2>5) Install skills + MCP config (choose one option)</h2>
+
+<h3>5a) VS Code Copilot</h3>
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-vscode.ps1</code></pre>
+
+<p>Recommended answers:</p>
+<ul>
+  <li>Knowledge mode: <code>served</code> (default, recommended) or <code>bundled</code> (offline references inside skills).</li>
+  <li>Transport: <code>http</code></li>
+  <li>URL: use your MCP URL (example: <code>http://127.0.0.1:8080/mcp</code>)</li>
+  <li>Token: paste the same bearer token configured for the MCP server.</li>
+</ul>
+
+<h3>5b) IntelliJ Copilot</h3>
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-intellij.ps1</code></pre>
+
+<p>Recommended answers:</p>
+<ul>
+  <li>Knowledge mode: <code>served</code> (default, recommended) or <code>bundled</code> (offline references inside skills)</li>
+  <li>Transport: <code>http</code></li>
+  <li>URL/token: same MCP URL and token as above.</li>
+</ul>
+
+<h3>5c) Generic manual helper (any AI client / IDE / CLI)</h3>
+<pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
+
+<p>What this option does:</p>
+<ul>
+  <li>Guides you through <code>served</code> or <code>embedded</code> skills mode.</li>
+  <li>Guides you through MCP transport (<code>stdio</code> or <code>http</code>) and reuses saved URL/token when available.</li>
+  <li>Prints the MCP config snippet and skills placement instructions for your chosen client.</li>
+  <li>Does not auto-write client config; you place settings manually in your client/IDE/CLI.</li>
+</ul>
+
+<p>Reference guide:</p>
+<ul>
+  <li><code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code></li>
+</ul>
+
+<p>Based on your need for skills setup, also see:</p>
+<ul>
+  <li>VS Code Copilot guide: <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md</code></li>
+  <li>IntelliJ Copilot guide: <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md</code></li>
+  <li>Generic manual guide: <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code></li>
+</ul>
+
+<h2>6) Verify in Copilot (for your chosen IDE)</h2>
+<p>Do these checks in Copilot chat and/or Copilot settings/UI tools for the IDE you chose.
+Using the Copilot UI is fully supported for this flow.</p>
+
+<p><strong>VS Code:</strong></p>
+<ol>
+  <li>Run Command Palette -&gt; <code>Developer: Reload Window</code>.</li>
+  <li>Open Copilot Chat and switch to <code>Agent</code> mode.</li>
+  <li>In Copilot UI (Agent Customizations -&gt; MCP Servers), verify <code>rad-mcp</code> appears/runs.</li>
+  <li>In Copilot UI (Agent Customizations -&gt; Skills), verify the 3 rad skills are listed.</li>
+  <li>Test prompt: <code>rad agent, list the managed devices</code>.</li>
+</ol>
+
+<p><strong>IntelliJ:</strong></p>
+<ol>
+  <li>Restart the IDE.</li>
+  <li>Open GitHub Copilot Chat, switch to Agent mode, and start a new chat.</li>
+  <li>In Copilot Chat, click the settings gear, then choose <code>Customizations</code>.</li>
+  <li>In Agent Customizations -&gt; <code>MCP Servers</code>, verify <code>rad-mcp</code> appears/runs.</li>
+  <li>In Agent Customizations -&gt; <code>Skills</code>, verify the rad skills are loaded.</li>
+  <li>Test prompt: <code>rad agent, list the managed devices</code>.</li>
+</ol>
+
+<p>Where not to look:</p>
+<ul>
+  <li>IntelliJ: <code>Settings -&gt; Tools -&gt; AI Assistant</code> is not the Copilot path and does not show this MCP/skills setup.</li>
+</ul>
+
+<p>If needed:</p>
+<ul>
+  <li>VS Code: run <code>MCP: Open User Configuration</code> or <code>MCP: Reset Trust</code>.</li>
+  <li>IntelliJ: re-run the installer with the same URL/token and restart the IDE.</li>
+</ul>
+
+<h2>7) Usage prompts from examples</h2>
+<p>Use these ready prompts after install (copied from <code>rad-mcp-server/docs/examples.md</code>):</p>
+
+<p>Start with device management (section 1):</p>
+<pre><code>rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234</code></pre>
+
+<p>Then one prompt from each core area:</p>
+
+<p>From section 2 (User manual knowledge):</p>
+<pre><code>rad agent, how does zero-touch provisioning work on the MiNID, and what are its limits?</code></pre>
+
+<p>From section 4 (CLI operations):</p>
+<pre><code>abayev, show the active alarms on sf-163-187</code></pre>
+
+<p>From section 5 (SNMP operations):</p>
+<pre><code>rad agent, check SNMP on etx2v-1 and report its exact firmware, sysObjectID, and detected family</code></pre>
+
+<p>Post-install MCP checker:</p>
+<pre><code>rad agent, what is MCP tools status? show a table with OK / DEGRADED / MISSING</code></pre>
+
+<p>Full prompt catalog:</p>
+<ul>
+  <li><code>rad-mcp-server/docs/examples.md</code></li>
+</ul>
+
+<hr>
+
+<p class="muted">Based on:</p>
+<ul>
+  <li><code>rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md</code></li>
+  <li><code>rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md</code></li>
+  <li><code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md</code></li>
+  <li><code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md</code></li>
+  <li><code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code></li>
+</ul>
+
+</body>
+</html>

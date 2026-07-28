@@ -16,6 +16,7 @@ machine. Principles (stdio vs http, who-starts-the-server, artifact kinds):
 | [Copilot JetBrains](#github-copilot--jetbrains-ides-intellij-pycharm-) (IntelliJ, …) | `install-copilot-intellij.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Copilot CLI](#github-copilot--cli) | `install-copilot-cli.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Codex](#openai-codex--ide-extension--chatgpt-desktop-app) (IDE + ChatGPT desktop) | `install-codex.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
+| Generic manual helper | `install-generic.ps1` / `.sh` | interactive served/embedded skills + stdio/http MCP snippets (no file writes) |
 
 > **Windows: "running scripts is disabled on this system"** — the machine's
 > PowerShell execution policy blocks `.ps1` files. Run the script through a
@@ -35,6 +36,10 @@ the Copilot-side server lifecycle/connection and does not start or restart
 an external HTTP listener process.
 Switching modes = replacing the previous rad-mcp entry, then doing the
 client's restart step.
+
+Manual snippet workflow guide:
+[INSTALL-generic-mcp-skills.md](INSTALL-generic-mcp-skills.md)
+(also as [.html](INSTALL-generic-mcp-skills.html)).
 
 The sections below carry each client's specifics: config file + shape,
 restart step, verify, quirks. Common troubleshooting (credentials, hangs,
