@@ -203,6 +203,26 @@ The three pipelines are independent and never overwrite each other:
 re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
 `manual-<family>/`; re-ingesting datasheets rewrites `datasheets/`.
 
+- **Knowledge routing by mode — read this before every knowledge lookup:**
+  Skill mode (bundled vs served) is the **sole routing signal** — the server's
+  `server_effective_mode` from `check_skill_version` is irrelevant to this
+  decision. A served-capable server does not change where you look for knowledge
+  when the skill is bundled.
+  - **bundled** (no `<!--rad-mode:served-->` marker in this file): `references/`
+    is present locally. Read knowledge directly from those files — grep
+    `cli-reference-<family>.md`, open `manual-<family>/` chapters, read
+    `datasheets/<product>.md`, `snmp-map-<family>.md`, etc. Do **NOT** call
+    `cli_search`, `manual_search`, or `datasheet_search` — those are served-mode
+    substitutes for the same data, and using them in bundled mode defeats the
+    purpose of a self-sufficient install (offline-capable, no catalog dependency).
+    `mib_*` tools are always allowed (SNMP OID resolution is not duplicated in
+    `references/`). `cli_help` is always allowed for live firmware verification.
+  - **served** (marker present): `references/` is absent. Use MCP tools as the
+    primary knowledge source: `cli_search` for CLI syntax, `manual_search` for
+    manual chapters, `datasheet_search` / `rad://datasheet` for datasheets,
+    `mib_*` for SNMP. Fall back to `rad://cli-reference/{family}/{context}` and
+    `rad://manual/{family}/{chapter}` resources when available.
+
 - **Answer-time lookup order (fastest first):** 1) the *Common config recipes*
   below — zero lookups; 2) grep `cli-reference-<family>.md` for the context
   header (`## configure crypto ca NAME`) — zero device I/O; 3) live `cli_help`

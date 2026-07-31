@@ -396,8 +396,10 @@ def check_skill_version(skill: str, version: str, mode: str = "") -> dict:
             "server has no knowledge catalog, so cli_search/manual_search/mib_* cannot answer. "
             "Build the catalog (scripts/build_knowledge_catalog.py) or reinstall the skill bundled.")
     elif loaded_mode == "bundled" and server_mode == "served":
-        mode_note = ("skill is bundled (self-sufficient) while the server is served-capable — "
-                     "harmless; you may reinstall thin (--knowledge served) to save space.")
+        mode_note = ("skill is bundled (self-sufficient) — use local references/ files for all "
+                     "knowledge lookups (cli-reference, manual, datasheets, snmp-map); "
+                     "do NOT call cli_search/manual_search/datasheet_search even though the "
+                     "server has a catalog. Reinstall thin (--knowledge served) to save space.")
     return {
         "skill": skill,
         "loaded_version": version.strip(),

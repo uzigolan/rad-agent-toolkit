@@ -154,6 +154,7 @@ function Copy-SkillsTo {
         Copy-Item -Recurse -Force (Join-Path $script:SkillsSrc $s) $Dest
         Write-Host "  skill -> $Dest\$s"
     }
+    $skillmd = Join-Path $Dest 'rad-cli-operations\SKILL.md'
     if ($Knowledge -eq 'served') {
         $refs = Join-Path $Dest 'rad-cli-operations\references'
         if (Test-Path $refs) {
@@ -162,11 +163,20 @@ function Copy-SkillsTo {
         }
         # Stamp the mode so the loaded skill's self-check knows it (missing = bundled).
         # Marker is an HTML comment with a unique token that never appears in prose.
-        $skillmd = Join-Path $Dest 'rad-cli-operations\SKILL.md'
         if ((Test-Path $skillmd) -and ((Get-Content $skillmd -Raw) -notmatch '<!--rad-mode:')) {
             $c = Get-Content $skillmd -Raw
             $c = $c -replace '(?m)^(> \*\*Skill version:\*\*.*)$', "`$1`n<!--rad-mode:served-->"
             Set-Content -Path $skillmd -Value $c -NoNewline
+        }
+    } else {
+        # Bundled: remove any leftover served marker — Copy-Item may not overwrite on PS 5.1 merge.
+        if (Test-Path $skillmd) {
+            $c = Get-Content $skillmd -Raw
+            if ($c -match '<!--rad-mode:') {
+                $c = $c -replace "`n<!--rad-mode:[^>]*-->", ''
+                Set-Content -Path $skillmd -Value $c -NoNewline
+                Write-Host "  bundled mode: removed served marker from rad-cli-operations\SKILL.md"
+            }
         }
     }
 }
@@ -517,8 +527,11 @@ function Test-KeepExisting {
         $cmd = if ($e.PSObject.Properties['command']) { $e.command } else { '?' }
         $summary = "$type  command=$cmd"
     }
-    Write-Host "$Name is already configured in ${Path}:"
-    Write-Host "    $summary"
+    $knowledgeMode = Get-InstalledKnowledgeMode
+    $knowledgeLine = if ($knowledgeMode) { $knowledgeMode } else { 'unknown' }
+    Write-Host "$Name is already configured:"
+    Write-Host "    mcp    : $summary"
+    Write-Host "    skills : $knowledgeLine"
     Write-Host "Keep this configuration? [Y/n]"
     $ans = Read-Host "Answer"
     switch -Regex ($ans) {
