@@ -22,6 +22,7 @@ _RAD = Path(__file__).resolve().parents[2]           # rad-mcp-server/
 DEFAULT_DB = _RAD / "build" / "rad-knowledge.sqlite"
 REPORT_PATH = _RAD / "build" / "mib-catalog-report.json"
 MEA_RAW_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea" / "raw"
+ALTERA_DOCS_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "altera-docs"
 
 _OID_RE = re.compile(r"^\d+(\.\d+)+$")
 
@@ -781,4 +782,73 @@ def mea_search(query: str = "", device: str = "", version: str = "",
         "returned": len(top),
         "results": top,
         "note": "offline FPGA-MEA artifacts from scripts/ingest_mea.py (toc_register_entries + table_rows)",
+    }
+
+
+def altera_search(query: str = "", doc: str = "", limit: int = 15) -> dict:
+    """Search ingested Altera docs (offline) from scripts/ingest_altera.py.
+
+    Matches markdown files under references/altera-docs and returns excerpts.
+    """
+    if not ALTERA_DOCS_DIR.exists():
+        raise KnowledgeUnavailable(
+            f"Altera docs directory not found at {ALTERA_DOCS_DIR} — run: "
+            "python scripts/ingest_altera.py --input-dir Altera"
+        )
+
+    files = sorted(p for p in ALTERA_DOCS_DIR.glob("*.md") if p.name != "altera-index.md")
+    if not files:
+        raise KnowledgeUnavailable(
+            f"no Altera artifacts found in {ALTERA_DOCS_DIR} — run ingest_altera.py first"
+        )
+
+    limit = max(1, min(int(limit), 100))
+    q = (query or "").strip()
+    q_low = q.lower()
+    doc_low = (doc or "").strip().lower()
+
+    hits: list[dict] = []
+
+    for path in files:
+        if doc_low and doc_low not in path.name.lower() and doc_low not in path.stem.lower():
+            continue
+
+        body = path.read_text(encoding="utf-8", errors="ignore")
+        title = body.splitlines()[0].lstrip("# ").strip() if body else path.stem
+
+        if not q:
+            hits.append({
+                "doc": title,
+                "file": path.name,
+                "section": "(document)",
+                "excerpt": _excerpt(body, title, width=220),
+            })
+            continue
+
+        lines = body.splitlines()
+        current_section = "(document)"
+        for ln in lines:
+            if ln.startswith("## "):
+                current_section = ln[3:].strip()
+                continue
+            if not ln.strip():
+                continue
+            if q_low in ln.lower():
+                hits.append({
+                    "doc": title,
+                    "file": path.name,
+                    "section": current_section,
+                    "excerpt": _excerpt(ln, q, width=240),
+                })
+                if len(hits) >= limit:
+                    break
+        if len(hits) >= limit:
+            break
+
+    return {
+        "query": query,
+        "doc": doc,
+        "returned": len(hits),
+        "results": hits[:limit],
+        "note": "offline Altera docs from scripts/ingest_altera.py (references/altera-docs)",
     }

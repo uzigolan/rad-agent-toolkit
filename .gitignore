@@ -68,4 +68,5 @@ inventory_bck.yaml
 
 # MEA artifacts and local archives
 MEA/
+Altera/
 *.zip

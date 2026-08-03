@@ -115,6 +115,7 @@ TOOL_VERSIONS = {
     "manual_search": "0.5.0",
     "datasheet_search": "0.7.0",
     "mea_search": "0.8.0",
+    "altera_search": "0.8.0",
     
     # Credentials tool (NEW in v0.8.0)
     "set_device_credentials": "0.8.0",
@@ -398,8 +399,8 @@ def check_skill_version(skill: str, version: str, mode: str = "") -> dict:
             "Build the catalog (scripts/build_knowledge_catalog.py) or reinstall the skill bundled.")
     elif loaded_mode == "bundled" and server_mode == "served":
         mode_note = ("skill is bundled (self-sufficient) — use local references/ files for all "
-                     "knowledge lookups (cli-reference, manual, datasheets, snmp-map); "
-                     "do NOT call cli_search/manual_search/datasheet_search even though the "
+                     "knowledge lookups (cli-reference, manual, datasheets, altera-docs, snmp-map); "
+                     "do NOT call cli_search/manual_search/datasheet_search/altera_search even though the "
                      "server has a catalog. Reinstall thin (--knowledge served) to save space.")
     return {
         "skill": skill,
@@ -948,6 +949,20 @@ def mea_search(query: str = "", device: str = "", version: str = "",
                  map_type=map_type, limit=limit)
     scope = f"{device or '*'}:{version or '*'}:{map_type or '*'}"
     audit("mea_search", "-", detail=f"{scope}:{(query or '')[:60]}")
+    return out
+
+
+@mcp.tool()
+def altera_search(query: str = "", doc: str = "", limit: int = 15) -> dict:
+    """Search ingested Altera documentation (offline).
+
+    Source: skills/rad-cli-operations/references/altera-docs/*.md produced by
+    scripts/ingest_altera.py. Matches document text and returns excerpts,
+    optionally filtered by doc filename token.
+    """
+    k = _knowledge()
+    out = _kcall(k.altera_search, query, doc=doc, limit=limit)
+    audit("altera_search", "-", detail=f"{doc or '*'}:{(query or '')[:60]}")
     return out
 
 

@@ -1,10 +1,11 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.12.0
+version: 1.13.0
 ---
 
 > **Skill version:** 1.12.0 · updated 2026-08-03 (1.12.0: generalized MEA routing hardening — MEA/mem-map/register requests must route to `mea_search` first in served mode regardless of product/family/version phrasing; retain `tool_versions` pre-flight when available and only claim unavailability after an actual `mea_search` runtime/tool error; regression examples are now generic templates, not product-specific; 1.11.0: MEA routing hardening — for MEA/mem-map requests, route to `mea_search` first in served mode; require a `tool_versions` pre-flight check when available; only claim MEA tool unavailability after an actual `mea_search` runtime/tool error; added regression example path for `Router_discard`; 1.10.0: MEA layer added — `references/fpga-mea/` artifacts from `scripts/ingest_mea.py`, `mea_search` tool, and `/rad-load-mea` command; knowledge-routing rules updated so bundled mode reads local fpga-mea references first while served mode uses MCP `mea_search`; ETX-1p/SF-1p CLI discovery notes: `show system info`/`show system general-info` not recognized, top-level `show` is limited, `cli_help` context must start with configure/admin/file, go directly to `configure system` > `show device-information` for MAC/device info; 1.8.0: (enter_debug_shell/debug_shell_command now actually work — confirmed for secflow and etx1p (Ubuntu Linux, `debug shell`/`exit`); VxWorks families (etx2/mp1/mp4100) and etx2v/minid still refuse cleanly until confirmed. Same drain-based reading as debug_menu (no anchored OS prompt regex), and both now auto-record to debug_tree_history too, tagged by kind ("menu" vs "shell"); 1.7.0: debug_menu now auto-records every call per family and the new debug_tree_history(family) tool looks that up — check it before probing the hidden debug tree live; debug_menu continues from the previous call by default (reset=false), don't resend earlier navigation steps; 1.6.0: new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — never whitelisted, never called without an explicit in-conversation request; disambiguated from the unrelated VxWorks boot-loader recovery menu; 1.5.0: datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.13.0 · updated 2026-08-03 (1.13.0: Altera knowledge layer added — `references/altera-docs/` artifacts from `scripts/ingest_altera.py`, `altera_search` tool, and `/rad-load-altera` command; routing rules updated so bundled mode reads local Altera docs while served mode uses MCP `altera_search`; 1.12.0: generalized MEA routing hardening — MEA/mem-map/register requests must route to `mea_search` first in served mode regardless of product/family/version phrasing; retain `tool_versions` pre-flight when available and only claim unavailability after an actual `mea_search` runtime/tool error; regression examples are now generic templates, not product-specific; 1.11.0: MEA routing hardening — for MEA/mem-map requests, route to `mea_search` first in served mode; require a `tool_versions` pre-flight check when available; only claim MEA tool unavailability after an actual `mea_search` runtime/tool error; added regression example path for `Router_discard`; 1.10.0: MEA layer added — `references/fpga-mea/` artifacts from `scripts/ingest_mea.py`, `mea_search` tool, and `/rad-load-mea` command; knowledge-routing rules updated so bundled mode reads local fpga-mea references first while served mode uses MCP `mea_search`; ETX-1p/SF-1p CLI discovery notes: `show system info`/`show system general-info` not recognized, top-level `show` is limited, `cli_help` context must start with configure/admin/file, go directly to `configure system` > `show device-information` for MAC/device info; 1.8.0: (enter_debug_shell/debug_shell_command now actually work — confirmed for secflow and etx1p (Ubuntu Linux, `debug shell`/`exit`); VxWorks families (etx2/mp1/mp4100) and etx2v/minid still refuse cleanly until confirmed. Same drain-based reading as debug_menu (no anchored OS prompt regex), and both now auto-record to debug_tree_history too, tagged by kind ("menu" vs "shell"); 1.7.0: debug_menu now auto-records every call per family and the new debug_tree_history(family) tool looks that up — check it before probing the hidden debug tree live; debug_menu continues from the previous call by default (reset=false), don't resend earlier navigation steps; 1.6.0: new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit gate + required confirmations + refusal defaults, plus an auditable debug workflow recipe; 1.5.2: live examples + context rules tightened; 1.5.1: wording cleanups for read-before-write flow; 1.5.0: response/verification mode toggles added; 1.4.0: manual/datasheet routing expanded; 1.3.0: mp4100 candidate-DB commit model added; 1.2.0: mp1 family coverage added; 1.1.0: minid family + fragile-SSH notes; 1.0.0: initial multi-family operations baseline)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -181,6 +182,9 @@ For the manual layer, drop the family's PDF in `manuals/` and run
 skill). For FPGA/MEA memory-map knowledge, place extracted MEA HTML files under
 `MEA/html_from_zips/` and run `python scripts/ingest_mea.py` (or
 `/rad-load-mea`), which rewrites `references/fpga-mea/`.
+For Altera docs knowledge, place Altera PDFs in `Altera/` and run
+`python scripts/ingest_altera.py` (or `/rad-load-altera`), which rewrites
+`references/altera-docs/`.
 PDFs stay gitignored; the extracted markdown/JSON artifacts are committed.
 
 ## How this skill treats the harvested data
@@ -201,6 +205,9 @@ user manual PDF ──ingest_manual.py──▶ manual-<family>/*.md + manual-in
 datasheet PDFs ──ingest_datasheet.py──▶ datasheets/<product>.md + datasheet-index.md
    (specs/variants/ordering,             └─▶ rad://datasheet[/{product}]
     driven by datasheet-map.yaml)
+
+Altera PDFs ──ingest_altera.py──▶ altera-docs/*.md + altera-index.md
+  (FPGA/vendor docs references)
 ```
 
 The three pipelines are independent and never overwrite each other:
@@ -215,9 +222,10 @@ re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
   - **bundled** (no `<!--rad-mode:served-->` marker in this file): `references/`
     is present locally. Read knowledge directly from those files — grep
     `cli-reference-<family>.md`, open `manual-<family>/` chapters, read
-    `datasheets/<product>.md`, `fpga-mea/*.json`, `snmp-map-<family>.md`, etc.
+    `datasheets/<product>.md`, `fpga-mea/*.json`, `altera-docs/*.md`,
+    `snmp-map-<family>.md`, etc.
     Do **NOT** call `cli_search`, `manual_search`, `datasheet_search`, or
-    `mea_search` — those are served-mode
+    `mea_search`, or `altera_search` — those are served-mode
     substitutes for the same data, and using them in bundled mode defeats the
     purpose of a self-sufficient install (offline-capable, no catalog dependency).
     `mib_*` tools are always allowed (SNMP OID resolution is not duplicated in
@@ -225,7 +233,7 @@ re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
   - **served** (marker present): `references/` is absent. Use MCP tools as the
     primary knowledge source: `cli_search` for CLI syntax, `manual_search` for
     manual chapters, `datasheet_search` / `rad://datasheet` for datasheets,
-    `mea_search` for FPGA memory-map lookup,
+    `mea_search` for FPGA memory-map lookup, `altera_search` for Altera docs,
     `mib_*` for SNMP. Fall back to `rad://cli-reference/{family}/{context}` and
     `rad://manual/{family}/{chapter}` resources when available.
 
