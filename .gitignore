@@ -61,3 +61,11 @@ inventory_bck.yaml
 # TLS artifacts (local-only)
 *.crt
 *.key
+
+# Local Python virtual environments (workspace/private)
+.venv/
+**/.venv/
+
+# MEA artifacts and local archives
+MEA/
+*.zip
