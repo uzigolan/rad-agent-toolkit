@@ -83,6 +83,7 @@ copy_skills_to() {
     local dest="$1"
     local knowledge="${2:-served}"
     mkdir -p "$dest"
+    ensure_served_catalog "$knowledge"
     local s
     for s in "${SKILL_NAMES[@]}"; do
         rm -rf "$dest/$s"
@@ -100,6 +101,41 @@ copy_skills_to() {
         if [ -f "$md" ] && ! grep -q '<!--rad-mode:' "$md"; then
             sed -i 's#^\(> \*\*Skill version:\*\*.*\)$#\1\n<!--rad-mode:served-->#' "$md"
         fi
+    fi
+}
+
+ensure_served_catalog() {
+    # For served knowledge mode, ensure the local catalog exists by building it
+    # on demand. This keeps reinstall + keep-existing-config flows functional
+    # without requiring a separate manual build step.
+    # $1 = knowledge mode (bundled|served)
+    local knowledge="$1"
+    [ "$knowledge" = "served" ] || return 0
+
+    local db="$RAD_ROOT/build/rad-knowledge.sqlite"
+    if [ -f "$db" ]; then
+        echo "  catalog status: OK (served catalog already present)" >&2
+        return 0
+    fi
+
+    echo "  catalog status: missing (served mode) -> building now ..." >&2
+    assert_common_setup
+
+    local builder="$RAD_ROOT/scripts/build_knowledge_catalog.py"
+    if [ ! -f "$builder" ]; then
+        echo "  WARNING: cannot build served catalog; missing $builder" >&2
+        return 0
+    fi
+
+    "$VENV_PYTHON" "$builder" --mib-root "MIBs2:priority=200" --mib-root "MIBS:priority=100" >&2 || {
+        echo "  WARNING: catalog build failed; served knowledge tools may be unavailable until rebuilt." >&2
+        return 0
+    }
+
+    if [ -f "$db" ]; then
+        echo "  catalog status: built ($db)" >&2
+    else
+        echo "  WARNING: catalog build did not produce $db" >&2
     fi
 }
 
@@ -171,6 +207,8 @@ show_served_catalog_hint() {
         echo "  checker status: OK (served via remote MCP; catalog expected on server)" >&2
         return 0
     fi
+
+    ensure_served_catalog "$knowledge"
 
     if [ ! -f "$RAD_ROOT/build/rad-knowledge.sqlite" ]; then
         echo "  checker status: DEGRADED (served selected, local catalog missing)" >&2

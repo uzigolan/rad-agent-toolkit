@@ -37,6 +37,14 @@ an external HTTP listener process.
 Switching modes = replacing the previous rad-mcp entry, then doing the
 client's restart step.
 
+Knowledge routing rule:
+- Served skills: knowledge lookups come from MCP tools (`cli_search`,
+	`manual_search`, `datasheet_search`, `mea_search`, `mib_*`) on the server.
+	Install/reinstall now auto-builds `build/rad-knowledge.sqlite` if served is
+	selected and the catalog is missing.
+- Embedded/bundled skills: the local `references/` copy is used first (works
+	even without MCP connectivity for documentation lookup).
+
 Manual snippet workflow guide:
 [INSTALL-generic-mcp-skills.md](INSTALL-generic-mcp-skills.md)
 (also as [.html](INSTALL-generic-mcp-skills.html)).

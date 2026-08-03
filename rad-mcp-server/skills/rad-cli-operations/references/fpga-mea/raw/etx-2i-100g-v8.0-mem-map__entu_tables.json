@@ -1,0 +1,1896 @@
+{
+  "source_file": "etx-2i-100g-v8.0-mem-map__entu_tables.html",
+  "source_path": "C:\\Users\\uzi_g\\Downloads\\ai-projects\\fusion-cli\\MEA\\html_from_zips\\etx-2i-100g-v8.0-mem-map__entu_tables.html",
+  "metadata": {
+    "device": "etx-2i-100g",
+    "version": "8.0",
+    "map_type": "entu_tables",
+    "source_stem": "etx-2i-100g-v8.0-mem-map__entu_tables"
+  },
+  "title": "Memory Map: RAD/chip/entu_tables/8.0",
+  "address_blocks": [
+    "IF",
+    "ML",
+    "OAM",
+    "TM"
+  ],
+  "toc_register_entries": [
+    {
+      "address": "0x3000000",
+      "name": "Classifier_search_table"
+    },
+    {
+      "address": "0x4000000",
+      "name": "External_Vlan_profile"
+    },
+    {
+      "address": "0x5000000",
+      "name": "MAB_counters_0"
+    },
+    {
+      "address": "0x5000001",
+      "name": "MAB_counters_1"
+    },
+    {
+      "address": "0x5000002",
+      "name": "MAB_counters_2"
+    },
+    {
+      "address": "0x5000003",
+      "name": "MAB_counters_3"
+    },
+    {
+      "address": "0x16000000",
+      "name": "Flow_Attributes_Table"
+    },
+    {
+      "address": "0x17000000",
+      "name": "Port2MAC_Table"
+    },
+    {
+      "address": "0x18000000",
+      "name": "Port_Configuration_table"
+    },
+    {
+      "address": "0x19000000",
+      "name": "ACL_Mask_Table_0"
+    },
+    {
+      "address": "0x19000001",
+      "name": "ACL_Mask_Table_1"
+    },
+    {
+      "address": "0x19000002",
+      "name": "ACL_Mask_Table_2"
+    },
+    {
+      "address": "0x19000003",
+      "name": "ACL_Mask_Table_3"
+    },
+    {
+      "address": "0x1a000000",
+      "name": "ACL_Search_Table"
+    },
+    {
+      "address": "0x1b000000",
+      "name": "ACL_Action_override_table"
+    },
+    {
+      "address": "0x1c000000",
+      "name": "Multicast_Destination_Table"
+    },
+    {
+      "address": "0x1d000000",
+      "name": "Action_Table"
+    },
+    {
+      "address": "0x1e000000",
+      "name": "priority_source_profile"
+    },
+    {
+      "address": "0x1f000000",
+      "name": "color_and_Cos_mapping_table_0"
+    },
+    {
+      "address": "0x1f000040",
+      "name": "color_and_Cos_mapping_table_1"
+    },
+    {
+      "address": "0x1f000080",
+      "name": "color_and_Cos_mapping_table_2"
+    },
+    {
+      "address": "0x1f000081",
+      "name": "color_and_Cos_mapping_table_3"
+    },
+    {
+      "address": "0x1f000082",
+      "name": "color_and_Cos_mapping_table_4"
+    },
+    {
+      "address": "0x20000000",
+      "name": "Green_and_Yellow_Priority_Mapping_Table_0"
+    },
+    {
+      "address": "0x20000040",
+      "name": "Green_and_Yellow_Priority_Mapping_Table_1"
+    },
+    {
+      "address": "0x20000080",
+      "name": "Green_and_Yellow_Priority_Mapping_Table_2"
+    },
+    {
+      "address": "0x20000081",
+      "name": "Green_and_Yellow_Priority_Mapping_Table_3"
+    },
+    {
+      "address": "0x20000082",
+      "name": "Green_and_Yellow_Priority_Mapping_Table_4"
+    },
+    {
+      "address": "0x21000000",
+      "name": "ocls_pri_and_Rank_Mapping_Table_0"
+    },
+    {
+      "address": "0x21000040",
+      "name": "ocls_pri_and_Rank_Mapping_Table_1"
+    },
+    {
+      "address": "0x21000080",
+      "name": "ocls_pri_and_Rank_Mapping_Table_2"
+    },
+    {
+      "address": "0x21000081",
+      "name": "ocls_pri_and_Rank_Mapping_Table_3"
+    },
+    {
+      "address": "0x21000082",
+      "name": "ocls_pri_and_Rank_Mapping_Table_4"
+    },
+    {
+      "address": "0x23000000",
+      "name": "Data_Packets_Counters"
+    },
+    {
+      "address": "0x24000000",
+      "name": "Oam_Classifier_Search_Table"
+    },
+    {
+      "address": "0x25000000",
+      "name": "Cluster_to_Port_table"
+    },
+    {
+      "address": "0x26000000",
+      "name": "LM_Search_Table"
+    },
+    {
+      "address": "0x27000000",
+      "name": "LxCP_MAC_Search_table"
+    },
+    {
+      "address": "0x28000000",
+      "name": "LxCP_Ethertype_table"
+    },
+    {
+      "address": "0x29000000",
+      "name": "LxCP_Destination_override_table"
+    },
+    {
+      "address": "0x2a000000",
+      "name": "LMM_and_SLM_Aging_table"
+    },
+    {
+      "address": "0x2c000000",
+      "name": "Pre_Parser_Port_mapping"
+    },
+    {
+      "address": "0x2d000000",
+      "name": "Rx_PHY_delay_table"
+    },
+    {
+      "address": "0x36000000",
+      "name": "IPP_statuses_table"
+    },
+    {
+      "address": "0x37000000",
+      "name": "IPP_events_table"
+    },
+    {
+      "address": "0x53000000",
+      "name": "LXCP_IPv4_DIP_specific_ranges_0"
+    },
+    {
+      "address": "0x53000001",
+      "name": "LXCP_IPv4_DIP_specific_ranges_1"
+    },
+    {
+      "address": "0x54000000",
+      "name": "LXCP_IPv6_DIP_specific_ranges_0"
+    },
+    {
+      "address": "0x54000001",
+      "name": "LXCP_IPv6_DIP_specific_ranges_1"
+    },
+    {
+      "address": "0x55000000",
+      "name": "Router_statistics_0"
+    },
+    {
+      "address": "0x55000001",
+      "name": "Router_statistics_1"
+    },
+    {
+      "address": "0x56000000",
+      "name": "L3_LxCP_statistics"
+    },
+    {
+      "address": "0x57000000",
+      "name": "L3_ACL_statistics"
+    },
+    {
+      "address": "0x0",
+      "name": "DSE_CMD"
+    },
+    {
+      "address": "0x1000000",
+      "name": "DSE_CMD_trigger"
+    },
+    {
+      "address": "0x2000000",
+      "name": "DSE_response"
+    },
+    {
+      "address": "0x3000000",
+      "name": "MAC_Limiter"
+    },
+    {
+      "address": "0x4000000",
+      "name": "FIB_DDR_IPV4_Table_0"
+    },
+    {
+      "address": "0x5000000",
+      "name": "FIB_DDR_IPV4_Table_1"
+    },
+    {
+      "address": "0x6000000",
+      "name": "FIB_DDR_IPV6_Table_0_0"
+    },
+    {
+      "address": "0x6000001",
+      "name": "FIB_DDR_IPV6_Table_0_1"
+    },
+    {
+      "address": "0x7000000",
+      "name": "FIB_DDR_IPV6_Table_1"
+    },
+    {
+      "address": "0x8000000",
+      "name": "FIB_DDR_direct"
+    },
+    {
+      "address": "0x9000000",
+      "name": "FIB_MARKER_IPV4_Table_0"
+    },
+    {
+      "address": "0xa000000",
+      "name": "FIB_MARKER_IPV4_Table_1"
+    },
+    {
+      "address": "0xb000000",
+      "name": "FIB_MARKER_IPV6_Table_0"
+    },
+    {
+      "address": "0xc000000",
+      "name": "FIB_MARKER_IPV6_Table_1"
+    },
+    {
+      "address": "0xd000000",
+      "name": "L3_ACL_SE_table"
+    },
+    {
+      "address": "0xe000000",
+      "name": "L3_ACL_IPDA_indexing_table"
+    },
+    {
+      "address": "0xf000000",
+      "name": "L3_ACL_IPSA_indexing_table"
+    },
+    {
+      "address": "0x10000000",
+      "name": "L3_ACL_Action_override_table"
+    },
+    {
+      "address": "0x11000000",
+      "name": "ERIF_Mapping_table"
+    },
+    {
+      "address": "0x12000000",
+      "name": "ARPID2DA_MAC_0"
+    },
+    {
+      "address": "0x13000000",
+      "name": "ARPID2DA_MAC_1"
+    },
+    {
+      "address": "0x14000000",
+      "name": "Router_MAC_lookup"
+    },
+    {
+      "address": "0x15000000",
+      "name": "AACL_rules_table"
+    },
+    {
+      "address": "0x16000000",
+      "name": "AACL_rule_types"
+    },
+    {
+      "address": "0x17000000",
+      "name": "AACL_IPDA_indexing_table"
+    },
+    {
+      "address": "0x18000000",
+      "name": "AACL_IPSA_indexing_table"
+    },
+    {
+      "address": "0x19000000",
+      "name": "AACL_MAC_SA_indexing_table"
+    },
+    {
+      "address": "0x1a000000",
+      "name": "AACL_MAC_DA_indexing_table"
+    },
+    {
+      "address": "0x1b000000",
+      "name": "AACL_rules_slicer"
+    },
+    {
+      "address": "0x1c000000",
+      "name": "AACL_flows_table"
+    },
+    {
+      "address": "0x1d000000",
+      "name": "exclude_table_0"
+    },
+    {
+      "address": "0x1d000001",
+      "name": "exclude_table_1"
+    },
+    {
+      "address": "0x1e000000",
+      "name": "exclude_table_counters"
+    },
+    {
+      "address": "0x1f000000",
+      "name": "HASH_table_0"
+    },
+    {
+      "address": "0x1f000001",
+      "name": "HASH_table_1"
+    },
+    {
+      "address": "0x20000000",
+      "name": "register_table_0"
+    },
+    {
+      "address": "0x20000001",
+      "name": "register_table_1"
+    },
+    {
+      "address": "0x20000002",
+      "name": "register_table_2"
+    },
+    {
+      "address": "0x20000003",
+      "name": "register_table_3"
+    },
+    {
+      "address": "0x20000004",
+      "name": "register_table_4"
+    },
+    {
+      "address": "0x21000000",
+      "name": "MAB_search_table"
+    },
+    {
+      "address": "0x22000000",
+      "name": "duplicate_mac_rejection"
+    },
+    {
+      "address": "0x0",
+      "name": "txhdr_0"
+    },
+    {
+      "address": "0x1",
+      "name": "txhdr_1"
+    },
+    {
+      "address": "0x2",
+      "name": "txhdr_2"
+    },
+    {
+      "address": "0x3",
+      "name": "txhdr_3_10"
+    },
+    {
+      "address": "0x1000000",
+      "name": "CCM_DB"
+    },
+    {
+      "address": "0x2000000",
+      "name": "PM_DB_0"
+    },
+    {
+      "address": "0x2000001",
+      "name": "PM_DB_1"
+    },
+    {
+      "address": "0x2000002",
+      "name": "PM_DB_2"
+    },
+    {
+      "address": "0x2000003",
+      "name": "PM_DB_3"
+    },
+    {
+      "address": "0x3000000",
+      "name": "Peer_DB"
+    },
+    {
+      "address": "0x4000000",
+      "name": "Data_Buffer"
+    },
+    {
+      "address": "0x5000000",
+      "name": "Error_Register_RAM"
+    },
+    {
+      "address": "0x6000000",
+      "name": "PM_Search_Table"
+    },
+    {
+      "address": "0x7000000",
+      "name": "Peer_Search_Table"
+    },
+    {
+      "address": "0x8000000",
+      "name": "Port_Interface_status"
+    },
+    {
+      "address": "0x9000000",
+      "name": "DMM_extension"
+    },
+    {
+      "address": "0xa000000",
+      "name": "PM_HR"
+    },
+    {
+      "address": "0xb000000",
+      "name": "TX_Sender_ID_0"
+    },
+    {
+      "address": "0xb000001",
+      "name": "TX_Sender_ID_1"
+    },
+    {
+      "address": "0xb000002",
+      "name": "TX_Sender_ID_2_127"
+    },
+    {
+      "address": "0xc000000",
+      "name": "RX_Sender_ID_0"
+    },
+    {
+      "address": "0xc000001",
+      "name": "RX_Sender_ID_1_127"
+    },
+    {
+      "address": "0xd000000",
+      "name": "OAM_100G_Genrerator_Profile_dB"
+    },
+    {
+      "address": "0xe000000",
+      "name": "OAM_100G_Generator_Flow_dB"
+    },
+    {
+      "address": "0xf000000",
+      "name": "OAM_100G_Generator_Header_dB"
+    },
+    {
+      "address": "0x10000000",
+      "name": "OAM_100G_Generator_Counters"
+    },
+    {
+      "address": "0x11000000",
+      "name": "OAM_100G_Generator_payload_dB_0"
+    },
+    {
+      "address": "0x11000001",
+      "name": "OAM_100G_Generator_payload_dB_1"
+    },
+    {
+      "address": "0x0",
+      "name": "EHP_CTAG_table"
+    },
+    {
+      "address": "0x1000000",
+      "name": "EHP_STAG_table"
+    },
+    {
+      "address": "0x2000000",
+      "name": "BMAC_table"
+    },
+    {
+      "address": "0x3000000",
+      "name": "EHPDB_General_Purpose_register_0"
+    },
+    {
+      "address": "0x3000001",
+      "name": "EHPDB_General_Purpose_register_1"
+    },
+    {
+      "address": "0x3000002",
+      "name": "EHPDB_General_Purpose_register_2"
+    },
+    {
+      "address": "0x3000003",
+      "name": "EHPDB_General_Purpose_register_3"
+    },
+    {
+      "address": "0x3000004",
+      "name": "EHPDB_General_Purpose_register_4"
+    },
+    {
+      "address": "0x3000005",
+      "name": "EHPDB_General_Purpose_register_5"
+    },
+    {
+      "address": "0x3000006",
+      "name": "EHPDB_General_Purpose_register_6"
+    },
+    {
+      "address": "0x5000000",
+      "name": "EHP_Profiles_Values_table_0"
+    },
+    {
+      "address": "0x5000001",
+      "name": "EHP_Profiles_Values_table_1"
+    },
+    {
+      "address": "0x5000002",
+      "name": "EHP_Profiles_Values_table_2"
+    },
+    {
+      "address": "0x5000003",
+      "name": "EHP_Profiles_Values_table_3"
+    },
+    {
+      "address": "0x6000000",
+      "name": "Multicast_Editing_Groups"
+    },
+    {
+      "address": "0x7000000",
+      "name": "LM_counters_read_only"
+    },
+    {
+      "address": "0x8000000",
+      "name": "LM_counters_read_and_clear"
+    },
+    {
+      "address": "0xe000000",
+      "name": "Q_WFQ_Validity_table__not_used_in_3.1.5"
+    },
+    {
+      "address": "0xf000000",
+      "name": "Edit_Action_Table"
+    },
+    {
+      "address": "0x10000000",
+      "name": "TX_Engine_Performance"
+    },
+    {
+      "address": "0x11000000",
+      "name": "Write_FIFO_Performance"
+    },
+    {
+      "address": "0x12000000",
+      "name": "Q2CL_Status_table__not_used_in_3.1.5"
+    },
+    {
+      "address": "0x13000000",
+      "name": "CL2P_Translation_table__not_used_in_3.1.5"
+    },
+    {
+      "address": "0x14000000",
+      "name": "CL2P_Maping_table__not_used_in_3.1.5"
+    },
+    {
+      "address": "0x15000000",
+      "name": "CL2P_Availability_table__not_used_in_3.1.5"
+    },
+    {
+      "address": "0x16000000",
+      "name": "CL2P_Commited_Eligibility_table__not_used_in_3.1.5"
+    },
+    {
+      "address": "0x17000000",
+      "name": "CL2P_Excess_Eligibility_table"
+    },
+    {
+      "address": "0x18000000",
+      "name": "CL2P_WFQ_Eligibility_status_table"
+    },
+    {
+      "address": "0x19000000",
+      "name": "Clusters_WFQ_table"
+    },
+    {
+      "address": "0x1a000000",
+      "name": "Cluster.COS_to_que_converter"
+    },
+    {
+      "address": "0x1b000000",
+      "name": "CL2P_WFQ_Validity_table"
+    },
+    {
+      "address": "0x1c000000",
+      "name": "Queues_WFQ_table"
+    },
+    {
+      "address": "0x1d000000",
+      "name": "Q_WFQ_Eligibility_status_table"
+    },
+    {
+      "address": "0x1e000000",
+      "name": "LAG_Port_Members"
+    },
+    {
+      "address": "0x1f000000",
+      "name": "LAG_physical_dest_ports"
+    },
+    {
+      "address": "0x20000000",
+      "name": "Discarded_Yellow_bytes_counter"
+    },
+    {
+      "address": "0x21000000",
+      "name": "Forwarded_Yellow_bytes_counter"
+    },
+    {
+      "address": "0x22000000",
+      "name": "Discarded_Green_bytes_counter"
+    },
+    {
+      "address": "0x23000000",
+      "name": "Forwarded_Green_bytes_counter"
+    },
+    {
+      "address": "0x24000000",
+      "name": "Discarded_Yellow_packets_counter"
+    },
+    {
+      "address": "0x25000000",
+      "name": "Forwarded_Yellow_packets_counter"
+    },
+    {
+      "address": "0x26000000",
+      "name": "Discarded_Green_packets_counter"
+    },
+    {
+      "address": "0x27000000",
+      "name": "Forwarded_Green_packets_counter"
+    },
+    {
+      "address": "0x28000000",
+      "name": "Discarded_Red_bytes_counter"
+    },
+    {
+      "address": "0x29000000",
+      "name": "Discarded_Red_packets_counter"
+    },
+    {
+      "address": "0x2a000000",
+      "name": "Egress_MTU_Drop_Counter_Table"
+    },
+    {
+      "address": "0x2b000000",
+      "name": "Egress_MTU_Size_table"
+    },
+    {
+      "address": "0x2c000000",
+      "name": "Drop_probability"
+    },
+    {
+      "address": "0x2d000000",
+      "name": "Current_Queue_Size_Table"
+    },
+    {
+      "address": "0x30000000",
+      "name": "Ingress_Port_Rate_Metering_Profiles_table"
+    },
+    {
+      "address": "0x31000000",
+      "name": "Ingress_Port_bucket_status_table"
+    },
+    {
+      "address": "0x32000000",
+      "name": "Service_Rate_Metering_Profiles_table"
+    },
+    {
+      "address": "0x33000000",
+      "name": "1st_stage_bucket_status_table"
+    },
+    {
+      "address": "0x34000000",
+      "name": "Destination_Queues_MQS"
+    },
+    {
+      "address": "0x38000000",
+      "name": "QMDRL_counter"
+    },
+    {
+      "address": "0x3a000000",
+      "name": "QM_level_Counter___not_used"
+    },
+    {
+      "address": "0x3b000000",
+      "name": "Service_rate_meter_profile_pointers_table"
+    },
+    {
+      "address": "0x3c000000",
+      "name": "sharing_buckets_table_MEF_10.3"
+    },
+    {
+      "address": "0x3d000000",
+      "name": "sharing_profile_table_MEF_10.3"
+    },
+    {
+      "address": "0x3e000000",
+      "name": "Sharing_group_properties_MEF_10.3"
+    },
+    {
+      "address": "0x40000000",
+      "name": "Find_1st_eight_from_ten_0"
+    },
+    {
+      "address": "0x41000000",
+      "name": "Find_1st_eight_from_ten_1"
+    },
+    {
+      "address": "0x42000000",
+      "name": "Queue_WFQ_Reload"
+    },
+    {
+      "address": "0x43000000",
+      "name": "Queue_WFQ_Ability"
+    },
+    {
+      "address": "0x44000000",
+      "name": "Queue_WFQ_Bucket"
+    },
+    {
+      "address": "0x47000000",
+      "name": "Queue_to_Cluster_Converter_not_used"
+    },
+    {
+      "address": "0x48000000",
+      "name": "Queue_Availability_not_used"
+    },
+    {
+      "address": "0x49000000",
+      "name": "Queue_CIR_Eligibility_not_used"
+    },
+    {
+      "address": "0x4a000000",
+      "name": "Queue_EIR_Eligibility_not_used"
+    },
+    {
+      "address": "0x4b000000",
+      "name": "Queue_Arbiter_Counter_Availability"
+    },
+    {
+      "address": "0x4c000000",
+      "name": "Queue_Arbiter_Counter_Level_Counter"
+    },
+    {
+      "address": "0x4d000000",
+      "name": "SWB_between_Clusters"
+    },
+    {
+      "address": "0x4e000000",
+      "name": "Port_and_position_to_Cluster_Reverse_Mapping"
+    },
+    {
+      "address": "0x4f000000",
+      "name": "Cluster_WFQ_reload"
+    },
+    {
+      "address": "0x50000000",
+      "name": "Cluster_WFQ_ability"
+    },
+    {
+      "address": "0x51000000",
+      "name": "Cluster_WFQ_bucket"
+    },
+    {
+      "address": "0x52000000",
+      "name": "Cluster_Shaper_bucket"
+    },
+    {
+      "address": "0x53000000",
+      "name": "Cluster_Shaper_Profile"
+    },
+    {
+      "address": "0x54000000",
+      "name": "Cluster_to_Port_Converter"
+    },
+    {
+      "address": "0x55000000",
+      "name": "Cluster_Availability"
+    },
+    {
+      "address": "0x56000000",
+      "name": "Cluster_CIR_Eligibility"
+    },
+    {
+      "address": "0x57000000",
+      "name": "Cluster_Arbiter_Counter_Availability_8_indication"
+    },
+    {
+      "address": "0x58000000",
+      "name": "Cluster_Arbiter_Counter_Availability"
+    },
+    {
+      "address": "0x59000000",
+      "name": "Cluster_Arbiter_Counter_Level_Counter"
+    },
+    {
+      "address": "0x5a000000",
+      "name": "HS_ingress_and_egress_counters_read_only"
+    },
+    {
+      "address": "0x5b000000",
+      "name": "HS_ingress_and_egress_counters_read_and_clear"
+    },
+    {
+      "address": "0x5c000000",
+      "name": "Master_Cluster_WFQ_reload_not_used"
+    },
+    {
+      "address": "0x5d000000",
+      "name": "Master_Cluster_WFQ_ability_not_used"
+    },
+    {
+      "address": "0x5e000000",
+      "name": "Master_Cluster_WFQ_bucket_not_used"
+    },
+    {
+      "address": "0x5f000000",
+      "name": "Master_Cluster_Shaper_bucket_not_used"
+    },
+    {
+      "address": "0x60000000",
+      "name": "master_Cluster_Shaper_Profile_not_used"
+    },
+    {
+      "address": "0x61000000",
+      "name": "Master_Cluster_to_Port_Converter_not_used"
+    },
+    {
+      "address": "0x62000000",
+      "name": "Master_Cluster_Availability_not_used"
+    },
+    {
+      "address": "0x63000000",
+      "name": "Master_Cluster_CIR_Eligibility_not_used"
+    },
+    {
+      "address": "0x64000000",
+      "name": "Master_Cluster_EIR_Eligibility_not_used"
+    },
+    {
+      "address": "0x65000000",
+      "name": "Master_Cluster_Arbiter_Counter_Availability_not_used"
+    },
+    {
+      "address": "0x66000000",
+      "name": "Master_Cluster_Arbiter_Counter_Level_Counter_not_used"
+    },
+    {
+      "address": "0x6c000000",
+      "name": "Port_Shaper_bucket"
+    },
+    {
+      "address": "0x6d000000",
+      "name": "Port_Shaper_Profile"
+    },
+    {
+      "address": "0x6f000000",
+      "name": "Port_Availability"
+    },
+    {
+      "address": "0x70000000",
+      "name": "Port_CIR_Eligibility"
+    },
+    {
+      "address": "0x71000000",
+      "name": "Port_EIR_Eligibility"
+    },
+    {
+      "address": "0x72000000",
+      "name": "Port_Arbiter_Counter_Availability"
+    },
+    {
+      "address": "0x73000000",
+      "name": "Port_Arbiter_Counter_Level_Counter"
+    },
+    {
+      "address": "0x74000000",
+      "name": "cluster_to_physical_port_translation_table__currently_not_used"
+    },
+    {
+      "address": "0x75000000",
+      "name": "physical_to_virtual_port_translation_table_currently_not_used"
+    },
+    {
+      "address": "0x76000000",
+      "name": "indm0_TM_events_table"
+    },
+    {
+      "address": "0x77000000",
+      "name": "indm1_TM_events_table"
+    },
+    {
+      "address": "0x78000000",
+      "name": "Dying_Gasp_packets_buffers_0"
+    },
+    {
+      "address": "0x78000001",
+      "name": "Dying_Gasp_packets_buffers_1_11"
+    },
+    {
+      "address": "0x79000000",
+      "name": "combo_protect_port_table"
+    },
+    {
+      "address": "0x458",
+      "name": "\u201cTX Ports enable\u201d for this cluster."
+    }
+  ],
+  "table_rows": [
+    {
+      "block": "IF",
+      "address": "0x3000000",
+      "name": "Classifier_search_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x4000000",
+      "name": "External_Vlan_profile"
+    },
+    {
+      "block": "IF",
+      "address": "0x5000000",
+      "name": "MAB_counters"
+    },
+    {
+      "block": "IF",
+      "address": "0x16000000",
+      "name": "Flow_Attributes_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x17000000",
+      "name": "Port2MAC_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x18000000",
+      "name": "Port_Configuration_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x19000000",
+      "name": "ACL_Mask_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x1a000000",
+      "name": "ACL_Search_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x1b000000",
+      "name": "ACL_Action_override_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x1c000000",
+      "name": "Multicast_Destination_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x1d000000",
+      "name": "Action_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x1e000000",
+      "name": "priority_source_profile"
+    },
+    {
+      "block": "IF",
+      "address": "0x1f000000",
+      "name": "color_and_Cos_mapping_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x20000000",
+      "name": "Green_and_Yellow_Priority_Mapping_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x21000000",
+      "name": "ocls_pri_and_Rank_Mapping_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x23000000",
+      "name": "Data_Packets_Counters"
+    },
+    {
+      "block": "IF",
+      "address": "0x24000000",
+      "name": "Oam_Classifier_Search_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x25000000",
+      "name": "Cluster_to_Port_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x26000000",
+      "name": "LM_Search_Table"
+    },
+    {
+      "block": "IF",
+      "address": "0x27000000",
+      "name": "LxCP_MAC_Search_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x28000000",
+      "name": "LxCP_Ethertype_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x29000000",
+      "name": "LxCP_Destination_override_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x2a000000",
+      "name": "LMM_and_SLM_Aging_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x2c000000",
+      "name": "Pre_Parser_Port_mapping"
+    },
+    {
+      "block": "IF",
+      "address": "0x2d000000",
+      "name": "Rx_PHY_delay_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x36000000",
+      "name": "IPP_statuses_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x37000000",
+      "name": "IPP_events_table"
+    },
+    {
+      "block": "IF",
+      "address": "0x53000000",
+      "name": "LXCP_IPv4_DIP_specific_ranges"
+    },
+    {
+      "block": "IF",
+      "address": "0x54000000",
+      "name": "LXCP_IPv6_DIP_specific_ranges"
+    },
+    {
+      "block": "IF",
+      "address": "0x55000000",
+      "name": "Router_statistics"
+    },
+    {
+      "block": "IF",
+      "address": "0x56000000",
+      "name": "L3_LxCP_statistics"
+    },
+    {
+      "block": "IF",
+      "address": "0x57000000",
+      "name": "L3_ACL_statistics"
+    },
+    {
+      "block": "ML",
+      "address": "0x0",
+      "name": "DSE_CMD"
+    },
+    {
+      "block": "ML",
+      "address": "0x1000000",
+      "name": "DSE_CMD_trigger"
+    },
+    {
+      "block": "ML",
+      "address": "0x2000000",
+      "name": "DSE_response"
+    },
+    {
+      "block": "ML",
+      "address": "0x3000000",
+      "name": "MAC_Limiter"
+    },
+    {
+      "block": "ML",
+      "address": "0x4000000",
+      "name": "FIB_DDR_IPV4_Table_0"
+    },
+    {
+      "block": "ML",
+      "address": "0x5000000",
+      "name": "FIB_DDR_IPV4_Table_1"
+    },
+    {
+      "block": "ML",
+      "address": "0x6000000",
+      "name": "FIB_DDR_IPV6_Table_0"
+    },
+    {
+      "block": "ML",
+      "address": "0x7000000",
+      "name": "FIB_DDR_IPV6_Table_1"
+    },
+    {
+      "block": "ML",
+      "address": "0x8000000",
+      "name": "FIB_DDR_direct"
+    },
+    {
+      "block": "ML",
+      "address": "0x9000000",
+      "name": "FIB_MARKER_IPV4_Table_0"
+    },
+    {
+      "block": "ML",
+      "address": "0xa000000",
+      "name": "FIB_MARKER_IPV4_Table_1"
+    },
+    {
+      "block": "ML",
+      "address": "0xb000000",
+      "name": "FIB_MARKER_IPV6_Table_0"
+    },
+    {
+      "block": "ML",
+      "address": "0xc000000",
+      "name": "FIB_MARKER_IPV6_Table_1"
+    },
+    {
+      "block": "ML",
+      "address": "0xd000000",
+      "name": "L3_ACL_SE_table"
+    },
+    {
+      "block": "ML",
+      "address": "0xe000000",
+      "name": "L3_ACL_IPDA_indexing_table"
+    },
+    {
+      "block": "ML",
+      "address": "0xf000000",
+      "name": "L3_ACL_IPSA_indexing_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x10000000",
+      "name": "L3_ACL_Action_override_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x11000000",
+      "name": "ERIF_Mapping_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x12000000",
+      "name": "ARPID2DA_MAC_0"
+    },
+    {
+      "block": "ML",
+      "address": "0x13000000",
+      "name": "ARPID2DA_MAC_1"
+    },
+    {
+      "block": "ML",
+      "address": "0x14000000",
+      "name": "Router_MAC_lookup"
+    },
+    {
+      "block": "ML",
+      "address": "0x15000000",
+      "name": "AACL_rules_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x16000000",
+      "name": "AACL_rule_types"
+    },
+    {
+      "block": "ML",
+      "address": "0x17000000",
+      "name": "AACL_IPDA_indexing_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x18000000",
+      "name": "AACL_IPSA_indexing_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x19000000",
+      "name": "AACL_MAC_SA_indexing_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x1a000000",
+      "name": "AACL_MAC_DA_indexing_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x1b000000",
+      "name": "AACL_rules_slicer"
+    },
+    {
+      "block": "ML",
+      "address": "0x1c000000",
+      "name": "AACL_flows_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x1d000000",
+      "name": "exclude_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x1e000000",
+      "name": "exclude_table_counters"
+    },
+    {
+      "block": "ML",
+      "address": "0x1f000000",
+      "name": "HASH_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x20000000",
+      "name": "register_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x21000000",
+      "name": "MAB_search_table"
+    },
+    {
+      "block": "ML",
+      "address": "0x22000000",
+      "name": "duplicate_mac_rejection"
+    },
+    {
+      "block": "OAM",
+      "address": "0x0",
+      "name": "txhdr"
+    },
+    {
+      "block": "OAM",
+      "address": "0x1000000",
+      "name": "CCM_DB"
+    },
+    {
+      "block": "OAM",
+      "address": "0x2000000",
+      "name": "PM_DB"
+    },
+    {
+      "block": "OAM",
+      "address": "0x3000000",
+      "name": "Peer_DB"
+    },
+    {
+      "block": "OAM",
+      "address": "0x4000000",
+      "name": "Data_Buffer"
+    },
+    {
+      "block": "OAM",
+      "address": "0x5000000",
+      "name": "Error_Register_RAM"
+    },
+    {
+      "block": "OAM",
+      "address": "0x6000000",
+      "name": "PM_Search_Table"
+    },
+    {
+      "block": "OAM",
+      "address": "0x7000000",
+      "name": "Peer_Search_Table"
+    },
+    {
+      "block": "OAM",
+      "address": "0x8000000",
+      "name": "Port_Interface_status"
+    },
+    {
+      "block": "OAM",
+      "address": "0x9000000",
+      "name": "DMM_extension"
+    },
+    {
+      "block": "OAM",
+      "address": "0xa000000",
+      "name": "PM_HR"
+    },
+    {
+      "block": "OAM",
+      "address": "0xb000000",
+      "name": "TX_Sender_ID"
+    },
+    {
+      "block": "OAM",
+      "address": "0xc000000",
+      "name": "RX_Sender_ID"
+    },
+    {
+      "block": "OAM",
+      "address": "0xd000000",
+      "name": "OAM_100G_Genrerator_Profile_dB"
+    },
+    {
+      "block": "OAM",
+      "address": "0xe000000",
+      "name": "OAM_100G_Generator_Flow_dB"
+    },
+    {
+      "block": "OAM",
+      "address": "0xf000000",
+      "name": "OAM_100G_Generator_Header_dB"
+    },
+    {
+      "block": "OAM",
+      "address": "0x10000000",
+      "name": "OAM_100G_Generator_Counters"
+    },
+    {
+      "block": "OAM",
+      "address": "0x11000000",
+      "name": "OAM_100G_Generator_payload_dB"
+    },
+    {
+      "block": "TM",
+      "address": "0x0",
+      "name": "EHP_CTAG_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x1000000",
+      "name": "EHP_STAG_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x2000000",
+      "name": "BMAC_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x3000000",
+      "name": "EHPDB_General_Purpose_register"
+    },
+    {
+      "block": "TM",
+      "address": "0x5000000",
+      "name": "EHP_Profiles_Values_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x6000000",
+      "name": "Multicast_Editing_Groups"
+    },
+    {
+      "block": "TM",
+      "address": "0x7000000",
+      "name": "LM_counters_read_only"
+    },
+    {
+      "block": "TM",
+      "address": "0x8000000",
+      "name": "LM_counters_read_and_clear"
+    },
+    {
+      "block": "TM",
+      "address": "0xe000000",
+      "name": "Q_WFQ_Validity_table__not_used_in_3.1.5"
+    },
+    {
+      "block": "TM",
+      "address": "0xf000000",
+      "name": "Edit_Action_Table"
+    },
+    {
+      "block": "TM",
+      "address": "0x10000000",
+      "name": "TX_Engine_Performance"
+    },
+    {
+      "block": "TM",
+      "address": "0x11000000",
+      "name": "Write_FIFO_Performance"
+    },
+    {
+      "block": "TM",
+      "address": "0x12000000",
+      "name": "Q2CL_Status_table__not_used_in_3.1.5"
+    },
+    {
+      "block": "TM",
+      "address": "0x13000000",
+      "name": "CL2P_Translation_table__not_used_in_3.1.5"
+    },
+    {
+      "block": "TM",
+      "address": "0x14000000",
+      "name": "CL2P_Maping_table__not_used_in_3.1.5"
+    },
+    {
+      "block": "TM",
+      "address": "0x15000000",
+      "name": "CL2P_Availability_table__not_used_in_3.1.5"
+    },
+    {
+      "block": "TM",
+      "address": "0x16000000",
+      "name": "CL2P_Commited_Eligibility_table__not_used_in_3.1.5"
+    },
+    {
+      "block": "TM",
+      "address": "0x17000000",
+      "name": "CL2P_Excess_Eligibility_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x18000000",
+      "name": "CL2P_WFQ_Eligibility_status_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x19000000",
+      "name": "Clusters_WFQ_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x1a000000",
+      "name": "Cluster.COS_to_que_converter"
+    },
+    {
+      "block": "TM",
+      "address": "0x1b000000",
+      "name": "CL2P_WFQ_Validity_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x1c000000",
+      "name": "Queues_WFQ_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x1d000000",
+      "name": "Q_WFQ_Eligibility_status_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x1e000000",
+      "name": "LAG_Port_Members"
+    },
+    {
+      "block": "TM",
+      "address": "0x1f000000",
+      "name": "LAG_physical_dest_ports"
+    },
+    {
+      "block": "TM",
+      "address": "0x20000000",
+      "name": "Discarded_Yellow_bytes_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x21000000",
+      "name": "Forwarded_Yellow_bytes_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x22000000",
+      "name": "Discarded_Green_bytes_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x23000000",
+      "name": "Forwarded_Green_bytes_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x24000000",
+      "name": "Discarded_Yellow_packets_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x25000000",
+      "name": "Forwarded_Yellow_packets_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x26000000",
+      "name": "Discarded_Green_packets_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x27000000",
+      "name": "Forwarded_Green_packets_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x28000000",
+      "name": "Discarded_Red_bytes_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x29000000",
+      "name": "Discarded_Red_packets_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x2a000000",
+      "name": "Egress_MTU_Drop_Counter_Table"
+    },
+    {
+      "block": "TM",
+      "address": "0x2b000000",
+      "name": "Egress_MTU_Size_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x2c000000",
+      "name": "Drop_probability_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x2d000000",
+      "name": "Current_Queue_Size_Table"
+    },
+    {
+      "block": "TM",
+      "address": "0x30000000",
+      "name": "Ingress_Port_Rate_Metering_Profiles_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x31000000",
+      "name": "Ingress_Port_bucket_status_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x32000000",
+      "name": "Service_Rate_Metering_Profiles_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x33000000",
+      "name": "1st_stage_bucket_status_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x34000000",
+      "name": "Destination_Queues_MQS"
+    },
+    {
+      "block": "TM",
+      "address": "0x38000000",
+      "name": "QMDRL_counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x3a000000",
+      "name": "QM_level_Counter___not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x3b000000",
+      "name": "Service_rate_meter_profile_pointers_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x3c000000",
+      "name": "sharing_buckets_table_MEF_10.3"
+    },
+    {
+      "block": "TM",
+      "address": "0x3d000000",
+      "name": "sharing_profile_table_MEF_10.3"
+    },
+    {
+      "block": "TM",
+      "address": "0x3e000000",
+      "name": "Sharing_group_properties_MEF_10.3"
+    },
+    {
+      "block": "TM",
+      "address": "0x40000000",
+      "name": "Find_1st_eight_from_ten_0"
+    },
+    {
+      "block": "TM",
+      "address": "0x41000000",
+      "name": "Find_1st_eight_from_ten_1"
+    },
+    {
+      "block": "TM",
+      "address": "0x42000000",
+      "name": "Queue_WFQ_Reload"
+    },
+    {
+      "block": "TM",
+      "address": "0x43000000",
+      "name": "Queue_WFQ_Ability"
+    },
+    {
+      "block": "TM",
+      "address": "0x44000000",
+      "name": "Queue_WFQ_Bucket"
+    },
+    {
+      "block": "TM",
+      "address": "0x47000000",
+      "name": "Queue_to_Cluster_Converter_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x48000000",
+      "name": "Queue_Availability_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x49000000",
+      "name": "Queue_CIR_Eligibility_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x4a000000",
+      "name": "Queue_EIR_Eligibility_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x4b000000",
+      "name": "Queue_Arbiter_Counter_Availability"
+    },
+    {
+      "block": "TM",
+      "address": "0x4c000000",
+      "name": "Queue_Arbiter_Counter_Level_Counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x4d000000",
+      "name": "SWB_between_Clusters"
+    },
+    {
+      "block": "TM",
+      "address": "0x4e000000",
+      "name": "Port_and_position_to_Cluster_Reverse_Mapping"
+    },
+    {
+      "block": "TM",
+      "address": "0x4f000000",
+      "name": "Cluster_WFQ_reload"
+    },
+    {
+      "block": "TM",
+      "address": "0x50000000",
+      "name": "Cluster_WFQ_ability"
+    },
+    {
+      "block": "TM",
+      "address": "0x51000000",
+      "name": "Cluster_WFQ_bucket"
+    },
+    {
+      "block": "TM",
+      "address": "0x52000000",
+      "name": "Cluster_Shaper_bucket"
+    },
+    {
+      "block": "TM",
+      "address": "0x53000000",
+      "name": "Cluster_Shaper_Profile"
+    },
+    {
+      "block": "TM",
+      "address": "0x54000000",
+      "name": "Cluster_to_Port_Converter"
+    },
+    {
+      "block": "TM",
+      "address": "0x55000000",
+      "name": "Cluster_Availability"
+    },
+    {
+      "block": "TM",
+      "address": "0x56000000",
+      "name": "Cluster_CIR_Eligibility"
+    },
+    {
+      "block": "TM",
+      "address": "0x57000000",
+      "name": "Cluster_Arbiter_Counter_Availability_8_indication"
+    },
+    {
+      "block": "TM",
+      "address": "0x58000000",
+      "name": "Cluster_Arbiter_Counter_Availability"
+    },
+    {
+      "block": "TM",
+      "address": "0x59000000",
+      "name": "Cluster_Arbiter_Counter_Level_Counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x5a000000",
+      "name": "HS_ingress_and_egress_counters_read_only"
+    },
+    {
+      "block": "TM",
+      "address": "0x5b000000",
+      "name": "HS_ingress_and_egress_counters_read_and_clear"
+    },
+    {
+      "block": "TM",
+      "address": "0x5c000000",
+      "name": "Master_Cluster_WFQ_reload_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x5d000000",
+      "name": "Master_Cluster_WFQ_ability_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x5e000000",
+      "name": "Master_Cluster_WFQ_bucket_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x5f000000",
+      "name": "Master_Cluster_Shaper_bucket_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x60000000",
+      "name": "master_Cluster_Shaper_Profile_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x61000000",
+      "name": "Master_Cluster_to_Port_Converter_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x62000000",
+      "name": "Master_Cluster_Availability_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x63000000",
+      "name": "Master_Cluster_CIR_Eligibility_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x64000000",
+      "name": "Master_Cluster_EIR_Eligibility_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x65000000",
+      "name": "Master_Cluster_Arbiter_Counter_Availability_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x66000000",
+      "name": "Master_Cluster_Arbiter_Counter_Level_Counter_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x6c000000",
+      "name": "Port_Shaper_bucket"
+    },
+    {
+      "block": "TM",
+      "address": "0x6d000000",
+      "name": "Port_Shaper_Profile"
+    },
+    {
+      "block": "TM",
+      "address": "0x6f000000",
+      "name": "Port_Availability"
+    },
+    {
+      "block": "TM",
+      "address": "0x70000000",
+      "name": "Port_CIR_Eligibility"
+    },
+    {
+      "block": "TM",
+      "address": "0x71000000",
+      "name": "Port_EIR_Eligibility"
+    },
+    {
+      "block": "TM",
+      "address": "0x72000000",
+      "name": "Port_Arbiter_Counter_Availability"
+    },
+    {
+      "block": "TM",
+      "address": "0x73000000",
+      "name": "Port_Arbiter_Counter_Level_Counter"
+    },
+    {
+      "block": "TM",
+      "address": "0x74000000",
+      "name": "cluster_to_physical_port_translation_table__currently_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x75000000",
+      "name": "physical_to_virtual_port_translation_table_currently_not_used"
+    },
+    {
+      "block": "TM",
+      "address": "0x76000000",
+      "name": "indm0_TM_events_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x77000000",
+      "name": "indm1_TM_events_table"
+    },
+    {
+      "block": "TM",
+      "address": "0x78000000",
+      "name": "Dying_Gasp_packets_buffers"
+    },
+    {
+      "block": "TM",
+      "address": "0x79000000",
+      "name": "combo_protect_port_table"
+    }
+  ],
+  "counts": {
+    "address_blocks": 4,
+    "toc_register_entries": 235,
+    "table_rows": 186
+  }
+}

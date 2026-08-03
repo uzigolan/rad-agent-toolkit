@@ -1,0 +1,292 @@
+{
+  "schema": "fpga-mea.v1",
+  "source": "scripts/ingest_mea.py",
+  "files": [
+    {
+      "source_file": "etx-2i-100g-v7.1-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "7.1",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 12,
+        "toc_register_entries": 518,
+        "table_rows": 518
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v7.1-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "7.1",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 233,
+        "table_rows": 232
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.0-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "8.0",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 49,
+        "toc_register_entries": 346,
+        "table_rows": 342
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.0-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "8.0",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 235,
+        "table_rows": 186
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.1-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "8.1",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 49,
+        "toc_register_entries": 356,
+        "table_rows": 352
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.1-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "8.1",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 235,
+        "table_rows": 186
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.2-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "8.2",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 51,
+        "toc_register_entries": 350,
+        "table_rows": 346
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.2-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "8.2",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 234,
+        "table_rows": 185
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.2_old-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "8.2_old",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 51,
+        "toc_register_entries": 349,
+        "table_rows": 345
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.2_old-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "8.2_old",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 234,
+        "table_rows": 185
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.3-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "8.3",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 49,
+        "toc_register_entries": 356,
+        "table_rows": 352
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.3-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "8.3",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 235,
+        "table_rows": 186
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.4-mem-map__entu_registers.html",
+      "device": "etx-2i-100g",
+      "version": "8.4",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 51,
+        "toc_register_entries": 351,
+        "table_rows": 347
+      }
+    },
+    {
+      "source_file": "etx-2i-100g-v8.4-mem-map__entu_tables.html",
+      "device": "etx-2i-100g",
+      "version": "8.4",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 237,
+        "table_rows": 188
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v10.0-mem-map__entu_registers.html",
+      "device": "etx-2i-10g",
+      "version": "10.0",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 24,
+        "toc_register_entries": 271,
+        "table_rows": 278
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v10.0-mem-map__entu_tables.html",
+      "device": "etx-2i-10g",
+      "version": "10.0",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 243,
+        "table_rows": 195
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.a-mem-map__entu_registers.html",
+      "device": "etx-2i-10g",
+      "version": "6.a",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 17,
+        "toc_register_entries": 308,
+        "table_rows": 298
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.a-mem-map__entu_tables.html",
+      "device": "etx-2i-10g",
+      "version": "6.a",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 246,
+        "table_rows": 198
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.a.1-mem-map__entu_registers.html",
+      "device": "etx-2i-10g",
+      "version": "6.a.1",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 17,
+        "toc_register_entries": 308,
+        "table_rows": 298
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.a.1-mem-map__entu_tables.html",
+      "device": "etx-2i-10g",
+      "version": "6.a.1",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 257,
+        "table_rows": 201
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.b-mem-map__entu_registers.html",
+      "device": "etx-2i-10g",
+      "version": "6.b",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 24,
+        "toc_register_entries": 271,
+        "table_rows": 278
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.b-mem-map__entu_tables.html",
+      "device": "etx-2i-10g",
+      "version": "6.b",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 243,
+        "table_rows": 195
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.c-mem-map__entu_registers.html",
+      "device": "etx-2i-10g",
+      "version": "6.c",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 13,
+        "toc_register_entries": 281,
+        "table_rows": 271
+      }
+    },
+    {
+      "source_file": "etx-2i-10g-v6.c-mem-map__entu_tables.html",
+      "device": "etx-2i-10g",
+      "version": "6.c",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 246,
+        "table_rows": 198
+      }
+    },
+    {
+      "source_file": "etx-2i-400g-v9.1-mem-map__entu_registers.html",
+      "device": "etx-2i-400g",
+      "version": "9.1",
+      "map_type": "entu_registers",
+      "counts": {
+        "address_blocks": 35,
+        "toc_register_entries": 334,
+        "table_rows": 334
+      }
+    },
+    {
+      "source_file": "etx-2i-400g-v9.1-mem-map__entu_tables.html",
+      "device": "etx-2i-400g",
+      "version": "9.1",
+      "map_type": "entu_tables",
+      "counts": {
+        "address_blocks": 4,
+        "toc_register_entries": 234,
+        "table_rows": 185
+      }
+    }
+  ]
+}

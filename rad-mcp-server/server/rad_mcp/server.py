@@ -114,6 +114,7 @@ TOOL_VERSIONS = {
     "cli_search": "0.5.0",
     "manual_search": "0.5.0",
     "datasheet_search": "0.7.0",
+    "mea_search": "0.8.0",
     
     # Credentials tool (NEW in v0.8.0)
     "set_device_credentials": "0.8.0",
@@ -930,6 +931,23 @@ def datasheet_search(query: str, family: str = "", product: str = "",
     out = _kcall(k.datasheet_search, query, family=family, product=product,
                  kind=kind, limit=limit)
     audit("datasheet_search", "-", detail=f"{family or product or '*'}:{query[:60]}")
+    return out
+
+
+@mcp.tool()
+def mea_search(query: str = "", device: str = "", version: str = "",
+               map_type: str = "", limit: int = 25) -> dict:
+    """Search ingested FPGA MEA memory-map artifacts (offline).
+
+    Source: skills/rad-cli-operations/references/fpga-mea/raw/*.json produced
+    by scripts/ingest_mea.py. Matches across register addresses/names and
+    parsed table rows. Optional filters: device, version, map_type.
+    """
+    k = _knowledge()
+    out = _kcall(k.mea_search, query, device=device, version=version,
+                 map_type=map_type, limit=limit)
+    scope = f"{device or '*'}:{version or '*'}:{map_type or '*'}"
+    audit("mea_search", "-", detail=f"{scope}:{(query or '')[:60]}")
     return out
 
 

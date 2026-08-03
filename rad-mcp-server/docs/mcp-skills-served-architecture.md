@@ -190,6 +190,8 @@ The workload columns measure different data shapes:
   harvested-reference provenance.
 - **NETCONF:** future storage of modules, containers, lists, keys,
   leaves, types, constraints, RPCs, notifications, and schema relationships.
+- **FPGA Data:** register/table memory-map lookup, exact address search,
+  block-level grouping, and versioned artifact retrieval.
 - **Toolkit fit:** one-process deployment, offline use, cross-platform
   packaging, source control, backup, rebuild, and maintenance burden.
 
@@ -199,26 +201,30 @@ whether a database belongs in Git, but whether it fits the complete
 
 ### Scores
 
-| Technology | Manuals | MIBs | CLI | NETCONF | Toolkit fit | Weighted overall |
-|---|---:|---:|---:|---:|---:|---:|
-| Flat JSON files | 2 | 2 | 3 | 2 | 5 | **2.9 / 5** |
-| **SQLite + FTS5** | **4** | **5** | **5** | **4** | **5** | **4.7 / 5** |
-| DuckDB | 3 | 4 | 4 | 4 | 3 | **3.6 / 5** |
-| PostgreSQL | 5 | 5 | 5 | 5 | 2 | **4.4 / 5** |
-| OpenSearch/Elasticsearch | 5 | 2 | 3 | 2 | 1 | **2.7 / 5** |
-| Dedicated vector database | 5 | 1 | 2 | 1 | 1 | **2.1 / 5** |
+| Rank | Technology | Manuals | MIBs | CLI | NETCONF | FPGA Data | Toolkit fit | Weighted overall | Selected |
+|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **1** | **SQLite + FTS5** | **4** | **5** | **5** | **4** | **5** | **5** | **4.8 / 5** | **Yes** |
+| 2 | PostgreSQL | 5 | 5 | 5 | 5 | 4 | 2 | **4.3 / 5** | No |
+| 3 | DuckDB | 3 | 4 | 4 | 4 | 4 | 3 | **3.7 / 5** | No |
+| 4 | Flat JSON files | 2 | 2 | 3 | 2 | 2 | 5 | **2.8 / 5** | No |
+| 5 | OpenSearch/Elasticsearch | 5 | 2 | 3 | 2 | 3 | 1 | **2.6 / 5** | No |
+| 6 | Dedicated vector database | 5 | 1 | 2 | 1 | 3 | 1 | **2.1 / 5** | No |
 
 The weighted score uses:
 
-- Manuals: 20%
-- MIBs: 25%
-- CLI: 25%
+- Manuals: 15%
+- MIBs: 20%
+- CLI: 20%
 - NETCONF: 10%
+- FPGA Data: 15%
 - Toolkit fit: 20%
 
-MIBs and CLI receive the highest weight because they are the core structured
-knowledge and safety-grounding layers. NETCONF is included now but weighted
-lower because it is a future capability rather than an implemented dependency.
+MIBs and CLI receive high weight because they are the core structured
+knowledge and safety-grounding layers. FPGA Data now has explicit weight due
+to MEA register/table ingestion and exact address lookup requirements. NETCONF
+is included but weighted lower because it is still a future capability.
+
+Best current choice for this toolkit: **SQLite + FTS5**.
 
 ### Interpretation by technology
 

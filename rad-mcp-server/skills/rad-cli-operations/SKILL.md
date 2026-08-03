@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD device operations expertise — ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface — "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks — and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.8.0
+version: 1.12.0
 ---
 
-> **Skill version:** 1.8.0 · updated 2026-07-21 (enter_debug_shell/debug_shell_command now actually work — confirmed for secflow and etx1p (Ubuntu Linux, `debug shell`/`exit`); VxWorks families (etx2/mp1/mp4100) and etx2v/minid still refuse cleanly until confirmed. Same drain-based reading as debug_menu (no anchored OS prompt regex), and both now auto-record to debug_tree_history too, tagged by kind ("menu" vs "shell"); 1.7.0: debug_menu now auto-records every call per family and the new debug_tree_history(family) tool looks that up — check it before probing the hidden debug tree live; debug_menu continues from the previous call by default (reset=false), don't resend earlier navigation steps; 1.6.0: new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — never whitelisted, never called without an explicit in-conversation request; disambiguated from the unrelated VxWorks boot-loader recovery menu; 1.5.0: datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.12.0 · updated 2026-08-03 (1.12.0: generalized MEA routing hardening — MEA/mem-map/register requests must route to `mea_search` first in served mode regardless of product/family/version phrasing; retain `tool_versions` pre-flight when available and only claim unavailability after an actual `mea_search` runtime/tool error; regression examples are now generic templates, not product-specific; 1.11.0: MEA routing hardening — for MEA/mem-map requests, route to `mea_search` first in served mode; require a `tool_versions` pre-flight check when available; only claim MEA tool unavailability after an actual `mea_search` runtime/tool error; added regression example path for `Router_discard`; 1.10.0: MEA layer added — `references/fpga-mea/` artifacts from `scripts/ingest_mea.py`, `mea_search` tool, and `/rad-load-mea` command; knowledge-routing rules updated so bundled mode reads local fpga-mea references first while served mode uses MCP `mea_search`; ETX-1p/SF-1p CLI discovery notes: `show system info`/`show system general-info` not recognized, top-level `show` is limited, `cli_help` context must start with configure/admin/file, go directly to `configure system` > `show device-information` for MAC/device info; 1.8.0: (enter_debug_shell/debug_shell_command now actually work — confirmed for secflow and etx1p (Ubuntu Linux, `debug shell`/`exit`); VxWorks families (etx2/mp1/mp4100) and etx2v/minid still refuse cleanly until confirmed. Same drain-based reading as debug_menu (no anchored OS prompt regex), and both now auto-record to debug_tree_history too, tagged by kind ("menu" vs "shell"); 1.7.0: debug_menu now auto-records every call per family and the new debug_tree_history(family) tool looks that up — check it before probing the hidden debug tree live; debug_menu continues from the previous call by default (reset=false), don't resend earlier navigation steps; 1.6.0: new dangerous-area section: the hidden `debug` tree/OS shell — debug_logon_request/debug_logon_submit/debug_menu/enter_debug_shell/debug_shell_command/exit_debug_shell — never whitelisted, never called without an explicit in-conversation request; disambiguated from the unrelated VxWorks boot-loader recovery menu; 1.5.0: datasheet layer added — third knowledge domain: `references/datasheets/` + `datasheet-map.yaml`, `datasheet_search` tool, `rad://datasheet` resources, `/rad-load-datasheet` command) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -16,7 +16,8 @@ entry in the returned `alerts` to the user, one line each:
 - **VERSION MISMATCH** — this loaded skill vs the connected server's `skills/`
   copy drifted (re-sync the copies / re-run the installer).
 - **MODE MISMATCH** — a served (thin, no-references) skill against a server
-  with no knowledge catalog: `cli_search`/`manual_search`/`mib_*` can't
+  with no knowledge catalog: `cli_search`/`manual_search`/`datasheet_search`/
+  `mea_search`/`mib_*` can't
   answer (build the catalog or reinstall bundled).
 
 Alerts are warnings, not blockers — report and continue. Do this once per
@@ -177,7 +178,10 @@ For the manual layer, drop the family's PDF in `manuals/` and run
 `references/manual-<family>/`). For the datasheet layer, drop the PDF in
 `datasheets/`, add its entry to `references/datasheet-map.yaml`, and run
 `python scripts/ingest_datasheet.py --all` (or the `/rad-load-datasheet`
-skill). PDFs stay gitignored; the extracted markdown is committed.
+skill). For FPGA/MEA memory-map knowledge, place extracted MEA HTML files under
+`MEA/html_from_zips/` and run `python scripts/ingest_mea.py` (or
+`/rad-load-mea`), which rewrites `references/fpga-mea/`.
+PDFs stay gitignored; the extracted markdown/JSON artifacts are committed.
 
 ## How this skill treats the harvested data
 
@@ -211,8 +215,9 @@ re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
   - **bundled** (no `<!--rad-mode:served-->` marker in this file): `references/`
     is present locally. Read knowledge directly from those files — grep
     `cli-reference-<family>.md`, open `manual-<family>/` chapters, read
-    `datasheets/<product>.md`, `snmp-map-<family>.md`, etc. Do **NOT** call
-    `cli_search`, `manual_search`, or `datasheet_search` — those are served-mode
+    `datasheets/<product>.md`, `fpga-mea/*.json`, `snmp-map-<family>.md`, etc.
+    Do **NOT** call `cli_search`, `manual_search`, `datasheet_search`, or
+    `mea_search` — those are served-mode
     substitutes for the same data, and using them in bundled mode defeats the
     purpose of a self-sufficient install (offline-capable, no catalog dependency).
     `mib_*` tools are always allowed (SNMP OID resolution is not duplicated in
@@ -220,8 +225,22 @@ re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
   - **served** (marker present): `references/` is absent. Use MCP tools as the
     primary knowledge source: `cli_search` for CLI syntax, `manual_search` for
     manual chapters, `datasheet_search` / `rad://datasheet` for datasheets,
+    `mea_search` for FPGA memory-map lookup,
     `mib_*` for SNMP. Fall back to `rad://cli-reference/{family}/{context}` and
     `rad://manual/{family}/{chapter}` resources when available.
+
+- **MEA/mem-map routing hard rule (served mode):** when the user request
+  contains `MEA`, `mem-map`, register address lookup, FPGA table/register
+  wording, or equivalent synonyms, call `mea_search` FIRST (before
+  `manual_search` / `cli_search` / `mib_*` fallbacks), regardless of whether
+  the user names a specific product, family, firmware version, or none.
+  If `tool_versions` is available, pre-flight-check that `mea_search` exists
+  and then use it. Only state "MEA tool unavailable" after an actual
+  `mea_search` invocation fails with a tool/runtime error.
+  Regression examples (generic expected path):
+  `search MEA for <symbol-or-address>` -> `mea_search(query="<symbol-or-address>")`
+  `find mem-map entry <token> for <device> <version>` ->
+  `mea_search(query="<token>", device="<device>", version="<version>")`.
 
 - **Answer-time lookup order (fastest first):** 1) the *Common config recipes*
   below — zero lookups; 2) grep `cli-reference-<family>.md` for the context
@@ -469,6 +488,12 @@ self-describing: a failed navigation returns the expected parameters
 (`- router <number> ... [1..10]`), so a NAVIGATION ERROR from
 `run_show_in_context` usually tells you the missing piece. `tree` on a parent
 context is the reliable way to discover what an unfamiliar subtree contains.
+
+**ETX-1p / SF-1p CLI discovery (verified live 2026-08-03):**
+- `show system info` / `show system general-info` are **not recognized** on this family — do not attempt them.
+- Top-level `show` only exposes: `rados-versions`, `admin`, `configure`, `file`, `quick-setup`.
+- `cli_help` `context` must start with `configure`, `admin`, or `file` (or be empty for root) — `show system` as a context is refused.
+- For device info / MAC → go directly to `configure system` → `show device-information`.
 
 ## Common config recipes (verified live — answer directly, no lookup needed)
 

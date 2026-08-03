@@ -150,6 +150,7 @@ function Copy-SkillsTo {
         [ValidateSet('bundled', 'served')][string]$Knowledge = 'served'
     )
     New-Item -ItemType Directory -Force $Dest | Out-Null
+    Ensure-ServedCatalog -Knowledge $Knowledge
     foreach ($s in $script:SkillNames) {
         Copy-Item -Recurse -Force (Join-Path $script:SkillsSrc $s) $Dest
         Write-Host "  skill -> $Dest\$s"
@@ -178,6 +179,42 @@ function Copy-SkillsTo {
                 Write-Host "  bundled mode: removed served marker from rad-cli-operations\SKILL.md"
             }
         }
+    }
+}
+
+function Ensure-ServedCatalog {
+    # For served knowledge mode, ensure the local catalog exists by building it
+    # on demand. This keeps reinstall + keep-existing-config flows functional
+    # without requiring users to remember a separate build step.
+    param(
+        [ValidateSet('bundled', 'served')][string]$Knowledge
+    )
+    if ($Knowledge -ne 'served') { return }
+
+    $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'
+    if (Test-Path $db) {
+        Write-Host "  catalog status: OK (served catalog already present)"
+        return
+    }
+
+    Write-Host "  catalog status: missing (served mode) -> building now ..."
+    Assert-CommonSetup
+
+    $builder = Join-Path $script:RadRoot 'scripts\build_knowledge_catalog.py'
+    if (-not (Test-Path $builder)) {
+        Write-Host "  WARNING: cannot build served catalog; missing $builder"
+        return
+    }
+
+    try {
+        & $script:VenvPython $builder --mib-root "MIBs2:priority=200" --mib-root "MIBS:priority=100"
+        if (($LASTEXITCODE -ne 0) -or (-not (Test-Path $db))) {
+            Write-Host "  WARNING: catalog build failed; served knowledge tools may be unavailable until rebuilt."
+            return
+        }
+        Write-Host "  catalog status: built ($db)"
+    } catch {
+        Write-Host "  WARNING: catalog build failed: $($_.Exception.Message)"
     }
 }
 
@@ -253,6 +290,8 @@ function Show-ServedCatalogHint {
         Write-Host "  checker status: OK (served via remote MCP; catalog expected on server)"
         return
     }
+
+    Ensure-ServedCatalog -Knowledge $Knowledge
 
     $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'
     if (-not (Test-Path $db)) {
