@@ -183,21 +183,22 @@ function Copy-SkillsTo {
 }
 
 function Ensure-ServedCatalog {
-    # For served knowledge mode, ensure the local catalog exists by building it
-    # on demand. This keeps reinstall + keep-existing-config flows functional
-    # without requiring users to remember a separate build step.
+    # Ensure the local knowledge catalog exists by building it on demand.
+    # This now runs as a baseline warm-up for install/reinstall flows (fresh
+    # or keep-existing), so MCP knowledge tools have a ready DB immediately.
     param(
         [ValidateSet('bundled', 'served')][string]$Knowledge
     )
-    if ($Knowledge -ne 'served') { return }
+
+    $reason = if ($Knowledge -eq 'served') { 'served mode' } else { 'bundled baseline warm-up' }
 
     $db = Join-Path $script:RadRoot 'build\rad-knowledge.sqlite'
     if (Test-Path $db) {
-        Write-Host "  catalog status: OK (served catalog already present)"
+        Write-Host "  catalog status: OK (catalog already present; $reason)"
         return
     }
 
-    Write-Host "  catalog status: missing (served mode) -> building now ..."
+    Write-Host "  catalog status: missing ($reason) -> building now ..."
     Assert-CommonSetup
 
     $builder = Join-Path $script:RadRoot 'scripts\build_knowledge_catalog.py'
@@ -209,7 +210,7 @@ function Ensure-ServedCatalog {
     try {
         & $script:VenvPython $builder --mib-root "MIBs2:priority=200" --mib-root "MIBS:priority=100"
         if (($LASTEXITCODE -ne 0) -or (-not (Test-Path $db))) {
-            Write-Host "  WARNING: catalog build failed; served knowledge tools may be unavailable until rebuilt."
+            Write-Host "  WARNING: catalog build failed; MCP knowledge tools may be unavailable until rebuilt."
             return
         }
         Write-Host "  catalog status: built ($db)"

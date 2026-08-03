@@ -105,20 +105,25 @@ copy_skills_to() {
 }
 
 ensure_served_catalog() {
-    # For served knowledge mode, ensure the local catalog exists by building it
-    # on demand. This keeps reinstall + keep-existing-config flows functional
-    # without requiring a separate manual build step.
+    # Ensure the local knowledge catalog exists by building it on demand.
+    # This now runs as a baseline warm-up for install/reinstall flows (fresh
+    # or keep-existing), so MCP knowledge tools have a ready DB immediately.
     # $1 = knowledge mode (bundled|served)
     local knowledge="$1"
-    [ "$knowledge" = "served" ] || return 0
+    local reason=""
+    if [ "$knowledge" = "served" ]; then
+        reason="served mode"
+    else
+        reason="bundled baseline warm-up"
+    fi
 
     local db="$RAD_ROOT/build/rad-knowledge.sqlite"
     if [ -f "$db" ]; then
-        echo "  catalog status: OK (served catalog already present)" >&2
+        echo "  catalog status: OK (catalog already present; $reason)" >&2
         return 0
     fi
 
-    echo "  catalog status: missing (served mode) -> building now ..." >&2
+    echo "  catalog status: missing ($reason) -> building now ..." >&2
     assert_common_setup
 
     local builder="$RAD_ROOT/scripts/build_knowledge_catalog.py"
@@ -128,7 +133,7 @@ ensure_served_catalog() {
     fi
 
     "$VENV_PYTHON" "$builder" --mib-root "MIBs2:priority=200" --mib-root "MIBS:priority=100" >&2 || {
-        echo "  WARNING: catalog build failed; served knowledge tools may be unavailable until rebuilt." >&2
+        echo "  WARNING: catalog build failed; MCP knowledge tools may be unavailable until rebuilt." >&2
         return 0
     }
 

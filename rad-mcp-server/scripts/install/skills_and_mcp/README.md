@@ -40,8 +40,9 @@ client's restart step.
 Knowledge routing rule:
 - Served skills: knowledge lookups come from MCP tools (`cli_search`,
 	`manual_search`, `datasheet_search`, `mea_search`, `mib_*`) on the server.
-	Install/reinstall now auto-builds `build/rad-knowledge.sqlite` if served is
-	selected and the catalog is missing.
+	Install/reinstall now auto-builds `build/rad-knowledge.sqlite` when missing
+	(including fresh setup and keep-existing-config paths) so MCP knowledge
+	queries have the local DB ready immediately.
 - Embedded/bundled skills: the local `references/` copy is used first (works
 	even without MCP connectivity for documentation lookup).
 
