@@ -1,10 +1,10 @@
 ﻿---
 name: rad-cli-operations
 description: RAD device operations expertise - ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface - "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks - and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.16.0
+version: 1.17.0
 ---
 
-> **Skill version:** 1.16.0 - updated 2026-08-04 (1.16.0: use `altera_search` confidence metadata (`confidence`, `token_coverage`, `confidence_summary`, `figure_refs`) to stop earlier with high-signal evidence; doc-narrow call 2 is now default when call 1 returns mixed docs. 1.15.0: Altera query optimization - cap iterative `altera_search` loops with a strict query budget and deterministic 1-3 call flow; avoid broad one-word probes; require direct answer synthesis once evidence is sufficient, including figure references. 1.14.0: fixed Altera/manual lookup routing regression - bundled mode must read local `references/` content and never substitute GitHub repo search; when bundled references are missing locally, run local ingest (`/rad-load-altera` or `scripts/ingest_altera.py`) before claiming unavailability; added explicit NoC reset/initialization regression flow. 1.13.0: Altera knowledge layer added - `references/altera-docs/` artifacts from `scripts/ingest_altera.py`, `altera_search` tool, and `/rad-load-altera` command.)
+> **Skill version:** 1.17.0 - updated 2026-08-04 (1.17.0: fixed MEA routing regression - stored MEA CLI/menu questions must use `debug_tree_history` first; `mea_search` is register/map-only and must not be treated as a command store; added stored-data-only stop rule and MEA anti-loop budget. 1.16.0: use `altera_search` confidence metadata (`confidence`, `token_coverage`, `confidence_summary`, `figure_refs`) to stop earlier with high-signal evidence; doc-narrow call 2 is now default when call 1 returns mixed docs. 1.15.0: Altera query optimization - cap iterative `altera_search` loops with a strict query budget and deterministic 1-3 call flow; avoid broad one-word probes; require direct answer synthesis once evidence is sufficient, including figure references. 1.14.0: fixed Altera/manual lookup routing regression - bundled mode must read local `references/` content and never substitute GitHub repo search; when bundled references are missing locally, run local ingest (`/rad-load-altera` or `scripts/ingest_altera.py`) before claiming unavailability; added explicit NoC reset/initialization regression flow. 1.13.0: Altera knowledge layer added - `references/altera-docs/` artifacts from `scripts/ingest_altera.py`, `altera_search` tool, and `/rad-load-altera` command.)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -248,18 +248,43 @@ re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
   - In **served** mode, use MCP knowledge tools (`altera_search`, `mea_search`,
     `manual_search`, `datasheet_search`) instead of repository search.
 
-- **MEA/mem-map routing hard rule (served mode):** when the user request
-  contains `MEA`, `mem-map`, register address lookup, FPGA table/register
-  wording, or equivalent synonyms, call `mea_search` FIRST (before
-  `manual_search` / `cli_search` / `mib_*` fallbacks), regardless of whether
-  the user names a specific product, family, firmware version, or none.
-  If `tool_versions` is available, pre-flight-check that `mea_search` exists
-  and then use it. Only state "MEA tool unavailable" after an actual
-  `mea_search` invocation fails with a tool/runtime error.
+- **MEA routing hard split (served mode):** distinguish **stored MEA
+  commands/menus** from **MEA register/map data** before choosing a tool.
+  - **Stored MEA command/menu questions**: if the user asks "which MEA
+    commands", "using MEA commands", "under `debug mea`", submenu names,
+    stored OAM/PM/HW paths, or exact MEA syntax, call `debug_tree_history`
+    FIRST. This is the stored command/menu source.
+  - **MEA register/map questions**: if the user asks for register names,
+    addresses, FPGA tables, block dumps, mem-map symbols, or register-backed
+    evidence, call `mea_search` FIRST. This is a register/map source only.
+  - Do **not** treat `mea_search` hits as MEA CLI command evidence.
+  - Do **not** answer a MEA command question by spraying `mea_search` synonym
+    queries (`fan`, `duty`, `pwm`, `cooling`, `temperature`). That is the wrong
+    store.
+  - Use `manual_search` / `cli_search` only for documented non-debug CLI or
+    behavior context after the MEA store decision is made.
   Regression examples (generic expected path):
+  `which MEA commands show OAM state on etx2?` -> `debug_tree_history(family="etx2")`
   `search MEA for <symbol-or-address>` -> `mea_search(query="<symbol-or-address>")`
   `find mem-map entry <token> for <device> <version>` ->
   `mea_search(query="<token>", device="<device>", version="<version>")`.
+
+- **MEA stored-data-only rule:** once the user says "stored data only", "not
+  on live device", or equivalent, stop proposing live debug probing in that
+  thread. Answer only from `debug_tree_history`, `mea_search`, manuals, CLI
+  refs, and other stored sources, and clearly mark any gaps as "not captured in
+  stored data".
+
+- **MEA query budget (anti-loop rule):**
+  - Maximum MEA evidence calls per question: **3**.
+  - Call 1: choose the correct primary store (`debug_tree_history` for MEA
+    commands/menus, `mea_search` for registers/maps).
+  - Call 2 (optional): one narrowing follow-up in the same store.
+  - Call 3 (optional): one cross-check in the companion store only if needed
+    (for example, `debug_tree_history` says `registers` and you need the mapped
+    block from `mea_search`).
+  - After call 3, synthesize the answer and stop; do not fan out across broad
+    synonyms.
 
 - **Altera NoC reset/init regression case:** for prompts like
   "find all references to NoC reset/initialization and return a checklist with

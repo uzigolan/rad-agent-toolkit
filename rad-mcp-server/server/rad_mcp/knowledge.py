@@ -675,6 +675,7 @@ def mea_search(query: str = "", device: str = "", version: str = "",
 
     Reads skills/rad-cli-operations/references/fpga-mea/raw/*.json and matches
     by address/name/block across TOC register entries and parsed table rows.
+    This is a register/map source, not stored MEA CLI-command history.
     """
     if not MEA_RAW_DIR.exists():
         raise KnowledgeUnavailable(
@@ -781,7 +782,7 @@ def mea_search(query: str = "", device: str = "", version: str = "",
         "scanned_files": scanned,
         "returned": len(top),
         "results": top,
-        "note": "offline FPGA-MEA artifacts from scripts/ingest_mea.py (toc_register_entries + table_rows)",
+        "note": "offline FPGA-MEA artifacts from scripts/ingest_mea.py (toc_register_entries + table_rows); register/map data only, not MEA CLI command history",
     }
 
 
