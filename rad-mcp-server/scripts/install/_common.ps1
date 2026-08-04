@@ -167,10 +167,15 @@ function Copy-SkillsTo {
     Write-Host "  skills payload refreshed from repo source (keep-existing MCP config paths included)"
     $skillmd = Join-Path $Dest 'rad-cli-operations\SKILL.md'
     if ($Knowledge -eq 'served') {
-        $refs = Join-Path $Dest 'rad-cli-operations\references'
-        if (Test-Path $refs) {
-            Remove-Item -Recurse -Force $refs
-            Write-Host "  served mode: omitted rad-cli-operations\references (served by the MCP catalog tools)"
+        $refsDirs = @(
+            Get-ChildItem -Path $Dest -Directory -Recurse -Force -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -eq 'references' }
+        )
+        foreach ($refDir in $refsDirs) {
+            Remove-Item -Recurse -Force $refDir.FullName
+        }
+        if ($refsDirs.Count -gt 0) {
+            Write-Host "  served mode: omitted all skills' references/ directories (served by the MCP catalog tools)"
         }
         # Stamp the mode so the loaded skill's self-check knows it (missing = bundled).
         # Marker is an HTML comment with a unique token that never appears in prose.

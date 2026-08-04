@@ -23,6 +23,12 @@ DEFAULT_DB = _RAD / "build" / "rad-knowledge.sqlite"
 REPORT_PATH = _RAD / "build" / "mib-catalog-report.json"
 MEA_RAW_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea" / "raw"
 ALTERA_DOCS_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "altera-docs"
+MEA_COMMANDS_FILE_CANDIDATES = [
+    _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea" / "mea-commands-only-with-relation.txt",
+    _RAD.parent / "MEA" / "mea_commands_only_with_relation 1.txt",
+    _RAD.parent / "MEA" / "mea_commands_only_with_relation.txt",
+    _RAD.parent / "MEA" / "mea_commands_only_in_realtion.txt",
+]
 
 _OID_RE = re.compile(r"^\d+(\.\d+)+$")
 
@@ -783,6 +789,71 @@ def mea_search(query: str = "", device: str = "", version: str = "",
         "returned": len(top),
         "results": top,
         "note": "offline FPGA-MEA artifacts from scripts/ingest_mea.py (toc_register_entries + table_rows); register/map data only, not MEA CLI command history",
+    }
+
+
+def mea_commands_search(query: str = "", category: str = "", limit: int = 100) -> dict:
+    """Search the stored MEA command catalog text file (offline).
+
+    This source is intended for questions like "all MEA commands" or command
+    families such as `MEA util fctl`. It is separate from debug_tree_history
+    (captured live sessions) and from mea_search (register/mem-map data).
+    """
+    paths = [p for p in MEA_COMMANDS_FILE_CANDIDATES if p.exists()]
+    if not paths:
+        raise KnowledgeUnavailable(
+            "MEA command catalog file not found. Expected one of: "
+            + ", ".join(str(p) for p in MEA_COMMANDS_FILE_CANDIDATES)
+        )
+
+    limit = max(1, min(int(limit), 2000))
+    q = (query or "").strip().lower()
+    cat = (category or "").strip().lower()
+
+    seen = set()
+    rows: list[dict] = []
+
+    for path in paths:
+        for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = raw.strip()
+            if not line or not line.startswith("MEA"):
+                continue
+
+            cmd = line
+            relation = ""
+            m = re.match(r"^(MEA\s+.+?)\s*-\s*Related to\s+(.+?)\.?$", line)
+            if m:
+                cmd = m.group(1).strip()
+                relation = m.group(2).strip()
+
+            key = (cmd.lower(), relation.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+            rows.append({
+                "command": cmd,
+                "relation": relation,
+                "source_file": path.name,
+            })
+
+    if q:
+        rows = [
+            r for r in rows
+            if q in r["command"].lower() or q in (r.get("relation") or "").lower()
+        ]
+    if cat:
+        rows = [r for r in rows if cat in (r.get("relation") or "").lower()]
+
+    rows.sort(key=lambda r: r["command"].lower())
+    top = rows[:limit]
+    return {
+        "query": query,
+        "category": category,
+        "catalog_files": [str(p) for p in paths],
+        "total_commands": len(rows),
+        "returned": len(top),
+        "results": top,
+        "note": "stored MEA command catalog text (not live debug history and not register/mem-map data)",
     }
 
 

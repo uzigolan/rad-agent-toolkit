@@ -11,6 +11,7 @@ commit → verify. Unit names below are the lab inventory — substitute yours.
 
 ## Contents
 
+0. [Quick map — one prompt per technology](#0-quick-map--one-prompt-per-technology)
 1. [User manual — feature & concept knowledge](#1-user-manual--feature--concept-knowledge)
 2. [Datasheets — hardware & product knowledge](#2-datasheets--hardware--product-knowledge)
 3. [Device management](#3-device-management)
@@ -21,6 +22,37 @@ commit → verify. Unit names below are the lab inventory — substitute yours.
 8. [Onboarding a new device type](#8-onboarding-a-new-device-type)
 9. [Debug tree & OS shell](#9-debug-tree--os-shell)
 10. [Fusion — every layer in one prompt](#10-fusion--every-layer-in-one-prompt)
+
+## 0. Quick map — one prompt per technology
+
+Use this section when you want one fast example for each technology surface.
+
+**Manual knowledge**
+> rad agent, according to the ETX-2 manual, explain ERP failover timers and revertive behavior
+
+**Datasheet knowledge**
+> noam, compare ETX-2i 10G vs 100G variant ports and timing from datasheets
+
+**Device management**
+> rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234
+
+**CLI operations**
+> abayev, show active alarms on sf-163-187
+
+**SNMP operations**
+> noam, read sysName and sysUpTime from minid-1 with exact SNMP GETs
+
+**MEA command catalog**
+> rad agent, list all MEA util fctl commands from stored data
+
+**MEA registers and memory map**
+> noam, search MEA register map for queue-related addresses and symbols
+
+**Hidden debug MEA on device**
+> abayev, unlock debug mode on lab-etx2 and check MEA FPGA version
+
+**Altera reference knowledge**
+> rad agent, in Altera docs explain AWVALID/WVALID timing expectations and point to the relevant figure
 
 ## 1. User manual — feature & concept knowledge
 

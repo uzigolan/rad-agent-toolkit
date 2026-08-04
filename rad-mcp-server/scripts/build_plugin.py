@@ -106,7 +106,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Build the rad-agent-toolkit plugin bundle.")
     ap.add_argument("--knowledge", choices=("bundled", "served"), default="bundled",
                     help="bundled (default): plugin carries the skills' references (~14 MB). "
-                         "served: thin plugin — rad-cli-operations/references omitted, served "
+                        "served: thin plugin — all skill references/ dirs omitted, served "
                          "by the MCP catalog tools.")
     args = ap.parse_args()
     served = args.knowledge == "served"
@@ -124,7 +124,7 @@ def main() -> None:
     ignore = shutil.ignore_patterns("references") if served else None
     shutil.copytree(SKILLS_SRC, PLUGIN / "skills", ignore=ignore)
     if served:
-        print("served mode: thin plugin (rad-cli-operations/references omitted — served by the MCP catalog)")
+        print("served mode: thin plugin (all skill references/ dirs omitted — served by the MCP catalog)")
         _stamp_served_mode(PLUGIN / "skills" / "rad-cli-operations" / "SKILL.md")
     (PLUGIN / "commands").mkdir()
     for md in sorted(COMMANDS_SRC.glob("*.md")):

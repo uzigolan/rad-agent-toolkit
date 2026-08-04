@@ -29,11 +29,12 @@ def _stamp_served(text: str) -> str:
 
 
 def _write_zip(out: Path, skill_dir: Path, served: bool) -> None:
-    skip = (skill_dir / "references") if served else None
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
-        for root, _, files in os.walk(skill_dir):
-            if skip and (Path(root) == skip or skip in Path(root).parents):
-                continue
+        for root, dirs, files in os.walk(skill_dir):
+            if served:
+                # Served mode ships SKILL.md-only semantics: strip reference trees
+                # from all skills, not just rad-cli-operations.
+                dirs[:] = [d for d in dirs if d != "references"]
             for f in files:
                 full = Path(root) / f
                 arc = full.relative_to(REPO / "skills").as_posix()

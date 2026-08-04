@@ -1,25 +1,32 @@
 ---
 name: rad-mea-debug
 description: RAD hidden debug tree and FPGA/MEA knowledge. Use when the user asks about `debug mea`, `FPGA>MEA`, stored MEA commands, OAM/PM/HW MEA paths, FPGA register maps, memory-map symbols, or what the device auto-programmed in MEA.
-version: 1.0.0
+version: 1.1.0
 ---
 
-> **Skill version:** 1.0.0 - updated 2026-08-04 (split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
+> **Skill version:** 1.1.0 - updated 2026-08-04 (1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
 
 # RAD MEA and debug skill
 
-## The two stores are different
+## The MEA stores are different
 
 - `debug_tree_history` is the stored MEA command/menu history.
 - `mea_search` is the FPGA register/memory-map store.
+- `mea_commands_search` is the static MEA command catalog text store.
 
 Do not mix them.
 
 ## Routing split
 
-- **Stored MEA command/menu questions:** `which MEA commands`, `under debug mea`, submenu names, OAM/PM/HW paths, exact MEA syntax -> use `debug_tree_history` first.
+- **All MEA commands / command-family questions:** `all commands`,
+	`list MEA commands`, `MEA util fctl`, `MEA oam` -> use
+	`mea_commands_search` first.
+- **Stored session MEA command/menu questions:** `what was captured`,
+	`under debug mea`, submenu names, OAM/PM/HW paths from prior sessions,
+	exact captured syntax -> use `debug_tree_history` first.
 - **Register/map questions:** addresses, register names, block dumps, FPGA table rows, mem-map symbols -> use `mea_search` first.
-- **Cross-check only when needed:** for example, `debug_tree_history` points to `registers`, then `mea_search` supplies the mapped block details.
+- **Cross-check only when needed:** for example, `debug_tree_history` points to
+	`registers`, then `mea_search` supplies the mapped block details.
 
 ## Stored-data-only rule
 
@@ -34,7 +41,8 @@ Answer from stored sources only and label any missing submenu details as `not ca
 ## Query budget
 
 - Maximum MEA evidence calls per question: **3**.
-- Call 1: choose the correct primary store.
+- Call 1: choose the correct primary store (`mea_commands_search`,
+  `debug_tree_history`, or `mea_search`).
 - Call 2: one narrowing follow-up in the same store if needed.
 - Call 3: one companion-store cross-check if needed.
 - After that, answer and stop. Do not fan out across broad synonym searches like `fan`, `duty`, `pwm`, `cooling`, `temperature` unless the primary store actually supports that evidence type.

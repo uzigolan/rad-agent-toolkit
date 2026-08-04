@@ -62,6 +62,11 @@ set by `Juniper/junos-mcp-server` and `CiscoDevNet/radkit-mcp-server-community`.
   management, CLI, SNMP, network engineering, advanced, onboarding, and a
   closing fusion set that spans every layer in one prompt — each addressed
   to "rad agent" / "abayev" / "noam".
+- **[docs/mea-knowledge-and-debug.md](docs/mea-knowledge-and-debug.md)** —
+   MEA routing and data stores: command catalog vs captured debug history vs
+   FPGA register/memory-map artifacts, including combined-question flow.
+- **[docs/altera-reference-knowledge.md](docs/altera-reference-knowledge.md)** —
+   Altera document retrieval model, figure-aware queries, and prompt patterns.
 - **[docs/knowledge-modes.md](docs/knowledge-modes.md)** — bundled ("embeded")
   vs served skills explained in plain English on one page: what differs, what's
   identical (all SNMP/MIB is server-side), and which to pick.
@@ -107,6 +112,18 @@ operations:
    `/rad-onboard-family` conducts a brand-new family end-to-end (calling
    the pipeline skills — never replacing them).
 
+### One prompt per technology
+
+- Manual knowledge: "rad agent, according to the ETX-2 manual, explain ERP failover timers and revertive behavior"
+- Datasheet knowledge: "noam, compare ETX-2i 10G vs 100G variant ports and timing from datasheets"
+- Device management: "rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234"
+- CLI operations: "abayev, show active alarms on sf-163-187"
+- SNMP operations: "noam, read sysName and sysUpTime from minid-1 with exact SNMP GETs"
+- MEA command catalog: "rad agent, list all MEA util fctl commands from stored data"
+- MEA registers and memory-map: "noam, search MEA register map for queue-related addresses and symbols"
+- Hidden debug MEA on device: "abayev, unlock debug mode on lab-etx2 and check MEA FPGA version"
+- Altera reference knowledge: "rad agent, in Altera docs explain AWVALID/WVALID timing expectations and point to the relevant figure"
+
 And the standing refusal: *"Reboot the device"* — **refused**; dangerous
 commands (`admin` context, factory-default, file deletes) are out of scope
 by design.
@@ -124,7 +141,7 @@ by design.
 | `run_show` / `run_show_in_context` | Whitelisted reads (RAD CLIs scope `show` to contexts) |
 | `cli_help` | Relay the CLI's interactive `?` help — commands, argument types, constraints. Never executes |
 | `snmp_probe` / `snmp_get` / `snmp_walk` | Read-only SNMP window (GET/GETNEXT only, never SET): identity + exact firmware without an SSH session, explicit-OID polls, capped walks — values decoded with catalog semantics. See `references/snmp-support.md` |
-| `knowledge_status` / `mib_search` / `mib_describe` / `mib_table` / `mib_notifications` / `snmp_build_poll_plan` / `cli_search` / `manual_search` / `datasheet_search` / `mea_search` / `altera_search` | **Offline** semantic MIB catalog (rad-knowledge.sqlite, FTS5): concept search, full object semantics (enums/units/indexes/provenance), table models, trap payloads, CLI/manual/datasheet full-text; plus FPGA MEA memory-map search and Altera document search from ingested artifacts. Never contacts a device; MIB-defined ≠ implemented (capability evidence carried separately) |
+| `knowledge_status` / `mib_search` / `mib_describe` / `mib_table` / `mib_notifications` / `snmp_build_poll_plan` / `cli_search` / `manual_search` / `datasheet_search` / `mea_search` / `mea_commands_search` / `altera_search` | **Offline** semantic MIB catalog (rad-knowledge.sqlite, FTS5): concept search, full object semantics (enums/units/indexes/provenance), table models, trap payloads, CLI/manual/datasheet full-text; plus FPGA MEA register/memory-map search, static MEA command-catalog search, and Altera document search from ingested artifacts. Never contacts a device; MIB-defined ≠ implemented (capability evidence carried separately) |
 | `get_config` / `backup_config` | Full config export / snapshot to local archive |
 | `stage_config` → `commit_config` | Staged writes: preview, explicit confirm, auto pre-commit backup |
 | `save_startup` | Persist running config (confirm required) |
@@ -155,19 +172,12 @@ how `debug_tree_history` avoids rediscovering the same path twice.
 **Resources:** `rad://inventory`, `rad://backups`, `rad://backups/{file}`,
 `rad://command-tree/{family}`.
 
-**Skills** (loaded by Claude on demand): `rad-core` — safety rules and the
-staged-commit workflow; `rad-cli-operations` — the main RAD operations skill:
-context-CLI model, verified command map, SNMP read path, and the
-`references/` trees/maps harvested from live devices and vendor sources.
-It covers both CLI questions and SNMP requests such as checking `sysDescr`,
-polling exact OIDs, walking IF-MIB-style tables, or checking trap/alarm
-coverage on a device. `rad-cli-operations` also exposes two **configurable
-behavior modes** (see its SKILL.md, *"Response & verification modes"*):
-response verbosity (`concise` default / `verbose`) and reference trust
-(`trust-reference` default / `always-verify-live`). Both default to the
-faster behavior; say e.g. *"abayev, use verbose mode"* or *"abayev, always
-verify live"* to revert for the rest of a session, and the equivalent phrase
-to switch back.
+**Skills** (loaded by Claude on demand): `rad-core` (safety + staged-commit),
+`rad-cli-operations` (thin intent router), `rad-cli-reference` (exact CLI
+syntax/capability grounding), `rad-reference-knowledge` (manual/datasheet/
+Altera reasoning), `rad-snmp-operations` (OID/MIB/SNMP reasoning),
+`rad-mea-debug` (MEA command history + command catalog + register maps), and
+`rad-device-mng` (inventory onboarding/updates).
 
 `/rad-harvest` (`scripts/harvest_cli.py`) now auto-creates and rolls back
 numeric-indexed parameterized contexts too (`mep`, `lag`, `pw`, `bridge`,

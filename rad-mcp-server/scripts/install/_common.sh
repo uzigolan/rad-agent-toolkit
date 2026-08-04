@@ -101,10 +101,16 @@ copy_skills_to() {
     done
     echo "  skills payload refreshed from repo source (keep-existing MCP config paths included)"
     if [ "$knowledge" = "served" ]; then
-        [ -d "$dest/rad-cli-operations/references" ] && {
-            rm -rf "$dest/rad-cli-operations/references"
-            echo "  served mode: omitted rad-cli-operations/references (served by the MCP catalog tools)"
-        }
+        local removed_refs=0
+        while IFS= read -r refdir; do
+            [ -n "$refdir" ] || continue
+            rm -rf "$refdir"
+            removed_refs=1
+        done <<EOF
+$(find "$dest" -type d -name references 2>/dev/null || true)
+EOF
+        [ "$removed_refs" = "1" ] && \
+            echo "  served mode: omitted all skills' references/ directories (served by the MCP catalog tools)"
         # Stamp the mode so the loaded skill's self-check knows it (missing =
         # bundled). Marker is an HTML comment with a token never used in prose.
         local md="$dest/rad-cli-operations/SKILL.md"

@@ -169,8 +169,8 @@
     the safety flow: reads wait for your <i>"run it now?"</i>, writes go backup → preview →
     <b>your explicit approval</b> → commit → verify.</p>
     <div class="chips">
-      <span class="chip"><b>33</b> prompts</span>
-      <span class="chip"><b>10</b> categories</span>
+      <span class="chip"><b>42</b> prompts</span>
+      <span class="chip"><b>11</b> categories</span>
       <span class="chip"><b>3</b> trigger names</span>
       <span class="chip"><b>7</b> device families verified live</span>
       <span class="chip"><b>CLI + manual + SNMP + datasheets + debug shell</b> fused knowledge</span>
@@ -179,6 +179,7 @@
 </div>
 
 <div class="bar"><div class="bar-in">
+  <a href="#s0">0 · Quick map</a>
   <a href="#s1">1 · Manual</a><a href="#s2">2 · Datasheets</a><a href="#s3">3 · Management</a>
   <a href="#s4">4 · Operations</a><a href="#s5">5 · SNMP</a><a href="#s6">6 · Engineering</a>
   <a href="#s7">7 · Advanced</a><a href="#s8">8 · Onboarding</a><a href="#s9">9 · Debug shell</a>
@@ -190,6 +191,47 @@
 </div></div>
 
 <main>
+
+<section class="s1" id="s0">
+  <div class="sec-head"><div class="medal">0</div>
+    <div><h2>Quick map — one prompt per technology</h2><div class="sec-sub">one fast prompt for each surface: manual, datasheet, inventory, CLI, SNMP, MEA commands, MEA registers, live debug, and Altera references</div></div></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">0.1</span>Manual knowledge</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">according to the ETX-2 manual, explain ERP failover timers and revertive behavior</span><button class="copy">copy</button></div>
+    <p class="what">Manual-driven concept explanation, with matching CLI context references.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">0.2</span>Datasheet knowledge</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">compare ETX-2i 10G vs 100G variant ports and timing from datasheets</span><button class="copy">copy</button></div>
+    <p class="what">Hardware differences from datasheet sections only.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">0.3</span>Device management</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234</span><button class="copy">copy</button></div>
+    <p class="what">Inventory onboarding with the six-fact intake gate.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">0.4</span>CLI operations</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">show active alarms on sf-163-187</span><button class="copy">copy</button></div>
+    <p class="what">Whitelisted live read (after confirmation) with CLI context routing.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">0.5</span>SNMP operations</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">read sysName and sysUpTime from minid-1 with exact SNMP GETs</span><button class="copy">copy</button></div>
+    <p class="what">Explicit OID reads via read-only SNMP tools.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">0.6</span>MEA command catalog</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">list all MEA util fctl commands from stored data</span><button class="copy">copy</button></div>
+    <p class="what">Uses the static MEA command-catalog store.</p></div>
+
+  <div class="card" data-p="noam"><h3><span class="n">0.7</span>MEA registers and memory map</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-noam">noam</span><span class="ptext">search MEA register map for queue-related addresses and symbols</span><button class="copy">copy</button></div>
+    <p class="what">Uses ingested FPGA MEA register and memory-map artifacts.</p></div>
+
+  <div class="card" data-p="abayev"><h3><span class="n">0.8</span>Hidden debug MEA on device</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-abayev">abayev</span><span class="ptext">unlock debug mode on lab-etx2 and check MEA FPGA version</span><button class="copy">copy</button></div>
+    <p class="what">Live hidden-debug workflow with explicit user request and confirmation gate.</p></div>
+
+  <div class="card" data-p="agent"><h3><span class="n">0.9</span>Altera reference knowledge</h3>
+    <div class="prompt"><span class="dots"><i></i><i></i><i></i></span><span class="badge b-agent">rad agent</span><span class="ptext">in Altera docs explain AWVALID/WVALID timing expectations and point to the relevant figure</span><button class="copy">copy</button></div>
+    <p class="what">Document-grounded Altera lookup with figure-aware references.</p></div>
+</section>
 
 <section class="s1" id="s1">
   <div class="sec-head"><div class="medal">1</div>

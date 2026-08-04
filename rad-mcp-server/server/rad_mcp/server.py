@@ -115,6 +115,7 @@ TOOL_VERSIONS = {
     "manual_search": "0.5.0",
     "datasheet_search": "0.7.0",
     "mea_search": "0.8.0",
+    "mea_commands_search": "1.0.0",
     "altera_search": "0.9.0",
     
     # Credentials tool (NEW in v0.8.0)
@@ -950,6 +951,22 @@ def mea_search(query: str = "", device: str = "", version: str = "",
     scope = f"{device or '*'}:{version or '*'}:{map_type or '*'}"
     audit("mea_search", "-", detail=f"{scope}:{(query or '')[:60]}")
     return out
+
+
+@mcp.tool()
+def mea_commands_search(query: str = "", category: str = "", limit: int = 100) -> dict:
+        """Search the stored MEA command-catalog text (offline).
+
+        Use this for questions like "list all MEA commands" or command-family
+        lookups (`MEA util fctl`, `MEA oam`, etc.). This is distinct from:
+            - debug_tree_history: session-captured menu/shell history
+            - mea_search: register/memory-map artifacts
+        """
+        k = _knowledge()
+        out = _kcall(k.mea_commands_search, query, category=category, limit=limit)
+        scope = category or "*"
+        audit("mea_commands_search", "-", detail=f"{scope}:{(query or '')[:60]}")
+        return out
 
 
 @mcp.tool()
