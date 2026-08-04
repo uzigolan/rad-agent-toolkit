@@ -8,7 +8,16 @@ $script:RadRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $script:VenvPython = Join-Path $RadRoot 'server\.venv\Scripts\python.exe'
 $script:Inventory = Join-Path $RadRoot 'inventory.yaml'
 $script:SkillsSrc = Join-Path $RadRoot 'skills'
-$script:SkillNames = @('rad-core', 'rad-cli-operations', 'rad-device-mng')
+
+function Get-RadSkillNames {
+    if (-not (Test-Path $script:SkillsSrc)) { return @() }
+    return @(
+        Get-ChildItem -Path $script:SkillsSrc -Directory |
+            Where-Object { Test-Path (Join-Path $_.FullName 'SKILL.md') } |
+            Sort-Object Name |
+            ForEach-Object { $_.Name }
+    )
+}
 
 # First interpreter that is Python >= 3.10. Returns the command or $null.
 function Get-BestPython {
@@ -151,7 +160,7 @@ function Copy-SkillsTo {
     )
     New-Item -ItemType Directory -Force $Dest | Out-Null
     Ensure-ServedCatalog -Knowledge $Knowledge
-    foreach ($s in $script:SkillNames) {
+    foreach ($s in (Get-RadSkillNames)) {
         Copy-Item -Recurse -Force (Join-Path $script:SkillsSrc $s) $Dest
         Write-Host "  skill -> $Dest\$s"
     }

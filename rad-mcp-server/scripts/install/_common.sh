@@ -9,7 +9,16 @@ RAD_ROOT="$(cd "$_COMMON_DIR/../.." && pwd)"
 VENV_PYTHON="$RAD_ROOT/server/.venv/bin/python"
 INVENTORY="$RAD_ROOT/inventory.yaml"
 SKILLS_SRC="$RAD_ROOT/skills"
-SKILL_NAMES=(rad-core rad-cli-operations rad-device-mng)
+
+get_rad_skill_names() {
+    [ -d "$SKILLS_SRC" ] || return 0
+    local dir
+    for dir in "$SKILLS_SRC"/*; do
+        [ -d "$dir" ] || continue
+        [ -f "$dir/SKILL.md" ] || continue
+        basename "$dir"
+    done | LC_ALL=C sort
+}
 
 # Transport selection, populated by prompt_transport / flag parsing.
 MODE="${MODE:-}"        # stdio | http
@@ -85,7 +94,7 @@ copy_skills_to() {
     mkdir -p "$dest"
     ensure_served_catalog "$knowledge"
     local s
-    for s in "${SKILL_NAMES[@]}"; do
+    for s in $(get_rad_skill_names); do
         rm -rf "$dest/$s"
         cp -R "$SKILLS_SRC/$s" "$dest/"
         echo "  skill -> $dest/$s"

@@ -124,9 +124,12 @@ if [ "$SKILL_MODE" = "served" ]; then
     [ -z "$KNOWLEDGE" ] && KNOWLEDGE="served"
     echo "  source skills folder: $SKILLS_SRC"
     echo "  served mode: use SKILL.md only (do not copy references/ or other files)"
-    echo "  rad-core           : $SKILLS_SRC/rad-core/SKILL.md"
-    echo "  rad-cli-operations : $SKILLS_SRC/rad-cli-operations/SKILL.md"
-    echo "  rad-device-mng     : $SKILLS_SRC/rad-device-mng/SKILL.md"
+    while IFS= read -r skill; do
+        [ -n "$skill" ] || continue
+        printf '  %-18s: %s\n' "$skill" "$SKILLS_SRC/$skill/SKILL.md"
+    done <<EOF
+$(get_rad_skill_names)
+EOF
     echo ""
     echo "Manual usage examples:"
     echo "  - Copilot user scope   -> ~/.copilot/skills/<skill-name>/SKILL.md"

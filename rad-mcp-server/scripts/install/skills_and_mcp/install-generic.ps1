@@ -117,9 +117,9 @@ if ($SkillMode -eq 'served') {
     if (-not $Knowledge) { $Knowledge = 'served' }
     Write-Host "  source skills folder: $SkillsSrc"
     Write-Host "  served mode: use SKILL.md only (do not copy references/ or other files)"
-    Write-Host "  rad-core           : $(Join-Path $SkillsSrc 'rad-core\SKILL.md')"
-    Write-Host "  rad-cli-operations : $(Join-Path $SkillsSrc 'rad-cli-operations\SKILL.md')"
-    Write-Host "  rad-device-mng     : $(Join-Path $SkillsSrc 'rad-device-mng\SKILL.md')"
+    foreach ($skill in (Get-RadSkillNames)) {
+        Write-Host ("  {0,-18}: {1}" -f $skill, (Join-Path $SkillsSrc "$skill\SKILL.md"))
+    }
     Write-Host ""
     Write-Host "Manual usage examples:"
     Write-Host "  - Copilot user scope   -> %USERPROFILE%\.copilot\skills\<skill-name>\SKILL.md"
