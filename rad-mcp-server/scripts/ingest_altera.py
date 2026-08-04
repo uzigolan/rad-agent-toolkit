@@ -123,6 +123,7 @@ def ingest_pdf(
     pdf_path: Path,
     out_dir: Path,
     with_figures: bool,
+    pages_per_chunk: int,
 ) -> tuple[str, int, int, str, int, int]:
     doc = fitz.open(pdf_path)
     slug = slugify(pdf_path.stem)
@@ -134,6 +135,7 @@ def ingest_pdf(
     try:
         title = (doc.metadata.get("title") or "").strip() or pdf_path.name
         sections = section_bounds(doc)
+        pages_per_chunk = max(1, int(pages_per_chunk))
 
         lines = [
             f"# Altera document: {title}",
@@ -141,27 +143,38 @@ def ingest_pdf(
             f"Source PDF: `{pdf_path.name}`",
             f"Pages: {doc.page_count}",
             f"Figures extracted: {'yes' if with_figures else 'no'}",
+            f"Pages per chunk: {pages_per_chunk}",
             "",
         ]
 
         for sec_title, start, end in sections:
-            lines.append(f"## {sec_title}  *(p.{start}-{end})*")
-            lines.append("")
-            for p in range(start - 1, end):
-                txt = clean_page_text(doc[p].get_text())
-                if txt:
-                    lines.append(txt)
-                    lines.append("")
+            chunk_idx = 1
+            chunk_start = start
+            while chunk_start <= end:
+                chunk_end = min(chunk_start + pages_per_chunk - 1, end)
+                lines.append(
+                    f"## {sec_title} / Chunk {chunk_idx}  *(p.{chunk_start}-{chunk_end})*"
+                )
+                lines.append("")
 
-                if with_figures:
-                    figs, new_files = extract_page_figures(doc, p, slug, out_dir, seen_hashes)
-                    figure_refs += len(figs)
-                    figure_files += new_files
-                    if figs:
-                        lines.append(f"### Figures from page {p + 1}")
+                for p in range(chunk_start - 1, chunk_end):
+                    txt = clean_page_text(doc[p].get_text())
+                    if txt:
+                        lines.append(txt)
                         lines.append("")
-                        lines.extend(figs)
-                        lines.append("")
+
+                    if with_figures:
+                        figs, new_files = extract_page_figures(doc, p, slug, out_dir, seen_hashes)
+                        figure_refs += len(figs)
+                        figure_files += new_files
+                        if figs:
+                            lines.append(f"### Figures from page {p + 1}")
+                            lines.append("")
+                            lines.extend(figs)
+                            lines.append("")
+
+                chunk_start = chunk_end + 1
+                chunk_idx += 1
 
         out_file.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
         return (pdf_path.name, doc.page_count, len(sections), out_file.name, figure_refs, figure_files)
@@ -177,6 +190,12 @@ def main() -> None:
         "--no-figures",
         action="store_true",
         help="Disable figure extraction (text-only markdown output).",
+    )
+    parser.add_argument(
+        "--pages-per-chunk",
+        type=int,
+        default=4,
+        help="Maximum pages per generated markdown chunk section (default: 4).",
     )
     args = parser.parse_args()
 
@@ -194,7 +213,14 @@ def main() -> None:
 
     rows: list[tuple[str, int, int, str, int, int]] = []
     for pdf in pdfs:
-        rows.append(ingest_pdf(pdf, OUT_DIR, with_figures=not args.no_figures))
+        rows.append(
+            ingest_pdf(
+                pdf,
+                OUT_DIR,
+                with_figures=not args.no_figures,
+                pages_per_chunk=args.pages_per_chunk,
+            )
+        )
 
     index_lines = [
         "# Altera docs index",
@@ -213,6 +239,7 @@ def main() -> None:
     print(f"Input dir: {input_dir}")
     print(f"PDF files parsed: {len(rows)}")
     print(f"Figure extraction: {'enabled' if not args.no_figures else 'disabled'}")
+    print(f"Pages per chunk: {max(1, int(args.pages_per_chunk))}")
     print(f"Output dir: {OUT_DIR}")
 
 

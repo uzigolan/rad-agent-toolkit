@@ -1,10 +1,10 @@
 ﻿---
 name: rad-cli-operations
 description: RAD device operations expertise - ETX-2, ETX-1p, SecFlow, Megaplex-4100, MP-1, MiNID and ETX-2V families (device families "etx2", "etx1p", "secflow", "mp4100", "mp1", "minid", "etx2v"; units like SF-1p / lab-sf1p / Device3 / marks-mp4 / mp-one / minid-1 / etx2v-1). ALWAYS use when the user addresses "abayev" / "noam" (the RAD expert personas) or "rad agent", and for ANY mention of a RAD, ETX, SecFlow, MiNID, or ETX-2V/uCPE-OS device, its CLI, or its SNMP surface - "how do I configure X on the RAD/SecFlow/ETX", "what's the command for ...", "check SNMP on Device3", "walk IF-MIB", "show sysDescr/sysObjectID", command syntax lookups, staging config changes, ports, VLANs, router/BGP, crypto, PKI keys, certificates, CA, IPsec, MQTT, OPC-UA, Modbus, SNMP, OIDs, MIBs, traps, alarms, counters, and health checks - and before calling any rad-mcp tool (`cli_help`, `run_show`, `stage_config`, `get_config`, `commit_config`, `snmp_probe`, `snmp_get`, `snmp_walk`).
-version: 1.14.0
+version: 1.16.0
 ---
 
-> **Skill version:** 1.14.0 - updated 2026-08-03 (1.14.0: fixed Altera/manual lookup routing regression - bundled mode must read local `references/` content and never substitute GitHub repo search; when bundled references are missing locally, run local ingest (`/rad-load-altera` or `scripts/ingest_altera.py`) before claiming unavailability; added explicit NoC reset/initialization regression flow. 1.13.0: Altera knowledge layer added - `references/altera-docs/` artifacts from `scripts/ingest_altera.py`, `altera_search` tool, and `/rad-load-altera` command.)
+> **Skill version:** 1.16.0 - updated 2026-08-04 (1.16.0: use `altera_search` confidence metadata (`confidence`, `token_coverage`, `confidence_summary`, `figure_refs`) to stop earlier with high-signal evidence; doc-narrow call 2 is now default when call 1 returns mixed docs. 1.15.0: Altera query optimization - cap iterative `altera_search` loops with a strict query budget and deterministic 1-3 call flow; avoid broad one-word probes; require direct answer synthesis once evidence is sufficient, including figure references. 1.14.0: fixed Altera/manual lookup routing regression - bundled mode must read local `references/` content and never substitute GitHub repo search; when bundled references are missing locally, run local ingest (`/rad-load-altera` or `scripts/ingest_altera.py`) before claiming unavailability; added explicit NoC reset/initialization regression flow. 1.13.0: Altera knowledge layer added - `references/altera-docs/` artifacts from `scripts/ingest_altera.py`, `altera_search` tool, and `/rad-load-altera` command.)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -269,6 +269,23 @@ re-harvesting rewrites the CLI reference; re-ingesting a manual rewrites
   `NoC`, `reset`, `initialization`, `boot`, `sequence`; 3) only if local docs
   are missing, run local ingest (`/rad-load-altera`) and retry; 4) return a
   practical step list with exact excerpts plus source file and section.
+
+- **Altera query budget (anti-loop rule):**
+  - Maximum `altera_search` calls per user question: **3** (hard cap).
+  - Call 1: one focused normalized query from user wording (include exact
+    protocol tokens like `awvalid`, `wvalid`, `same cycle`, `handshake`).
+  - Call 2 (default when docs are mixed): doc-filtered follow-up using the
+    top document from call 1.
+  - Call 3 (optional): figure-focused follow-up (`figure`, `timing`, `waveform`)
+    only if figure refs are still missing.
+  - Do **not** run broad scatter queries (`AXI`, `write`, `Figure`, `burst`)
+    as independent calls.
+  - After call 3, synthesize the best answer with confidence + gaps; do not
+    continue searching in a loop.
+  - Confidence stop rule: if call 1 or call 2 returns `confidence_summary.high`
+    > 0 and a result with `token_coverage >= 0.4`, stop searching and answer.
+  - Figure stop rule: if a high/medium-confidence hit already includes
+    `figure_refs`, do not issue call 3.
 
 - **Answer-time lookup order (fastest first):** 1) the *Common config recipes*
   below ג€” zero lookups; 2) grep `cli-reference-<family>.md` for the context

@@ -788,7 +788,8 @@ def mea_search(query: str = "", device: str = "", version: str = "",
 def altera_search(query: str = "", doc: str = "", limit: int = 15) -> dict:
     """Search ingested Altera docs (offline) from scripts/ingest_altera.py.
 
-    Matches markdown files under references/altera-docs and returns excerpts.
+    Matches markdown files under references/altera-docs and returns ranked
+    excerpts, plus nearby figure links when available.
     """
     if not ALTERA_DOCS_DIR.exists():
         raise KnowledgeUnavailable(
@@ -804,10 +805,75 @@ def altera_search(query: str = "", doc: str = "", limit: int = 15) -> dict:
 
     limit = max(1, min(int(limit), 100))
     q = (query or "").strip()
-    q_low = q.lower()
     doc_low = (doc or "").strip().lower()
 
+    # Common protocol token aliases so one query can match variant spellings.
+    alias_map = {
+        "aw_valid": "awvalid",
+        "w_valid": "wvalid",
+        "ar_valid": "arvalid",
+        "r_valid": "rvalid",
+        "b_valid": "bvalid",
+    }
+
+    def _norm_text(s: str) -> str:
+        s = s.lower()
+        for src, dst in alias_map.items():
+            s = s.replace(src, dst)
+        return s
+
+    def _query_terms(text: str) -> list[str]:
+        norm = _norm_text(text)
+        terms = [t for t in re.split(r"[^a-z0-9_]+", norm) if len(t) >= 3]
+        # Keep order while deduping.
+        seen = set()
+        out = []
+        for t in terms:
+            if t in seen:
+                continue
+            seen.add(t)
+            out.append(t)
+        return out[:20]
+
+    def _section_chunks(lines: list[str]) -> list[dict]:
+        chunks: list[dict] = []
+        cur_title = "(document)"
+        cur_lines: list[str] = []
+        for raw in lines:
+            if raw.startswith("## "):
+                if cur_lines:
+                    text = "\n".join(cur_lines).strip()
+                    figs = re.findall(r"!\[[^\]]*\]\((figures/[^)]+)\)", text)
+                    chunks.append({"section": cur_title, "text": text, "figure_refs": figs})
+                cur_title = raw[3:].strip() or "(document)"
+                cur_lines = []
+                continue
+            cur_lines.append(raw)
+
+        if cur_lines:
+            text = "\n".join(cur_lines).strip()
+            figs = re.findall(r"!\[[^\]]*\]\((figures/[^)]+)\)", text)
+            chunks.append({"section": cur_title, "text": text, "figure_refs": figs})
+        return chunks
+
+    def _token_coverage(matched: list[str], total: int) -> float:
+        if total <= 0:
+            return 0.0
+        return round(len(matched) / float(total), 3)
+
+    q_norm = _norm_text(q)
+    terms = _query_terms(q)
+    pair_phrases = [f"{terms[i]} {terms[i + 1]}" for i in range(len(terms) - 1)]
+    figure_words = {"figure", "timing", "waveform", "diagram", "sequence", "reset", "clock"}
+    needs_figure_bias = bool(figure_words.intersection(set(terms)) or ("figure" in q_norm))
+
+    protocol_tokens = {
+        "awvalid", "wvalid", "awready", "wready", "arvalid", "arready",
+        "rvalid", "rready", "bvalid", "bready", "handshake",
+    }
+
     hits: list[dict] = []
+    seen_hits: set[tuple[str, str]] = set()
 
     for path in files:
         if doc_low and doc_low not in path.name.lower() and doc_low not in path.stem.lower():
@@ -815,40 +881,104 @@ def altera_search(query: str = "", doc: str = "", limit: int = 15) -> dict:
 
         body = path.read_text(encoding="utf-8", errors="ignore")
         title = body.splitlines()[0].lstrip("# ").strip() if body else path.stem
+        lines = body.splitlines()
+        chunks = _section_chunks(lines)
 
         if not q:
+            fig_refs = [
+                re.search(r"\((figures/[^)]+)\)", ln).group(1)
+                for ln in lines
+                if "![Figure" in ln and re.search(r"\((figures/[^)]+)\)", ln)
+            ]
             hits.append({
                 "doc": title,
                 "file": path.name,
                 "section": "(document)",
                 "excerpt": _excerpt(body, title, width=220),
+                "figure_refs": fig_refs[:5],
+                "figure_count": len(fig_refs),
             })
             continue
 
-        lines = body.splitlines()
-        current_section = "(document)"
-        for ln in lines:
-            if ln.startswith("## "):
-                current_section = ln[3:].strip()
+        for ch in chunks:
+            section = ch.get("section", "(document)")
+            text = str(ch.get("text") or "")
+            if not text.strip():
                 continue
-            if not ln.strip():
+
+            text_norm = _norm_text(text)
+            matched = [t for t in terms if t in text_norm]
+            if q_norm and q_norm in text_norm:
+                score = 140
+            else:
+                if not matched:
+                    continue
+                # Require stronger evidence for longer user questions.
+                if len(terms) >= 4 and len(matched) < 2:
+                    continue
+                score = len(matched) * 12
+
+            phrase_hits = sum(1 for p in pair_phrases if p in text_norm)
+            score += min(phrase_hits, 3) * 9
+
+            proto_hits = [t for t in matched if t in protocol_tokens]
+            score += len(proto_hits) * 7
+
+            fig_refs = list(ch.get("figure_refs") or [])
+            if fig_refs and needs_figure_bias:
+                score += 8
+
+            if doc_low and doc_low in path.name.lower():
+                score += 5
+
+            key = (path.name, section)
+            if key in seen_hits:
                 continue
-            if q_low in ln.lower():
-                hits.append({
-                    "doc": title,
-                    "file": path.name,
-                    "section": current_section,
-                    "excerpt": _excerpt(ln, q, width=240),
-                })
-                if len(hits) >= limit:
-                    break
-        if len(hits) >= limit:
-            break
+            seen_hits.add(key)
+
+            anchor = q if q_norm in text_norm else " ".join(matched[:3])
+            confidence = "high" if score >= 150 else ("medium" if score >= 45 else "low")
+
+            hits.append({
+                "doc": title,
+                "file": path.name,
+                "section": section,
+                "excerpt": _excerpt(text, anchor or q or " ", width=320),
+                "matched_terms": matched,
+                "score": score,
+                "token_coverage": _token_coverage(matched, len(terms)),
+                "confidence": confidence,
+                "figure_refs": fig_refs[:5],
+                "figure_count": len(fig_refs),
+            })
+            if len(hits) >= max(limit * 5, 80):
+                break
+
+    hits.sort(
+        key=lambda h: (
+            -int(h.get("score", 0)),
+            -len(h.get("matched_terms", []) or []),
+            -float(h.get("token_coverage", 0.0) or 0.0),
+            h.get("file", ""),
+            h.get("section", ""),
+        )
+    )
+    top = hits[:limit]
+    high = sum(1 for h in top if h.get("confidence") == "high")
+    medium = sum(1 for h in top if h.get("confidence") == "medium")
+    for h in top:
+        h.pop("score", None)
 
     return {
         "query": query,
         "doc": doc,
-        "returned": len(hits),
-        "results": hits[:limit],
-        "note": "offline Altera docs from scripts/ingest_altera.py (references/altera-docs)",
+        "returned": len(top),
+        "strategy": "keyword+section ranking (deterministic, no vectors)",
+        "confidence_summary": {
+            "high": high,
+            "medium": medium,
+            "low": max(0, len(top) - high - medium),
+        },
+        "results": top,
+        "note": "offline Altera docs from scripts/ingest_altera.py (references/altera-docs); results ranked by normalized token overlap and include nearby figure links when present",
     }

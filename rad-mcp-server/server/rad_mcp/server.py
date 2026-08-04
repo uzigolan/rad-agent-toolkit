@@ -115,7 +115,7 @@ TOOL_VERSIONS = {
     "manual_search": "0.5.0",
     "datasheet_search": "0.7.0",
     "mea_search": "0.8.0",
-    "altera_search": "0.8.0",
+    "altera_search": "0.9.0",
     
     # Credentials tool (NEW in v0.8.0)
     "set_device_credentials": "0.8.0",
@@ -957,8 +957,10 @@ def altera_search(query: str = "", doc: str = "", limit: int = 15) -> dict:
     """Search ingested Altera documentation (offline).
 
     Source: skills/rad-cli-operations/references/altera-docs/*.md produced by
-    scripts/ingest_altera.py. Matches document text and returns excerpts,
-    optionally filtered by doc filename token.
+    scripts/ingest_altera.py. Returns deterministic section-ranked excerpts
+    (token overlap + phrase/protocol boosts + alias normalization such as
+    aw_valid->awvalid), optionally doc-filtered, and includes nearby figure
+    links plus confidence metadata.
     """
     k = _knowledge()
     out = _kcall(k.altera_search, query, doc=doc, limit=limit)
