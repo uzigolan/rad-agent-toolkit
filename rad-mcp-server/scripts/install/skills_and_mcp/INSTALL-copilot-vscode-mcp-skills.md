@@ -144,7 +144,9 @@ changing the URL or token.
   }
   ```
 
-- **Skills** → `~/.copilot/skills/` (`rad-core`, `rad-cli-operations`,
+- **Skills** → `~/.copilot/skills/` (all `rad-*` skill folders, including
+  `rad-core`, `rad-cli-operations`, `rad-cli-reference`,
+  `rad-reference-knowledge`, `rad-snmp-operations`, `rad-mea-debug`, and
   `rad-device-mng`) — the same folder Copilot CLI reads. In served mode the
   `rad-cli-operations/references/` folder is omitted and the SKILL.md is
   stamped `<!--rad-mode:served-->`.
@@ -173,7 +175,7 @@ then install fresh.
 
 - `MCP: List Servers` → rad-mcp running (Start/Restart here manages only
   Copilot's connection — it never starts an external HTTP listener).
-- Type `/rad` in chat → the three skills autocomplete (`/rad-core`, …).
+- Type `/rad` in chat → the RAD skills autocomplete (`/rad-core`, …).
 - Ask: *"rad agent, list the managed devices"* → approve the
   tool-permission prompt.
 

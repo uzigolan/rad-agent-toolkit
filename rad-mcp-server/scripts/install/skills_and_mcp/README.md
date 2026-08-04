@@ -94,7 +94,7 @@ ignored** (verified 2026-07-10). For this toolkit, Claude Desktop is
 **local stdio only** for `rad-mcp`.
 
 **Skills (zip upload, the one manual-refresh target):** sidebar Customize →
-Skills → upload the three zips from `dist/claude-desktop-skills/`. Build
+Skills → upload the RAD skill zips from `dist/claude-desktop-skills/`. Build
 them with `python scripts/build_desktop_skills.py` — **not**
 `Compress-Archive` (backslash entry paths → "invalid character" on upload).
 Zips are snapshots: rebuild + re-upload after every skill/reference update.
@@ -103,7 +103,7 @@ language only.
 
 **Restart + verify:** **tray-Quit** and relaunch (window close is NOT
 enough; config is read only at launch). Tools icon near the message box
-lists rad-mcp; Customize → Skills shows the three skills; ask *"run a health
+lists rad-mcp; Customize → Skills shows the RAD skills; ask *"run a health
 check on <device>"*. Logs: `%APPDATA%\Claude\logs\mcp*.log`.
 
 ## GitHub Copilot — VS Code (agent mode)
@@ -144,7 +144,7 @@ route, field-tested 2026-07-12).
 **Restart + verify:** restart the server ("MCP: List Servers" → Restart) or
 reload the window. MCP tools exist **only in agent mode** (invisible in
 Ask/Edit). "MCP: List Servers" → rad-mcp running; `/rad` autocompletes the
-three skills; *"rad agent, list the managed devices"*. Quirks: org policy
+RAD skills; *"rad agent, list the managed devices"*. Quirks: org policy
 "MCP servers in Copilot" gates everything on Business/Enterprise; VS Code
 caps a chat request at **128 tools** (deselect unused servers); invalid
 skill frontmatter fails **silently** (`name` lowercase and matching the
@@ -251,7 +251,7 @@ skill (or copy the folders into `~/.copilot/skills/`); inside this repo
 nothing to do. Skills load **only at CLI startup**.
 
 **Restart + verify:** restart the `copilot` session. `/mcp show` → rad-mcp
-running; `/skills list` → the three skills; *"rad agent, list the managed
+running; `/skills list` → the RAD skills; *"rad agent, list the managed
 devices"* — answer the first tool-permission prompt "yes, always".
 Non-interactive runs (`copilot -p`) need `--allow-tool 'rad-mcp(*)'`.
 (Full fresh-clone flow verified 2026-07-11 on Rocky 8.9.)

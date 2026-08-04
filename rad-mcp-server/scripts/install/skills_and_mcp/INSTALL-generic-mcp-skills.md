@@ -45,7 +45,7 @@ This helper only prints what to copy and where.
    - no extra knowledge prompt is shown
 2. If a previous setup exists, choose whether to keep it:
    - saved at `server/.rad-mcp-generic-config`
-   - keeps both skills settings (delivery mode + knowledge) and MCP settings
+   - keeps the RAD skills settings (delivery mode + knowledge) and MCP settings
    - in http mode this keeps both URL and token
 3. If you do not keep the saved configuration, the installer asks everything again:
    - skills delivery mode

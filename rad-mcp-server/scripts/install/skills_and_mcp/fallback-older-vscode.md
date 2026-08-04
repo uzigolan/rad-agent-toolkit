@@ -8,15 +8,15 @@ differs.
 
 ## 1. Put the skill folders in the workspace
 
-Copy `rad-mcp-server/skills/` (the three folders, `references/` included)
+Copy `rad-mcp-server/skills/` (all `rad-*` skill folders, `references/` included)
 into the workspace, e.g. under `skills/`.
 
 ## 2. Make each SKILL.md discoverable as an instructions file
 
 ```powershell
-copy skills\rad-core\SKILL.md skills\rad-core\rad-core.instructions.md
-copy skills\rad-cli-operations\SKILL.md skills\rad-cli-operations\rad-cli-operations.instructions.md
-copy skills\rad-device-mng\SKILL.md skills\rad-device-mng\rad-device-mng.instructions.md
+Get-ChildItem skills -Directory | ForEach-Object {
+  Copy-Item "$($_.FullName)\SKILL.md" "$($_.FullName)\$($_.Name).instructions.md"
+}
 ```
 
 And point VS Code at them — `.vscode/settings.json` (note the setting is

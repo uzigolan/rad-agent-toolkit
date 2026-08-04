@@ -7,9 +7,9 @@ is NOT portable is the Claude-specific packaging (SKILL.md loader, /commands,
 plugin manifest). This bundle carries the reusable pieces:
 
   portable-agent/
-    knowledge/        <- the skill's SKILL.md + references/ (syntax + manuals),
-                         usable as a Custom-GPT knowledge upload, Cursor rules,
-                         a system prompt, or any RAG corpus
+    knowledge/        <- combined RAD skill brief + references/ + per-skill
+                         SKILL.md files, usable as a Custom-GPT knowledge upload,
+                         Cursor rules, a system prompt, or any RAG corpus
     README.md         <- how to wire the MCP server into a non-Claude client,
                          and how to adapt SKILL.md into agent instructions
 
@@ -21,17 +21,18 @@ import shutil
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-SKILL = REPO / "skills" / "rad-cli-operations"
+SKILLS = REPO / "skills"
+ROUTER_SKILL = SKILLS / "rad-cli-operations"
 OUT = REPO / "dist" / "portable-agent"
 
-README = """# rad-cli-operations — portable bundle (non-Claude clients)
+README = """# RAD skills — portable bundle (non-Claude clients)
 
 The value splits into two layers with very different portability:
 
 | Layer | Portable? | How to use elsewhere |
 |---|---|---|
 | **rad-mcp server** (tools + `rad://` resources) | **Yes — open MCP protocol** | Point any MCP-capable client at the same launch command (below). No code changes. |
-| **Skill** (`SKILL.md`, `/commands`, plugin) | Claude-format only | Adapt `knowledge/SKILL.md` into the client's instruction/system-prompt slot. |
+| **Skills** (`skills/*/SKILL.md`, plugin) | Claude-format only | Adapt `knowledge/SKILL.md` into the client's instruction/system-prompt slot, or use the per-skill files under `knowledge/skills/`. |
 | **Knowledge** (`references/`, manuals) | Yes — plain markdown/jsonl | Upload as Custom-GPT knowledge, Cursor rules, or a RAG corpus. |
 
 ## 1. Wire the MCP server into a non-Claude client (stdio)
@@ -66,12 +67,12 @@ The server speaks stdio MCP. The launch command is identical everywhere:
 
 ## 2. Adapt the skill into agent instructions
 
-`knowledge/SKILL.md` is already an agent brief. To reuse it as a Custom GPT
-instruction / OpenAI agent system prompt / Cursor rule, keep the CLI model,
-verified command map, config recipes, safety rules, and personas; drop the
-Claude-Code-specific mechanics (the `Skill`/`/command` references, and the
-"grep the reference file" steps become "consult the attached knowledge" or
-"call the rad-mcp resources").
+`knowledge/SKILL.md` is a combined RAD skill brief assembled from the router
+and domain skills. To reuse it as a Custom GPT instruction / OpenAI agent
+system prompt / Cursor rule, keep the routing, retrieval, safety, and device
+behavior rules; drop Claude-specific mechanics and map local-reference steps to
+either attached knowledge or MCP resource/tool calls. If you prefer finer
+control, each original skill file is also copied under `knowledge/skills/`.
 
 ## 3. Knowledge files
 
@@ -83,13 +84,32 @@ resource support.
 """
 
 
+def _combined_skill_text() -> str:
+  parts = []
+  for skill_dir in sorted(SKILLS.iterdir()):
+    skill_md = skill_dir / "SKILL.md"
+    if not skill_md.exists():
+      continue
+    parts.append(f"<!-- {skill_dir.name} -->\n")
+    parts.append(skill_md.read_text(encoding="utf-8").strip())
+    parts.append("\n")
+  return "\n".join(parts).rstrip() + "\n"
+
+
 def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
-    (OUT / "knowledge").mkdir(parents=True)
-    # copy the skill content (SKILL.md + references/) verbatim
-    shutil.copy2(SKILL / "SKILL.md", OUT / "knowledge" / "SKILL.md")
-    shutil.copytree(SKILL / "references", OUT / "knowledge" / "references")
+    (OUT / "knowledge" / "skills").mkdir(parents=True)
+    # combined instruction brief + the original per-skill SKILL.md files
+    (OUT / "knowledge" / "SKILL.md").write_text(_combined_skill_text(), encoding="utf-8")
+    for skill_dir in sorted(SKILLS.iterdir()):
+        skill_md = skill_dir / "SKILL.md"
+        if not skill_md.exists():
+            continue
+        target = OUT / "knowledge" / "skills" / skill_dir.name
+        target.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(skill_md, target / "SKILL.md")
+    shutil.copytree(ROUTER_SKILL / "references", OUT / "knowledge" / "references")
     (OUT / "README.md").write_text(README, encoding="utf-8")
     files = sum(1 for _ in OUT.rglob("*") if _.is_file())
     kb = sum(f.stat().st_size for f in OUT.rglob("*") if f.is_file()) / 1024

@@ -215,12 +215,12 @@ zip builds honor `--knowledge served` by producing thin variants.
 
 ## 7. The skills and how to drive them
 
-Three skills: `rad-core` (safety contract), `rad-cli-operations` (RAD
-operations expert: personas Abayev/Noam/"rad agent", spoken toggles for
-verbosity and reference-trust, CLI and SNMP live-read workflows, and six
-operation categories — syntax lookup, device inquiry, device changes, manual
-questions, hardware/datasheet questions, SNMP/knowledge queries, knowledge
-upkeep), `rad-device-mng`
+The RAD stack now uses a small skill tree: `rad-core` (safety contract),
+`rad-cli-operations` (thin router for persona prompts and broad RAD asks),
+`rad-cli-reference` (exact CLI syntax/capability grounding),
+`rad-reference-knowledge` (manuals, datasheets, Altera/vendor docs),
+`rad-snmp-operations` (OID/MIB/SNMP reasoning), `rad-mea-debug`
+(hidden `debug mea` tree + FPGA/MEA maps), and `rad-device-mng`
 (inventory CRUD + onboarding). Skills answer to plain language; the slash
 commands package recurring procedures — `/rad-health`, `/rad-backup`, the
 knowledge pipelines `/rad-harvest`, `/rad-load-manual` and

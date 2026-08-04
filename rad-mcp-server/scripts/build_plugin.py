@@ -1,7 +1,7 @@
 """Assemble the rad-agent-toolkit Claude plugin (dist/plugin/) + upload zip.
 
 One plugin bundles everything a user needs in a single upload/install:
-  - both skills (rad-cli-operations, rad-core)
+    - all RAD skills under skills/
   - all commands (rad-harvest, rad-load-manual, rad-load-datasheet, rad-backup, rad-health)
   - the rad-mcp MCP server (.mcp.json)
 
@@ -61,8 +61,8 @@ MCP = {
 
 README = """# RAD Agent Toolkit (Claude plugin)
 
-One-upload bundle: the **rad-mcp** MCP server + both skills
-(`rad-cli-operations`, `rad-core`) + maintenance commands
+One-upload bundle: the **rad-mcp** MCP server + the RAD skills
+under `skills/` + maintenance commands
 (`rad-harvest`, `rad-load-manual`, `rad-load-datasheet`, `rad-backup`, `rad-health`).
 
 ## Install

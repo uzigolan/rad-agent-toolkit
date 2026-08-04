@@ -143,8 +143,10 @@ the installer wires both:
    }
    ```
 
-3. **Skills** → `~/.copilot/skills/` (`rad-core`, `rad-cli-operations`,
-   `rad-device-mng`) — both agent paths read this same folder.
+3. **Skills** → `~/.copilot/skills/` (all `rad-*` skill folders, including
+  `rad-core`, `rad-cli-operations`, `rad-cli-reference`,
+  `rad-reference-knowledge`, `rad-snmp-operations`, `rad-mea-debug`, and
+  `rad-device-mng`) — both agent paths read this same folder.
 
 Each existing config gets a timestamped `.bak` first; other servers in the
 files survive the merge. The plugin seeds `mcp.json` with a `//`-commented
