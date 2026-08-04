@@ -28,6 +28,7 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT_DIR = REPO.parent / "MEA" / "html_from_zips"
 OUT_DIR = REPO / "skills" / "rad-cli-operations" / "references" / "fpga-mea"
+DEFAULT_COMMANDS_FILE = REPO.parent / "MEA" / "mea_commands_only_with_relation 1.txt"
 
 REGISTER_ANCHOR_RE = re.compile(
     r"Register\s+(0x[0-9a-fA-F]+)\s+-\s+([^<\n\r]+)",
@@ -206,6 +207,20 @@ def write_outputs(records: list[dict[str, Any]], out_dir: Path) -> None:
     (out_dir / "fpga-mea-index.md").write_text("\n".join(md_lines) + "\n", encoding="utf-8")
 
 
+def copy_commands_catalog(commands_file: Path, out_dir: Path) -> None:
+    """Copy MEA command catalog into tracked fpga-mea references location.
+
+    This makes command-catalog lookups portable across clones and installs,
+    rather than depending on a local ../MEA folder existing on that machine.
+    """
+    if not commands_file.exists():
+        print(f"WARNING: MEA command catalog not found: {commands_file}")
+        return
+    dst = out_dir / "mea-commands-only-with-relation.txt"
+    dst.write_text(commands_file.read_text(encoding="utf-8", errors="ignore"), encoding="utf-8")
+    print(f"Command catalog copied: {dst}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -219,6 +234,12 @@ def main() -> None:
         default="*.html",
         help="Glob pattern for MEA files (default: *.html)",
     )
+    parser.add_argument(
+        "--commands-file",
+        type=Path,
+        default=DEFAULT_COMMANDS_FILE,
+        help="MEA command catalog text file to copy into references",
+    )
     args = parser.parse_args()
 
     input_dir = args.input_dir.resolve()
@@ -231,6 +252,7 @@ def main() -> None:
 
     records = [parse_html_file(p) for p in files]
     write_outputs(records, OUT_DIR)
+    copy_commands_catalog(args.commands_file.resolve(), OUT_DIR)
 
     total_toc = sum(r["counts"]["toc_register_entries"] for r in records)
     total_rows = sum(r["counts"]["table_rows"] for r in records)

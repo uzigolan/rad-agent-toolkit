@@ -1,0 +1,1002 @@
+﻿MEA Commands - Full List Across Codebase
+Total unique commands: 998
+Total occurrences: 1927
+
+MEA  Router Nat mapping read - Related to MEA internal engineering/debug command handling.
+MEA 10g clear statistics - Related to MEA internal engineering/debug command handling.
+MEA 10g create - Related to MEA internal engineering/debug command handling.
+MEA 10g delete_stream - Related to MEA internal engineering/debug command handling.
+MEA 10g disable_stream - Related to MEA internal engineering/debug command handling.
+MEA 10g enable_stream - Related to MEA internal engineering/debug command handling.
+MEA 10g show stream - Related to MEA internal engineering/debug command handling.
+MEA 10g statistics - Related to MEA internal engineering/debug command handling.
+MEA 10g user_data - Related to MEA internal engineering/debug command handling.
+MEA 1588 delay rx - Related to MEA internal engineering/debug command handling.
+MEA 1588 delay tx - Related to MEA internal engineering/debug command handling.
+MEA 1588 rx - Related to MEA internal engineering/debug command handling.
+MEA 1588 show - Related to MEA internal engineering/debug command handling.
+MEA 1588 tx - Related to MEA internal engineering/debug command handling.
+MEA 1588 vitesse-algorithm get - Related to MEA internal engineering/debug command handling.
+MEA 1588 vitesse-algorithm set - Related to MEA internal engineering/debug command handling.
+MEA bridge aging enable - Related to MEA internal engineering/debug command handling.
+MEA bridge aging show - Related to MEA internal engineering/debug command handling.
+MEA bridge aging start - Related to MEA internal engineering/debug command handling.
+MEA bridge aging time - Related to MEA internal engineering/debug command handling.
+MEA bridge ddrtest - Related to MEA internal engineering/debug command handling.
+MEA bridge delete - Related to MEA internal engineering/debug command handling.
+MEA bridge duplicate - Related to MEA internal engineering/debug command handling.
+MEA bridge duplicate_mac - Related to MEA internal engineering/debug command handling.
+MEA bridge edit - Related to MEA internal engineering/debug command handling.
+MEA bridge enable - Related to MEA internal engineering/debug command handling.
+MEA bridge erase - Related to MEA internal engineering/debug command handling.
+MEA bridge event - Related to MEA internal engineering/debug command handling.
+MEA bridge find - Related to MEA internal engineering/debug command handling.
+MEA bridge hash delete - Related to MEA internal engineering/debug command handling.
+MEA bridge hash get - Related to MEA internal engineering/debug command handling.
+MEA bridge hash getType - Related to MEA internal engineering/debug command handling.
+MEA bridge hash read - Related to MEA internal engineering/debug command handling.
+MEA bridge hash set - Related to MEA internal engineering/debug command handling.
+MEA bridge hash type1 - Related to MEA internal engineering/debug command handling.
+MEA bridge hash type2 - Related to MEA internal engineering/debug command handling.
+MEA bridge hash write - Related to MEA internal engineering/debug command handling.
+MEA bridge insert - Related to MEA internal engineering/debug command handling.
+MEA bridge learning - Related to MEA internal engineering/debug command handling.
+MEA bridge maclimit add - Related to MEA internal engineering/debug command handling.
+MEA bridge maclimit create - Related to MEA internal engineering/debug command handling.
+MEA bridge maclimit delete - Related to MEA internal engineering/debug command handling.
+MEA bridge maclimit get - Related to MEA internal engineering/debug command handling.
+MEA bridge maclimit set - Related to MEA internal engineering/debug command handling.
+MEA bridge maclimit show - Related to MEA internal engineering/debug command handling.
+MEA bridge policer - Related to MEA internal engineering/debug command handling.
+MEA bridge raminit - Related to MEA internal engineering/debug command handling.
+MEA bridge read - Related to MEA internal engineering/debug command handling.
+MEA bridge show - Related to MEA internal engineering/debug command handling.
+MEA bridge write - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring search_hashTable - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set 5_tuple_key - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set analyze_timer - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set exclude_5_tuple_key - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set exclude_5_tuple_key delete - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set focus_entry - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set hash_level - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set mask - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring set on_port - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring show - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring show_final_result - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring show_max_rate - Related to MEA internal engineering/debug command handling.
+MEA bw_monitoring start_analyze - Related to MEA internal engineering/debug command handling.
+MEA counter cluster - Related to MEA internal engineering/debug command handling.
+MEA debug counter avqsize - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter bmqs - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter cl2pa - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter cl2pc - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter cl2pe - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter cl2pv - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter cl2pw - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter drop - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter hs show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter mtudrop disable - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter mtudrop show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter portcir - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter q2cl - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter qsize - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter sercir - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter wfqcb - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter wfqcst - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter wfqqb - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug counter wfqr - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug event config set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug event show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug event tmshow - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug events show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug events tmshow - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat bw_montoring show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat map counter - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat map exclude - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat map hash - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat map register - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat set hash level - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat set hash start - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat set hash timer - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat set tuple enable - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug fat set tuple exclude - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug HS_STATUS cluster - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug IndexSer - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug log clear - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug log disable - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug log enable - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug log filter - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug log show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp action_profile_entry get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp action_profile_entry update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp cam set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp etypecam  get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp etypecam init - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp etypecam set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp etypecam update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp info - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp init - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp l2cp create - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp l2cp delete - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp l2cp init - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp l2cp show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp macseckey get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp macseckey update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp MY_IP get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp MY_IP update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp myip set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp myip show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp profile set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp profile show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_etype_and_mac etype update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_etype_and_mac etype_location get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_etype_and_mac etype_location update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_etype_and_mac get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_etype_and_mac mac update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_etype_and_mac update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_mc_addr get - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp rad_oam_mc_addr update - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg macseckey set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg macseckey show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg oam global etype set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg oam global mac set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg oam global show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg oam mac set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reg oam mac show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp reinit - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp show cam - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug lxcp show l2cp - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam ccm - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam counter - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam lmco - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam lmst - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam lmTable - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam pm - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam search - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam show ccm - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam show counter - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam show opcode - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam show search - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam show status - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam show txh - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam status - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug oam txh - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser clear - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set all - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set color - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set da - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set ethpri - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set ethtype - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set l2p - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set net_pri - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set net_tag1 - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set net_tag2 - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set nettype - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set oam - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set pri_rule - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set ptp - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set sa - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set sec - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set sid - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set src_port - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set vlaneth - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser set vlanpri - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser show - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug parser type - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug phy dmm - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug pll read - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug pll write - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug policer set - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug port rx - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug port tx - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug queue cl2Port - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug queue map - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug queue option - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug queue pri - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show acl - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show action - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show bmqs - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show bqstatus - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show cl2p - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show classifier - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show clq - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show clv - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show counter - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show drop - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show edit - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show indx - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show mqs - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show muedit - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show policer - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show port - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show port conf - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show port policer - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show profile - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show queue - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show service - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show wfqc - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show wfqq - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show wred - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug show xper - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug test first - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug test second - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug test tab - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug test tabwr - Related to internal debug state, parser, counters, queues, and logs.
+MEA debug test time - Related to internal debug state, parser, counters, queues, and logs.
+MEA ds2081 pages - Related to DS2081 component status/pages diagnostics.
+MEA ds2081 show - Related to DS2081 component status/pages diagnostics.
+MEA envelop rank add - Related to MEA internal engineering/debug command handling.
+MEA envelop rank delete - Related to MEA internal engineering/debug command handling.
+MEA envelop rank set - Related to MEA internal engineering/debug command handling.
+MEA envelop set - Related to MEA internal engineering/debug command handling.
+MEA envelop show - Related to MEA internal engineering/debug command handling.
+MEA eth 10g link - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth asic los - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth asic read - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth asic show - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth asic write - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth fpga read - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth fpga show - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth fpga write - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth phy clk  get - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth phy clk  set - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth phy link - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth phy macShow - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 init - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 nobypass - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 page0 - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 page1 - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 read - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 show - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth sfp30 write - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth show - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts auto - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts autoneg no - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts autoneg reset - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts autoneg set - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts crcShow - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts down - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts farloop - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts get - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts gpio write - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts macShow - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts nearloop - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts noget - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts page read - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts page write - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts print - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts read - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts reset - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts rst - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts show - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA eth vts write - Related to Ethernet PHY/SFP/VTS controls and diagnostics.
+MEA event config - Related to MEA internal engineering/debug command handling.
+MEA event show - Related to MEA internal engineering/debug command handling.
+MEA eye checkers create - Related to MEA internal engineering/debug command handling.
+MEA eye checkers done - Related to MEA internal engineering/debug command handling.
+MEA eye checkers enable - Related to MEA internal engineering/debug command handling.
+MEA eye checkers reset - Related to MEA internal engineering/debug command handling.
+MEA eye checkers set - Related to MEA internal engineering/debug command handling.
+MEA eye checkers show - Related to MEA internal engineering/debug command handling.
+MEA eye checkers snapshot - Related to MEA internal engineering/debug command handling.
+MEA eye equlizer get - Related to MEA internal engineering/debug command handling.
+MEA eye equlizer set - Related to MEA internal engineering/debug command handling.
+MEA eye equlizer show - Related to MEA internal engineering/debug command handling.
+MEA eye error inject - Related to MEA internal engineering/debug command handling.
+MEA eye polarity set - Related to MEA internal engineering/debug command handling.
+MEA eye polarity show - Related to MEA internal engineering/debug command handling.
+MEA eye prbs create - Related to MEA internal engineering/debug command handling.
+MEA eye prbs stop - Related to MEA internal engineering/debug command handling.
+MEA eye stratix create - Related to MEA internal engineering/debug command handling.
+MEA fpga load - Related to MEA internal engineering/debug command handling.
+MEA fpga phyreinit - Related to MEA internal engineering/debug command handling.
+MEA fpga reinit - Related to MEA internal engineering/debug command handling.
+MEA generator clear statistics - Related to MEA internal engineering/debug command handling.
+MEA generator create - Related to MEA internal engineering/debug command handling.
+MEA generator delete_stream - Related to MEA internal engineering/debug command handling.
+MEA generator disable_stream - Related to MEA internal engineering/debug command handling.
+MEA generator enable_stream - Related to MEA internal engineering/debug command handling.
+MEA generator payload_type - Related to MEA internal engineering/debug command handling.
+MEA generator show counter - Related to MEA internal engineering/debug command handling.
+MEA generator show hader - Related to MEA internal engineering/debug command handling.
+MEA generator show payload - Related to MEA internal engineering/debug command handling.
+MEA generator show stream - Related to MEA internal engineering/debug command handling.
+MEA generator statistics - Related to MEA internal engineering/debug command handling.
+MEA generator user_data - Related to MEA internal engineering/debug command handling.
+MEA globals combo set - Related to MEA internal engineering/debug command handling.
+MEA globals combo show - Related to MEA internal engineering/debug command handling.
+MEA globals eth port read - Related to MEA internal engineering/debug command handling.
+MEA globals eth port write - Related to MEA internal engineering/debug command handling.
+MEA globals eth type read - Related to MEA internal engineering/debug command handling.
+MEA globals eth type write - Related to MEA internal engineering/debug command handling.
+MEA globals get - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config countera - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config emulmode - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config inga - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config ingb - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config ingc - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config ratiob - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config ratioc - Related to MEA internal engineering/debug command handling.
+MEA globals ihp config show - Related to MEA internal engineering/debug command handling.
+MEA globals set bclimit - Related to MEA internal engineering/debug command handling.
+MEA globals set bmqs - Related to MEA internal engineering/debug command handling.
+MEA globals set ccmcpu - Related to MEA internal engineering/debug command handling.
+MEA globals set ccmoam - Related to MEA internal engineering/debug command handling.
+MEA globals set combo_mode - Related to MEA internal engineering/debug command handling.
+MEA globals set deficite - Related to MEA internal engineering/debug command handling.
+MEA globals set fetr - Related to MEA internal engineering/debug command handling.
+MEA globals set gigatr - Related to MEA internal engineering/debug command handling.
+MEA globals set ignor - Related to MEA internal engineering/debug command handling.
+MEA globals set mqs - Related to MEA internal engineering/debug command handling.
+MEA globals set mqsbuffer - Related to MEA internal engineering/debug command handling.
+MEA globals set policer - Related to MEA internal engineering/debug command handling.
+MEA globals set protect mode - Related to MEA internal engineering/debug command handling.
+MEA globals set protection - Related to MEA internal engineering/debug command handling.
+MEA globals set rank - Related to MEA internal engineering/debug command handling.
+MEA globals set shaper - Related to MEA internal engineering/debug command handling.
+MEA globals set userprotect - Related to MEA internal engineering/debug command handling.
+MEA globals set wfqc - Related to MEA internal engineering/debug command handling.
+MEA globals set wfqq - Related to MEA internal engineering/debug command handling.
+MEA globals set wred - Related to MEA internal engineering/debug command handling.
+MEA gps entu read - Related to MEA internal engineering/debug command handling.
+MEA gps entu write - Related to MEA internal engineering/debug command handling.
+MEA gps event - Related to MEA internal engineering/debug command handling.
+MEA gps show - Related to MEA internal engineering/debug command handling.
+MEA HS cluster master get - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster master set - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster port get - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster port set - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster shaper bucket - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster shaper get - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster shaper set - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster swb get - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster swb set - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster Weight get - Related to hierarchical scheduler and cluster shaping.
+MEA HS cluster Weight set - Related to hierarchical scheduler and cluster shaping.
+MEA HS port level show - Related to hierarchical scheduler and cluster shaping.
+MEA HS port master show - Related to hierarchical scheduler and cluster shaping.
+MEA HS portShaper get - Related to hierarchical scheduler and cluster shaping.
+MEA HS portShaper set - Related to hierarchical scheduler and cluster shaping.
+MEA HS queue level get - Related to hierarchical scheduler and cluster shaping.
+MEA HS queue swb get - Related to hierarchical scheduler and cluster shaping.
+MEA HS queue swb set - Related to hierarchical scheduler and cluster shaping.
+MEA HS queue Weight get - Related to hierarchical scheduler and cluster shaping.
+MEA HS queue Weight set - Related to hierarchical scheduler and cluster shaping.
+MEA HS show - Related to hierarchical scheduler and cluster shaping.
+MEA hw dry read - Related to MEA internal engineering/debug command handling.
+MEA hw dry write - Related to MEA internal engineering/debug command handling.
+MEA hw x86 gpio read - Related to x86 module/CPLD/GPIO debug and control.
+MEA hw x86 gpio write - Related to x86 module/CPLD/GPIO debug and control.
+MEA hw x86 reg read - Related to x86 module/CPLD/GPIO debug and control.
+MEA hw x86 reg write - Related to x86 module/CPLD/GPIO debug and control.
+MEA id pages - Related to MEA internal engineering/debug command handling.
+MEA id show - Related to MEA internal engineering/debug command handling.
+MEA ipp a2cl create - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl delete - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl shadow show - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl show - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer delete - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer print - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show dyn - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show end - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show fill - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show flow - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show index - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show rule - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show show - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp a2cl slicer show valid - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show action - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show cam - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show event - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show key - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show map - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show preparser - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show service - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show static - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show status - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp show typetokey - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp table event - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp table read - Related to ingress packet processor/classifier/CAM operations.
+MEA ipp table write - Related to ingress packet processor/classifier/CAM operations.
+MEA kernel add 16 write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel add 32 write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel add 8 read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel add 8 write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel add read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel add write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp info - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp start1588readregs - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp startreadregs - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp stat - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp stop1588readregs - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp stopreadregs - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel comp write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel cpu loop - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel cpu rmon - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel cpu show - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel ddr read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel ddr test - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel ddr write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga dump - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga reg - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga reset - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga rst - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga show - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel fpga write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel FWD read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel FWD write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IHP read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IHP test - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IHP write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IPP read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IPP write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IPP0 read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IPP0 write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IPP1 read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel IPP1 write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel map - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset action - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset ehpc - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset ehps - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset greip - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset port - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel mapset service - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel MID read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel MID write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel OAM read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel OAM write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel phy restar - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel phy show - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel reg loop - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel reg read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel reg write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel tab - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel tab acl remove - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel tab acl serch - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel tab read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel table - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM test - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM0 read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM0 write - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM1 read - Related to low-level kernel/chip register and block diagnostics.
+MEA kernel TM1 write - Related to low-level kernel/chip register and block diagnostics.
+MEA l3 ddr init - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 ddr read - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 ddr test - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 ddr write - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 dscp set - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 edit create - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 map erif - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 map irif - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 mapset ipv4 - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 mapset ipv6 - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 set ipv4 - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 set ipv6 - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show active - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show arp - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show dscp - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show edit - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show ERIF - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show event - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show ipv4 - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show ipv6 - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show irif - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA l3 show samac - Related to L3 mapping/edit/DDR and route-processing diagnostics.
+MEA liu read - Related to MEA internal engineering/debug command handling.
+MEA liu write - Related to MEA internal engineering/debug command handling.
+MEA loadba  dynamic show - Related to MEA internal engineering/debug command handling.
+MEA loadba  lag show - Related to MEA internal engineering/debug command handling.
+MEA loadba cluster add - Related to MEA internal engineering/debug command handling.
+MEA loadba cluster delete - Related to MEA internal engineering/debug command handling.
+MEA loadba cluster des - Related to MEA internal engineering/debug command handling.
+MEA loadba cluster ignor - Related to MEA internal engineering/debug command handling.
+MEA loadba cluster show - Related to MEA internal engineering/debug command handling.
+MEA loadba conf set - Related to MEA internal engineering/debug command handling.
+MEA loadba enable delete - Related to MEA internal engineering/debug command handling.
+MEA loadba enable set - Related to MEA internal engineering/debug command handling.
+MEA loadba enable show - Related to MEA internal engineering/debug command handling.
+MEA loadba lag creat - Related to MEA internal engineering/debug command handling.
+MEA loadba lag delete - Related to MEA internal engineering/debug command handling.
+MEA loadba port add - Related to MEA internal engineering/debug command handling.
+MEA loadba port delete - Related to MEA internal engineering/debug command handling.
+MEA loadba port show - Related to MEA internal engineering/debug command handling.
+MEA loadba show cluster - Related to MEA internal engineering/debug command handling.
+MEA loadba show dynamic - Related to MEA internal engineering/debug command handling.
+MEA loadba show enable - Related to MEA internal engineering/debug command handling.
+MEA loadba show lagid - Related to MEA internal engineering/debug command handling.
+MEA loadba show port - Related to MEA internal engineering/debug command handling.
+MEA loadba show tx - Related to MEA internal engineering/debug command handling.
+MEA loadba tx set - Related to MEA internal engineering/debug command handling.
+MEA loadba tx show - Related to MEA internal engineering/debug command handling.
+MEA mac 10g conf - Related to MEA internal engineering/debug command handling.
+MEA mac 10g show - Related to MEA internal engineering/debug command handling.
+MEA mac 1g auto - Related to MEA internal engineering/debug command handling.
+MEA mac 1g show - Related to MEA internal engineering/debug command handling.
+MEA module acl addtoser - Related to MEA internal engineering/debug command handling.
+MEA module acl create - Related to MEA internal engineering/debug command handling.
+MEA module acl delete - Related to MEA internal engineering/debug command handling.
+MEA module acl mac create - Related to MEA internal engineering/debug command handling.
+MEA module acl mac get - Related to MEA internal engineering/debug command handling.
+MEA module acl mac show - Related to MEA internal engineering/debug command handling.
+MEA module acl show - Related to MEA internal engineering/debug command handling.
+MEA module dying delete - Related to MEA internal engineering/debug command handling.
+MEA module dying on - Related to MEA internal engineering/debug command handling.
+MEA module dying set - Related to MEA internal engineering/debug command handling.
+MEA module primap create - Related to MEA internal engineering/debug command handling.
+MEA module primap delete - Related to MEA internal engineering/debug command handling.
+MEA module primap set - Related to MEA internal engineering/debug command handling.
+MEA module primap show - Related to MEA internal engineering/debug command handling.
+MEA multi create - Related to MEA internal engineering/debug command handling.
+MEA multi delete - Related to MEA internal engineering/debug command handling.
+MEA multi set - Related to MEA internal engineering/debug command handling.
+MEA multi show - Related to MEA internal engineering/debug command handling.
+MEA oam 10g gen enb - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g gen payload data - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g gen payload pack - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g gen rate - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g gen set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g gen show pay - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g gen show tx - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g opcode set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g opcode show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rmon clear - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rmon dis - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rmon genral - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rmon show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx enable set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx enable show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx event - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx maping set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx maping show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx param set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx param show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx sn set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx sn show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g rx statistic - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g show reg - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx active set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx active show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx descriptor create - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx descriptor delete - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx descriptor set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx descriptor show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx event - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx param set - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx param show - Related to OAM message, counter, generator, and register operations.
+MEA oam 10g tx statistic - Related to OAM message, counter, generator, and register operations.
+MEA oam classifier set create - Related to OAM message, counter, generator, and register operations.
+MEA oam classifier set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam classifier set modify - Related to OAM message, counter, generator, and register operations.
+MEA oam classifier show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters bert show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters delay bins set - Related to OAM message, counter, generator, and register operations.
+MEA oam counters delay cnt show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters delay poll - Related to OAM message, counter, generator, and register operations.
+MEA oam counters delay stat clear - Related to OAM message, counter, generator, and register operations.
+MEA oam counters delay stat show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters general show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters loss show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters loss tm show - Related to OAM message, counter, generator, and register operations.
+MEA oam counters reply show - Related to OAM message, counter, generator, and register operations.
+MEA oam data-buffer get - Related to OAM message, counter, generator, and register operations.
+MEA oam data-buffer set - Related to OAM message, counter, generator, and register operations.
+MEA oam debug delay - Related to OAM message, counter, generator, and register operations.
+MEA oam debug dmm create - Related to OAM message, counter, generator, and register operations.
+MEA oam debug intrpt hndlr - Related to OAM message, counter, generator, and register operations.
+MEA oam debug intrpt poll - Related to OAM message, counter, generator, and register operations.
+MEA oam debug intrpt print - Related to OAM message, counter, generator, and register operations.
+MEA oam debug oamser create - Related to OAM message, counter, generator, and register operations.
+MEA oam debug peer create - Related to OAM message, counter, generator, and register operations.
+MEA oam debug pmser create - Related to OAM message, counter, generator, and register operations.
+MEA oam debug show - Related to OAM message, counter, generator, and register operations.
+MEA oam debug status-reg show - Related to OAM message, counter, generator, and register operations.
+MEA oam debug time clear - Related to OAM message, counter, generator, and register operations.
+MEA oam debug time show - Related to OAM message, counter, generator, and register operations.
+MEA oam err-to-cpu get - Related to OAM message, counter, generator, and register operations.
+MEA oam err-to-cpu set - Related to OAM message, counter, generator, and register operations.
+MEA oam layer-mapping get - Related to OAM message, counter, generator, and register operations.
+MEA oam layer-mapping set - Related to OAM message, counter, generator, and register operations.
+MEA oam mep set create - Related to OAM message, counter, generator, and register operations.
+MEA oam mep set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam mep show - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types ccm set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types ccm set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types dmm-1dm set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types lbm-test set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types lmm set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types lm-st  show - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types lm-st set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types lm-st set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm delete - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm del-msg - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm rdclr - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm stop-tx - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm-st set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm-st set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types pm-st show - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm set active - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm set enable - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm set show - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm-st set create - Related to OAM message, counter, generator, and register operations.
+MEA oam message-types slm-st set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam multicast-mac get - Related to OAM message, counter, generator, and register operations.
+MEA oam multicast-mac set - Related to OAM message, counter, generator, and register operations.
+MEA oam portif get - Related to OAM message, counter, generator, and register operations.
+MEA oam portif set - Related to OAM message, counter, generator, and register operations.
+MEA oam port-mac get - Related to OAM message, counter, generator, and register operations.
+MEA oam port-mac set - Related to OAM message, counter, generator, and register operations.
+MEA oam registers read - Related to OAM message, counter, generator, and register operations.
+MEA oam registers write - Related to OAM message, counter, generator, and register operations.
+MEA oam remote-mep peer-st show - Related to OAM message, counter, generator, and register operations.
+MEA oam remote-mep set create - Related to OAM message, counter, generator, and register operations.
+MEA oam remote-mep set delete - Related to OAM message, counter, generator, and register operations.
+MEA oam remote-mep show - Related to OAM message, counter, generator, and register operations.
+MEA oam sender-id-rx get - Related to OAM message, counter, generator, and register operations.
+MEA oam sender-id-rx set - Related to OAM message, counter, generator, and register operations.
+MEA oam sender-id-tx get - Related to OAM message, counter, generator, and register operations.
+MEA oam sender-id-tx set - Related to OAM message, counter, generator, and register operations.
+MEA oam shapers get - Related to OAM message, counter, generator, and register operations.
+MEA oam shapers set - Related to OAM message, counter, generator, and register operations.
+MEA oam test lbm set - Related to OAM message, counter, generator, and register operations.
+MEA oam tx-hdr set create - Related to OAM message, counter, generator, and register operations.
+MEA oam tx-hdr set delete - Related to OAM message, counter, generator, and register operations.
+MEA parser gmux header ackget - Related to MEA internal engineering/debug command handling.
+MEA parser gmux header add - Related to MEA internal engineering/debug command handling.
+MEA parser gmux header ctag - Related to MEA internal engineering/debug command handling.
+MEA parser gmux header mode - Related to MEA internal engineering/debug command handling.
+MEA parser gmux header remove - Related to MEA internal engineering/debug command handling.
+MEA parser gmux header setrmove - Related to MEA internal engineering/debug command handling.
+MEA parser gmux header stag - Related to MEA internal engineering/debug command handling.
+MEA parser gmux reg get - Related to MEA internal engineering/debug command handling.
+MEA parser gmux reg set - Related to MEA internal engineering/debug command handling.
+MEA parser gmux set - Related to MEA internal engineering/debug command handling.
+MEA parser mega reg get - Related to MEA internal engineering/debug command handling.
+MEA parser mega reg set - Related to MEA internal engineering/debug command handling.
+MEA parser parser delete - Related to MEA internal engineering/debug command handling.
+MEA parser parser set - Related to MEA internal engineering/debug command handling.
+MEA parser parser show - Related to MEA internal engineering/debug command handling.
+MEA parser prepar delete - Related to MEA internal engineering/debug command handling.
+MEA parser prepar set - Related to MEA internal engineering/debug command handling.
+MEA parser prepar show - Related to MEA internal engineering/debug command handling.
+MEA parser show parser - Related to MEA internal engineering/debug command handling.
+MEA parser show port - Related to MEA internal engineering/debug command handling.
+MEA parser show pre - Related to MEA internal engineering/debug command handling.
+MEA parser show reg - Related to MEA internal engineering/debug command handling.
+MEA parser show type - Related to MEA internal engineering/debug command handling.
+MEA phy dump - Related to MEA internal engineering/debug command handling.
+MEA phy fpga loop disable - Related to MEA internal engineering/debug command handling.
+MEA phy fpga loop in - Related to MEA internal engineering/debug command handling.
+MEA phy fpga loop out - Related to MEA internal engineering/debug command handling.
+MEA phy link - Related to MEA internal engineering/debug command handling.
+MEA phy mic loop - Related to MEA internal engineering/debug command handling.
+MEA phy mic read - Related to MEA internal engineering/debug command handling.
+MEA phy mic show - Related to MEA internal engineering/debug command handling.
+MEA phy mic write - Related to MEA internal engineering/debug command handling.
+MEA phy netlog link - Related to MEA internal engineering/debug command handling.
+MEA phy rd - Related to MEA internal engineering/debug command handling.
+MEA phy reg - Related to MEA internal engineering/debug command handling.
+MEA phy reset - Related to MEA internal engineering/debug command handling.
+MEA phy show fifo - Related to MEA internal engineering/debug command handling.
+MEA phy show lane - Related to MEA internal engineering/debug command handling.
+MEA phy status - Related to MEA internal engineering/debug command handling.
+MEA phy test prbs - Related to MEA internal engineering/debug command handling.
+MEA phy wr - Related to MEA internal engineering/debug command handling.
+MEA pm clear - Related to performance measurement counters and PM configuration.
+MEA pm config set - Related to performance measurement counters and PM configuration.
+MEA pm config show - Related to performance measurement counters and PM configuration.
+MEA pm dis - Related to performance measurement counters and PM configuration.
+MEA pm genral - Related to performance measurement counters and PM configuration.
+MEA pm show - Related to performance measurement counters and PM configuration.
+MEA port 10g speed - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port combo mode set - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port combo set - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port combo show - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port egress set - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port ingress set - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port ingress show - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port map - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port mirror delete - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port mirror enable - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port mirror set - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port mirror show - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port restar - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port shaper set - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port shaper show - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA port show - Related to port ingress/egress/mirroring/shaper configuration/debug.
+MEA queue Cluster counters add - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster counters del - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster counters dis - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster counters map - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster counters show - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster Create - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster delete - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster set - Related to queue scheduling and WRED/priority behavior.
+MEA queue Cluster show - Related to queue scheduling and WRED/priority behavior.
+MEA queue counters show - Related to queue scheduling and WRED/priority behavior.
+MEA queue drop clear - Related to queue scheduling and WRED/priority behavior.
+MEA queue drop disable - Related to queue scheduling and WRED/priority behavior.
+MEA queue drop general - Related to queue scheduling and WRED/priority behavior.
+MEA queue drop show - Related to queue scheduling and WRED/priority behavior.
+MEA queue PriQueue set - Related to queue scheduling and WRED/priority behavior.
+MEA queue PriQueue show - Related to queue scheduling and WRED/priority behavior.
+MEA queue PriQueue wred set - Related to queue scheduling and WRED/priority behavior.
+MEA queue PriQueue wred show - Related to queue scheduling and WRED/priority behavior.
+MEA rmon clear - Related to RMON counters, timing, clear, and monitoring display.
+MEA rmon dis - Related to RMON counters, timing, clear, and monitoring display.
+MEA rmon general - Related to RMON counters, timing, clear, and monitoring display.
+MEA rmon show - Related to RMON counters, timing, clear, and monitoring display.
+MEA rmon time - Related to RMON counters, timing, clear, and monitoring display.
+MEA Router ACL create - Related to MEA internal engineering/debug command handling.
+MEA Router ACL delete - Related to MEA internal engineering/debug command handling.
+MEA Router ACL show dip shadow - Related to MEA internal engineering/debug command handling.
+MEA Router ACL show rule shadow - Related to MEA internal engineering/debug command handling.
+MEA Router ACL show sip shadow - Related to MEA internal engineering/debug command handling.
+MEA Router ARP add - Related to MEA internal engineering/debug command handling.
+MEA Router ARP create - Related to MEA internal engineering/debug command handling.
+MEA Router ARP show - Related to MEA internal engineering/debug command handling.
+MEA Router ARP viwe - Related to MEA internal engineering/debug command handling.
+MEA Router ERIF create - Related to MEA internal engineering/debug command handling.
+MEA Router ERIF delete - Related to MEA internal engineering/debug command handling.
+MEA Router ERIF dscp_stamp_profile set cre - Related to MEA internal engineering/debug command handling.
+MEA Router ERIF dscp_stamp_profile show - Related to MEA internal engineering/debug command handling.
+MEA Router ERIF show - Related to MEA internal engineering/debug command handling.
+MEA Router FIB ipv4 create - Related to MEA internal engineering/debug command handling.
+MEA Router FIB ipv6 create - Related to MEA internal engineering/debug command handling.
+MEA Router FIB shadow add - Related to MEA internal engineering/debug command handling.
+MEA Router FIB shadow clear - Related to MEA internal engineering/debug command handling.
+MEA Router FIB shadow delete - Related to MEA internal engineering/debug command handling.
+MEA Router FIB shadow get - Related to MEA internal engineering/debug command handling.
+MEA Router FIB shadow show - Related to MEA internal engineering/debug command handling.
+MEA Router FIB shadow swap - Related to MEA internal engineering/debug command handling.
+MEA Router gre encapsulation create - Related to MEA internal engineering/debug command handling.
+MEA Router gre encapsulation delete - Related to MEA internal engineering/debug command handling.
+MEA Router gre encapsulation show - Related to MEA internal engineering/debug command handling.
+MEA Router gre event - Related to MEA internal engineering/debug command handling.
+MEA Router gre index shadow show - Related to MEA internal engineering/debug command handling.
+MEA Router gre mytunnel create - Related to MEA internal engineering/debug command handling.
+MEA Router gre mytunnel delete - Related to MEA internal engineering/debug command handling.
+MEA Router gre mytunnel shadow show - Related to MEA internal engineering/debug command handling.
+MEA Router gre mytunnel show - Related to MEA internal engineering/debug command handling.
+MEA Router gre shadow show - Related to MEA internal engineering/debug command handling.
+MEA Router gre show acl - Related to MEA internal engineering/debug command handling.
+MEA Router gre show encapsolate - Related to MEA internal engineering/debug command handling.
+MEA Router gre show greid - Related to MEA internal engineering/debug command handling.
+MEA Router gre show ipsa - Related to MEA internal engineering/debug command handling.
+MEA Router gre show mytunnel - Related to MEA internal engineering/debug command handling.
+MEA Router gre show statistics - Related to MEA internal engineering/debug command handling.
+MEA Router IRIF create - Related to MEA internal engineering/debug command handling.
+MEA Router IRIF delete - Related to MEA internal engineering/debug command handling.
+MEA Router IRIF show - Related to MEA internal engineering/debug command handling.
+MEA Router map acl - Related to MEA internal engineering/debug command handling.
+MEA Router map ipsa - Related to MEA internal engineering/debug command handling.
+MEA Router Nat alg config - Related to MEA internal engineering/debug command handling.
+MEA Router Nat alg mapset - Related to MEA internal engineering/debug command handling.
+MEA Router Nat alg show - Related to MEA internal engineering/debug command handling.
+MEA Router Nat debug set - Related to MEA internal engineering/debug command handling.
+MEA Router Nat delete - Related to MEA internal engineering/debug command handling.
+MEA Router Nat mapping create - Related to MEA internal engineering/debug command handling.
+MEA Router Nat mapping delete - Related to MEA internal engineering/debug command handling.
+MEA Router Nat mapping show - Related to MEA internal engineering/debug command handling.
+MEA Router Nat rule create - Related to MEA internal engineering/debug command handling.
+MEA Router Nat rule delete - Related to MEA internal engineering/debug command handling.
+MEA Router Nat rule read - Related to MEA internal engineering/debug command handling.
+MEA Router Nat rule show - Related to MEA internal engineering/debug command handling.
+MEA Router Nat show entry - Related to MEA internal engineering/debug command handling.
+MEA Router Nat show index - Related to MEA internal engineering/debug command handling.
+MEA Router Nat show mapping - Related to MEA internal engineering/debug command handling.
+MEA Router Nat show public - Related to MEA internal engineering/debug command handling.
+MEA Router Nat show shdow - Related to MEA internal engineering/debug command handling.
+MEA Router Nat statistics clr - Related to MEA internal engineering/debug command handling.
+MEA Router Nat statistics disable - Related to MEA internal engineering/debug command handling.
+MEA Router Nat statistics general - Related to MEA internal engineering/debug command handling.
+MEA Router Nat statistics show - Related to MEA internal engineering/debug command handling.
+MEA Router show ARP - Related to MEA internal engineering/debug command handling.
+MEA Router show ERIF - Related to MEA internal engineering/debug command handling.
+MEA Router show FIB - Related to MEA internal engineering/debug command handling.
+MEA Router show IRIF - Related to MEA internal engineering/debug command handling.
+MEA Router show statistic - Related to MEA internal engineering/debug command handling.
+MEA Router statistic general clear - Related to MEA internal engineering/debug command handling.
+MEA Router statistic general diseble - Related to MEA internal engineering/debug command handling.
+MEA Router statistic general show - Related to MEA internal engineering/debug command handling.
+MEA Router statistic show - Related to MEA internal engineering/debug command handling.
+MEA service create fast - Related to MEA internal engineering/debug command handling.
+MEA service flow create - Related to MEA internal engineering/debug command handling.
+MEA service prisrc create - Related to MEA internal engineering/debug command handling.
+MEA service prisrc show - Related to MEA internal engineering/debug command handling.
+MEA service set create - Related to MEA internal engineering/debug command handling.
+MEA service set delete - Related to MEA internal engineering/debug command handling.
+MEA service set modify - Related to MEA internal engineering/debug command handling.
+MEA service set protect - Related to MEA internal engineering/debug command handling.
+MEA service show Action - Related to MEA internal engineering/debug command handling.
+MEA service show cla - Related to MEA internal engineering/debug command handling.
+MEA service show clusters - Related to MEA internal engineering/debug command handling.
+MEA service show policing - Related to MEA internal engineering/debug command handling.
+MEA service show port - Related to MEA internal engineering/debug command handling.
+MEA service show service - Related to MEA internal engineering/debug command handling.
+MEA test ddr - Related to test traffic generation and validation routines.
+MEA test fpga - Related to test traffic generation and validation routines.
+MEA test gen - Related to test traffic generation and validation routines.
+MEA test port clear - Related to test traffic generation and validation routines.
+MEA test port outgen conf - Related to test traffic generation and validation routines.
+MEA test port rmon - Related to test traffic generation and validation routines.
+MEA test port show - Related to test traffic generation and validation routines.
+MEA test port start - Related to test traffic generation and validation routines.
+MEA test port stop - Related to test traffic generation and validation routines.
+MEA test queue - Related to test traffic generation and validation routines.
+MEA test show - Related to test traffic generation and validation routines.
+MEA test time - Related to test traffic generation and validation routines.
+MEA thermo start - Related to thermal monitor controls.
+MEA thermo stop - Related to thermal monitor controls.
+MEA udp 1588 alarm - Related to MEA internal engineering/debug command handling.
+MEA udp 1588 counter - Related to MEA internal engineering/debug command handling.
+MEA udp 1588 IdSet - Related to MEA internal engineering/debug command handling.
+MEA udp 1588 Ipset - Related to MEA internal engineering/debug command handling.
+MEA udp 1588 MacSet - Related to MEA internal engineering/debug command handling.
+MEA udp 1588 Restart - Related to MEA internal engineering/debug command handling.
+MEA udp 1588 show - Related to MEA internal engineering/debug command handling.
+MEA udp log opr - Related to MEA internal engineering/debug command handling.
+MEA udp router crestatic - Related to MEA internal engineering/debug command handling.
+MEA udp router delstatic - Related to MEA internal engineering/debug command handling.
+MEA udp router getstatic - Related to MEA internal engineering/debug command handling.
+MEA udp router inter - Related to MEA internal engineering/debug command handling.
+MEA udp router ipSrc - Related to MEA internal engineering/debug command handling.
+MEA udp router jumpstatic - Related to MEA internal engineering/debug command handling.
+MEA udp router rmon - Related to MEA internal engineering/debug command handling.
+MEA udp router show - Related to MEA internal engineering/debug command handling.
+MEA util 2801 read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util 2801 show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util 2801 write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util calibrate set - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp gp bal name - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp gp bal read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp gp bal write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp gp gpr - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp info - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp start1588readregs - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp startreadregs - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp stat - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp stop1588readregs - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp stopreadregs - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp syncE read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp syncE write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util comp write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util cpu disable - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util equalization set - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util error - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util etile pma attribute - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye debug read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye debug write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye eye - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye init - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye modifay - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util eye write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fan read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fan show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fan tmp - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fan write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl duty - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl lut - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl mode - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl preg - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl stat - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fctl write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fec enable - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fec show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util fpga dump - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util gen ba rx - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util gen ba tx - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util gen create - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util gen on - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util gen set - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util gen show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util i2c read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util i2c write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util jat load - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util jat read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util jat show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util jat write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util loop - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell counter - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell error - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell global - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell phy read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell phy show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell phy write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell port - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell vlan create - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell vlan show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util marvell write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 modify - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 reset - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 s10 power - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 status - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 test - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 version - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util max10 write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox close - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox erase - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox load - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox open - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu load - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu m10 delay - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu m10 erase - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu m10 load - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu m10 sys - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu status - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox rsu verify - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox save - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox setcs - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox stat - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox temp - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox verify - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox wren - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util mbox write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util phy dmm - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util phy get - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util phy show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util phy trn - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util pll read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util pll write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util print - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util print reg - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps alert read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps alert write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps block - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps ein - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps eout - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps fan - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps sequencer - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps status - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps value - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps vout - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util ps write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp cpld - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp ddm - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp i2c - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp pdly - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp qsfp - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp reg - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util qsfp sdly - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util reset - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util rst - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util sfp pass - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util sfp read - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util sfp show - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util sfp write - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA util temp - Related to utility diagnostics for PHY/I2C/PSU/fan/optics components.
+MEA version - Related to MEA internal engineering/debug command handling.
+MEA white-list counters show - Related to MEA internal engineering/debug command handling.
+MEA white-list disable - Related to MEA internal engineering/debug command handling.
+MEA white-list enable - Related to MEA internal engineering/debug command handling.
+MEA white-list mac add - Related to MEA internal engineering/debug command handling.
+MEA white-list mac del - Related to MEA internal engineering/debug command handling.
+MEA white-list mac show - Related to MEA internal engineering/debug command handling.
+MEA white-list port add - Related to MEA internal engineering/debug command handling.
+MEA white-list port del - Related to MEA internal engineering/debug command handling.
+MEA white-list port show - Related to MEA internal engineering/debug command handling.
+MEA x86 cpld - Related to x86 module/CPLD/GPIO debug and control.
+MEA x86 load - Related to x86 module/CPLD/GPIO debug and control.
+MEA x86 print - Related to x86 module/CPLD/GPIO debug and control.
+MEA x86 show - Related to x86 module/CPLD/GPIO debug and control.
+MEA x86 unload - Related to x86 module/CPLD/GPIO debug and control.
+MEA xper create - Related to MEA internal engineering/debug command handling.
+MEA xper delete - Related to MEA internal engineering/debug command handling.
+MEA xper show - Related to MEA internal engineering/debug command handling.
