@@ -3,6 +3,15 @@
 This document defines how Altera documentation is used in the toolkit,
 which prompts work best, and how it differs from CLI/manual/device flows.
 
+## Stored-data nature (what "stored" means for Altera)
+
+Stored Altera data means previously ingested documentation artifacts and
+extracted figures that are searched offline. Answers are grounded in these
+stored files, not from live device commands.
+
+This gives repeatable outputs for the same query and clear source provenance
+(document section and figure references).
+
 ## Scope
 
 Altera knowledge in this toolkit is document-grounded reference retrieval for:
@@ -22,6 +31,38 @@ It is not a live device command surface by itself.
    `skills/rad-cli-operations/references/altera-docs/figures/`.
 3. Served-mode access through MCP tool calls instead of skill-side reference
    folders.
+
+## Stored-data examples
+
+### Example A: stored markdown section
+
+Representative stored excerpt:
+
+```text
+Section: AXI write channel handshake
+... AWVALID and WVALID may assert independently and are accepted per channel readiness ...
+```
+
+How it is used:
+
+1. Query: "explain AWVALID/WVALID timing expectations".
+2. Tool: `altera_search`.
+3. Output cites the matching stored section text.
+
+### Example B: stored figure reference
+
+Representative stored figure metadata:
+
+```text
+Figure: noc-write-path-overview
+Source: altera-docs/figures/<doc-slug>/...
+```
+
+How it is used:
+
+1. Query: "show the figure for NoC write acceptance behavior".
+2. Tool: `altera_search`.
+3. Output returns figure-aware evidence from stored figure artifacts.
 
 ## Primary tool
 
