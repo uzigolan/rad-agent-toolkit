@@ -628,10 +628,19 @@ def debug_tree_history(family: str, limit: int = 20) -> list[dict]:
     "menu" or "shell"), so a later session (or a later step in this one) can
     check prior navigation instead of rediscovering the same path blind.
     Returns the most recent entries first; empty if nothing's been recorded
-    yet for this family. Read-only, no write scope required.
+    yet for this family. For safety, the recorded source-device name is not
+    returned to callers (history is path evidence, not a target-device list).
+    Read-only, no write scope required.
     """
     get_driver(family)  # raises with the valid-family list if unknown
-    return debug_tree_log.history(family, limit=limit)
+    rows = debug_tree_log.history(family, limit=limit)
+    # Never leak historical source-device names through this read path.
+    out: list[dict] = []
+    for r in rows:
+        rr = dict(r)
+        rr.pop("device", None)
+        out.append(rr)
+    return out
 
 
 @mcp.tool()

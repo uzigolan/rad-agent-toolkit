@@ -48,6 +48,14 @@ Answer from stored sources only and label any missing submenu details as `not ca
 - If those sources do not contain the requested item, return
 	`not captured in stored data`.
 
+## Device-target rule for history
+
+- `debug_tree_history` is command/path evidence only.
+- Never treat historical `debug_tree_history` entries as the current target
+	device list.
+- For live execution targets, use the current managed inventory only
+	(`list_devices` / explicit user-provided target in this session).
+
 ## Query budget
 
 - Maximum MEA evidence calls per question: **3**.
