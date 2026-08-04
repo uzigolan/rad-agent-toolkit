@@ -1,10 +1,10 @@
 ---
 name: rad-mea-debug
 description: RAD hidden debug tree and FPGA/MEA knowledge. Use when the user asks about `debug mea`, `FPGA>MEA`, stored MEA commands, OAM/PM/HW MEA paths, FPGA register maps, memory-map symbols, or what the device auto-programmed in MEA.
-version: 1.1.0
+version: 1.2.0
 ---
 
-> **Skill version:** 1.1.0 - updated 2026-08-04 (1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
+> **Skill version:** 1.2.0 - updated 2026-08-04 (1.2.0: strict missing-data policy - do not scan arbitrary workspace/repo disk paths for MEA evidence; bundled mode may use only skill reference artifacts, served mode must use MCP MEA tools only. 1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
 
 # RAD MEA and debug skill
 
@@ -35,8 +35,18 @@ Once the user says `stored data only`, `not on live device`, or equivalent:
 - do not propose `debug logon`
 - do not propose `debug_menu`
 - do not suggest probing hidden menus live
+- do not browse arbitrary workspace/repo folders for fallback evidence
 
 Answer from stored sources only and label any missing submenu details as `not captured in stored data`.
+
+## Disk evidence boundary
+
+- Bundled mode: local file evidence is allowed only from skill reference assets
+	under `skills/rad-cli-operations/references/`.
+- Served mode: local disk fallback is forbidden; use `mea_commands_search`,
+	`debug_tree_history`, and `mea_search` only.
+- If those sources do not contain the requested item, return
+	`not captured in stored data`.
 
 ## Query budget
 

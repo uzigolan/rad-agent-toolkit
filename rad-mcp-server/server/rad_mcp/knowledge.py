@@ -25,9 +25,6 @@ MEA_RAW_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea"
 ALTERA_DOCS_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "altera-docs"
 MEA_COMMANDS_FILE_CANDIDATES = [
     _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea" / "mea-commands-only-with-relation.txt",
-    _RAD.parent / "MEA" / "mea_commands_only_with_relation 1.txt",
-    _RAD.parent / "MEA" / "mea_commands_only_with_relation.txt",
-    _RAD.parent / "MEA" / "mea_commands_only_in_realtion.txt",
 ]
 
 _OID_RE = re.compile(r"^\d+(\.\d+)+$")

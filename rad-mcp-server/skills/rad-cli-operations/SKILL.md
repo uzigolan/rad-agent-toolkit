@@ -1,10 +1,10 @@
 ---
 name: rad-cli-operations
 description: RAD skill router for ETX/SecFlow/Megaplex/MiNID/ETX-2V requests. Load whenever the user addresses "rad agent", "abayev", or "noam", or asks a broad RAD question that first needs routing across CLI syntax, manuals, SNMP, MEA/debug, vendor documentation, inventory, or live device actions.
-version: 2.0.0
+version: 2.1.0
 ---
 
-> **Skill version:** 2.0.0 - updated 2026-08-04 (2.0.0: split the former monolithic skill into a thin router plus domain skills: `rad-cli-reference`, `rad-reference-knowledge`, `rad-snmp-operations`, and `rad-mea-debug`; this file now owns only top-level routing and shared mode boundaries. 1.17.0: fixed MEA routing regression - stored MEA CLI/menu questions must use `debug_tree_history` first; `mea_search` is register/map-only and must not be treated as a command store; added stored-data-only stop rule and MEA anti-loop budget.)
+> **Skill version:** 2.1.0 - updated 2026-08-04 (2.1.0: strict evidence-source boundary - when data is missing, never browse arbitrary workspace/repo disk paths; bundled mode may read only `skills/.../references/`; served mode must use MCP knowledge tools only. 2.0.0: split the former monolithic skill into a thin router plus domain skills: `rad-cli-reference`, `rad-reference-knowledge`, `rad-snmp-operations`, and `rad-mea-debug`; this file now owns only top-level routing and shared mode boundaries. 1.17.0: fixed MEA routing regression - stored MEA CLI/menu questions must use `debug_tree_history` first; `mea_search` is register/map-only and must not be treated as a command store; added stored-data-only stop rule and MEA anti-loop budget.)
 
 ## Session self-check (once, before your first rad-mcp tool call)
 
@@ -39,6 +39,9 @@ Choose the domain skill by the user's actual evidence need, not by a single keyw
 
 - **Bundled:** read local knowledge from `skills/rad-cli-operations/references/`.
 - **Served:** use MCP knowledge tools instead of repository search.
+- **Never** recover missing data by scanning arbitrary workspace/repo folders.
+- In bundled mode, local disk evidence is limited to `skills/.../references/` only.
+- In served mode, local disk fallback is forbidden; use MCP tools or report missing data.
 - Never substitute GitHub/repository search for bundled local references when the local references are the authoritative source.
 - If bundled references are missing locally, treat that as a local environment problem first; rebuild/reinstall before claiming the data does not exist.
 
