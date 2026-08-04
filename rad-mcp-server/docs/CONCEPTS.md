@@ -229,6 +229,9 @@ knowledge pipelines `/rad-harvest`, `/rad-load-manual` and
 skills to onboard a brand-new family end-to-end — it never replaces them;
 each pipeline stays independently runnable for its lifetime trigger).
 
+The detailed relationship and routing model for this skill tree is documented
+in [skills-routing.md](skills-routing.md).
+
 **Onboarding a new family requires two live inputs** — a reachable device of
 that family (probe → CLI harvest need a real unit) and the family's manual
 PDF (the concept layer). Without both, onboarding cannot complete; there is
