@@ -155,6 +155,7 @@ function Copy-SkillsTo {
         Copy-Item -Recurse -Force (Join-Path $script:SkillsSrc $s) $Dest
         Write-Host "  skill -> $Dest\$s"
     }
+    Write-Host "  skills payload refreshed from repo source (keep-existing MCP config paths included)"
     $skillmd = Join-Path $Dest 'rad-cli-operations\SKILL.md'
     if ($Knowledge -eq 'served') {
         $refs = Join-Path $Dest 'rad-cli-operations\references'

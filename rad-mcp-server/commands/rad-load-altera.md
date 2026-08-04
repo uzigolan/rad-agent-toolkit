@@ -1,6 +1,6 @@
 ---
-description: Ingest Altera PDF docs into repeatable knowledge artifacts (markdown per document + index) for FPGA/bitstream/register reference lookups.
-argument-hint: [--input-dir <path>] [--pattern <glob>]   e.g. --input-dir Altera
+description: Ingest Altera PDF docs into repeatable knowledge artifacts (markdown per document + figure assets + index) for FPGA/bitstream/register reference lookups.
+argument-hint: [--input-dir <path>] [--pattern <glob>] [--no-figures]   e.g. --input-dir Altera
 ---
 
 Ingest Altera documentation for: $ARGUMENTS
@@ -8,6 +8,7 @@ Ingest Altera documentation for: $ARGUMENTS
 This is a local-only, repeatable pipeline similar to manual/datasheet ingest.
 It rewrites a normalized Altera reference layer consumed by skill/file lookups
 (and served-mode tool lookups once `altera_search` is available).
+By default it also extracts embedded PDF figures and links them from markdown.
 
 1. Resolve source input.
    - Default: `Altera/` at workspace root.
@@ -21,6 +22,7 @@ It rewrites a normalized Altera reference layer consumed by skill/file lookups
 
 3. Validate generated outputs under:
    - `skills/rad-cli-operations/references/altera-docs/*.md`
+   - `skills/rad-cli-operations/references/altera-docs/figures/<doc-slug>/*`
    - `skills/rad-cli-operations/references/altera-docs/altera-index.md`
 
 4. Report counts and output path.

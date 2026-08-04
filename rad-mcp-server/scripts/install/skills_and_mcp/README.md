@@ -45,6 +45,9 @@ Knowledge routing rule:
 	queries have the local DB ready immediately.
 - Embedded/bundled skills: the local `references/` copy is used first (works
 	even without MCP connectivity for documentation lookup).
+	Reinstalling while keeping the existing MCP entry still refreshes the skill
+	payload from repo source, including bundled reference assets such as
+	`references/altera-docs/` and extracted figure files.
 
 Manual snippet workflow guide:
 [INSTALL-generic-mcp-skills.md](INSTALL-generic-mcp-skills.md)

@@ -90,6 +90,7 @@ copy_skills_to() {
         cp -R "$SKILLS_SRC/$s" "$dest/"
         echo "  skill -> $dest/$s"
     done
+    echo "  skills payload refreshed from repo source (keep-existing MCP config paths included)"
     if [ "$knowledge" = "served" ]; then
         [ -d "$dest/rad-cli-operations/references" ] && {
             rm -rf "$dest/rad-cli-operations/references"

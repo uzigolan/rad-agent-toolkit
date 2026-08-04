@@ -183,7 +183,8 @@ skill). For FPGA/MEA memory-map knowledge, place extracted MEA HTML files under
 `/rad-load-mea`), which rewrites `references/fpga-mea/`.
 For Altera docs knowledge, place Altera PDFs in `Altera/` and run
 `python scripts/ingest_altera.py` (or `/rad-load-altera`), which rewrites
-`references/altera-docs/`.
+`references/altera-docs/` and preserves embedded figures under
+`references/altera-docs/figures/<doc-slug>/`, linked from markdown.
 PDFs stay gitignored; the extracted markdown/JSON artifacts are committed.
 
 ## How this skill treats the harvested data
@@ -205,8 +206,8 @@ datasheet PDFs ג”€ג”€ingest_datasheet.pyג”€ג”€ג–¶ datash
    (specs/variants/ordering,             ג””ג”€ג–¶ rad://datasheet[/{product}]
     driven by datasheet-map.yaml)
 
-Altera PDFs ג”€ג”€ingest_altera.pyג”€ג”€ג–¶ altera-docs/*.md + altera-index.md
-  (FPGA/vendor docs references)
+Altera PDFs ג”€ג”€ingest_altera.pyג”€ג”€ג–¶ altera-docs/*.md + figures/<doc-slug>/* + altera-index.md
+  (FPGA/vendor docs references + preserved embedded figures)
 ```
 
 The three pipelines are independent and never overwrite each other:
