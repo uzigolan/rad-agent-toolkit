@@ -27,7 +27,7 @@ Write-Host "Step 1/2: preparing local stdio MCP server ..."
 & $mcpInstaller @mcpArgs
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-$codexArgs = @{ Name = $Name; Knowledge = 'served' }
+$codexArgs = @{ Stdio = $true; Name = $Name; Knowledge = 'served' }
 if ($Reconfigure) { $codexArgs['Reconfigure'] = $true }
 
 Write-Host ""

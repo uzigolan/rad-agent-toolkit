@@ -30,7 +30,8 @@ if (-not (Test-Path (Split-Path $cfgPath))) {
 
 # Keep an existing MCP entry unless -Reconfigure. Skills are rebuilt regardless.
 $keptExisting = $false
-if ((-not $Reconfigure) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name)) {
+$expectedStdio = New-StdioEntry
+if ((-not $Reconfigure) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name -ExpectedEntry $expectedStdio)) {
   $keptExisting = $true
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
 } else {

@@ -547,6 +547,65 @@ function Resolve-HttpArgs {
     return @($Url, $Token)
 }
 
+function Convert-NormalizedMcpValue {
+    param([Parameter(ValueFromPipeline)]$Value)
+
+    if ($null -eq $Value) { return $null }
+
+    if ($Value -is [string] -or $Value -is [char] -or $Value -is [bool] -or
+        $Value -is [byte] -or $Value -is [int16] -or $Value -is [int32] -or $Value -is [int64] -or
+        $Value -is [uint16] -or $Value -is [uint32] -or $Value -is [uint64] -or
+        $Value -is [single] -or $Value -is [double] -or $Value -is [decimal]) {
+        return $Value
+    }
+
+    if ($Value -is [System.Collections.IEnumerable] -and -not ($Value -is [string])) {
+        if ($Value -is [System.Collections.IDictionary]) {
+            $out = [ordered]@{}
+            foreach ($k in @($Value.Keys | Sort-Object)) {
+                $out[[string]$k] = Convert-NormalizedMcpValue $Value[$k]
+            }
+            return $out
+        }
+
+        # PSObject with named properties
+        if ($Value.PSObject -and $Value.PSObject.Properties.Count -gt 0 -and -not ($Value -is [array])) {
+            $out = [ordered]@{}
+            foreach ($p in @($Value.PSObject.Properties | Sort-Object Name)) {
+                $out[$p.Name] = Convert-NormalizedMcpValue $p.Value
+            }
+            return $out
+        }
+
+        $arr = @()
+        foreach ($i in $Value) { $arr += ,(Convert-NormalizedMcpValue $i) }
+        return $arr
+    }
+
+    if ($Value.PSObject -and $Value.PSObject.Properties.Count -gt 0) {
+        $out = [ordered]@{}
+        foreach ($p in @($Value.PSObject.Properties | Sort-Object Name)) {
+            $out[$p.Name] = Convert-NormalizedMcpValue $p.Value
+        }
+        return $out
+    }
+
+    return [string]$Value
+}
+
+function Test-McpEntryEquivalent {
+    param(
+        [Parameter(Mandatory)]$Current,
+        [Parameter(Mandatory)]$Expected
+    )
+
+    $a = Convert-NormalizedMcpValue $Current
+    $b = Convert-NormalizedMcpValue $Expected
+    $aj = (($a | ConvertTo-Json -Depth 30 -Compress) -replace '\s+', '')
+    $bj = (($b | ConvertTo-Json -Depth 30 -Compress) -replace '\s+', '')
+    return ($aj -eq $bj)
+}
+
 function Test-KeepExisting {
     # If a rad-mcp entry already exists in the JSON config, summarize it and ask
     # whether to keep it. Returns $true to keep (caller then skips writing the
@@ -556,6 +615,7 @@ function Test-KeepExisting {
         [Parameter(Mandatory)][string]$Path,
         [Parameter(Mandatory)][string]$RootKey,
         [string]$Name = 'rad-mcp',
+        $ExpectedEntry,
         [switch]$Reconfigure
     )
     if ($Reconfigure) { return $false }
@@ -564,6 +624,15 @@ function Test-KeepExisting {
     $root = $cfg.$RootKey
     if (-not $root -or -not $root.PSObject.Properties[$Name]) { return $false }
     $e = $root.$Name
+
+    if ($PSBoundParameters.ContainsKey('ExpectedEntry')) {
+        if (-not (Test-McpEntryEquivalent -Current $e -Expected $ExpectedEntry)) {
+            Write-Host "$Name is already configured, but differs from the expected stdio configuration."
+            Write-Host "  action: replacing the existing entry with the expected stdio setup."
+            return $false
+        }
+    }
+
     $type = if ($e.PSObject.Properties['type']) { $e.type } else { 'stdio' }
     if ($type -eq 'http') {
         $auth = ''

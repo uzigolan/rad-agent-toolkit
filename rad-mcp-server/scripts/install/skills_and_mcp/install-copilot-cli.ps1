@@ -31,7 +31,14 @@ New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
 foreach ($p in $cfgPaths) { Backup-JsonConfig -Path $p }
 
 $explicit = $Http -or $Url -or $Token -or $Reconfigure
-if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name)) {
+$expectedStdio = [ordered]@{
+    type    = 'local'
+    command = $VenvPython
+    args    = @('-m', 'rad_mcp.server')
+    env     = @{ RAD_MCP_INVENTORY = $Inventory }
+    tools   = @('*')
+}
+if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'mcpServers' -Name $Name -ExpectedEntry $expectedStdio)) {
     $Knowledge = Resolve-KnowledgeMode $Knowledge
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
     Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge

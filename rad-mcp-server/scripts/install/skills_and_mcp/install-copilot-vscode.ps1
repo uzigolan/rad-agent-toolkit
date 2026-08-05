@@ -30,7 +30,8 @@ New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
 Backup-JsonConfig -Path $cfgPath
 
 $explicit = $Stdio -or $Http -or $Url -or $Token -or $Reconfigure
-if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -Name $Name)) {
+$expectedStdio = New-StdioEntry -WithType
+if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -Name $Name -ExpectedEntry $expectedStdio)) {
     $Knowledge = Resolve-KnowledgeMode $Knowledge
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
     Copy-SkillsTo "$env:USERPROFILE\.copilot\skills" -Knowledge $Knowledge
