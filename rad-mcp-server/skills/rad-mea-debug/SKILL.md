@@ -1,10 +1,10 @@
 ---
 name: rad-mea-debug
 description: RAD hidden debug tree and FPGA/MEA knowledge. Use when the user asks about `debug mea`, `FPGA>MEA`, stored MEA commands, OAM/PM/HW MEA paths, FPGA register maps, memory-map symbols, or what the device auto-programmed in MEA.
-version: 1.3.0
+version: 1.4.0
 ---
 
-> **Skill version:** 1.3.0 - updated 2026-08-05 (1.3.0: fixed MEA category workflow drift - for "stored commands" requests use `mea_commands_search` first (not `debug_tree_history`), require explicit source labeling in answers, and for live queue diagnostics run a stored-first preflight + version check + targeted command bundle with no exploratory `?` loops unless the user asks exploration. 1.2.0: strict missing-data policy - do not scan arbitrary workspace/repo disk paths for MEA evidence; bundled mode may use only skill reference artifacts, served mode must use MCP MEA tools only. 1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
+> **Skill version:** 1.4.0 - updated 2026-08-05 (1.4.0: hard gate for all MEA-involved prompts - call stored MCP MEA tools first (`mea_commands_search` and/or `mea_search`, optional `debug_tree_history`) before any live `debug mea`; build targeted live commands from stored evidence; only if targeted run fails may one-step live `?` exploration be used. 1.3.0: fixed MEA category workflow drift - for "stored commands" requests use `mea_commands_search` first (not `debug_tree_history`), require explicit source labeling in answers, and for live queue diagnostics run a stored-first preflight + version check + targeted command bundle with no exploratory `?` loops unless the user asks exploration. 1.2.0: strict missing-data policy - do not scan arbitrary workspace/repo disk paths for MEA evidence; bundled mode may use only skill reference artifacts, served mode must use MCP MEA tools only. 1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
 
 # RAD MEA and debug skill
 
@@ -29,6 +29,20 @@ Do not mix them.
 	`registers`, then `mea_search` supplies the mapped block details.
 
 ## Mandatory flow by prompt category
+
+## Global MEA gate (applies to every MEA-related request)
+
+Before any live `debug mea` action, perform stored MCP preflight first:
+
+1. Run at least one relevant stored MCP MEA source:
+	- `mea_commands_search` for command/menu/catalog intent
+	- `mea_search` for register/map intent
+	- optional `debug_tree_history` for previously captured session paths
+2. Build a targeted live command bundle from that stored evidence.
+3. Run the targeted bundle live only if the user asked for live execution.
+4. Only if the targeted live run fails, do minimal live exploration (`?`) to recover.
+
+Do not start with live menu digging.
 
 ### A) Stored-command catalog prompts
 
@@ -75,6 +89,9 @@ For queue checks, prefer one compact bundle such as:
 
 If `drop show all` is unsupported on that variant, then fallback to `drop ?` once,
 then continue with the minimum compatible form.
+
+If any targeted command fails due to variant differences, permit one minimal
+live-discovery step (`?`) at the exact failing node, then resume targeted execution.
 
 ### C) Version-aware execution rule
 
