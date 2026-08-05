@@ -16,6 +16,8 @@ machine. Principles (stdio vs http, who-starts-the-server, artifact kinds):
 | [Copilot JetBrains](#github-copilot--jetbrains-ides-intellij-pycharm-) (IntelliJ, …) | `install-copilot-intellij.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Copilot CLI](#github-copilot--cli) | `install-copilot-cli.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
 | [Codex](#openai-codex--ide-extension--chatgpt-desktop-app) (IDE + ChatGPT desktop) | `install-codex.ps1` / `.sh` | stdio (default), `-Http -Token <t>` |
+| [Codex VS Code quick stdio](#openai-codex--ide-extension--chatgpt-desktop-app) | `install-stdio-codex-vscode.ps1` | stdio + served skills (combined 2-step wrapper) |
+| [Codex VS Code quick http](#openai-codex--ide-extension--chatgpt-desktop-app) | `install-http-codex-vscode.ps1` | http + served skills (MCP listener runs separately) |
 | Generic manual helper | `install-generic.ps1` / `.sh` | interactive served/embedded skills + stdio/http MCP snippets (no file writes) |
 
 > **Windows: "running scripts is disabled on this system"** — the machine's
@@ -265,6 +267,26 @@ Copilot commands do not start that listener for you.
 > **One config, both surfaces:** both read the SAME `~/.codex/config.toml`
 > and `~/.agents/skills/` — installing for one installs for the other; only
 > the restart step and UI differ.
+
+**Quick local stdio path (VS Code Codex):**
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\install-stdio-codex-vscode.ps1
+```
+
+This wrapper runs `install-stdio-mcp-server.ps1` first, then `install-codex.ps1`
+in stdio + served mode.
+
+**Quick HTTP path (VS Code Codex):**
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\install-http-codex-vscode.ps1
+PowerShell -ExecutionPolicy Bypass -File .\install-http-codex-vscode.ps1 -Url http://127.0.0.1:8080/mcp -Token <token>
+```
+
+This wrapper configures Codex for HTTP + served skills and delegates to
+`install-codex.ps1 -Http`. Start the HTTP listener separately from
+`../mcp_server/` before using Codex.
 
 **Config:** `[mcp_servers.rad-mcp]` in `~/.codex/config.toml` — stdio:
 `command`/`args`/`cwd`/`env`, `startup_timeout_sec = 20` (default 10 can

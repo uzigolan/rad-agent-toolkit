@@ -1,12 +1,12 @@
-# INSTALL/UPDATE: Copilot + rad-mcp
+# INSTALL/UPDATE: Copilot/Codex + rad-mcp
 
-This guide is the root install and update entrypoint for GitHub Copilot users.
+This guide is the root install and update entrypoint for GitHub Copilot and OpenAI Codex users.
 
 Use the same flows both for a first installation and for later updates after
 `git pull`. Re-running the relevant installer refreshes MCP configuration,
 skills, and local stdio prerequisites as needed.
 
-Use exactly one section below, based on your IDE and MCP transport.
+Choose one main AI product section below, then one variant flow under it.
 
 ## 1. Before you start
 
@@ -25,7 +25,11 @@ If you already have the repo:
 git pull
 ```
 
-## 2. Install MCP stdio and Copilot on VS Code
+## 2. GitHub Copilot (main)
+
+Use one Copilot variant below.
+
+### 2.1 VS Code + MCP stdio (default)
 
 This is the default and simplest local install path.
 
@@ -58,7 +62,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -SkipCatalog
 ```
 
-## 3. Install MCP stdio and Copilot on IntelliJ
+### 2.2 IntelliJ + MCP stdio
 
 Run:
 
@@ -89,7 +93,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -SkipCatalog
 ```
 
-## 4. Install MCP HTTP and Copilot on VS Code
+### 2.3 VS Code + MCP HTTP
 
 First start or prepare the HTTP MCP server:
 
@@ -110,12 +114,20 @@ Recommended answers:
 3. URL: your MCP URL.
 4. Token: the matching server bearer token.
 
+After install:
+
+1. Reload the VS Code window.
+2. Open Copilot Settings and verify `rad-mcp` appears under MCP Servers.
+3. Start or Restart the MCP server entry if needed.
+4. Switch Copilot Chat to Agent mode.
+5. Test with: `rad agent, list the managed devices`.
+
 Detailed guides:
 
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
 
-## 5. Install MCP HTTP and Copilot on IntelliJ
+### 2.4 IntelliJ + MCP HTTP
 
 First start or prepare the HTTP MCP server:
 
@@ -136,12 +148,20 @@ Recommended answers:
 3. URL: your MCP URL.
 4. Token: the matching server bearer token.
 
+After install:
+
+1. Restart the IDE.
+2. Open Copilot Settings and verify `rad-mcp` appears under MCP Servers.
+3. Start or Restart the MCP server entry if needed.
+4. Switch Copilot Chat to Agent mode.
+5. Test with: `rad agent, list the managed devices`.
+
 Detailed guides:
 
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
 
-## 6. Install MCP stdio and Copilot generic
+### 2.5 Generic + MCP stdio
 
 First prepare local stdio MCP prerequisites:
 
@@ -157,7 +177,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 
 Use this when your target client is not the supported VS Code or IntelliJ Copilot flow.
 
-## 7. Install MCP HTTP and Copilot generic
+### 2.6 Generic + MCP HTTP
 
 First start or prepare the HTTP MCP server:
 
@@ -173,7 +193,93 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 
 Choose HTTP mode in the helper and provide the server URL and token.
 
-## 8. Problems
+After install:
+
+1. Apply the generated MCP snippet in your target client config.
+2. Restart that client/session.
+3. Verify the client can see `rad-mcp` tools.
+
+## 3. ChatGPT Codex (main)
+
+Use one Codex variant below.
+
+### 3.1 VS Code Codex + MCP stdio
+
+Run:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-codex-vscode.ps1
+```
+
+What it does:
+
+1. Prepares the local stdio MCP server.
+2. Builds or reuses the local catalog as needed.
+3. Installs Codex MCP config (`~/.codex/config.toml`).
+4. Installs skills for Codex (`~/.agents/skills`) in served mode.
+
+After install:
+
+1. Fully restart VS Code (or the Codex extension host/session).
+2. Open a local Codex session and run `/mcp` and `/skills`.
+3. Test with: `rad agent, list the managed devices`.
+
+Useful options:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-codex-vscode.ps1 -MibDir C:\MIBS
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-codex-vscode.ps1 -SkipCatalog
+```
+
+### 3.2 VS Code Codex + MCP HTTP
+
+Step 1: start or prepare the shared HTTP MCP server:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1
+```
+
+Step 2: install Codex MCP config + skills in HTTP mode:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-http-codex-vscode.ps1
+```
+
+Recommended answers/flags:
+
+1. Knowledge mode: `served`.
+2. URL: your MCP URL.
+3. Token: the matching server bearer token.
+
+After install:
+
+1. Fully restart VS Code (or the Codex extension host/session).
+2. Open a local Codex session and run `/mcp` and `/skills`.
+3. Test with: `rad agent, list the managed devices`.
+
+Non-interactive example:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-http-codex-vscode.ps1 -Url http://127.0.0.1:8080/mcp -Token <token>
+```
+
+### 3.3 Codex shared installer (CLI/IDE/Desktop)
+
+Use the shared Codex installer when you want one config for all Codex surfaces
+(`~/.codex/config.toml`):
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-codex.ps1
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-codex.ps1 -Http -Url http://127.0.0.1:8080/mcp -Token <token>
+```
+
+### 3.4 ChatGPT Codex desktop app (HTTPS guide)
+
+For the desktop-app-focused HTTPS flow, follow:
+
+1. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md`
+
+## 4. Problems
 
 ### `'PowerShell' is not recognized`
 
@@ -228,7 +334,7 @@ Get-Command pwsh, powershell.exe
 2. Served mode must use MCP knowledge tools, not arbitrary workspace disk search.
 3. If the tracked reference artifact is missing, update the repo and reinstall.
 
-## 9. Verify with one prompt per technology
+## 5. Verify with one prompt per technology
 
 1. Device management: `rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234`
 2. Manual knowledge: `rad agent, according to the ETX-2 manual, explain ERP failover timers and revertive behavior`
@@ -237,11 +343,13 @@ Get-Command pwsh, powershell.exe
 5. MEA commands: `rad agent, list all MEA util fctl commands from stored data`
 6. Altera knowledge: `rad agent, in Altera docs explain AWVALID/WVALID timing expectations and point to the relevant figure`
 
-## 10. Detailed references
+## 6. Detailed references
 
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md`
 3. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
 4. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
 5. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md`
-6. `rad-mcp-server/docs/examples.md`
+6. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md`
+7. `rad-mcp-server/scripts/install/skills_and_mcp/README.md`
+8. `rad-mcp-server/docs/examples.md`

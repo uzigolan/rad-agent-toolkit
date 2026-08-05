@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>INSTALL/UPDATE: Copilot + rad-mcp</title>
+<title>INSTALL/UPDATE: Copilot/Codex + rad-mcp</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -46,14 +46,22 @@
   .muted { color:var(--muted); }
   .lead { color:var(--muted); max-width:80ch; }
   .warn { background:var(--warn-bg); border-left:4px solid var(--warn-border); padding:.8rem 1rem; border-radius:0 8px 8px 0; margin:1rem 0; }
-  .tabs { display:flex; flex-wrap:wrap; gap:.5rem; margin:1.2rem 0 1rem; }
-  .tab {
+  .main-tabs { display:flex; flex-wrap:wrap; gap:.6rem; margin:1.2rem 0 1rem; }
+  .main-tab {
+    border:1px solid var(--border); background:var(--panel); color:var(--fg);
+    border-radius:999px; padding:.58rem 1.05rem; cursor:pointer; font-weight:700;
+  }
+  .main-tab.active { background:var(--active); color:var(--active-ink); border-color:var(--active); }
+  .main-panel { display:none; margin:0 0 1rem; }
+  .main-panel.active { display:block; }
+  .sub-tabs { display:flex; flex-wrap:wrap; gap:.5rem; margin:0 0 1rem; }
+  .sub-tab {
     border:1px solid var(--border); background:var(--panel); color:var(--fg);
     border-radius:999px; padding:.55rem .95rem; cursor:pointer; font-weight:600;
   }
-  .tab.active { background:var(--active); color:var(--active-ink); border-color:var(--active); }
-  .panel { display:none; background:var(--panel2); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.1rem 1.3rem; margin:0 0 1rem; }
-  .panel.active { display:block; }
+  .sub-tab.active { background:var(--active); color:var(--active-ink); border-color:var(--active); }
+  .sub-panel { display:none; background:var(--panel2); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.1rem 1.3rem; margin:0 0 1rem; }
+  .sub-panel.active { display:block; }
   .grid { display:grid; grid-template-columns:1fr; gap:1rem; }
   .mini { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:.85rem 1rem; }
   .steps { margin-top:.6rem; }
@@ -63,12 +71,12 @@
 </head>
 <body>
 
-<h1>INSTALL/UPDATE: Copilot + rad-mcp</h1>
-<p class="lead">Pick one install path. The default tab is the simplest local setup: VS Code Copilot with a local stdio MCP server and skills installed together by one combined script. These same flows are also the supported update paths after <code>git pull</code>; rerun the relevant installer to refresh MCP config, skills, and local stdio prerequisites.</p>
+<h1>INSTALL/UPDATE: Copilot/Codex + rad-mcp</h1>
+<p class="lead">Pick one install path. Main product tabs are <code>GitHub Copilot</code> and <code>ChatGPT Codex</code>. Default is Copilot. Inside each main product tab, choose the transport/IDE sub-tab. These same flows are also the supported update paths after <code>git pull</code>; rerun the relevant installer to refresh MCP config, skills, and local stdio prerequisites.</p>
 
 <h2>Before You Start</h2>
 <ol>
-  <li>Use only the official GitHub Copilot product for your IDE.</li>
+  <li>Use only the official GitHub Copilot or OpenAI Codex product for your IDE.</li>
   <li>Clone or update the repository.</li>
   <li>Run installer commands from the repository root.</li>
 </ol>
@@ -82,17 +90,22 @@ git pull</code></pre>
 <div class="warn"><strong>Safety note</strong><br>
 The installers create and use a repo-local Python environment under <code>rad-mcp-server/server/.venv</code>. They do not install Python packages system-wide.</div>
 
-<h2>Install Paths</h2>
-<div class="tabs">
-  <button class="tab active" data-tab="vscode-stdio">VS Code + MCP stdio</button>
-  <button class="tab" data-tab="intellij-stdio">IntelliJ + MCP stdio</button>
-  <button class="tab" data-tab="vscode-http">VS Code + MCP http</button>
-  <button class="tab" data-tab="intellij-http">IntelliJ + MCP http</button>
-  <button class="tab" data-tab="generic-stdio">Generic + MCP stdio</button>
-  <button class="tab" data-tab="generic-http">Generic + MCP http</button>
+<h2>Choose AI Product and Setup Flow</h2>
+<div class="main-tabs">
+  <button class="main-tab active" data-main-tab="copilot">GitHub Copilot</button>
+  <button class="main-tab" data-main-tab="codex">ChatGPT Codex</button>
+  <button class="main-tab" data-main-tab="generic">Generic</button>
 </div>
 
-<section class="panel active" id="vscode-stdio">
+<section class="main-panel active" id="main-copilot">
+  <div class="sub-tabs" data-sub-group="copilot">
+    <button class="sub-tab active" data-sub-tab="copilot-vscode-stdio">VS Code + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="copilot-intellij-stdio">IntelliJ + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="copilot-vscode-http">VS Code + MCP http</button>
+    <button class="sub-tab" data-sub-tab="copilot-intellij-http">IntelliJ + MCP http</button>
+  </div>
+
+<section class="sub-panel active" id="copilot-vscode-stdio">
   <h2>Install MCP stdio and Copilot on VS Code</h2>
   <p>This is the default and simplest local install path.</p>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
@@ -117,7 +130,7 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -SkipCatalog</code></pre>
 </section>
 
-<section class="panel" id="intellij-stdio">
+<section class="sub-panel" id="copilot-intellij-stdio">
   <h2>Install MCP stdio and Copilot on IntelliJ</h2>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1</code></pre>
   <h3>After install</h3>
@@ -141,40 +154,135 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -SkipCatalog</code></pre>
 </section>
 
-<section class="panel" id="vscode-http">
+<section class="sub-panel" id="copilot-vscode-http">
   <h2>Install MCP http and Copilot on VS Code</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: install VS Code Copilot MCP config and skills</h3>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-vscode.ps1</code></pre>
   <p>Recommended answers: <code>served</code> knowledge, <code>http</code> transport, then your MCP URL and matching token.</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Reload the VS Code window.</li>
+    <li>Open Copilot Settings and verify <code>rad-mcp</code> appears under MCP Servers.</li>
+    <li>Start or Restart the MCP server entry if needed.</li>
+    <li>Switch Copilot Chat to Agent mode.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
 </section>
 
-<section class="panel" id="intellij-http">
+<section class="sub-panel" id="copilot-intellij-http">
   <h2>Install MCP http and Copilot on IntelliJ</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: install JetBrains Copilot MCP config and skills</h3>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-intellij.ps1</code></pre>
   <p>Recommended answers: <code>served</code> knowledge, <code>http</code> transport, then your MCP URL and matching token.</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Restart the IDE.</li>
+    <li>Open Copilot Settings and verify <code>rad-mcp</code> appears under MCP Servers.</li>
+    <li>Start or Restart the MCP server entry if needed.</li>
+    <li>Switch Copilot Chat to Agent mode.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
 </section>
 
-<section class="panel" id="generic-stdio">
-  <h2>Install MCP stdio and Copilot generic</h2>
-  <h3>Step 1: prepare local stdio MCP prerequisites</h3>
-  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1</code></pre>
-  <h3>Step 2: run the generic helper</h3>
-  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
-  <p>Use this when your target client is not the supported VS Code or IntelliJ Copilot flow.</p>
 </section>
 
-<section class="panel" id="generic-http">
-  <h2>Install MCP http and Copilot generic</h2>
+<section class="main-panel" id="main-generic">
+  <div class="sub-tabs" data-sub-group="generic">
+    <button class="sub-tab active" data-sub-tab="generic-stdio">Generic + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="generic-http">Generic + MCP http</button>
+  </div>
+
+  <section class="sub-panel active" id="generic-main-stdio">
+    <h2>Install MCP stdio generic</h2>
+    <h3>Step 1: prepare local stdio MCP prerequisites</h3>
+    <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1</code></pre>
+    <h3>Step 2: run the generic helper</h3>
+    <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
+    <p>Use this when your target client is not the supported Copilot or Codex paths.</p>
+  </section>
+
+  <section class="sub-panel" id="generic-main-http">
+    <h2>Install MCP http generic</h2>
+    <h3>Step 1: prepare the HTTP MCP server</h3>
+    <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
+    <h3>Step 2: run the generic helper</h3>
+    <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
+    <p>Choose HTTP mode in the helper and provide the server URL and token.</p>
+    <h3>After install</h3>
+    <ol>
+      <li>Apply the generated MCP snippet in your target client config.</li>
+      <li>Restart that client/session.</li>
+      <li>Verify the client can see <code>rad-mcp</code> tools.</li>
+    </ol>
+  </section>
+</section>
+
+<section class="main-panel" id="main-codex">
+  <div class="sub-tabs" data-sub-group="codex">
+    <button class="sub-tab active" data-sub-tab="codex-vscode-stdio">VS Code Codex + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="codex-vscode-http">VS Code Codex + MCP http</button>
+    <button class="sub-tab" data-sub-tab="codex-shared-installer">Codex shared installer (CLI/IDE/Desktop)</button>
+    <button class="sub-tab" data-sub-tab="codex-desktop-https">ChatGPT Codex desktop app (HTTPS)</button>
+  </div>
+
+<section class="sub-panel active" id="codex-vscode-stdio">
+  <h2>Install MCP stdio and Codex on VS Code</h2>
+  <p>One-command local path for Codex on VS Code.</p>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-codex-vscode.ps1</code></pre>
+  <h3>After install</h3>
+  <ol>
+    <li>Fully restart VS Code (or restart the Codex extension host/session).</li>
+    <li>Open a local Codex session and run <code>/mcp</code> and <code>/skills</code>.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Builds or reuses the local catalog as needed.</li>
+    <li>Installs Codex MCP config in <code>~/.codex/config.toml</code>.</li>
+    <li>Installs skills to <code>~/.agents/skills</code> (served mode).</li>
+  </ol>
+  <h3>Useful options</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-codex-vscode.ps1 -MibDir C:\MIBS
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-codex-vscode.ps1 -SkipCatalog</code></pre>
+</section>
+
+<section class="sub-panel" id="codex-vscode-http">
+  <h2>Install MCP http and Codex on VS Code</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
   <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
-  <h3>Step 2: run the generic helper</h3>
-  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
-  <p>Choose HTTP mode in the helper and provide the server URL and token.</p>
+  <h3>Step 2: install Codex MCP config and skills (http)</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-http-codex-vscode.ps1</code></pre>
+  <p>Recommended answers: <code>served</code> knowledge, then your MCP URL and matching token.</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Fully restart VS Code (or the Codex extension host/session).</li>
+    <li>Open a local Codex session and run <code>/mcp</code> and <code>/skills</code>.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+  <h3>Non-interactive example</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-http-codex-vscode.ps1 -Url http://127.0.0.1:8080/mcp -Token &lt;token&gt;</code></pre>
+</section>
+
+<section class="sub-panel" id="codex-shared-installer">
+  <h2>Codex shared installer (CLI/IDE/Desktop)</h2>
+  <p>Use one shared Codex config for all Codex surfaces.</p>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-codex.ps1
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-codex.ps1 -Http -Url http://127.0.0.1:8080/mcp -Token &lt;token&gt;</code></pre>
+  <p>This writes <code>~/.codex/config.toml</code> and refreshes skills under <code>~/.agents/skills</code>.</p>
+</section>
+
+<section class="sub-panel" id="codex-desktop-https">
+  <h2>ChatGPT Codex desktop app (HTTPS flow)</h2>
+  <p>For the dedicated desktop-app HTTPS setup and trust chain notes, follow:</p>
+  <pre><code>rad-mcp-server\scripts\install\skills_and_mcp\INSTALL-codex-mcp-skills.md</code></pre>
+  <p>This covers MCP registration, TLS trust, plugin flow, restart/validation, and listener ownership.</p>
+</section>
+
 </section>
 
 <h2>Problems</h2>
@@ -222,17 +330,40 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 </ol>
 
 <hr>
-<p class="muted">Detailed references: <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code>, <code>rad-mcp-server/docs/examples.md</code>.</p>
+<p class="muted">Detailed references: <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/README.md</code>, <code>rad-mcp-server/docs/examples.md</code>.</p>
 
 <script>
-  const tabs = document.querySelectorAll('.tab');
-  const panels = document.querySelectorAll('.panel');
-  tabs.forEach(tab => {
+  const mainTabs = document.querySelectorAll('.main-tab');
+  const mainPanels = document.querySelectorAll('.main-panel');
+  mainTabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
+      mainTabs.forEach(t => t.classList.remove('active'));
+      mainPanels.forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
+      document.getElementById(`main-${tab.dataset.mainTab}`).classList.add('active');
+    });
+  });
+
+  const subTabGroups = document.querySelectorAll('.sub-tabs');
+  subTabGroups.forEach(group => {
+    const tabs = group.querySelectorAll('.sub-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        const mainPanel = tab.closest('.main-panel');
+        if (!mainPanel) {
+          return;
+        }
+        mainPanel.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        let panelId = tab.dataset.subTab;
+        if (panelId === 'generic-stdio') {
+          panelId = 'generic-main-stdio';
+        } else if (panelId === 'generic-http') {
+          panelId = 'generic-main-http';
+        }
+        document.getElementById(panelId).classList.add('active');
+      });
     });
   });
 
