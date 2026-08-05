@@ -32,6 +32,26 @@ if ! command -v claude >/dev/null 2>&1; then
     exit 1
 fi
 
+# The marketplace/plugin manifests are machine-local (gitignored, absolute
+# venv paths) - generate them so `claude plugin marketplace add` finds a valid
+# marketplace. rad-mcp-server/ itself is both marketplace and plugin root
+# (skills/ and commands/ already live there).
+install_rad_plugin() {
+    local mp_dir="$RAD_ROOT/.claude-plugin" desc ver
+    mkdir -p "$mp_dir"
+    desc='Operate RAD Data Communications devices (SecFlow, ETX-1p, ETX-2) - staged-commit config safety, harvested CLI reference + manuals, SNMP/MIB tools.'
+    ver="$(sed -n 's/^__version__ = "\(.*\)"/\1/p' "$RAD_ROOT/server/rad_mcp/__init__.py" 2>/dev/null)"
+    ver="${ver:-0.0.0}"
+    printf '{\n  "name": "rad-mcp",\n  "version": "%s",\n  "description": "%s"\n}\n' "$ver" "$desc" > "$mp_dir/plugin.json"
+    printf '{\n  "name": "rad-marketplace",\n  "owner": { "name": "RAD" },\n  "plugins": [\n    { "name": "rad-mcp", "source": "./", "description": "%s" }\n  ]\n}\n' "$desc" > "$mp_dir/marketplace.json"
+    # Plugin-root .mcp.json: the MCP registration the plugin carries.
+    "$(_py)" -c 'import json,sys; print(json.dumps({"mcpServers": {"rad-mcp": json.loads(sys.argv[1])}}, indent=2))' "$(new_stdio_entry)" > "$RAD_ROOT/.mcp.json"
+    # Re-add so the marketplace path is always current.
+    claude plugin marketplace remove rad-marketplace 2>/dev/null || true
+    claude plugin marketplace add "$RAD_ROOT"
+    claude plugin install rad-mcp@rad-marketplace
+}
+
 # Keep an existing MCP registration unless flags/--reconfigure force a change.
 # Skills refresh either way: http re-copies client-side; stdio re-installs the
 # plugin (refreshes bundled skills + commands; same MCP registration).
@@ -44,9 +64,7 @@ if [ -z "$MODE" ] && [ -z "$HTTP_URL" ] && [ -z "$HTTP_TOKEN" ] && [ "${RAD_RECO
             copy_skills_to "$HOME/.claude/skills" "$KMODE"
         else
             assert_common_setup
-            REPO_ROOT="$(cd "$RAD_ROOT/.." && pwd)"
-            claude plugin marketplace add "$REPO_ROOT"
-            claude plugin install rad-mcp@rad-marketplace
+            install_rad_plugin
             echo "  plugin -> refreshed rad-mcp@rad-marketplace (skills + commands; MCP unchanged)"
         fi
         echo ""
@@ -60,8 +78,10 @@ KMODE="$(resolve_knowledge_mode "${RAD_KNOWLEDGE:-}" skip-installed)"
 prompt_transport
 
 if [ "$MODE" = http ]; then
+    claude mcp remove --scope user "$NAME" 2>/dev/null || true
     claude mcp remove "$NAME" 2>/dev/null || true
-    claude mcp add --transport http "$NAME" "$HTTP_URL" --header "Authorization: Bearer $HTTP_TOKEN"
+    # user scope -> global registration (~/.claude.json), available in every project
+    claude mcp add --scope user --transport http "$NAME" "$HTTP_URL" --header "Authorization: Bearer $HTTP_TOKEN"
     echo "  mcp   -> http client of $HTTP_URL (read-only)"
     show_mcp_config_text "transport = http
 url       = $HTTP_URL
@@ -70,10 +90,8 @@ header    = Authorization: Bearer $HTTP_TOKEN" "added MCP configuration (claude 
     copy_skills_to "$HOME/.claude/skills" "$KMODE"
 else
     assert_common_setup
-    REPO_ROOT="$(cd "$RAD_ROOT/.." && pwd)"
-    claude plugin marketplace add "$REPO_ROOT"
-    claude plugin install rad-mcp@rad-marketplace
-    echo "  plugin -> rad-mcp@rad-marketplace (MCP + 3 skills + 4 commands)"
+    install_rad_plugin
+    echo "  plugin -> rad-mcp@rad-marketplace (MCP + skills + commands)"
     show_mcp_config_text "$("$(_py)" -c 'import json,sys; print(json.dumps({"rad-mcp": json.loads(sys.argv[1])}, indent=2))' "$(new_stdio_entry)")" \
         "MCP configuration the plugin registers (stdio; the client launches the server):"
 fi

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>INSTALL/UPDATE: Copilot/Codex + rad-mcp</title>
+<title>INSTALL/UPDATE: Copilot/Codex/Claude + rad-mcp</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -71,8 +71,8 @@
 </head>
 <body>
 
-<h1>INSTALL/UPDATE: Copilot/Codex + rad-mcp</h1>
-<p class="lead">Pick one install path. Main product tabs are <code>GitHub Copilot</code> and <code>ChatGPT Codex</code>. Default is Copilot. Inside each main product tab, choose the transport/IDE sub-tab. These same flows are also the supported update paths after <code>git pull</code>; rerun the relevant installer to refresh MCP config, skills, and local stdio prerequisites.</p>
+<h1>INSTALL/UPDATE: Copilot/Codex/Claude + rad-mcp</h1>
+<p class="lead">Pick one install path. Main product tabs are <code>GitHub Copilot</code>, <code>ChatGPT Codex</code>, and <code>Claude</code>. Default is Copilot. Inside each main product tab, choose the transport/IDE sub-tab. These same flows are also the supported update paths after <code>git pull</code>; rerun the relevant installer to refresh MCP config, skills, and local stdio prerequisites.</p>
 
 <h2>Before You Start</h2>
 <ol>
@@ -83,7 +83,7 @@
     </ol>
   </li>
   <li>Download and install Git: <a href="https://git-scm.com/install/windows">https://git-scm.com/install/windows</a></li>
-  <li>Use only the official GitHub Copilot or OpenAI Codex product for your IDE.</li>
+  <li>Use only the official GitHub Copilot, OpenAI Codex, or Anthropic Claude product for your IDE.</li>
   <li>Clone or update the repository.</li>
   <li>Run installer commands from the repository root.</li>
 </ol>
@@ -101,6 +101,7 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 <div class="main-tabs">
   <button class="main-tab active" data-main-tab="copilot">GitHub Copilot</button>
   <button class="main-tab" data-main-tab="codex">ChatGPT Codex</button>
+  <button class="main-tab" data-main-tab="claude">Claude</button>
   <button class="main-tab" data-main-tab="generic">Generic</button>
 </div>
 
@@ -108,8 +109,10 @@ The installers create and use a repo-local Python environment under <code>rad-mc
   <div class="sub-tabs" data-sub-group="copilot">
     <button class="sub-tab active" data-sub-tab="copilot-vscode-stdio">VS Code + MCP stdio</button>
     <button class="sub-tab" data-sub-tab="copilot-intellij-stdio">IntelliJ + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="copilot-cli-stdio">Copilot CLI + MCP stdio</button>
     <button class="sub-tab" data-sub-tab="copilot-vscode-http">VS Code + MCP http</button>
     <button class="sub-tab" data-sub-tab="copilot-intellij-http">IntelliJ + MCP http</button>
+    <button class="sub-tab" data-sub-tab="copilot-cli-http">Copilot CLI + MCP http</button>
   </div>
 
 <section class="sub-panel active" id="copilot-vscode-stdio">
@@ -178,6 +181,26 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
   </ol>
 </section>
 
+<section class="sub-panel" id="copilot-cli-stdio">
+  <h2>Install MCP stdio and GitHub Copilot CLI</h2>
+  <p>For the <code>copilot</code> terminal CLI (also read by the embedded Copilot CLI agent in JetBrains IDEs).</p>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-cli.ps1</code></pre>
+  <p>When prompted for transport, choose <code>stdio</code> (the default).</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Restart the <code>copilot</code> session (skills and MCP load at startup only).</li>
+    <li>Verify with <code>/mcp show</code> and <code>/skills list</code>.</li>
+    <li>On the first tool call, answer the permission prompt with <code>yes, always</code>.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Writes/merges <code>~\.copilot\mcp-config.json</code> and <code>~\.copilot\mcp.json</code> (kept in sync).</li>
+    <li>Copies the skills to <code>~\.copilot\skills</code> (served mode).</li>
+  </ol>
+</section>
+
 <section class="sub-panel" id="copilot-intellij-http">
   <h2>Install MCP http and Copilot on IntelliJ</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
@@ -191,6 +214,22 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
     <li>Open Copilot Settings and verify <code>rad-mcp</code> appears under MCP Servers.</li>
     <li>Start or Restart the MCP server entry if needed.</li>
     <li>Switch Copilot Chat to Agent mode.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+</section>
+
+<section class="sub-panel" id="copilot-cli-http">
+  <h2>Install MCP http and GitHub Copilot CLI</h2>
+  <h3>Step 1: prepare the HTTP MCP server</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
+  <h3>Step 2: install Copilot CLI MCP config and skills (http)</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-cli.ps1 -Http -Url http://127.0.0.1:8080/mcp -Token &lt;token&gt;</code></pre>
+  <p>Or run without flags and choose <code>http</code> at the transport prompt, then provide your MCP URL and matching token.</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Make sure the shared HTTP server is running and its token matches this client's.</li>
+    <li>Restart the <code>copilot</code> session.</li>
+    <li>Verify with <code>/mcp show</code> and <code>/skills list</code>.</li>
     <li>Test with <code>rad agent, list the managed devices</code>.</li>
   </ol>
 </section>
@@ -226,6 +265,71 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
       <li>Verify the client can see <code>rad-mcp</code> tools.</li>
     </ol>
   </section>
+</section>
+
+<section class="main-panel" id="main-claude">
+  <div class="sub-tabs" data-sub-group="claude">
+    <button class="sub-tab active" data-sub-tab="claude-desktop-stdio">Claude Desktop + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="claude-vscode-stdio">Claude VS Code + MCP stdio</button>
+    <button class="sub-tab" data-sub-tab="claude-cli-stdio">Claude CLI + MCP stdio</button>
+  </div>
+
+<section class="sub-panel active" id="claude-desktop-stdio">
+  <h2>Install MCP stdio and Claude Desktop</h2>
+  <p>All Claude variants use stdio MCP only — Claude launches the local server itself (full toolset including staged writes).</p>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-desktop.ps1</code></pre>
+  <h3>After install (two manual steps)</h3>
+  <ol>
+    <li>FULLY restart Claude Desktop: system-tray icon -&gt; Quit (closing the window is NOT enough), then relaunch.</li>
+    <li>Sidebar Customize -&gt; Skills -&gt; upload the skill zips from the Explorer folder the installer opens (replace existing ones if already uploaded).</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Backs up the Claude Desktop config (Windows Store or traditional path), then merges the <code>rad-mcp</code> entry under <code>mcpServers</code>.</li>
+    <li>Rebuilds the skill zips and opens the zip folder for manual upload.</li>
+  </ol>
+  <h3>Useful options</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-desktop.ps1 -Reconfigure</code></pre>
+</section>
+
+<section class="sub-panel" id="claude-vscode-stdio">
+  <h2>Install MCP stdio and Claude Code on VS Code</h2>
+  <p>Requires the <code>claude</code> CLI on PATH (install Claude Code first: <a href="https://claude.com/claude-code">https://claude.com/claude-code</a>). The VS Code extension and the CLI read the same plugin/config.</p>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-code.ps1</code></pre>
+  <p>When prompted for transport, choose <code>stdio</code> (the default plugin mode).</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Reload the VS Code window with <code>Ctrl + Shift + P</code> -&gt; <code>Developer: Reload Window</code>.</li>
+    <li>Verify with <code>/mcp</code> and try <code>/rad-health &lt;device-name&gt;</code>.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Installs the <code>rad-mcp@rad-marketplace</code> plugin (MCP registration + skills + slash commands).</li>
+  </ol>
+</section>
+
+<section class="sub-panel" id="claude-cli-stdio">
+  <h2>Install MCP stdio and Claude CLI</h2>
+  <p>Same installer as the VS Code flow — Claude Code CLI and the VS Code extension share the plugin/config.</p>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-code.ps1</code></pre>
+  <p>When prompted for transport, choose <code>stdio</code> (the default plugin mode).</p>
+  <h3>After install</h3>
+  <ol>
+    <li>Start a new <code>claude</code> session.</li>
+    <li>Verify with <code>/mcp</code> and try <code>/rad-health &lt;device-name&gt;</code>.</li>
+    <li>Test with <code>rad agent, list the managed devices</code>.</li>
+  </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Installs the <code>rad-mcp@rad-marketplace</code> plugin (MCP registration + skills + slash commands).</li>
+  </ol>
+</section>
+
 </section>
 
 <section class="main-panel" id="main-codex">
@@ -337,7 +441,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 </ol>
 
 <hr>
-<p class="muted">Detailed references: <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/README.md</code>, <code>rad-mcp-server/docs/examples.md</code>.</p>
+<p class="muted">Detailed references: <code>rad-mcp-server/docs/INSTALL-locations.md</code> (where each flow installs MCP config, skills, and plugins), <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md</code>, <code>rad-mcp-server/scripts/install/skills_and_mcp/README.md</code>, <code>rad-mcp-server/docs/examples.md</code>.</p>
 
 <script>
   const mainTabs = document.querySelectorAll('.main-tab');

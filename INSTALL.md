@@ -1,6 +1,6 @@
-# INSTALL/UPDATE: Copilot/Codex + rad-mcp
+# INSTALL/UPDATE: Copilot/Codex/Claude + rad-mcp
 
-This guide is the root install and update entrypoint for GitHub Copilot and OpenAI Codex users.
+This guide is the root install and update entrypoint for GitHub Copilot, OpenAI Codex, and Anthropic Claude users.
 
 Use the same flows both for a first installation and for later updates after
 `git pull`. Re-running the relevant installer refreshes MCP configuration,
@@ -14,7 +14,7 @@ Choose one main AI product section below, then one variant flow under it.
 1.1 VS Code: https://code.visualstudio.com/download
 1.2 IntelliJ IDEA: https://lp.jetbrains.com/intellij-idea-promo
 2. Download and install Git: https://git-scm.com/install/windows
-3. Use only the official GitHub Copilot or ChatGPT Codex product for your IDE.
+3. Use only the official GitHub Copilot, ChatGPT Codex, or Anthropic Claude product for your IDE.
 4. Clone or update the repository.
 5. Run all installer commands from the repository root.
 
@@ -97,7 +97,33 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -SkipCatalog
 ```
 
-### 2.3 VS Code + MCP HTTP
+### 2.3 Copilot CLI + MCP stdio
+
+For the `copilot` terminal CLI (also read by the embedded Copilot CLI agent
+in JetBrains IDEs).
+
+Run:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-cli.ps1
+```
+
+When prompted for transport, choose `stdio` (the default).
+
+After install:
+
+1. Restart the `copilot` session (skills and MCP load at startup only).
+2. Verify with `/mcp show` and `/skills list`.
+3. On the first tool call, answer the permission prompt with `yes, always`.
+4. Test with: `rad agent, list the managed devices`.
+
+What it does:
+
+1. Prepares the local stdio MCP server.
+2. Writes/merges `~\.copilot\mcp-config.json` and `~\.copilot\mcp.json` (kept in sync).
+3. Copies the skills to `~\.copilot\skills` in served mode.
+
+### 2.4 VS Code + MCP HTTP
 
 First start or prepare the HTTP MCP server:
 
@@ -131,7 +157,7 @@ Detailed guides:
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
 
-### 2.4 IntelliJ + MCP HTTP
+### 2.5 IntelliJ + MCP HTTP
 
 First start or prepare the HTTP MCP server:
 
@@ -165,7 +191,31 @@ Detailed guides:
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
 
-### 2.5 Generic + MCP stdio
+### 2.6 Copilot CLI + MCP HTTP
+
+Step 1: start or prepare the shared HTTP MCP server:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1
+```
+
+Step 2: install Copilot CLI MCP config + skills in HTTP mode:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-cli.ps1 -Http -Url http://127.0.0.1:8080/mcp -Token <token>
+```
+
+Or run without flags and choose `http` at the transport prompt, then provide
+your MCP URL and matching token.
+
+After install:
+
+1. Make sure the shared HTTP server is running and its token matches this client's.
+2. Restart the `copilot` session.
+3. Verify with `/mcp show` and `/skills list`.
+4. Test with: `rad agent, list the managed devices`.
+
+### 2.7 Generic + MCP stdio
 
 First prepare local stdio MCP prerequisites:
 
@@ -181,7 +231,7 @@ PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills
 
 Use this when your target client is not the supported VS Code or IntelliJ Copilot flow.
 
-### 2.6 Generic + MCP HTTP
+### 2.8 Generic + MCP HTTP
 
 First start or prepare the HTTP MCP server:
 
@@ -283,7 +333,82 @@ For the desktop-app-focused HTTPS flow, follow:
 
 1. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md`
 
-## 4. Problems
+## 4. Claude (main)
+
+Use one Claude variant below. All Claude variants use stdio MCP only — Claude
+launches the local server itself (full toolset including staged writes).
+
+### 4.1 Claude Desktop + MCP stdio
+
+Run:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-desktop.ps1
+```
+
+What it does:
+
+1. Prepares the local stdio MCP server.
+2. Backs up the Claude Desktop config (Windows Store or traditional path), then merges the `rad-mcp` entry under `mcpServers`.
+3. Rebuilds the skill zips and opens the zip folder for manual upload.
+
+After install (two manual steps):
+
+1. FULLY restart Claude Desktop: system-tray icon -> Quit (closing the window is NOT enough), then relaunch.
+2. Sidebar Customize -> Skills -> upload the skill zips from the Explorer folder the installer opens (replace existing ones if already uploaded).
+3. Test with: `rad agent, list the managed devices`.
+
+Useful options:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-desktop.ps1 -Reconfigure
+```
+
+### 4.2 Claude VS Code + MCP stdio
+
+Requires the `claude` CLI on PATH (install Claude Code first:
+https://claude.com/claude-code). The VS Code extension and the CLI read the
+same plugin/config.
+
+Run:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-code.ps1
+```
+
+When prompted for transport, choose `stdio` (the default plugin mode).
+
+What it does:
+
+1. Prepares the local stdio MCP server.
+2. Installs the `rad-mcp@rad-marketplace` plugin (MCP registration + skills + slash commands).
+
+After install:
+
+1. Reload the VS Code window with `Ctrl + Shift + P` -> `Developer: Reload Window`.
+2. Verify with `/mcp` and try `/rad-health <device-name>`.
+3. Test with: `rad agent, list the managed devices`.
+
+### 4.3 Claude CLI + MCP stdio
+
+Same installer as the VS Code flow — Claude Code CLI and the VS Code
+extension share the plugin/config.
+
+Run:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-claude-code.ps1
+```
+
+When prompted for transport, choose `stdio` (the default plugin mode).
+
+After install:
+
+1. Start a new `claude` session.
+2. Verify with `/mcp` and try `/rad-health <device-name>`.
+3. Test with: `rad agent, list the managed devices`.
+
+## 5. Problems
 
 ### `'PowerShell' is not recognized`
 
@@ -338,7 +463,7 @@ Get-Command pwsh, powershell.exe
 2. Served mode must use MCP knowledge tools, not arbitrary workspace disk search.
 3. If the tracked reference artifact is missing, update the repo and reinstall.
 
-## 5. Verify with one prompt per technology
+## 6. Verify with one prompt per technology
 
 1. Device management: `rad agent, add my device: name lab-etx2, host 172.17.163.205, family etx2, group lab, user su, password 1234`
 2. Manual knowledge: `rad agent, according to the ETX-2 manual, explain ERP failover timers and revertive behavior`
@@ -347,13 +472,14 @@ Get-Command pwsh, powershell.exe
 5. MEA commands: `rad agent, list all MEA util fctl commands from stored data`
 6. Altera knowledge: `rad agent, in Altera docs explain AWVALID/WVALID timing expectations and point to the relevant figure`
 
-## 6. Detailed references
+## 7. Detailed references
 
-1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
-2. `rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md`
-3. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
-4. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
-5. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md`
-6. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md`
-7. `rad-mcp-server/scripts/install/skills_and_mcp/README.md`
-8. `rad-mcp-server/docs/examples.md`
+1. `rad-mcp-server/docs/INSTALL-locations.md` — where each flow installs MCP config, skills, and plugins
+2. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
+3. `rad-mcp-server/scripts/install/mcp_server/INSTALL-stdio-mcp-server.md`
+4. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
+5. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
+6. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-generic-mcp-skills.md`
+7. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-codex-mcp-skills.md`
+8. `rad-mcp-server/scripts/install/skills_and_mcp/README.md`
+9. `rad-mcp-server/docs/examples.md`
