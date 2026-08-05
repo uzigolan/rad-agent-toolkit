@@ -20,8 +20,16 @@
     font-size:.9em; background:var(--code-bg); border:1px solid var(--border);
     border-radius:4px; padding:.1em .35em; }
   pre { background:var(--code-bg); border:1px solid var(--border); border-radius:6px;
-    padding: .9rem 1rem; overflow-x:auto; }
+    padding: 2rem 1rem .9rem; overflow-x:auto; position:relative; }
   pre code { background:none; border:none; padding:0; font-size:.85rem; }
+  .copy-cmd-btn {
+    position:absolute; top:.45rem; right:.45rem;
+    border:1px solid var(--border); background:var(--bg); color:var(--fg);
+    border-radius:6px; padding:.2rem .5rem; font-size:.75rem; cursor:pointer;
+  }
+  .copy-cmd-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .copy-cmd-btn.copied { color:#0b7a43; border-color:#0b7a43; }
+  .copy-cmd-btn.failed { color:#b62324; border-color:#b62324; }
   a { color:var(--accent); }
   ul { padding-left:1.6rem; }
   li { margin:.25rem 0; }
@@ -145,6 +153,49 @@ Remove-Item -Recurse -Force "rad-mcp-server/build/work" -ErrorAction SilentlyCon
 Remove-Item -Force "rad-mcp-server/server/.rad-mcp-stdio-config","rad-mcp-server/server/.rad-mcp-http-config","rad-mcp-server/server/.rad-mcp-tokens" -ErrorAction SilentlyContinue
 # Optional:
 # Remove-Item -Force "rad-mcp-server/server/.env","rad-mcp-server/inventory.yaml" -ErrorAction SilentlyContinue</code></pre>
+
+<script>
+  document.querySelectorAll('pre > code').forEach(codeEl => {
+    const preEl = codeEl.parentElement;
+    if (!preEl || preEl.querySelector('.copy-cmd-btn')) {
+      return;
+    }
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-cmd-btn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy command to clipboard');
+
+    btn.addEventListener('click', async () => {
+      const text = codeEl.innerText.replace(/\u00a0/g, ' ');
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+      } catch (err) {
+        btn.textContent = 'Failed';
+        btn.classList.add('failed');
+      }
+
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied', 'failed');
+      }, 1400);
+    });
+
+    preEl.appendChild(btn);
+  });
+</script>
 
 </body>
 </html>

@@ -1,10 +1,10 @@
 ---
 name: rad-mea-debug
 description: RAD hidden debug tree and FPGA/MEA knowledge. Use when the user asks about `debug mea`, `FPGA>MEA`, stored MEA commands, OAM/PM/HW MEA paths, FPGA register maps, memory-map symbols, or what the device auto-programmed in MEA.
-version: 1.2.0
+version: 1.3.0
 ---
 
-> **Skill version:** 1.2.0 - updated 2026-08-04 (1.2.0: strict missing-data policy - do not scan arbitrary workspace/repo disk paths for MEA evidence; bundled mode may use only skill reference artifacts, served mode must use MCP MEA tools only. 1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
+> **Skill version:** 1.3.0 - updated 2026-08-05 (1.3.0: fixed MEA category workflow drift - for "stored commands" requests use `mea_commands_search` first (not `debug_tree_history`), require explicit source labeling in answers, and for live queue diagnostics run a stored-first preflight + version check + targeted command bundle with no exploratory `?` loops unless the user asks exploration. 1.2.0: strict missing-data policy - do not scan arbitrary workspace/repo disk paths for MEA evidence; bundled mode may use only skill reference artifacts, served mode must use MCP MEA tools only. 1.1.0: added explicit MEA command-catalog routing via `mea_commands_search` for "all commands" and command-family lookups; kept `debug_tree_history` for captured sessions and `mea_search` for register maps. 1.0.0: split out of `rad-cli-operations` to own MEA/debug-tree and FPGA register-map routing.)
 
 # RAD MEA and debug skill
 
@@ -27,6 +27,62 @@ Do not mix them.
 - **Register/map questions:** addresses, register names, block dumps, FPGA table rows, mem-map symbols -> use `mea_search` first.
 - **Cross-check only when needed:** for example, `debug_tree_history` points to
 	`registers`, then `mea_search` supplies the mapped block details.
+
+## Mandatory flow by prompt category
+
+### A) Stored-command catalog prompts
+
+Examples: `show all stored MEA commands`, `list stored MEA util commands`,
+`show in MEA data all stored commands`.
+
+Required order:
+
+1. `mea_commands_search` (primary authoritative source for command catalog).
+2. Optional single narrowing call in `mea_commands_search` (family/category/query).
+3. Use `debug_tree_history` only as supplemental "captured in sessions" evidence,
+	never as the primary "all commands" source.
+
+Do not start with `debug_tree_history` for these prompts.
+
+### B) Stored-first then live diagnostic prompts
+
+Examples: `based on MEA data check queues`, `use stored MEA commands then run queue checks`.
+
+Required order:
+
+1. Pull stored command path(s) from `mea_commands_search` for the requested area
+	(for queue checks: `queue`, `counters`, `drop`, `Cluster`, `PriQueue`).
+2. Optional one `debug_tree_history` check for previously captured path variants.
+3. If user wants live execution, run a targeted command bundle directly.
+	Avoid exploratory `?` fan-out unless the user explicitly asks exploration.
+
+For queue checks, prefer one compact bundle such as:
+
+- `debug mea`
+- `MEA`
+- `queue`
+- `counters`
+- `show`
+- `up`
+- `drop`
+- `show all`
+- `up`
+- `Cluster`
+- `show`
+- `up`
+- `PriQueue`
+- `show`
+
+If `drop show all` is unsupported on that variant, then fallback to `drop ?` once,
+then continue with the minimum compatible form.
+
+### C) Version-aware execution rule
+
+When the prompt asks to use stored data to choose live commands by device version:
+
+1. Identify family and available version evidence (stored or live).
+2. Prefer commands known from stored catalog/history for that family/version profile.
+3. State any uncertainty explicitly as `variant-specific; not captured in stored data`.
 
 ## Stored-data-only rule
 
@@ -64,6 +120,16 @@ Answer from stored sources only and label any missing submenu details as `not ca
 - Call 2: one narrowing follow-up in the same store if needed.
 - Call 3: one companion-store cross-check if needed.
 - After that, answer and stop. Do not fan out across broad synonym searches like `fan`, `duty`, `pwm`, `cooling`, `temperature` unless the primary store actually supports that evidence type.
+
+## Response evidence labeling
+
+For MEA answers that combine sources, split results by source heading:
+
+- `Source: MEA command catalog (mea_commands_search)`
+- `Source: Captured debug history (debug_tree_history)`
+- `Source: Live device output (debug_menu)`
+
+Never present mixed-source content as a single unlabeled "stored data" block.
 
 ## Live-debug boundary
 

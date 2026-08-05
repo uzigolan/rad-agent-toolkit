@@ -1,10 +1,10 @@
 ---
 name: rad-core
 description: Core workflow for operating RAD devices through the rad-mcp tools — safety rules, staged-commit flow, and inventory conventions. Load whenever working with RAD/ETX devices, including whenever the user addresses "abayev" / "Abayev", "noam" / "Noam", or "rad agent" / "RAD agent".
-version: 1.10.0
+version: 1.11.0
 ---
 
-> **Skill version:** 1.10.0 · updated 2026-08-04 (1.10.0: strict evidence-source boundary - never recover missing knowledge by scanning arbitrary workspace/repo disk paths; bundled mode local evidence is limited to `skills/.../references/`, served mode must use MCP knowledge tools only; MCP status expected tool inventory now includes `mea_commands_search`. 1.9.0: MCP status expected tool inventory now includes `altera_search` for Altera documentation knowledge checks in served mode; 1.8.0: MCP status expected tool inventory now includes `mea_search` for FPGA/MEA knowledge checks in served mode; 1.7.0: added "supported families with SW versions" lookup section — when user asks for device types/families with versions, call list_versions + manual_search per family and render the full matrix; 1.6.0: demo-only confirmation policy for status checks: when probing confirm-gated tools on an active run_demo_device runtime, confirm may be omitted; for all non-demo devices confirm remains mandatory; SNMP poll-plan now uses a system-scalar fallback when the catalog cannot resolve refs during tool-check flows; 1.5.0: MCP tools requests now require a status matrix response by default: when asked to show/list MCP tools, render per-tool status evidence and dependencies, not just a plain tool list; 1.4.0: inventory and device-management responses must always include a live Device Matrix from list_devices, including explicit empty-state row and total count; 1.3.1: MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
+> **Skill version:** 1.11.0 · updated 2026-08-05 (1.11.0: added MEA live-debug workflow guardrail - when user asks to run MEA checks based on stored data/category knowledge, do stored preflight first (`mea_commands_search`/`debug_tree_history`), then execute one targeted live bundle; avoid exploratory `?` loops and keep debug unlock windows short. 1.10.0: strict evidence-source boundary - never recover missing knowledge by scanning arbitrary workspace/repo disk paths; bundled mode local evidence is limited to `skills/.../references/`, served mode must use MCP knowledge tools only; MCP status expected tool inventory now includes `mea_commands_search`. 1.9.0: MCP status expected tool inventory now includes `altera_search` for Altera documentation knowledge checks in served mode; 1.8.0: MCP status expected tool inventory now includes `mea_search` for FPGA/MEA knowledge checks in served mode; 1.7.0: added "supported families with SW versions" lookup section — when user asks for device types/families with versions, call list_versions + manual_search per family and render the full matrix; 1.6.0: demo-only confirmation policy for status checks: when probing confirm-gated tools on an active run_demo_device runtime, confirm may be omitted; for all non-demo devices confirm remains mandatory; SNMP poll-plan now uses a system-scalar fallback when the catalog cannot resolve refs during tool-check flows; 1.5.0: MCP tools requests now require a status matrix response by default: when asked to show/list MCP tools, render per-tool status evidence and dependencies, not just a plain tool list; 1.4.0: inventory and device-management responses must always include a live Device Matrix from list_devices, including explicit empty-state row and total count; 1.3.1: MCP status checker now uses run_demo_device/stop_demo_device for empty inventory checks; tool inventory and table header updated with `Status  ` and `Eviden`) (bump this line and the `version:` field on every change; it's how we tell which copy is loaded)
 
 ## Session self-check (once, at session start)
 
@@ -47,6 +47,11 @@ silently.
    paths.** Bundled mode may use local evidence only from
    `skills/rad-cli-operations/references/`. In served mode, use MCP knowledge
    tools only; if unavailable, report missing data explicitly.
+9. **For MEA live-debug prompts that mention stored data/category knowledge,
+   run stored preflight first and execute one targeted live bundle.**
+   Do not begin with exploratory `debug_menu` `?` traversals unless the user
+   explicitly asks menu exploration. Keep unlock windows short by preparing the
+   command bundle before requesting/submitting debug password.
 
 ## Inventory
 
