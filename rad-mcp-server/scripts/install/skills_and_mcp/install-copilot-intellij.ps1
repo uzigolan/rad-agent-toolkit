@@ -20,6 +20,7 @@ trust prompt, use agent mode.
 #>
 param(
     [ValidateSet('bundled','served','')][string]$Knowledge = '',
+    [switch]$Stdio,
     [switch]$Http,
     [string]$Url,
     [string]$Token,
@@ -32,7 +33,7 @@ $cfgPath = Join-Path $env:LOCALAPPDATA 'github-copilot\intellij\mcp.json'
 New-Item -ItemType Directory -Force (Split-Path $cfgPath) | Out-Null
 Backup-JsonConfig -Path $cfgPath
 
-$explicit = $Http -or $Url -or $Token -or $Reconfigure
+$explicit = $Stdio -or $Http -or $Url -or $Token -or $Reconfigure
 if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -Name $Name)) {
     $Knowledge = Resolve-KnowledgeMode $Knowledge
     Write-Host "  mcp   -> kept existing $Name entry in $cfgPath"
@@ -45,7 +46,7 @@ if ((-not $explicit) -and (Test-KeepExisting -Path $cfgPath -RootKey 'servers' -
 $Knowledge = Resolve-KnowledgeMode $Knowledge -SkipInstalledReuse
 
 $mode = 'stdio'; $u = ''; $t = ''
-if (-not ($Http -or $Url -or $Token)) {
+if (-not ($Stdio -or $Http -or $Url -or $Token)) {
     # Interactive transport prompt when no flags given
     $transport = Invoke-TransportPrompt
     if ($transport.Mode -eq 'http') { $mode = 'http'; $u = $transport.Url; $t = $transport.Token }
