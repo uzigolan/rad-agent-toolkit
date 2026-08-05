@@ -3,13 +3,13 @@ Combined stdio install for JetBrains Copilot:
   1. Prepare the local stdio MCP server (venv + optional catalog)
   2. Install JetBrains Copilot MCP config + skills in stdio mode
 
+This wrapper forces skills to install in served mode.
+
 Run from anywhere:
   .\install-stdio-copilot-intellij.ps1
-  .\install-stdio-copilot-intellij.ps1 -Knowledge served
   .\install-stdio-copilot-intellij.ps1 -MibDir C:\MIBS
 #>
 param(
-    [ValidateSet('bundled','served','')][string]$Knowledge = '',
     [string]$MibDir,
     [switch]$SkipCatalog,
     [string]$Name = 'rad-mcp',
@@ -27,8 +27,7 @@ Write-Host "Step 1/2: preparing local stdio MCP server ..."
 & $mcpInstaller @mcpArgs
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-$copilotArgs = @{ Stdio = $true; Name = $Name }
-if ($Knowledge) { $copilotArgs['Knowledge'] = $Knowledge }
+$copilotArgs = @{ Stdio = $true; Name = $Name; Knowledge = 'served' }
 if ($Reconfigure) { $copilotArgs['Reconfigure'] = $true }
 
 Write-Host ""

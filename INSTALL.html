@@ -87,101 +87,85 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 <section class="panel active" id="vscode-stdio">
   <h2>Install MCP stdio and Copilot on VS Code</h2>
   <p>This is the default and simplest local install path.</p>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
-  <div class="grid two">
-    <div class="mini">
-      <h3>What it does</h3>
-      <ol class="steps">
-        <li>Prepares the local stdio MCP server.</li>
-        <li>Builds or reuses the local catalog as needed.</li>
-        <li>Installs VS Code Copilot MCP config.</li>
-        <li>Installs Copilot skills.</li>
-      </ol>
-    </div>
-    <div class="mini">
-      <h3>Useful options</h3>
-      <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -Knowledge served
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -Knowledge bundled
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -MibDir C:\MIBS
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -SkipCatalog</code></pre>
-    </div>
-  </div>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
   <h3>After install</h3>
   <ol>
     <li>Reload the VS Code window with <code>Ctrl + Shift + P</code> -&gt; <code>Developer: Reload Window</code>.</li>
-    <li>Open Copilot settings or Agent Customizations from the Copilot UI.</li>
+    <li>Open Copilot Settings ⚙.</li>
     <li>In <code>MCP Servers</code>, make sure <code>rad-mcp</code> appears and click Start or Restart if needed.</li>
     <li>In <code>Skills</code>, search for <code>rad-</code> and verify you see 8 or more skills.</li>
     <li>Switch Copilot Chat to Agent mode.</li>
     <li>Test with <code>rad agent, list the managed devices</code>.</li>
   </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Builds or reuses the local catalog as needed.</li>
+    <li>Installs VS Code Copilot MCP config.</li>
+    <li>Installs Copilot skills (served mode).</li>
+  </ol>
+  <h3>Useful options</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -MibDir C:\MIBS
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1 -SkipCatalog</code></pre>
 </section>
 
 <section class="panel" id="intellij-stdio">
   <h2>Install MCP stdio and Copilot on IntelliJ</h2>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1</code></pre>
-  <div class="grid two">
-    <div class="mini">
-      <h3>What it does</h3>
-      <ol class="steps">
-        <li>Prepares the local stdio MCP server.</li>
-        <li>Builds or reuses the local catalog as needed.</li>
-        <li>Installs JetBrains Copilot MCP config.</li>
-        <li>Installs Copilot skills.</li>
-      </ol>
-    </div>
-    <div class="mini">
-      <h3>Useful options</h3>
-      <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -Knowledge served
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -Knowledge bundled
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -MibDir C:\MIBS
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -SkipCatalog</code></pre>
-    </div>
-  </div>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1</code></pre>
   <h3>After install</h3>
   <ol>
     <li>Restart the IDE.</li>
-    <li>Open Copilot settings or Agent Customizations from the Copilot UI.</li>
+    <li>Open Copilot Settings ⚙.</li>
     <li>In <code>MCP Servers</code>, make sure <code>rad-mcp</code> appears and click Start or Restart if needed.</li>
     <li>In <code>Skills</code>, search for <code>rad-</code> and verify you see 8 or more skills.</li>
     <li>Switch Copilot Chat to Agent mode.</li>
     <li>Test with <code>rad agent, list the managed devices</code>.</li>
   </ol>
+  <h3>What it does</h3>
+  <ol class="steps">
+    <li>Prepares the local stdio MCP server.</li>
+    <li>Builds or reuses the local catalog as needed.</li>
+    <li>Installs JetBrains Copilot MCP config.</li>
+    <li>Installs Copilot skills (served mode).</li>
+  </ol>
+  <h3>Useful options</h3>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -MibDir C:\MIBS
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1 -SkipCatalog</code></pre>
 </section>
 
 <section class="panel" id="vscode-http">
   <h2>Install MCP http and Copilot on VS Code</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: install VS Code Copilot MCP config and skills</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-vscode.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-vscode.ps1</code></pre>
   <p>Recommended answers: <code>served</code> knowledge, <code>http</code> transport, then your MCP URL and matching token.</p>
 </section>
 
 <section class="panel" id="intellij-http">
   <h2>Install MCP http and Copilot on IntelliJ</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: install JetBrains Copilot MCP config and skills</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-intellij.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-copilot-intellij.ps1</code></pre>
   <p>Recommended answers: <code>served</code> knowledge, <code>http</code> transport, then your MCP URL and matching token.</p>
 </section>
 
 <section class="panel" id="generic-stdio">
   <h2>Install MCP stdio and Copilot generic</h2>
   <h3>Step 1: prepare local stdio MCP prerequisites</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1</code></pre>
   <h3>Step 2: run the generic helper</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
   <p>Use this when your target client is not the supported VS Code or IntelliJ Copilot flow.</p>
 </section>
 
 <section class="panel" id="generic-http">
   <h2>Install MCP http and Copilot generic</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: run the generic helper</h3>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-generic.ps1</code></pre>
   <p>Choose HTTP mode in the helper and provide the server URL and token.</p>
 </section>
 
@@ -190,10 +174,10 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 <div class="mini">
   <h3><code>'PowerShell'</code> is not recognized</h3>
   <p>If you are already inside a PowerShell prompt, do not launch <code>PowerShell</code> again. Run the script directly:</p>
-  <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
+  <pre><code>PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
   <p>If execution policy blocks it:</p>
   <pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
+PowerShell -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
   <p>If the machine uses PowerShell 7:</p>
   <pre><code>pwsh -ExecutionPolicy Bypass -File .\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
   <p>Check what exists:</p>
