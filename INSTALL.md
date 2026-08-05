@@ -1,6 +1,10 @@
-# INSTALL: Copilot + rad-mcp
+# INSTALL/UPDATE: Copilot + rad-mcp
 
-This guide is the root install entrypoint for GitHub Copilot users.
+This guide is the root install and update entrypoint for GitHub Copilot users.
+
+Use the same flows both for a first installation and for later updates after
+`git pull`. Re-running the relevant installer refreshes MCP configuration,
+skills, and local stdio prerequisites as needed.
 
 Use exactly one section below, based on your IDE and MCP transport.
 
@@ -21,7 +25,7 @@ If you already have the repo:
 git pull
 ```
 
-## 2. Install stdio MCP and Copilot on VS Code
+## 2. Install MCP stdio and Copilot on VS Code
 
 This is the default and simplest local install path.
 
@@ -49,12 +53,14 @@ Useful options:
 
 After install:
 
-1. Reload the VS Code window.
-2. Accept the MCP trust dialog.
-3. Switch Copilot Chat to Agent mode.
-4. Test with: `rad agent, list the managed devices`.
+1. Reload the VS Code window with `Ctrl + Shift + P` -> `Developer: Reload Window`.
+2. Open Copilot settings or Agent Customizations from the Copilot UI.
+3. In `MCP Servers`, make sure `rad-mcp` appears and click Start or Restart if needed.
+4. In `Skills`, search for `rad-` and verify you see 8 or more skills.
+5. Switch Copilot Chat to Agent mode.
+6. Test with: `rad agent, list the managed devices`.
 
-## 3. Install stdio MCP and Copilot on IntelliJ
+## 3. Install MCP stdio and Copilot on IntelliJ
 
 Run:
 
@@ -81,12 +87,13 @@ Useful options:
 After install:
 
 1. Restart the IDE.
-2. Open GitHub Copilot Chat in Agent mode.
-3. Accept the MCP trust prompt.
-4. Start a new chat.
-5. Test with: `rad agent, list the managed devices`.
+2. Open Copilot settings or Agent Customizations from the Copilot UI.
+3. In `MCP Servers`, make sure `rad-mcp` appears and click Start or Restart if needed.
+4. In `Skills`, search for `rad-` and verify you see 8 or more skills.
+5. Switch Copilot Chat to Agent mode.
+6. Test with: `rad agent, list the managed devices`.
 
-## 4. Install HTTP MCP and Copilot on VS Code
+## 4. Install MCP HTTP and Copilot on VS Code
 
 First start or prepare the HTTP MCP server:
 
@@ -112,7 +119,7 @@ Detailed guides:
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-vscode-mcp-skills.md`
 
-## 5. Install HTTP MCP and Copilot on IntelliJ
+## 5. Install MCP HTTP and Copilot on IntelliJ
 
 First start or prepare the HTTP MCP server:
 
@@ -138,7 +145,7 @@ Detailed guides:
 1. `rad-mcp-server/scripts/install/mcp_server/INSTALL-http-mcp-server.md`
 2. `rad-mcp-server/scripts/install/skills_and_mcp/INSTALL-copilot-intellij-mcp-skills.md`
 
-## 6. Install stdio MCP and Copilot generic
+## 6. Install MCP stdio and Copilot generic
 
 First prepare local stdio MCP prerequisites:
 
@@ -154,7 +161,7 @@ Then run the generic helper:
 
 Use this when your target client is not the supported VS Code or IntelliJ Copilot flow.
 
-## 7. Install HTTP MCP and Copilot generic
+## 7. Install MCP HTTP and Copilot generic
 
 First start or prepare the HTTP MCP server:
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>INSTALL: Copilot + rad-mcp</title>
+<title>INSTALL/UPDATE: Copilot + rad-mcp</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -55,8 +55,8 @@
 </head>
 <body>
 
-<h1>INSTALL: Copilot + rad-mcp</h1>
-<p class="lead">Pick one install path. The default tab is the simplest local setup: VS Code Copilot with a local stdio MCP server and skills installed together by one combined script.</p>
+<h1>INSTALL/UPDATE: Copilot + rad-mcp</h1>
+<p class="lead">Pick one install path. The default tab is the simplest local setup: VS Code Copilot with a local stdio MCP server and skills installed together by one combined script. These same flows are also the supported update paths after <code>git pull</code>; rerun the relevant installer to refresh MCP config, skills, and local stdio prerequisites.</p>
 
 <h2>Before You Start</h2>
 <ol>
@@ -76,16 +76,16 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 
 <h2>Install Paths</h2>
 <div class="tabs">
-  <button class="tab active" data-tab="vscode-stdio">VS Code + stdio</button>
-  <button class="tab" data-tab="intellij-stdio">IntelliJ + stdio</button>
-  <button class="tab" data-tab="vscode-http">VS Code + http</button>
-  <button class="tab" data-tab="intellij-http">IntelliJ + http</button>
-  <button class="tab" data-tab="generic-stdio">Generic + stdio</button>
-  <button class="tab" data-tab="generic-http">Generic + http</button>
+  <button class="tab active" data-tab="vscode-stdio">VS Code + MCP stdio</button>
+  <button class="tab" data-tab="intellij-stdio">IntelliJ + MCP stdio</button>
+  <button class="tab" data-tab="vscode-http">VS Code + MCP http</button>
+  <button class="tab" data-tab="intellij-http">IntelliJ + MCP http</button>
+  <button class="tab" data-tab="generic-stdio">Generic + MCP stdio</button>
+  <button class="tab" data-tab="generic-http">Generic + MCP http</button>
 </div>
 
 <section class="panel active" id="vscode-stdio">
-  <h2>Install stdio MCP and Copilot on VS Code</h2>
+  <h2>Install MCP stdio and Copilot on VS Code</h2>
   <p>This is the default and simplest local install path.</p>
   <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-vscode.ps1</code></pre>
   <div class="grid two">
@@ -108,15 +108,17 @@ The installers create and use a repo-local Python environment under <code>rad-mc
   </div>
   <h3>After install</h3>
   <ol>
-    <li>Reload the VS Code window.</li>
-    <li>Accept the MCP trust dialog.</li>
+    <li>Reload the VS Code window with <code>Ctrl + Shift + P</code> -&gt; <code>Developer: Reload Window</code>.</li>
+    <li>Open Copilot settings or Agent Customizations from the Copilot UI.</li>
+    <li>In <code>MCP Servers</code>, make sure <code>rad-mcp</code> appears and click Start or Restart if needed.</li>
+    <li>In <code>Skills</code>, search for <code>rad-</code> and verify you see 8 or more skills.</li>
     <li>Switch Copilot Chat to Agent mode.</li>
     <li>Test with <code>rad agent, list the managed devices</code>.</li>
   </ol>
 </section>
 
 <section class="panel" id="intellij-stdio">
-  <h2>Install stdio MCP and Copilot on IntelliJ</h2>
+  <h2>Install MCP stdio and Copilot on IntelliJ</h2>
   <pre><code>.\rad-mcp-server\scripts\install\skills_and_mcp\install-stdio-copilot-intellij.ps1</code></pre>
   <div class="grid two">
     <div class="mini">
@@ -139,15 +141,16 @@ The installers create and use a repo-local Python environment under <code>rad-mc
   <h3>After install</h3>
   <ol>
     <li>Restart the IDE.</li>
-    <li>Open GitHub Copilot Chat in Agent mode.</li>
-    <li>Accept the MCP trust prompt.</li>
-    <li>Start a new chat.</li>
+    <li>Open Copilot settings or Agent Customizations from the Copilot UI.</li>
+    <li>In <code>MCP Servers</code>, make sure <code>rad-mcp</code> appears and click Start or Restart if needed.</li>
+    <li>In <code>Skills</code>, search for <code>rad-</code> and verify you see 8 or more skills.</li>
+    <li>Switch Copilot Chat to Agent mode.</li>
     <li>Test with <code>rad agent, list the managed devices</code>.</li>
   </ol>
 </section>
 
 <section class="panel" id="vscode-http">
-  <h2>Install http MCP and Copilot on VS Code</h2>
+  <h2>Install MCP http and Copilot on VS Code</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
   <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: install VS Code Copilot MCP config and skills</h3>
@@ -156,7 +159,7 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 </section>
 
 <section class="panel" id="intellij-http">
-  <h2>Install http MCP and Copilot on IntelliJ</h2>
+  <h2>Install MCP http and Copilot on IntelliJ</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
   <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: install JetBrains Copilot MCP config and skills</h3>
@@ -165,7 +168,7 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 </section>
 
 <section class="panel" id="generic-stdio">
-  <h2>Install stdio MCP and Copilot generic</h2>
+  <h2>Install MCP stdio and Copilot generic</h2>
   <h3>Step 1: prepare local stdio MCP prerequisites</h3>
   <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-stdio-mcp-server.ps1</code></pre>
   <h3>Step 2: run the generic helper</h3>
@@ -174,7 +177,7 @@ The installers create and use a repo-local Python environment under <code>rad-mc
 </section>
 
 <section class="panel" id="generic-http">
-  <h2>Install http MCP and Copilot generic</h2>
+  <h2>Install MCP http and Copilot generic</h2>
   <h3>Step 1: prepare the HTTP MCP server</h3>
   <pre><code>.\rad-mcp-server\scripts\install\mcp_server\install-and-start-http-mcp-server.ps1</code></pre>
   <h3>Step 2: run the generic helper</h3>
