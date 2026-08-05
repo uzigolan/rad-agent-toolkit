@@ -10,9 +10,13 @@ Choose one main AI product section below, then one variant flow under it.
 
 ## 1. Before you start
 
-1. Use only the official GitHub Copilot product for your IDE.
-2. Clone or update the repository.
-3. Run all installer commands from the repository root.
+1. Download and install the latest IDE you work with.
+1.1 VS Code: https://code.visualstudio.com/download
+1.2 IntelliJ IDEA: https://lp.jetbrains.com/intellij-idea-promo
+2. Download and install Git: https://git-scm.com/install/windows
+3. Use only the official GitHub Copilot or ChatGPT Codex product for your IDE.
+4. Clone or update the repository.
+5. Run all installer commands from the repository root.
 
 ```bash
 git clone https://github.com/uzigolan/rad-agent-toolkit.git

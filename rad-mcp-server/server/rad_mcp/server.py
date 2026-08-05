@@ -129,6 +129,7 @@ TOOL_VERSIONS = {
     # Debug tools (v0.1.0)
     "debug_logon_request": "0.1.1",
     "debug_logon_submit": "0.1.1",
+    "debug_access_preflight": "0.1.0",
     "debug_menu": "0.1.1",
     "enter_debug_shell": "0.1.1",
     "debug_shell_command": "0.1.1",
@@ -1544,6 +1545,120 @@ if WRITE_TOOLS_ENABLED:
         get_backend().debug_logon_submit(dev, password)
         audit("debug_logon_submit", device, detail="debug mode unlocked", ok=True)
         return f"Debug mode unlocked on {device}."
+
+    @mcp.tool()
+    def debug_access_preflight(
+        device: str,
+        target: str = "mea",
+        commands: list[str] | None = None,
+        confirm: bool = False,
+        reset: bool = False,
+    ) -> dict:
+        """Dedicated unlock-first flow for debug operations.
+
+        Tries one targeted action using the current session first (reuses an
+        existing unlock if someone already opened debug recently). If that
+        action fails, issues a fresh debug key-code challenge immediately so
+        the caller can submit a new password via debug_logon_submit.
+
+        target:
+          - mea   -> probe via debug_menu (default command: ["debug mea"])
+          - menu  -> probe via debug_menu (default command: ["debug"])
+          - shell -> probe via enter_debug_shell
+
+        For target=mea/menu, pass `commands` to test a specific bundle.
+        For target=shell, `commands` is ignored.
+        """
+        _require_write_scope()
+        if not confirm and not _demo_confirm_bypass(device):
+            return {
+                "status": "REFUSED: debug_access_preflight requires confirm=true.",
+                "target": target,
+            }
+
+        dev = get_device(device)
+        mode = (target or "mea").strip().lower()
+        if mode not in ("mea", "menu", "shell"):
+            raise ToolError("target must be one of: mea, menu, shell")
+
+        probe_commands = list(commands or (["debug mea"] if mode == "mea" else ["debug"]))
+
+        if _demo_state(dev.name):
+            state = _demo_state(dev.name) or {}
+            if state.get("debug_unlocked"):
+                audit("debug_access_preflight", device, detail=f"demo target={mode} reused unlock", ok=True)
+                return {
+                    "status": "ready",
+                    "target": mode,
+                    "used_existing_unlock": True,
+                    "next_step": "Run your debug action directly (debug already unlocked).",
+                }
+            key_code = state.get("debug_key_code", "424242")
+            audit("debug_access_preflight", device, detail=f"demo target={mode} key issued", ok=True)
+            return {
+                "status": "unlock_required",
+                "target": mode,
+                "used_existing_unlock": False,
+                "key_code": key_code,
+                "next_step": (
+                    f"Call debug_logon_submit('{device}', password=<value>, confirm=true), "
+                    f"then retry your {mode} action."
+                ),
+            }
+
+        backend = get_backend()
+        try:
+            if mode == "shell":
+                output = backend.enter_debug_shell(dev)
+                action = "enter_debug_shell"
+            else:
+                output = backend.debug_menu(dev, probe_commands, reset=reset)
+                action = "debug_menu"
+
+            out = redact(output)
+            audit("debug_access_preflight", device,
+                  detail=f"target={mode} action={action} reused unlock", ok=True)
+            if mode == "shell":
+                next_step = "Debug shell is active; run debug_shell_command or exit_debug_shell."
+            else:
+                next_step = "Debug access is ready; continue with your targeted debug_menu commands."
+            return {
+                "status": "ready",
+                "target": mode,
+                "used_existing_unlock": True,
+                "action": action,
+                "probe_commands": [] if mode == "shell" else probe_commands,
+                "output": out,
+                "next_step": next_step,
+            }
+        except Exception as exc:
+            # Any failed probe is treated as stale/locked debug access: request
+            # a fresh key challenge so callers can continue immediately.
+            reason = str(exc)
+            try:
+                key_code = backend.debug_logon_request(dev)
+            except Exception as unlock_exc:
+                audit("debug_access_preflight", device,
+                      detail=f"target={mode} probe failed and key request failed: {reason}", ok=False)
+                raise ToolError(
+                    f"debug preflight failed ({reason}) and key request also failed ({unlock_exc})"
+                ) from unlock_exc
+
+            audit("debug_access_preflight", device,
+                  detail=f"target={mode} probe failed; key issued", ok=True)
+            return {
+                "status": "unlock_required",
+                "target": mode,
+                "used_existing_unlock": False,
+                "probe_commands": [] if mode == "shell" else probe_commands,
+                "probe_error": reason,
+                "key_code": key_code,
+                "next_step": (
+                    f"Compute password for key_code and call "
+                    f"debug_logon_submit('{device}', password=<value>, confirm=true), "
+                    f"then retry your {mode} action."
+                ),
+            }
 
     @mcp.tool()
     def debug_menu(device: str, commands: list[str], confirm: bool = False,
