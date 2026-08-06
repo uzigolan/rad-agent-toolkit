@@ -26,12 +26,44 @@ ALTERA_DOCS_DIR = _RAD / "skills" / "rad-cli-operations" / "references" / "alter
 MEA_COMMANDS_FILE_CANDIDATES = [
     _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea" / "mea-commands-only-with-relation.txt",
 ]
+MEA_HELP_R_FILE_CANDIDATES = [
+    _RAD / "skills" / "rad-cli-operations" / "references" / "fpga-mea" / "mea-help-r-full-commands.json",
+]
 
 _OID_RE = re.compile(r"^\d+(\.\d+)+$")
 
 
 class KnowledgeUnavailable(RuntimeError):
     pass
+
+
+def _load_mea_help_r_rows() -> list[dict]:
+    rows: list[dict] = []
+    seen: set[tuple[str, str, str, str]] = set()
+    for path in MEA_HELP_R_FILE_CANDIDATES:
+        if not path.exists():
+            continue
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+        for item in payload.get("commands", []):
+            command = str(item.get("command") or "").strip()
+            if not command:
+                continue
+            label = str(item.get("label") or "").strip()
+            family = str(item.get("family") or "").strip()
+            version = str(item.get("version") or "").strip()
+            key = (command.lower(), label.lower(), family.lower(), version.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+            rows.append({
+                "command": command,
+                "relation": label,
+                "family": family,
+                "version": version,
+                "source_file": path.name,
+                "source_type": "recursive_help",
+            })
+    return rows
 
 
 def _db_path() -> Path:
@@ -809,6 +841,7 @@ def mea_commands_search(query: str = "", category: str = "", limit: int = 100) -
 
     seen = set()
     rows: list[dict] = []
+    flat_count = 0
 
     for path in paths:
         for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
@@ -831,26 +864,89 @@ def mea_commands_search(query: str = "", category: str = "", limit: int = 100) -
                 "command": cmd,
                 "relation": relation,
                 "source_file": path.name,
+                "source_type": "flat_catalog",
             })
+            flat_count += 1
+
+    recursive_rows = _load_mea_help_r_rows()
+    recursive_count = len(recursive_rows)
+    for item in recursive_rows:
+        key = (
+            item["command"].lower(),
+            (item.get("relation") or "").lower(),
+            (item.get("family") or "").lower(),
+            (item.get("version") or "").lower(),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append(item)
 
     if q:
         rows = [
             r for r in rows
-            if q in r["command"].lower() or q in (r.get("relation") or "").lower()
+            if q in r["command"].lower()
+            or q in (r.get("relation") or "").lower()
+            or q in (r.get("family") or "").lower()
+            or q in (r.get("version") or "").lower()
         ]
     if cat:
         rows = [r for r in rows if cat in (r.get("relation") or "").lower()]
 
-    rows.sort(key=lambda r: r["command"].lower())
+    source_rank = {"recursive_help": 0, "flat_catalog": 1}
+    rows.sort(key=lambda r: (r["command"].lower(), source_rank.get(r.get("source_type", ""), 9), (r.get("relation") or "").lower()))
     top = rows[:limit]
+    variant_specific = bool(re.search(
+        r"\b(etx1p|etx2|etx2v|secflow|minid|mp1|mp4100|family|variant|version|sw|firmware|build|fpga)\b",
+        q,
+    ))
+    command_path_like = bool(q) and (q.startswith("mea ") or len(q.split()) >= 3)
+    result_has_family_version = any(r.get("family") or r.get("version") for r in top)
+    options = [
+        "Search the flat MEA text catalog for the full command family or subtree name.",
+        "Check whether the command appears only in a live recursive `debug mea` `help -r` capture for this family/version.",
+        "If still missing, verify on the live device with targeted `debug mea` help at the exact subtree.",
+        "Treat missing hits as possibly variant-specific when family or software version differs.",
+    ]
+    source_stats = {
+        "flat_catalog_commands": flat_count,
+        "recursive_help_commands": recursive_count,
+    }
+    if q and not top:
+        if variant_specific:
+            recommended_next_check = "family_version_check"
+        elif command_path_like and recursive_count:
+            recommended_next_check = "live_debug"
+        else:
+            recommended_next_check = "flat_catalog"
+        note = (
+            "command not found in current stored MEA sources; see `check_options` for fallback checks."
+        )
+    elif q and variant_specific and not result_has_family_version:
+        recommended_next_check = "family_version_check"
+        note = (
+            "command matched stored MEA sources, but the query looks family/version-specific and the current result does not carry matching family/version evidence."
+        )
+    elif q and recursive_count < flat_count:
+        recommended_next_check = "live_debug" if command_path_like and recursive_count else "flat_catalog"
+        note = (
+            "stored MEA command catalog text plus optional recursive help captures; "
+            "flat catalog is currently broader than live recursive-help harvest coverage."
+        )
+    else:
+        recommended_next_check = "recursive_help" if recursive_count else "flat_catalog"
+        note = "stored MEA command catalog text plus optional recursive help captures (not live debug history and not register/mem-map data)"
     return {
         "query": query,
         "category": category,
         "catalog_files": [str(p) for p in paths],
         "total_commands": len(rows),
         "returned": len(top),
+        "source_stats": source_stats,
         "results": top,
-        "note": "stored MEA command catalog text (not live debug history and not register/mem-map data)",
+        "recommended_next_check": recommended_next_check,
+        "check_options": options,
+        "note": note,
     }
 
 

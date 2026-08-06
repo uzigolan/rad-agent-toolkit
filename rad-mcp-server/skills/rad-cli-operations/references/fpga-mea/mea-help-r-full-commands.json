@@ -1,0 +1,2585 @@
+﻿{
+    "schema":  "mea-help-r.v1",
+    "family":  "etx2",
+    "version":  "6.8.5(5.120D)",
+    "source":  "debug mea help -r",
+    "command_count":  368,
+    "commands":  [
+                     {
+                         "command":  "MEA kernel mapset action",
+                         "label":  "action set table IPP action attribute",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fan read",
+                         "label":  "read fan reg",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster counters map",
+                         "label":  "Show Queue Cluster counters mapping",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show rule",
+                         "label":  "rule a2cl rule show",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam portif get",
+                         "label":  "get port interface status",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm delete",
+                         "label":  "delete PM from PM table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug oam txh",
+                         "label":  "show OAM txHdr table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge aging start",
+                         "label":  "start  age starting value {0xA8)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring search_hashTable",
+                         "label":  "Search the hash Table for the 1st over the treshold key",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp l2cp create",
+                         "label":  "create creat new l2cp",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg oam global mac set",
+                         "label":  "set global mac [register 0x44 - 0x48]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA pm config show",
+                         "label":  "Show  Discard PM counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge learning",
+                         "label":  "learning   add mac to hash tab",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel add read",
+                         "label":  "read   all adress",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set mask",
+                         "label":  "mask set mask",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port shaper show",
+                         "label":  "Show port ingress parameters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam mep set delete",
+                         "label":  "delete MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth vts auto",
+                         "label":  "auto PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl duty",
+                         "label":  "duty cycle",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl write",
+                         "label":  "write reg",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module acl create",
+                         "label":  "create    ACL",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA envelop rank set",
+                         "label":  "set Rank in service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam err-to-cpu set",
+                         "label":  "Set error to cpu table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam layer-mapping set",
+                         "label":  "Set MEP layers mapping profile. Profile-id is configured in service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat set hash timer",
+                         "label":  "timer set timer",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam debug time clear",
+                         "label":  "Clear OAM timestamp logs",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba show dynamic",
+                         "label":  "show daynamic master cluster port",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg oam mac show",
+                         "label":  "show oam mac add",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g user_data",
+                         "label":  "write user data",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel reg write",
+                         "label":  "Write \u003coffset\u003e \u003cdata\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module primap create",
+                         "label":  "create  pri mapping",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth 10g link",
+                         "label":  "link  Show 10G link",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel MID write",
+                         "label":  "Write \u003cAddress\u003e \u003centry\u003e \u003cDATA0\u003e opt... \u003cDATA1\u003e \u003cDATA2\u003e \u003cDATA3\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam multicast-mac set",
+                         "label":  "Set Oam Multicast MAC address",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port mirror enable",
+                         "label":  "enable  mirror ingress egress",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster counters add",
+                         "label":  "Add Cluster to Queue counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g clear statistics",
+                         "label":  "show statistics",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth vts page read",
+                         "label":  "Read PHY registers values via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service show service",
+                         "label":  "Show service paramter",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util phy dmm",
+                         "label":  "dmm    \u003cport\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util gen ba rx",
+                         "label":  "rx genrator default 1g",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals eth type write",
+                         "label":  "write register for ethertype",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util sfp write",
+                         "label":  "write register in sfp",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set wfqc",
+                         "label":  "Set global WFQ cluster",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge read",
+                         "label":  "read   from hash table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module dying set",
+                         "label":  "write  buffer to send",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug show xper",
+                         "label":  "show xper Table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set rank",
+                         "label":  "Set global rank",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module primap set",
+                         "label":  "set  pri mapping",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba cluster des",
+                         "label":  "des load balance cluster destined to a LAG port",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm del-msg",
+                         "label":  "delete DMM or 1DM or LMM PM defined on MEP and remote MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam portif set",
+                         "label":  "get port interface status",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg macseckey show",
+                         "label":  "get  the MAC SEC Key Ether type",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel TM read",
+                         "label":  "Read \u003cAddress\u003e \u003centry\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm set delete",
+                         "label":  "delete slm",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util jat write",
+                         "label":  "write jat",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 vitesse-algorithm get",
+                         "label":  "get TC by vitess",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer print",
+                         "label":  "print all table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm set active",
+                         "label":  "active pmDb",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp info",
+                         "label":  "info profile the lxcp",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam remote-mep set delete",
+                         "label":  "delete remote MEP from remote MEPs pool",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp cam set",
+                         "label":  "set \u003cetypecam\u003e \u003cvalid\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster counters show",
+                         "label":  "Show port Cluster Queue parameters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug event show",
+                         "label":  "show event",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge aging show",
+                         "label":  "show  aging Time",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl stat",
+                         "label":  "show stat",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge duplicate_mac",
+                         "label":  "duplicate_mac set enable duplicate MAC",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba tx set",
+                         "label":  "set load balance port TX",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat set hash start",
+                         "label":  "start start analyze",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam layer-mapping get",
+                         "label":  "Get mapping of layer in profile id",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth sfp30 read",
+                         "label":  "Read PHY registers values via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util jat read",
+                         "label":  "read JAT",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge maclimit get",
+                         "label":  "get MAC Limiter profile",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port combo mode set",
+                         "label":  "set enable/disable   combo",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA envelop rank set",
+                         "label":  "set envelop in service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set analyze_timer",
+                         "label":  "timer set timer(in mili-Seconds) assume clock 182.24 MHz",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster set",
+                         "label":  "set Queue Cluster parameters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel reg read",
+                         "label":  "Read \u003coffset\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg oam global show",
+                         "label":  "show oam mac add [register 0x44 - 0x48]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba tx show",
+                         "label":  "show load balance port TX show",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam debug intrpt print",
+                         "label":  "print interrupt indication to screen",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm-st set delete",
+                         "label":  "delete slm-st",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel IPP1 write",
+                         "label":  "Write to IPP1",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam err-to-cpu get",
+                         "label":  "Get error to cpu table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat map register",
+                         "label":  "register Show table 0x20",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util sfp read",
+                         "label":  "read register in sfp",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth vts print",
+                         "label":  "print PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port egress set",
+                         "label":  "Set Port Egress Paremeters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl mode",
+                         "label":  "auto/man",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge ddrtest",
+                         "label":  "ddrtest",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set combo_mode",
+                         "label":  "combo_mode   combo   enable/disable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp startreadregs",
+                         "label":  "start reading Sync-e registers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring start_analyze",
+                         "label":  "start start analyze",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port ingress set",
+                         "label":  "Set port ingress paremeters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types lm-st set delete",
+                         "label":  "delete an entry in Loss Measuemnet search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue drop show",
+                         "label":  "show  Cluster drop",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm rdclr",
+                         "label":  "Access pm db entry with read and clear writing command",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp gp bal write",
+                         "label":  "write   \u003cadd\u003e \u003cdata0\u003e ... \u003cdatan\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set policer",
+                         "label":  "Set global policer enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam remote-mep peer-st show",
+                         "label":  "show PEER Seaech Table entries",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel reg loop",
+                         "label":  "loop \u003cadd\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba lag delete",
+                         "label":  "delete load balance LagId",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util 2801 show",
+                         "label":  "show 2801",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam debug intrpt poll",
+                         "label":  "enable/disable polling of interrupt controller register",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port combo mode set",
+                         "label":  "set   combo   enable/disable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp syncE write",
+                         "label":  "write   \u003cadd\u003e \u003cdata0\u003e ... \u003cdatan\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA rmon dis",
+                         "label":  "dis    RMON counters from adaptor",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util jat show",
+                         "label":  "Show jat name \u0026 parameters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug oam search",
+                         "label":  "show OAM Search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module dying delete",
+                         "label":  "delete  buffer",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel add 8 write",
+                         "label":  "write  all adress",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm-st show",
+                         "label":  "show PM Seaech Table entries",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug event tmshow",
+                         "label":  "Show TM events",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fan tmp",
+                         "label":  "tmp Local tempteture",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show valid",
+                         "label":  "index a2cl index rule",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show dyn",
+                         "label":  "dyn a2cl static dynamic",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp profile show",
+                         "label":  "show profile the lxcp [0-31]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters reply show",
+                         "label":  "show reply counters: lbm, lmm, dmm",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util phy trn",
+                         "label":  "trn    \u003cport\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge aging enable",
+                         "label":  "set   the bridge aging",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam sender-id-rx get",
+                         "label":  "Get RX sender id for oam tlv",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set wfqq",
+                         "label":  "Set global WFQ queue",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp gp bal name",
+                         "label":  "write   \u003cadd\u003e \u003cdata0\u003e ... \u003cdatan\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm-st set create",
+                         "label":  "create slm",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp stopreadregs",
+                         "label":  "stop reading Sync-e registers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth sfp30 init",
+                         "label":  "init PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge maclimit add",
+                         "label":  "add MAC Limiter to service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set 5_tuple_key",
+                         "label":  "5_tuple_key set exclude_5_tuple_key enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg oam mac set",
+                         "label":  "set  oam mac add",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list disable",
+                         "label":  "Disable white-list",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl shadow show",
+                         "label":  "show a2cl static dynamic",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster Create",
+                         "label":  "create a new Queue Cluster",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show index",
+                         "label":  "index a2cl flow",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util phy show",
+                         "label":  "show  \u003cport\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam remote-mep set create",
+                         "label":  "Add remote MEP to remote MEPs pool",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show flow",
+                         "label":  "flow a2cl rule show",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp gp bal read",
+                         "label":  "read    \u003cadd\u003e  opt ..\u003clen\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 show",
+                         "label":  "show  1588 param",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm set enable",
+                         "label":  "enable slm",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module primap delete",
+                         "label":  "delete  pri mapping",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list mac del",
+                         "label":  "Delete mac from white-list",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba cluster ignor",
+                         "label":  "ignor load balance cluster in grop ID",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g create",
+                         "label":  "create 10g gen flow",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp table write",
+                         "label":  "write table IPP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam sender-id-rx set",
+                         "label":  "Set RX sender id for oam tlv",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g disable_stream",
+                         "label":  "disable stream",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster counters show",
+                         "label":  "Show Cluster counters per Queue",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam sender-id-tx get",
+                         "label":  "Get TX tlv",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fan show",
+                         "label":  "show fan reg",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util sfp pass",
+                         "label":  "pass write passworg to sfp",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp gp bal read",
+                         "label":  "read  \u003cadd\u003e  opt ..\u003clen\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba lag creat",
+                         "label":  "creat load balance",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam debug status-reg show",
+                         "label":  "show OAM status register",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug show indx",
+                         "label":  "show indx",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA event config",
+                         "label":  "config  IPP event",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel ddr write",
+                         "label":  "write the DDR",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types lmm set create",
+                         "label":  "create LMM message to a MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util 2801 write",
+                         "label":  "write 2801",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug oam lmTable",
+                         "label":  "show OAM LM search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam classifier set modify",
+                         "label":  "Modify an entry in OAM classifier search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set focus_entry",
+                         "label":  "focus_entry set timer",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list enable",
+                         "label":  "Enable white-list",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm set show",
+                         "label":  "show slm",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util reset",
+                         "label":  "reset FPGA",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g show stream",
+                         "label":  "show stream",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster counters del",
+                         "label":  "Delete Cluster from Queue counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel mapset port",
+                         "label":  "port set table IPP flow attribute",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp start1588readregs",
+                         "label":  "start reading 1588 registers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA version",
+                         "label":  "Show MEA versions of the entities",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge delete",
+                         "label":  "delete  mac from hash tab",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list port del",
+                         "label":  "Delete Port from white-list",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel TM write",
+                         "label":  "Write \u003cAddress\u003e \u003centry\u003e \u003cDATA0\u003e opt... \u003cDATA1\u003e \u003cDATA2\u003e \u003cDATA3\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam data-buffer get",
+                         "label":  "Get the data buffer content",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug log filter",
+                         "label":  "Filter  logging",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util gen ba tx",
+                         "label":  "tx genrator default 1g",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port mirror delete",
+                         "label":  "delete (mirror and flow)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set bmqs",
+                         "label":  "Set bmqs  enable disable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 delay tx",
+                         "label":  "tx  Enable the 1588 tx",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set exclude_5_tuple_key",
+                         "label":  "exclude_5_tuple_key set exclude_5_tuple_key\u003e\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters bert show",
+                         "label":  "show OAM counters for BERT obtained from PM",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types ccm set create",
+                         "label":  "Add CCM message to a MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util pll read",
+                         "label":  "read pll",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module acl delete",
+                         "label":  "delete  ACL",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm-st set create",
+                         "label":  "create an entry in PM ST",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module primap show",
+                         "label":  "show  pri mapping",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp info",
+                         "label":  "showing info Companion components version",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel OAM read",
+                         "label":  "Read \u003cAddress\u003e \u003centry\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types lm-st set create",
+                         "label":  "create an entry in Loss Measuemnet search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fan write",
+                         "label":  "write fan reg",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util gen create",
+                         "label":  "create genrator default 1g",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA event show",
+                         "label":  "show event",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam classifier set delete",
+                         "label":  "Delete an entry in OAM classifier search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g clear statistics",
+                         "label":  "clear statistics",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set mqsbuffer",
+                         "label":  "Set mqsbuffer",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service prisrc show",
+                         "label":  "show priority source profile",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show end",
+                         "label":  "end a2cl flow",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam shapers set",
+                         "label":  "Set Oam Shapers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba cluster show",
+                         "label":  "show cluster",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam port-mac get",
+                         "label":  "Get Port MAC address",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set protect mode",
+                         "label":  "Set global policer enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth vts noget",
+                         "label":  "noget PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue PriQueue set",
+                         "label":  "set  Priority Queue",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam registers read",
+                         "label":  "Read OAM registers values",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam sender-id-tx set",
+                         "label":  "Set TX sender id for oam tlv",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue PriQueue wred show",
+                         "label":  "Show egress wred table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters delay stat show",
+                         "label":  "show OAM delay measurement statistics - BINS and MAX/MIN/AVG",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug show profile",
+                         "label":  "show profile Table (profileId)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util gen on",
+                         "label":  "on genrator default 1g",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters loss tm show",
+                         "label":  "show/rd and clr loss measurement obtained from TM",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring show_final_result",
+                         "label":  "show Show exclude table 0x20",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue counters show",
+                         "label":  "Show Queue Counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm stop-tx",
+                         "label":  "stop PM Tx in PM DB",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module dying on",
+                         "label":  "on oprate the dayGasp by force",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set bclimit",
+                         "label":  "Set bclimit",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp myip show",
+                         "label":  "get the IP in ENTU [reg 0xd0 0xd4 0xd8]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam registers write",
+                         "label":  "Write to OAM registers values",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types pm-st set delete",
+                         "label":  "delete an entry in PM search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster delete",
+                         "label":  "delete  Cluster Queue",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA envelop show",
+                         "label":  "show Rank paramter",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg macseckey set",
+                         "label":  "update the MAC SEC Key Ether type",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat map hash",
+                         "label":  "hash Show table 0x1f",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp reg oam global etype set",
+                         "label":  "set global etype [register 0x44 - 0x48]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port mirror show",
+                         "label":  "Show port mirror",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge maclimit delete",
+                         "label":  "delete MAC Limiter profile",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp stat",
+                         "label":  "stat [-z]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel IPP0 read",
+                         "label":  "Read from IPP0",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list port add",
+                         "label":  "Add Port to white-list",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug oam ccm",
+                         "label":  "show OAM ccm table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA module acl show",
+                         "label":  "show  ACL",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat set hash level",
+                         "label":  "level set level",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port mirror set",
+                         "label":  "set (mirror and flow)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util pll write",
+                         "label":  "write pll",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue Cluster counters dis",
+                         "label":  "dis    Queue Statistics counters from adaptor",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth sfp30 show",
+                         "label":  "Show PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals get",
+                         "label":  "Get register",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam classifier show",
+                         "label":  "Show entries of OAM classifier search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel IPP1 read",
+                         "label":  "Read from IPP1",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam shapers get",
+                         "label":  "Set Oam Shapers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA rmon show",
+                         "label":  "Show    RMON counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals eth port write",
+                         "label":  "write register for ethertype",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp stop1588readregs",
+                         "label":  "stop reading 1588 registers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service set modify",
+                         "label":  "Modify service parameters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set wred",
+                         "label":  "Set wred  enable disable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 vitesse-algorithm set",
+                         "label":  "set tc by vitess",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl create",
+                         "label":  "create a2cl flow",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring show",
+                         "label":  "show Show bw_montoring",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba enable show",
+                         "label":  "show load balance Enable show",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types ccm set delete",
+                         "label":  "delete CCM message from MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam debug time show",
+                         "label":  "show time stamp of OAM events",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug event config set",
+                         "label":  "config set IPP event",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 delay tx",
+                         "label":  "tx  tx delay per port nano sec",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters loss tm show",
+                         "label":  "show OAM counters for loss measurement obtained from LMM PM",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge write",
+                         "label":  "write  to hash table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge hash get",
+                         "label":  "get  hash type  (0 - 3)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug log show",
+                         "label":  "Show    logging",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel IPP0 write",
+                         "label":  "Write to IPP0",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba cluster add",
+                         "label":  "add load balance cluster in grop ID",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA test fpga",
+                         "label":  "test the table FPGA",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue PriQueue wred set",
+                         "label":  "Set Egress WRED Drop Probability table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp table read",
+                         "label":  "read table IPP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam data-buffer set",
+                         "label":  "Set the data buffer content",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g enable_stream",
+                         "label":  "enable stream",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba port delete",
+                         "label":  "delete load balance port in grop ID",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel add 32 write",
+                         "label":  "write  all adress",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters delay poll",
+                         "label":  "enable/disable polling of DM counters from PM DB",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat map counter",
+                         "label":  "counter Show table 0x1e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge maclimit create",
+                         "label":  "create MAC Limiter profile",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug log clear",
+                         "label":  "clear    logging",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge hash set",
+                         "label":  "set  hash type  [0..3])",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth vts page write",
+                         "label":  "Write to PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba enable set",
+                         "label":  "set load balance Enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel tab",
+                         "label":  "tab \u003cmodel\u003e \u003centry\u003e \u003cstart\u003e \u003clen\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel MID read",
+                         "label":  "Read \u003cAddress\u003e \u003centry\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl lut",
+                         "label":  "lookup table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam mep show",
+                         "label":  "show MEP status and statistics including related PM\u0027s",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fpga dump",
+                         "label":  "dump    [reg ipp0 ipp1 tm mid oam]",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set mqs",
+                         "label":  "Set mqs  enable disable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel add 8 read",
+                         "label":  "read   all adress",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring show_max_rate",
+                         "label":  "show Show bw_montoring",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list counters show",
+                         "label":  "Show Port dropped Counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp profile set",
+                         "label":  "set LxCP Destination override table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA pm config set",
+                         "label":  "set discard PM Counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp myip set",
+                         "label":  "update the IP in ENTU",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 delay rx",
+                         "label":  "rx  Enable the 1588 rx",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp gp bal write",
+                         "label":  "write \u003cadd\u003e \u003cdata0\u003e ... \u003cdatan\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl preg",
+                         "label":  "print regs",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge aging enable",
+                         "label":  "enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba cluster delete",
+                         "label":  "delete load balance cluster in grop ID",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util gen set",
+                         "label":  "set genrator default 1g",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam multicast-mac get",
+                         "label":  "Get Oam Multicast MAC address",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals set shaper",
+                         "label":  "Set global shaper enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port 10g speed",
+                         "label":  "speed 10G port",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port shaper show",
+                         "label":  "show port shaper",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util i2c write",
+                         "label":  "write i2c",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service flow create",
+                         "label":  "Create service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util 2801 read",
+                         "label":  "read 2801",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA envelop rank delete",
+                         "label":  "delete Rank from service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set hash_level",
+                         "label":  "level set level",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam remote-mep show",
+                         "label":  "show remote MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba port show",
+                         "label":  "show port",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge aging show",
+                         "label":  "show  all mac in bridge",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters delay bins set",
+                         "label":  "set OAM delay measurement BINS thresholds and number",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge event",
+                         "label":  "event Show event FWD table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge find",
+                         "label":  "find  find if mac exist",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba show lagid",
+                         "label":  "show lag",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA test gen",
+                         "label":  "on genrator",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba port add",
+                         "label":  "add load balance port in grop ID",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp syncE read",
+                         "label":  "read    \u003cadd\u003e  opt ..\u003clen\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bw_monitoring set on_port",
+                         "label":  "on_port set timer",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge aging time",
+                         "label":  "time   the bridge aging",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam classifier set create",
+                         "label":  "Create an entry in OAM classifier search table",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp l2cp init",
+                         "label":  "init the table 0x27",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types dmm-1dm set create",
+                         "label":  "create DMM or 1DM  message to a MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer delete",
+                         "label":  "delete all rules",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp l2cp delete",
+                         "label":  "delete \u003cprotocol id\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show fill",
+                         "label":  "fill a2cl static dynamic",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl delete",
+                         "label":  "delete Rule by static Index",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel mapset service",
+                         "label":  "service set table IPP flow attribute",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 1588 delay rx",
+                         "label":  "rx  rx delay per port nano sec",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat bw_montoring show",
+                         "label":  "show Show table 0x20",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam mep set create",
+                         "label":  "Create OAM ag. MEP entity",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug lxcp l2cp show",
+                         "label":  "Show The l2cp table 0x27",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util fctl read",
+                         "label":  "read reg",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat set tuple enable",
+                         "label":  "enable set exclude_5_tuple_key enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA pm dis",
+                         "label":  "dis    PM counters from adaptor",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam tx-hdr set delete",
+                         "label":  "delete tx hdr of MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types lbm-test set create",
+                         "label":  "add LBM or TEST message to a MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals eth port read",
+                         "label":  "read register for ethertype",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel add 16 write",
+                         "label":  "write  all adress",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA pm config show",
+                         "label":  "Show    PM Counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam message-types slm set create",
+                         "label":  "create slm",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA 10g delete_stream",
+                         "label":  "delete stream",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service set delete",
+                         "label":  "Delete service(s)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge duplicate",
+                         "label":  "duplicate Mac Limiter",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util phy get",
+                         "label":  "get  \u003cport\u003e \u003creg\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list mac show",
+                         "label":  "Show white-list supported mac addresses",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat map exclude",
+                         "label":  "exclude Show table 0x1d",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel OAM write",
+                         "label":  "Write \u003cAddress\u003e \u003centry\u003e \u003cDATA0\u003e opt... \u003cDATA1\u003e \u003cDATA2\u003e \u003cDATA3\u003e",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam port-mac set",
+                         "label":  "Set port MAC address",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba enable delete",
+                         "label":  "delete load balance Enable",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam debug intrpt hndlr",
+                         "label":  "enable/disable SW handler of interrupt controller",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA kernel ddr read",
+                         "label":  "read the DDR",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA queue PriQueue show",
+                         "label":  "show  Priority Queue",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug show muedit",
+                         "label":  "show multi edit",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA globals eth type read",
+                         "label":  "read register for ethertype",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list port show",
+                         "label":  "Show white-list supported ports",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters delay cnt show",
+                         "label":  "show OAM counters(in us) for delay measurement obtained from DMM/1DM PM",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service set create",
+                         "label":  "Create service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util i2c read",
+                         "label":  "read i2c",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA envelop rank add",
+                         "label":  "add Rank to service",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth sfp30 write",
+                         "label":  "Write to PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge maclimit set",
+                         "label":  "set MAC Limiter profile",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA eth vts show",
+                         "label":  "Show PHY registers via MII",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port shaper set",
+                         "label":  "set port shaper",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA white-list mac add",
+                         "label":  "Add mac to white-list",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA bridge raminit",
+                         "label":  "raminit",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug show clq",
+                         "label":  "show Queue in cluster   (clusterId)",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA debug fat set tuple exclude",
+                         "label":  "exclude set exclude_5_tuple_key",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA loadba conf set",
+                         "label":  "set  LAG Hash Configuration",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA test ddr",
+                         "label":  "ddr  test the DDR",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA service prisrc create",
+                         "label":  "create priority source profile",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util comp gp gpr",
+                         "label":  "read/write GP registers",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam counters general show",
+                         "label":  "show OAM total messages and packets counters",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA oam tx-hdr set create",
+                         "label":  "Create TX HDR table entry for MEP",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl shadow show",
+                         "label":  "create a2cl flow",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA ipp a2cl slicer show show",
+                         "label":  "show a2cl flow",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA port combo show",
+                         "label":  "show  combo Type",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     },
+                     {
+                         "command":  "MEA util jat load",
+                         "label":  "Burn jat",
+                         "family":  "etx2",
+                         "version":  "6.8.5(5.120D)",
+                         "source":  "debug mea help -r"
+                     }
+                 ]
+}
