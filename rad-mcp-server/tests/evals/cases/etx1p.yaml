@@ -1,0 +1,43 @@
+# etx1p family cases — device lab-etx1p (named ports: 'ethernet lan1').
+
+- id: etx1p-port-status-named
+  family: etx1p
+  prompt: "Check the status of port lan1 on lab-etx1p."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["lan1"]
+    device_io: allowed
+    reason: "etx1p ports are named — 'ethernet lan1', not numeric"
+
+- id: etx1p-show-resources
+  family: etx1p
+  prompt: "What's the CPU and memory usage on lab-etx1p?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain: { command: "resources" }
+    device_io: allowed
+    reason: "'show resources' exists on etx1p (and secflow), not etx2"
+
+- id: etx1p-alarm-details
+  family: etx1p
+  prompt: "Show active alarms with timestamps on lab-etx1p."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["active-alarms"]
+    device_io: allowed
+
+- id: etx1p-summary-inventory
+  family: etx1p
+  prompt: "Give me the hardware and software inventory of lab-etx1p."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["summary-inventory", "device-information"]
+    device_io: allowed
+
+- id: etx1p-snmp-sysdescr
+  family: etx1p
+  prompt: "Read sysDescr from lab-etx1p over SNMP."
+  expect:
+    tool_called: snmp_get
+    args_contain_any: ["1.3.6.1.2.1.1.1", "sysdescr", "sysDescr"]
+    device_io: allowed

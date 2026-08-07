@@ -1,0 +1,36 @@
+name: evals
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install server package
+        run: pip install -e rad-mcp-server/server
+
+      - name: Run eval suite
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python rad-mcp-server/tests/evals/runner.py
+
+      # Skip must be loud, never silent: when no key is configured the runner
+      # exits 0 but the model phase did not run — surface that on the job.
+      - name: Warn when model phase skipped
+        if: ${{ env.HAS_KEY == '' }}
+        env:
+          HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "::warning title=Evals skipped::ANTHROPIC_API_KEY secret not configured — model-driven eval cases were NOT executed. Static and registration checks only."

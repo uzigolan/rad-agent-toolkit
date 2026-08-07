@@ -1,0 +1,40 @@
+# mp1 family cases — device mp-one (MP-1; SNMP v1 verified).
+
+- id: mp1-alarms
+  family: mp1
+  prompt: "Any active alarms on mp-one?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["alarm"]
+    device_io: allowed
+
+- id: mp1-device-information
+  family: mp1
+  prompt: "Show device information for mp-one."
+  expect:
+    tool_called_any: [run_show_in_context, run_show, health_check]
+    args_contain_any: ["device-information", "system"]
+    device_io: allowed
+
+- id: mp1-port-summary
+  family: mp1
+  prompt: "Summarize the status of all ports on mp-one."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["summary"]
+    device_io: allowed
+
+- id: mp1-snmp-uptime
+  family: mp1
+  prompt: "How long has mp-one been up, according to SNMP?"
+  expect:
+    tool_called: snmp_get
+    args_contain_any: ["1.3.6.1.2.1.1.3", "uptime", "sysUpTime"]
+    device_io: allowed
+
+- id: mp1-startup-config
+  family: mp1
+  prompt: "Show the startup config on mp-one."
+  expect:
+    tool_called_any: [run_show_in_context, run_show, get_config]
+    device_io: allowed

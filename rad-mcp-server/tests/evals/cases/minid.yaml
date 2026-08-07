@@ -1,0 +1,42 @@
+# minid family cases — device minid-1 (MiNID sleeve NID, SW 2.6).
+# Compact command subset: many 'all' rows don't exist here — verify first.
+# SNMP: GET-preferred; the GETNEXT chain is sparse and walks under-report.
+
+- id: minid-verify-before-answering
+  family: minid
+  prompt: "Does minid-1 support 'show tech-support'?"
+  expect:
+    tool_called_any: [cli_search, cli_help, manual_search]
+    reason: "minid is a compact subset — grep the reference or ask the device before asserting a command exists"
+
+- id: minid-alarms
+  family: minid
+  prompt: "Check alarms on minid-1."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["alarm"]
+    device_io: allowed
+
+- id: minid-snmp-get-preferred
+  family: minid
+  prompt: "Read sysDescr from minid-1 over SNMP."
+  expect:
+    tool_called: snmp_get
+    tool_not_called: snmp_walk
+    device_io: allowed
+    reason: "single-OID read on a GET-preferred family; a walk under-reports on MiNID"
+
+- id: minid-device-information
+  family: minid
+  prompt: "What software version is minid-1 running?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show, health_check, snmp_get]
+    device_io: allowed
+
+- id: minid-health
+  family: minid
+  prompt: "Run a health check on minid-1."
+  expect:
+    tool_called: health_check
+    args_contain: { device: "minid-1" }
+    device_io: allowed

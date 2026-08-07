@@ -1,0 +1,38 @@
+# mp4100 family cases — device marks-mp4 (Megaplex-4100; SNMP v1 ONLY).
+
+- id: mp4100-alarms
+  family: mp4100
+  prompt: "Show the active alarms on marks-mp4."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["alarm"]
+    device_io: allowed
+
+- id: mp4100-snmp-walk-system
+  family: mp4100
+  prompt: "Walk the SNMP system group on marks-mp4."
+  expect:
+    tool_called: snmp_walk
+    device_io: allowed
+
+- id: mp4100-device-information
+  family: mp4100
+  prompt: "What model and version is marks-mp4?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show, health_check]
+    device_io: allowed
+
+- id: mp4100-syntax-grep-first
+  family: mp4100
+  prompt: "Which CLI contexts exist on mp4100 for configuring ports? Answer from the harvested reference."
+  expect:
+    tool_called_any: [cli_search, cli_help, manual_search]
+    reason: "mp4100 rows aren't cross-checked in the verified map — grep the harvested reference first"
+
+- id: mp4100-health
+  family: mp4100
+  prompt: "Health check marks-mp4."
+  expect:
+    tool_called: health_check
+    args_contain: { device: "marks-mp4" }
+    device_io: allowed

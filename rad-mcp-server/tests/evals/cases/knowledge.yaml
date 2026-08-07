@@ -1,0 +1,75 @@
+# Knowledge cases — retrieval correctness with NO device I/O (plan 00, task 3).
+# Every case here must be answerable from the committed corpus alone; any
+# transport call is a failure. Facts sourced from:
+#   skills/rad-cli-operations/references/verified-commands.md
+#   skills/rad-cli-operations/references/family-profiles.yaml
+
+- id: knowledge-mqtt-limit
+  prompt: "How many MQTT servers can an ETX-1p have?"
+  expect:
+    device_io: forbidden
+    answer_contains: "2"
+    reason: "manual layer answers this; must not touch the device"
+
+- id: knowledge-alarms-command-and-context
+  prompt: "Which command shows active alarms on a secflow, and in which CLI context does it live?"
+  expect:
+    device_io: forbidden
+    answer_contains: ["active-alarms", "reporting"]
+    reason: "verified command map: 'show active-alarms' in 'configure reporting'"
+
+- id: knowledge-etx2-no-show-resources
+  prompt: "Does the etx2 family support the 'show resources' command?"
+  expect:
+    device_io: forbidden
+    answer_contains_any: ["not", "no"]
+    reason: "verified command map: 'show resources' is secflow/etx1p only, NOT etx2"
+
+- id: knowledge-sysobjectid-etx2
+  prompt: "Which RAD family does sysObjectID 1.3.6.1.4.1.164.6.1.6.79 correspond to?"
+  expect:
+    device_io: forbidden
+    answer_contains: "etx2"
+    reason: "family-profiles.yaml maps this sysObjectID to etx2"
+
+- id: knowledge-mp4100-snmp-version
+  prompt: "Which SNMP version is actually verified working on mp4100 units?"
+  expect:
+    device_io: forbidden
+    answer_contains: "v1"
+    reason: "family profile: v1 ONLY — v2c/v3 time out despite being claimed"
+
+- id: knowledge-minid-getbulk
+  prompt: "Is SNMP GETBULK supported on the MiNID?"
+  expect:
+    device_io: forbidden
+    answer_contains_any: ["no", "not"]
+    reason: "family profile: bulk_supported false; GETNEXT chain sparse, GET preferred"
+
+- id: knowledge-startup-config-context
+  prompt: "On RAD devices, which context and command show the startup configuration?"
+  expect:
+    device_io: forbidden
+    answer_contains: "startup-config"
+    reason: "verified command map: 'show startup-config' in the 'file' context"
+
+- id: knowledge-running-config-global
+  prompt: "What is the global command that displays the full running configuration on RAD CLI devices?"
+  expect:
+    device_io: forbidden
+    answer_contains: "info"
+    reason: "verified command map: 'info' at root is a global command"
+
+- id: knowledge-etx2v-vnf-context
+  prompt: "Which RAD family uniquely has a virtualization (VNF) CLI context?"
+  expect:
+    device_io: forbidden
+    answer_contains: "etx2v"
+    reason: "etx2v / uCPE-OS adds the virtualization context no other family has"
+
+- id: knowledge-sysdescr-oid
+  prompt: "What is the numeric OID for sysDescr?"
+  expect:
+    device_io: forbidden
+    answer_contains: "1.3.6.1.2.1.1.1"
+    reason: "MIB knowledge; no reason to probe a device for a standard OID"

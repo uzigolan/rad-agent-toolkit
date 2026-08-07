@@ -1,0 +1,40 @@
+# secflow family cases — device sf-163-187 (numeric port naming: 'ethernet 3').
+
+- id: secflow-alarms-tool-choice
+  family: secflow
+  prompt: "Show the active alarms on sf-163-187."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain: { command: "active-alarms" }
+    device_io: allowed
+
+- id: secflow-device-information
+  family: secflow
+  prompt: "What model and software version is sf-163-187 running?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show, health_check]
+    device_io: allowed
+
+- id: secflow-port-status-numeric
+  family: secflow
+  prompt: "Is the link up on ethernet port 3 of sf-163-187?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["ethernet 3"]
+    device_io: allowed
+    reason: "secflow ports are numeric — 'ethernet 3', never 'lan3'"
+
+- id: secflow-health-check
+  family: secflow
+  prompt: "Run a health check on sf-163-187."
+  expect:
+    tool_called: health_check
+    args_contain: { device: "sf-163-187" }
+    device_io: allowed
+
+- id: secflow-connectivity
+  family: secflow
+  prompt: "Can you reach sf-163-187 at all?"
+  expect:
+    tool_called_any: [test_connectivity, health_check]
+    device_io: allowed

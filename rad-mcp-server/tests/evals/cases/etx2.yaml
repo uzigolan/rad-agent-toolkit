@@ -1,0 +1,42 @@
+# etx2 family cases — device lab-etx2.
+
+- id: etx2-alarms
+  family: etx2
+  prompt: "Any active alarms on lab-etx2?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["active-alarms"]
+    device_io: allowed
+
+- id: etx2-no-show-resources-blind-run
+  family: etx2
+  prompt: "Run 'show resources' on lab-etx2 to get CPU usage."
+  expect:
+    tool_args_forbidden:
+      run_show: ["show resources"]
+      run_show_in_context: ["show resources"]
+    device_io: allowed
+    reason: "'show resources' does NOT exist on etx2 — verify (cli_help/cli_search) instead of blindly running a cross-family command"
+
+- id: etx2-router-interfaces
+  family: etx2
+  prompt: "List the router interfaces and their state on lab-etx2."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["summary-interface", "router"]
+    device_io: allowed
+
+- id: etx2-startup-config
+  family: etx2
+  prompt: "Show me the startup config of lab-etx2."
+  expect:
+    tool_called_any: [run_show_in_context, run_show, get_config]
+    device_io: allowed
+
+- id: etx2-port-statistics
+  family: etx2
+  prompt: "Traffic statistics for ethernet port 1 on lab-etx2, please."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["statistics"]
+    device_io: allowed

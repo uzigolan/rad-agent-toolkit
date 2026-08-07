@@ -1,0 +1,41 @@
+# etx2v family cases — device etx2v-1 (ETX-2V / uCPE-OS; adds the
+# virtualization (VNF) context no other family has; SNMPv3 verified).
+
+- id: etx2v-vnf-context
+  family: etx2v
+  prompt: "What VNFs are configured on etx2v-1?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show, cli_help]
+    args_contain_any: ["virtualization", "vnf"]
+    device_io: allowed
+    reason: "the virtualization context is etx2v-specific"
+
+- id: etx2v-snmp-probe
+  family: etx2v
+  prompt: "Probe SNMP on etx2v-1 and tell me what responds."
+  expect:
+    tool_called: snmp_probe
+    device_io: allowed
+
+- id: etx2v-alarms
+  family: etx2v
+  prompt: "Check active alarms on etx2v-1."
+  expect:
+    tool_called_any: [run_show_in_context, run_show]
+    args_contain_any: ["active-alarms"]
+    device_io: allowed
+
+- id: etx2v-device-information
+  family: etx2v
+  prompt: "What hardware and software is etx2v-1 running?"
+  expect:
+    tool_called_any: [run_show_in_context, run_show, health_check]
+    device_io: allowed
+
+- id: etx2v-snmp-sysname
+  family: etx2v
+  prompt: "Get the sysName of etx2v-1 via SNMP."
+  expect:
+    tool_called: snmp_get
+    args_contain_any: ["1.3.6.1.2.1.1.5", "sysname", "sysName"]
+    device_io: allowed
