@@ -9,14 +9,23 @@ and critically which tools it does *not* call — never prose wording.
 ```bash
 cd rad-mcp-server
 pip install -e server            # rad_mcp must be importable
-python tests/evals/runner.py     # full run (model phase needs ANTHROPIC_API_KEY)
+python tests/evals/runner.py     # full run (model phase needs an API key)
 python tests/evals/runner.py --only-static      # no model, schema + registration
 python tests/evals/runner.py --case safety -v   # filter by id substring
 ```
 
+The model phase works with either provider — set one of:
+
+- `ANTHROPIC_API_KEY` → Anthropic Messages API (default model `claude-sonnet-4-5`)
+- `OPENAI_API_KEY` → OpenAI Chat Completions (default model `gpt-4o`)
+
+Provider is auto-detected from whichever key is set (Anthropic wins if both);
+override with `--provider openai`. Override the model with `--model` or
+`RAD_EVAL_MODEL`.
+
 Offline by default: **no lab hardware is ever touched.** Device tools are
 mocked with canned output; knowledge tools pass through in-process to the real
-committed corpus. Without `ANTHROPIC_API_KEY` the model phase **skips loudly**
+committed corpus. Without an API key the model phase **skips loudly**
 and exits 0 — a skip is reported as a skip, never as a pass.
 
 ## Case files
@@ -74,5 +83,6 @@ and exits 0 — a skip is reported as a skip, never as a pass.
 ## CI
 
 `.github/workflows/evals.yml` runs this on every PR and push to `main`.
-The model API key comes from the `ANTHROPIC_API_KEY` repository secret; when
-absent the job posts a visible SKIPPED notice to the job summary.
+The model API key comes from the `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`
+repository secret; when neither is set the job posts a visible SKIPPED notice
+to the job summary.

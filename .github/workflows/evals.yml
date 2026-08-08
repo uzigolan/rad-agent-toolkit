@@ -24,13 +24,15 @@ jobs:
       - name: Run eval suite
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python rad-mcp-server/tests/evals/runner.py
 
       # Skip must be loud, never silent: when no key is configured the runner
       # exits 0 but the model phase did not run — surface that on the job.
       - name: Warn when model phase skipped
-        if: ${{ env.HAS_KEY == '' }}
+        if: ${{ env.HAS_ANTHROPIC == '' && env.HAS_OPENAI == '' }}
         env:
-          HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          HAS_ANTHROPIC: ${{ secrets.ANTHROPIC_API_KEY }}
+          HAS_OPENAI: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo "::warning title=Evals skipped::ANTHROPIC_API_KEY secret not configured — model-driven eval cases were NOT executed. Static and registration checks only."
+          echo "::warning title=Evals skipped::Neither ANTHROPIC_API_KEY nor OPENAI_API_KEY secret is configured — model-driven eval cases were NOT executed. Static and registration checks only."

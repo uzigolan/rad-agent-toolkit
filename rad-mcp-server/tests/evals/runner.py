@@ -6,9 +6,10 @@ Offline by default — no lab hardware, ever:
     the real server registration (import, no I/O)
   * `kind: registration` cases (e.g. readonly-lacks-write-tools) run in a
     subprocess with the case's env and assert on the registered tool set
-  * model-driven cases run ONLY when ANTHROPIC_API_KEY is set; device tools
-    are mocked with canned output, knowledge tools pass through in-process to
-    the real corpus. Without a key the model phase SKIPS LOUDLY and exits 0.
+  * model-driven cases run ONLY when ANTHROPIC_API_KEY or OPENAI_API_KEY is
+    set; device tools are mocked with canned output, knowledge tools pass
+    through in-process to the real corpus. Without a key the model phase
+    SKIPS LOUDLY and exits 0.
 
 Assertions are on tool selection and arguments, never on prose wording
 (answer checks are substring-only). Exit codes: 0 pass/skip, 1 failures,
@@ -40,9 +41,19 @@ RAD_MCP_SERVER_DIR = EVALS_DIR.parent.parent  # rad-mcp-server/
 SERVER_PKG_DIR = RAD_MCP_SERVER_DIR / "server"
 RAD_CORE_SKILL = RAD_MCP_SERVER_DIR / "skills" / "rad-core" / "SKILL.md"
 
-API_URL = "https://api.anthropic.com/v1/messages"
-API_VERSION = "2023-06-01"
-DEFAULT_MODEL = os.environ.get("RAD_EVAL_MODEL", "claude-sonnet-4-5")
+PROVIDERS = {
+    "anthropic": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "key_env": "ANTHROPIC_API_KEY",
+        "default_model": "claude-sonnet-4-5",
+    },
+    "openai": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "key_env": "OPENAI_API_KEY",
+        "default_model": "gpt-4o",
+    },
+}
+ANTHROPIC_API_VERSION = "2023-06-01"
 MAX_TURNS = 8
 
 # Tools that open a transport to a device. `device_io: forbidden` fails if any
@@ -288,12 +299,21 @@ def build_api_tools() -> list[dict] | None:
     return json.loads(out.stdout.strip().splitlines()[-1])
 
 
-def api_request(payload: dict, api_key: str) -> dict:
+class FatalAPIError(RuntimeError):
+    """Auth/permission failure that will affect every case; abort the run."""
+
+
+def api_request(payload: dict, api_key: str, provider: str) -> dict:
+    if provider == "openai":
+        headers = {"content-type": "application/json",
+                   "authorization": f"Bearer {api_key}"}
+    else:
+        headers = {"content-type": "application/json", "x-api-key": api_key,
+                   "anthropic-version": ANTHROPIC_API_VERSION}
     req = urllib.request.Request(
-        API_URL,
+        PROVIDERS[provider]["url"],
         data=json.dumps(payload).encode(),
-        headers={"content-type": "application/json", "x-api-key": api_key,
-                 "anthropic-version": API_VERSION},
+        headers=headers,
     )
     for attempt in (1, 2, 3):
         try:
@@ -301,9 +321,14 @@ def api_request(payload: dict, api_key: str) -> dict:
                 return json.loads(resp.read())
         except urllib.error.HTTPError as e:
             if e.code in (429, 500, 529) and attempt < 3:
-                time.sleep(10 * attempt)
+                # 429 = TPM window; each request can be ~28k tokens, so wait
+                # long enough for the minute window to roll over
+                time.sleep(45 * attempt if e.code == 429 else 10 * attempt)
                 continue
-            raise RuntimeError(f"API error {e.code}: {e.read().decode()[:500]}") from e
+            detail = e.read().decode()[:500]
+            if e.code in (401, 403):
+                raise FatalAPIError(f"API error {e.code}: {detail}") from e
+            raise RuntimeError(f"API error {e.code}: {detail}") from e
     raise RuntimeError("unreachable")
 
 
@@ -318,8 +343,11 @@ def system_prompt(use_skill: bool) -> str:
 
 
 def run_model_case(case: dict, tools: list[dict], api_key: str, model: str,
-                   use_skill: bool, verbose: bool) -> tuple[list[dict], str]:
+                   use_skill: bool, verbose: bool,
+                   provider: str = "anthropic") -> tuple[list[dict], str]:
     """Drive the model until end_turn; return (tool_calls, final_text)."""
+    if provider == "openai":
+        return _run_model_case_openai(case, tools, api_key, model, use_skill, verbose)
     fixtures = case.get("fixtures", {}) or {}
     messages: list[dict] = []
     for turn in case.get("history", []) or []:
@@ -333,7 +361,7 @@ def run_model_case(case: dict, tools: list[dict], api_key: str, model: str,
             "model": model, "max_tokens": 1500, "temperature": 0,
             "system": system_prompt(use_skill),
             "messages": messages, "tools": tools,
-        }, api_key)
+        }, api_key, "anthropic")
         content = resp.get("content", [])
         messages.append({"role": "assistant", "content": content})
         text_parts = [b["text"] for b in content if b.get("type") == "text"]
@@ -354,6 +382,58 @@ def run_model_case(case: dict, tools: list[dict], api_key: str, model: str,
                 "content": execute_tool(name, args, fixtures),
             })
         messages.append({"role": "user", "content": results})
+    return calls, final_text
+
+
+def _to_openai_tools(tools: list[dict]) -> list[dict]:
+    return [{"type": "function",
+             "function": {"name": t["name"], "description": t["description"],
+                          "parameters": t["input_schema"]}} for t in tools]
+
+
+def _run_model_case_openai(case: dict, tools: list[dict], api_key: str,
+                           model: str, use_skill: bool,
+                           verbose: bool) -> tuple[list[dict], str]:
+    fixtures = case.get("fixtures", {}) or {}
+    messages: list[dict] = [{"role": "system", "content": system_prompt(use_skill)}]
+    for turn in case.get("history", []) or []:
+        messages.append({"role": turn["role"], "content": turn["content"]})
+    messages.append({"role": "user", "content": case["prompt"]})
+
+    oa_tools = _to_openai_tools(tools)
+    # reasoning models reject temperature and max_tokens
+    reasoning = model.startswith(("o1", "o3", "o4", "gpt-5"))
+    calls: list[dict] = []
+    final_text = ""
+    for _ in range(MAX_TURNS):
+        payload: dict = {"model": model, "messages": messages, "tools": oa_tools}
+        if reasoning:
+            payload["max_completion_tokens"] = 4000
+        else:
+            payload["max_tokens"] = 1500
+            payload["temperature"] = 0
+        resp = api_request(payload, api_key, "openai")
+        msg = resp["choices"][0]["message"]
+        messages.append(msg)
+        # safety refusals arrive in `refusal` with content null
+        if msg.get("content"):
+            final_text = msg["content"]
+        elif msg.get("refusal"):
+            final_text = msg["refusal"]
+        tool_calls = msg.get("tool_calls") or []
+        if not tool_calls:
+            break
+        for tc in tool_calls:
+            name = tc["function"]["name"]
+            try:
+                args = json.loads(tc["function"].get("arguments") or "{}")
+            except json.JSONDecodeError:
+                args = {}
+            calls.append({"name": name, "args": args})
+            if verbose:
+                print(f"      -> {name}({json.dumps(args)[:120]})")
+            messages.append({"role": "tool", "tool_call_id": tc["id"],
+                             "content": execute_tool(name, args, fixtures)})
     return calls, final_text
 
 
@@ -442,7 +522,12 @@ def main() -> int:
     ap.add_argument("--only-static", action="store_true",
                     help="run schema + registration checks only, never the model")
     ap.add_argument("--case", default="", help="filter: case id substring")
-    ap.add_argument("--model", default=DEFAULT_MODEL)
+    ap.add_argument("--provider", choices=["anthropic", "openai"], default=None,
+                    help="model API provider (default: auto-detect from which "
+                         "key env var is set; anthropic wins if both)")
+    ap.add_argument("--model", default=None,
+                    help="model name (default: RAD_EVAL_MODEL env or the "
+                         "provider's default)")
     ap.add_argument("--no-skill", action="store_true",
                     help="omit rad-core SKILL.md from the system prompt")
     ap.add_argument("--verbose", "-v", action="store_true")
@@ -487,12 +572,22 @@ def main() -> int:
 
     # model phase
     model_cases = [c for c in cases if c.get("kind") != "registration"]
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if opts.provider:
+        provider = opts.provider
+    elif os.environ.get("ANTHROPIC_API_KEY"):
+        provider = "anthropic"
+    elif os.environ.get("OPENAI_API_KEY"):
+        provider = "openai"
+    else:
+        provider = "anthropic"
+    api_key = os.environ.get(PROVIDERS[provider]["key_env"], "")
+    model = (opts.model or os.environ.get("RAD_EVAL_MODEL")
+             or PROVIDERS[provider]["default_model"])
     if opts.only_static or not api_key:
         banner = ("=" * 70 + "\n"
                   "  MODEL-DRIVEN EVALS SKIPPED — "
                   + ("--only-static given" if opts.only_static
-                     else "no ANTHROPIC_API_KEY configured")
+                     else "no ANTHROPIC_API_KEY or OPENAI_API_KEY configured")
                   + f"\n  {len(model_cases)} cases NOT executed. This is a skip, not a pass.\n"
                   + "=" * 70)
         print(banner)
@@ -506,13 +601,23 @@ def main() -> int:
         if not tools:
             print("cannot export tool schemas; aborting model phase")
             return 1
-        print(f"model phase: {len(model_cases)} cases against {opts.model}")
+        print(f"model phase: {len(model_cases)} cases against {model} ({provider})")
         for case in model_cases:
             suite = per_suite.setdefault(case["_file"], [0, 0])
+            text = ""
             try:
-                calls, text = run_model_case(case, tools, api_key, opts.model,
-                                             not opts.no_skill, opts.verbose)
+                calls, text = run_model_case(case, tools, api_key, model,
+                                             not opts.no_skill, opts.verbose,
+                                             provider)
                 fails = evaluate(case, calls, text)
+            except FatalAPIError as e:
+                print(f"\nFATAL: {e}\n  API key rejected — check "
+                      f"{PROVIDERS[provider]['key_env']}. "
+                      "Aborting model phase; remaining cases not run.")
+                failures.append(f"{case['id']}: fatal: {e}")
+                emit_summary([(n, p, f) for n, (p, f) in sorted(per_suite.items())],
+                             failures)
+                return 1
             except RuntimeError as e:
                 fails = [f"runner error: {e}"]
             if fails:
@@ -521,6 +626,8 @@ def main() -> int:
                 print(f"  FAIL {case['id']}")
                 for f in fails:
                     print(f"        {f}")
+                if any("answer" in f for f in fails):
+                    print(f"        final answer was: {text[:400]!r}")
             else:
                 suite[0] += 1
                 print(f"  pass {case['id']}")
