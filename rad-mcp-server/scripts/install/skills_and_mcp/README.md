@@ -41,7 +41,7 @@ client's restart step.
 
 Knowledge routing rule:
 - Served skills: knowledge lookups come from MCP tools (`cli_search`,
-	`manual_search`, `datasheet_search`, `mea_search`, `mib_*`) on the server.
+	`manual_search`, `datasheet_search`, `release_notes_search`, `mea_search`, `mib_*`) on the server.
 	Install/reinstall now auto-builds `build/rad-knowledge.sqlite` when missing
 	(including fresh setup and keep-existing-config paths) so MCP knowledge
 	queries have the local DB ready immediately.
@@ -77,12 +77,12 @@ http switch: `claude mcp remove rad-mcp` (and
 (`claude plugin marketplace add <repo>/rad-mcp-server`, then
 `claude plugin install rad-mcp@rad-marketplace`); or run `claude` from the
 repo root (reads `.claude/` directly). This is the only target with the
-`/rad-health`, `/rad-backup`, `/rad-harvest`, `/rad-load-manual`,
-`/rad-load-datasheet` commands.
+`/rad-*` slash commands (health, backup, harvest, and the `rad-load-*`
+knowledge-ingest commands — the roster is `commands/*.md`).
 
 **Restart + verify:** CLI — restart the session; extension — reload the
 window. Then `claude mcp list` / `/mcp` (14 tools = stdio; 8 = read-only
-http); `/rad` autocompletes the six commands; *"rad agent, list the managed
+http); `/rad` autocompletes the commands; *"rad agent, list the managed
 devices"* triggers the skill. Launch errors (extension): Output panel →
 "Claude Code" channel.
 

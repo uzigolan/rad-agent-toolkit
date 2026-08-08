@@ -2,7 +2,8 @@
 
 One plugin bundles everything a user needs in a single upload/install:
     - all RAD skills under skills/
-  - all commands (rad-harvest, rad-load-manual, rad-load-datasheet, rad-backup, rad-health)
+  - all commands (everything in commands/*.md — rad-health, rad-backup,
+    rad-harvest, and the rad-load-* knowledge-ingest commands)
   - the rad-mcp MCP server (.mcp.json)
 
 Assembled from the canonical sources so there is no extra hand-maintained copy
@@ -62,8 +63,9 @@ MCP = {
 README = """# RAD Agent Toolkit (Claude plugin)
 
 One-upload bundle: the **rad-mcp** MCP server + the RAD skills
-under `skills/` + maintenance commands
-(`rad-harvest`, `rad-load-manual`, `rad-load-datasheet`, `rad-backup`, `rad-health`).
+under `skills/` + maintenance commands (everything in `commands/` —
+`rad-health`, `rad-backup`, `rad-harvest`, and the `rad-load-*`
+knowledge-ingest commands).
 
 ## Install
 - **Claude Desktop:** Customize -> Plugins -> Upload local plugin -> this zip.
@@ -74,7 +76,7 @@ under `skills/` + maintenance commands
 - **Skills + MCP tools** (reads, staged config, backups, health): Claude Code
   AND Desktop.
 - **`/rad-backup`, `/rad-health`:** MCP-based -> work anywhere.
-- **`/rad-harvest`, `/rad-load-manual`, `/rad-load-datasheet`:** run local Python scripts in this repo
+- **`/rad-harvest` and the `/rad-load-*` ingest commands:** run local Python scripts in this repo
   -> Claude Code only (Desktop can't execute them). Harmless if present.
 
 ## LOCAL build caveat

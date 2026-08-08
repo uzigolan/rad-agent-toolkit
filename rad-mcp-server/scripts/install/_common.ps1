@@ -151,7 +151,8 @@ function Copy-SkillsTo {
     #   served            — thin skills (SKILL.md only); the rad-cli-operations
     #                       references/ is omitted and served by the MCP
     #                       knowledge-catalog tools (cli_search / manual_search
-    #                       / datasheet_search / mib_*). Requires a connected
+    #                       / datasheet_search / release_notes_search / mib_*).
+    #                       Requires a connected
     #                       rad-mcp server whose build/rad-knowledge.sqlite is
     #                       present.
     param(
