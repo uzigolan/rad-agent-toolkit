@@ -133,6 +133,19 @@ CREATE TABLE datasheet_sections (
 CREATE INDEX ix_ds_family ON datasheet_sections(family);
 CREATE INDEX ix_ds_product ON datasheet_sections(product);
 CREATE VIRTUAL TABLE datasheet_fts USING fts5(family, product, section, body, content='');
+-- Release notes: FOURTH domain, version-scoped facts, one row per item.
+-- product_kind 'nms' (RADview) or 'device' (firmware; family set); section is
+-- feature/compatibility/upgrade/solved/known-new/known/other; trs carries the
+-- TRS tracking id where the source table has one (the cross-release join key).
+CREATE TABLE release_notes (
+  id INTEGER PRIMARY KEY, product_kind TEXT NOT NULL, product TEXT NOT NULL,
+  family TEXT, version TEXT NOT NULL, doc_rev TEXT, released TEXT,
+  section TEXT NOT NULL, trs TEXT, title TEXT NOT NULL, body TEXT NOT NULL,
+  source_id INTEGER NOT NULL REFERENCES knowledge_sources(id));
+CREATE INDEX ix_rn_product_version ON release_notes(product, version);
+CREATE INDEX ix_rn_trs ON release_notes(trs);
+CREATE INDEX ix_rn_family ON release_notes(family);
+CREATE VIRTUAL TABLE rn_fts USING fts5(product, version, section, trs, title, body, content='');
 """
 
 # ── verified seed data: family profiles come from the SINGLE SOURCE yaml ───
@@ -451,7 +464,8 @@ def ingest_references(con: sqlite3.Connection, report: dict):
     """Phase 5: CLI-help jsonl + manual chapters + curated reference docs."""
     cur = con.cursor()
     counts = {"cli_help": 0, "manual_sections": 0, "reference_docs": 0, "families_cli": 0, "families_manual": 0,
-              "datasheet_sections": 0, "products_datasheet": 0}
+              "datasheet_sections": 0, "products_datasheet": 0,
+              "release_notes": 0, "release_note_docs": 0}
 
     def src_row(domain, family, path: Path) -> int:
         cur.execute("INSERT INTO knowledge_sources(domain,family,path,sha256) VALUES (?,?,?,?)",
@@ -525,6 +539,44 @@ def ingest_references(con: sqlite3.Connection, report: dict):
                 cur.execute("INSERT INTO datasheet_fts(rowid,family,product,section,body) VALUES (?,?,?,?,?)",
                             (cur.lastrowid, family or "", product, clean, chunk))
                 counts["datasheet_sections"] += 1
+
+    # Release notes (jsonl per document from ingest_release_notes.py:
+    # first record = doc meta, then one record per item)
+    rndir = REFS / "release-notes"
+    if rndir.is_dir():
+        for jf in sorted(rndir.glob("rn-*.jsonl")):
+            lines = [l for l in jf.read_text(encoding="utf-8").splitlines() if l.strip()]
+            if not lines:
+                continue
+            try:
+                meta = json.loads(lines[0])
+            except json.JSONDecodeError:
+                continue
+            if meta.get("kind") != "meta":
+                continue
+            sid = src_row("release-notes", meta.get("family"), jf)
+            counts["release_note_docs"] += 1
+            for line in lines[1:]:
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                cur.execute(
+                    "INSERT INTO release_notes(product_kind,product,family,version,"
+                    "doc_rev,released,section,trs,title,body,source_id) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                    (meta.get("product_kind", "nms"), meta.get("product", jf.stem),
+                     meta.get("family"), meta.get("version", "?"),
+                     meta.get("doc_rev"), meta.get("released"),
+                     rec.get("section", "other"), rec.get("trs"),
+                     rec.get("title", ""), rec.get("body", ""), sid))
+                cur.execute(
+                    "INSERT INTO rn_fts(rowid,product,version,section,trs,title,body) "
+                    "VALUES (?,?,?,?,?,?,?)",
+                    (cur.lastrowid, meta.get("product", ""), meta.get("version", ""),
+                     rec.get("section", ""), rec.get("trs") or "",
+                     rec.get("title", ""), rec.get("body", "")))
+                counts["release_notes"] += 1
 
     # Curated reference docs (family-agnostic knowledge) + snmp capability maps
     doc_files = [REFS / n for n in REFDOC_FILES if (REFS / n).exists()]

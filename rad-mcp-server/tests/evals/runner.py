@@ -81,10 +81,10 @@ DEVICE_IO_TOOLS = {
 # Local-only tools passed through in-process to the real implementation
 # (they read the committed corpus / local state — offline and side-effect free).
 PASSTHROUGH_TOOLS = {
-    "cli_search", "manual_search", "datasheet_search", "mea_search",
-    "mea_commands_search", "altera_search", "mib_search", "mib_describe",
-    "mib_table", "mib_notifications", "knowledge_status", "list_versions",
-    "tool_versions", "check_skill_version",
+    "cli_search", "manual_search", "datasheet_search", "release_notes_search",
+    "mea_search", "mea_commands_search", "altera_search", "mib_search",
+    "mib_describe", "mib_table", "mib_notifications", "knowledge_status",
+    "list_versions", "tool_versions", "check_skill_version",
 }
 
 # Fixture inventory: inventory.yaml in the repo is empty; evals need known

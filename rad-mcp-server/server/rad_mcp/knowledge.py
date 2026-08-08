@@ -97,6 +97,11 @@ def status() -> dict:
                 "SELECT count(*) FROM datasheet_sections").fetchone()[0]
         except sqlite3.OperationalError:
             counts["datasheet_sections"] = 0
+        try:
+            counts["release_notes"] = cur.execute(
+                "SELECT count(*) FROM release_notes").fetchone()[0]
+        except sqlite3.OperationalError:
+            counts["release_notes"] = 0
         roots = [dict(r) for r in cur.execute(
             "SELECT root, priority, count(*) AS files, sum(selected) AS selected "
             "FROM source_files GROUP BY root, priority ORDER BY priority DESC")]
@@ -668,6 +673,85 @@ def datasheet_search(query: str, family: str = "", product: str = "",
                         "kind=card means a module for its family's chassis, not a "
                         "standalone device; procedures live in manual_search, syntax "
                         "in cli_search"}
+    finally:
+        con.close()
+
+
+_TRS_REF_RE = re.compile(r"^(?:TRS[-\s]?)?(\d{4,7})$", re.IGNORECASE)
+
+
+def release_notes_search(query: str = "", product: str = "", version: str = "",
+                         family: str = "", section: str = "", trs: str = "",
+                         limit: int = 15) -> dict:
+    """Search the ingested release notes (fourth knowledge domain). Facts here
+    are VERSION-SCOPED, one row per item; solved/known limitations are keyed
+    by TRS number. A TRS reference (via `trs` or a TRS-looking `query`)
+    returns that item's rows across ALL releases ordered by version — the
+    known -> solved trajectory. Everything else is filtered full-text."""
+    limit = max(1, min(int(limit), 30))
+    con = _connect()
+    try:
+        cur = con.cursor()
+        try:
+            cur.execute("SELECT 1 FROM release_notes LIMIT 1")
+        except sqlite3.OperationalError:
+            return {"query": query, "returned": 0, "results": [],
+                    "note": "catalog predates the release-notes layer — rebuild it "
+                            "with scripts/build_knowledge_catalog.py"}
+
+        def row_out(r) -> dict:
+            return {"domain": "release-notes", "product_kind": r["product_kind"],
+                    "product": r["product"], "family": r["family"],
+                    "version": r["version"], "doc_rev": r["doc_rev"],
+                    "section": r["section"], "trs": r["trs"],
+                    "title": r["title"], "excerpt": _excerpt(r["body"], query or r["title"])}
+
+        fsql, args = "", []
+        if product:
+            fsql += " AND r.product=?"; args.append(product)
+        if version:
+            fsql += " AND r.version=?"; args.append(version)
+        if family:
+            fsql += " AND r.family=?"; args.append(family)
+        if section:
+            fsql += " AND r.section=?"; args.append(section)
+
+        # tier 1: exact TRS — the cross-release view is the whole point
+        trs_ref = trs or query.strip()
+        m = _TRS_REF_RE.match(trs_ref.strip())
+        if m:
+            rows = cur.execute(
+                f"SELECT r.* FROM release_notes r WHERE r.trs=?{fsql} "
+                "ORDER BY r.version, r.section LIMIT ?",
+                [f"TRS-{m.group(1)}"] + args + [limit]).fetchall()
+            if rows:
+                return {"query": query or trs_ref, "returned": len(rows),
+                        "results": [row_out(r) for r in rows],
+                        "note": "all releases mentioning this TRS, ordered by "
+                                "version — section shows the known -> solved "
+                                "trajectory"}
+            if trs:
+                return {"query": trs, "returned": 0, "results": [],
+                        "note": "no release note mentions this TRS in the "
+                                "ingested corpus — absence of evidence, not "
+                                "proof it does not exist"}
+
+        # tier 2: full-text (or pure filter listing when query is empty)
+        if query.strip():
+            rows = cur.execute(
+                f"SELECT r.* FROM rn_fts f JOIN release_notes r ON r.id=f.rowid "
+                f"WHERE rn_fts MATCH ?{fsql} ORDER BY bm25(rn_fts) LIMIT ?",
+                [_fts_query(query)] + args + [limit]).fetchall()
+        else:
+            rows = cur.execute(
+                f"SELECT r.* FROM release_notes r WHERE 1=1{fsql} "
+                "ORDER BY r.product, r.version, r.section LIMIT ?",
+                args + [limit]).fetchall()
+        return {"query": query, "returned": len(rows),
+                "results": [row_out(r) for r in rows],
+                "note": "facts are scoped to their `version`; a limitation "
+                        "known in one release may be solved in a later one — "
+                        "check the same TRS across versions before concluding"}
     finally:
         con.close()
 

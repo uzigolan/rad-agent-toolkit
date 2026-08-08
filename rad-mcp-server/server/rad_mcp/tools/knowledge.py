@@ -14,7 +14,7 @@ from ..runtime import _kcall, _knowledge
 
 
 def register_knowledge_tools(mcp) -> None:
-    """Register the 10 offline knowledge-search tools."""
+    """Register the 11 offline knowledge-search tools."""
 
     @mcp.tool()
     def mib_search(query: str, module: str = "", kind: str = "", oid_prefix: str = "",
@@ -105,6 +105,27 @@ def register_knowledge_tools(mcp) -> None:
         out = _kcall(k.datasheet_search, query, family=family, product=product,
                      kind=kind, limit=limit)
         audit("datasheet_search", "-", detail=f"{family or product or '*'}:{query[:60]}")
+        return out
+
+    @mcp.tool()
+    def release_notes_search(query: str = "", product: str = "", version: str = "",
+                             family: str = "", section: str = "", trs: str = "",
+                             limit: int = 15) -> dict:
+        """Search the ingested release notes (offline — fourth knowledge domain).
+        Facts here are VERSION-SCOPED: solved/known limitations are one row per
+        TRS number per release. Pass `trs` (or a bare TRS number as the query)
+        to see that item across ALL releases ordered by version — the
+        known -> solved trajectory answers "was this fixed, and in which
+        version?". Filters: product (e.g. radview), version, family (device
+        firmware RNs), section (feature / compatibility / upgrade / solved /
+        known-new / known). What changed per release lives HERE — specs in
+        datasheet_search, concepts in manual_search, syntax in cli_search."""
+        k = _knowledge()
+        out = _kcall(k.release_notes_search, query, product=product,
+                     version=version, family=family, section=section, trs=trs,
+                     limit=limit)
+        audit("release_notes_search", "-",
+              detail=f"{product or family or '*'}:{trs or query[:60]}")
         return out
 
     @mcp.tool()

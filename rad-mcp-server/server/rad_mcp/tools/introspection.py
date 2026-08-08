@@ -51,6 +51,7 @@ TOOL_VERSIONS = {
     "cli_search": "0.5.0",
     "manual_search": "0.5.0",
     "datasheet_search": "0.7.0",
+    "release_notes_search": "0.12.0",
     "mea_search": "0.8.0",
     "mea_commands_search": "1.0.0",
     "altera_search": "0.9.0",

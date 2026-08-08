@@ -18,7 +18,7 @@ RAD_MCP_TOOL_PROFILE selects the surface:
                     an MCP tool in ANY profile; use the rad-mcp-set-credentials
                     CLI). Group flags are IGNORED so the surface stays
                     predictable for existing installs.
-  lean              knowledge + device + snmp (25 tools). Optional groups are
+  lean              knowledge + device + snmp (26 tools). Optional groups are
                     opt-in per flag:
                       RAD_MCP_SNMP=false          drop the 4 SNMP tools
                       RAD_MCP_DEBUG_TOOLS=true    add the 8 debug tools

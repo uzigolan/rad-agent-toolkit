@@ -24,8 +24,9 @@ into the MCP ecosystem.
         │
  MCP server               rad_mcp.server  (Python, FastMCP, stdio)
         │                 tools grouped by capability (rad_mcp/tools/*):
-        │                   knowledge (10)  mib_* · cli_search · manual_search ·
-        │                                   datasheet_search · mea_* · altera_search
+        │                   knowledge (11)  mib_* · cli_search · manual_search ·
+        │                                   datasheet_search · release_notes_search ·
+        │                                   mea_* · altera_search
         │                   device (11)     list_devices · test_connectivity ·
         │                                   run_show[_in_context] · cli_help ·
         │                                   get_config · health_check · backup_config ·
@@ -400,4 +401,5 @@ RAG adds the fuzzy one.
 - [ ] RADview northbound backend
 - [x] Device manual layer (ETX-1p): PDF → per-chapter markdown + CLI cross-links
 - [x] Datasheet layer: 39 product datasheets → per-subject markdown + family/product/card classification + `datasheet_search`
+- [x] Release-notes layer: PDF → version-scoped jsonl (row per item, TRS-keyed solved/known limitations) + `release_notes_search` (cross-release TRS trajectory)
 - [ ] Manuals RAG (semantic search over the manual corpus)
