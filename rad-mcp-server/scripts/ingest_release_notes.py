@@ -20,10 +20,10 @@ Output: skills/rad-cli-operations/references/release-notes/
 The jsonl is what scripts/build_knowledge_catalog.py ingests into the
 `release_notes` table (+ rn_fts) that release_notes_search answers from.
 
-NOTE: the table/heading parser was written from the RADview SP 7.2.3 (v6e)
-document structure and verified against a synthetic fixture; review the jsonl
-after the first run on each new document vintage (parse fallbacks degrade to
-section-level records, never silently drop content).
+NOTE: the layout parser (y-ordered lines, bold headings, gap-based row
+grouping) was tuned against the RADview SP 7.2.3 (v6e) document structure;
+review the jsonl after the first run on each new document vintage (parse
+fallbacks degrade to section-level records, never silently drop content).
 
 Usage (server venv python):
   python scripts/ingest_release_notes.py "release-notes/RADview_SP_7.2.3.pdf" \
@@ -37,6 +37,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 import fitz  # pymupdf
@@ -54,20 +55,30 @@ SECTIONS = ("feature", "compatibility", "upgrade", "solved", "known-new",
 # most-specific first (a "new known limitations" heading must not hit "new").
 HEADING_MAP = [
     (re.compile(r"new\s+known\s+limitation|known\s+limitations?\s+.*new|"
-                r"limitations?\s+introduced", re.I), "known-new"),
+                r"limitations?\s+introduced|^new\s+limitations?\b", re.I), "known-new"),
     (re.compile(r"solved|fixed|resolved|corrected", re.I), "solved"),
     (re.compile(r"known\s+(limitation|issue|problem)|open\s+issues", re.I), "known"),
     (re.compile(r"new\s+feature|enhancement|what'?s\s+new", re.I), "feature"),
     (re.compile(r"compatib|interoperab|supported\s+(version|platform|device|agent)|"
                 r"requirement", re.I), "compatibility"),
-    (re.compile(r"upgrade|installation|migration", re.I), "upgrade"),
+    (re.compile(r"upgrade|install|migration", re.I), "upgrade"),
 ]
 
-TRS_RE = re.compile(r"\b(?:TRS[-\s]?)?(\d{4,7})\b")
+# Only an explicit TRS prefix keys a record — bare 4-7 digit numbers are
+# phone numbers, ZIP codes and years in these documents.
+TRS_RE = re.compile(r"\bTRS[-\s]?(\d{3,7})\b", re.I)
 VERSION_RE = re.compile(r"\b(\d+\.\d+(?:\.\d+)?(?:\.\d+)?)\b")
 NOISE_RE = re.compile(
     r"^(release notes?|page \d+( of \d+)?|www\.rad\.com.*|"
     r".*all rights reserved.*|the access company|\d{1,3})$", re.I)
+# End-matter boilerplate (contact block, legal, RADcare portal how-to):
+# from the first match onward, content is discarded until a real heading.
+SKIP_RE = re.compile(
+    r"headquarters|\u00a9\s*\d{4}|copyright|all rights reserved|"
+    r"publication no|radcare online|www\.rad\.com", re.I)
+RELEASED_RE = re.compile(
+    r"(January|February|March|April|May|June|July|August|September|"
+    r"October|November|December)\s+\d{1,2},\s+\d{4}")
 
 
 def classify_heading(text: str) -> str | None:
@@ -77,7 +88,8 @@ def classify_heading(text: str) -> str | None:
     return None
 
 
-def page_lines(page) -> list[tuple[str, float, bool]]:
+def page_lines(page) -> list[tuple]:
+    """(text, size, bold, y, x, rect) per visual line."""
     out = []
     for block in page.get_text("dict").get("blocks", []):
         for line in block.get("lines", []):
@@ -87,122 +99,107 @@ def page_lines(page) -> list[tuple[str, float, bool]]:
                 continue
             size = max((s.get("size", 0.0) for s in spans), default=0.0)
             bold = any("bold" in s.get("font", "").lower() for s in spans)
-            out.append((text, round(size, 1), bold))
+            rect = fitz.Rect(line["bbox"])
+            out.append((text, round(size, 1), bold, rect.y0, rect.x0, rect))
     return out
 
 
 def guess_meta(doc) -> dict:
-    """Best-effort product/version guess off page 1; CLI args override."""
-    first = " ".join(t for t, _, _ in page_lines(doc[0]))
+    """Best-effort product/version/date guess off page 1; CLI args override."""
+    first = " ".join(l[0] for l in page_lines(doc[0]))
     meta: dict = {}
     vm = VERSION_RE.search(first)
     if vm:
         meta["version"] = vm.group(1)
+    dm = RELEASED_RE.search(first)
+    if dm:
+        meta["released"] = dm.group(0)
     if re.search(r"radview", first, re.I):
         meta.setdefault("product", "radview")
         meta.setdefault("product_kind", "nms")
     return meta
 
 
-def _table_records(table, section: str) -> list[dict]:
-    """One record per data row of a TRS-style table. Header row picks the ID
-    and description columns; rows without a TRS still become records."""
-    rows = table.extract()
-    if not rows or len(rows) < 2:
-        return []
-    header = [(c or "").strip().lower() for c in rows[0]]
-    trs_col = next((i for i, h in enumerate(header)
-                    if re.search(r"\btrs\b|\bid\b|number", h)), None)
-    desc_col = next((i for i, h in enumerate(header)
-                     if re.search(r"desc|limitation|problem|feature|issue|detail", h)),
-                    None)
-    recs = []
-    for row in rows[1:]:
-        cells = [(c or "").strip() for c in row]
-        if not any(cells):
-            continue
-        trs = None
-        if trs_col is not None and cells[trs_col:trs_col + 1]:
-            m = TRS_RE.search(cells[trs_col])
-            trs = f"TRS-{m.group(1)}" if m else None
-        body_cells = [f"{header[i] or f'col{i}'}: {c}"
-                      for i, c in enumerate(cells) if c]
-        body = "\n".join(body_cells)
-        title_src = (cells[desc_col] if desc_col is not None and desc_col < len(cells)
-                     and cells[desc_col] else body)
-        title = re.sub(r"\s+", " ", title_src)[:160]
-        recs.append({"section": section, "trs": trs, "title": title, "body": body})
-    return recs
+# groups made only of table column-header words are layout junk, not items
+HEADER_JUNK_RE = re.compile(
+    r"^(category|limitation|comments?|description|trs|id|notes?|status|"
+    r"severity|[\s|]+)+$", re.I)
+
+
+def _row_groups(buf: list[tuple[int, float, str]]) -> list[list[tuple[int, float, str]]]:
+    """Group section lines back into visual table rows by vertical gaps.
+    pymupdf's find_tables is unreliable on these documents (it fragments
+    wrapped rows or sees only the header row), but reading order sorted by
+    (y, x) is row-major and row boundaries show up as larger y-gaps."""
+    diffs = [b[1] - a[1] for a, b in zip(buf, buf[1:])
+             if b[0] == a[0] and b[1] - a[1] > 1]
+    med = sorted(diffs)[len(diffs) // 2] if diffs else 0.0
+    thresh = max(med * 1.45, 8.0)
+    groups: list[list] = [[buf[0]]]
+    for prev, line in zip(buf, buf[1:]):
+        if line[0] != prev[0] or (line[1] - prev[1]) > thresh:
+            groups.append([])
+        groups[-1].append(line)
+    return groups
 
 
 def parse_pdf(pdf: Path) -> tuple[dict, list[dict]]:
     doc = fitz.open(pdf)
     meta = guess_meta(doc)
+
+    per_page = [page_lines(p) for p in doc]
+    # running headers/footers: whole lines repeated on several pages
+    counts: Counter = Counter()
+    for lines in per_page:
+        counts.update({l[0].casefold() for l in lines})
+    boiler = {t for t, c in counts.items()
+              if c >= min(3, len(per_page)) and len(t) < 80}
+
     items: list[dict] = []
     section = "other"
-    pending_text: dict[str, list[str]] = {}
+    pending: list[tuple[int, float, str]] = []  # (page, y, text)
 
-    def flush(sec: str):
-        text = "\n".join(pending_text.pop(sec, [])).strip()
-        if text:
-            items.append({"section": sec, "trs": None,
-                          "title": f"{sec} notes", "body": text})
-
-    for page in doc:
-        # tables first: their bboxes let us drop table text from the prose flow
-        table_bboxes = []
-        try:
-            for t in page.find_tables():
-                table_bboxes.append(fitz.Rect(t.bbox))
-                recs = _table_records(t, section)
-                items.extend(recs)
-        except Exception:
-            pass  # table detection is best-effort; prose fallback still runs
-
-        for block in page.get_text("dict").get("blocks", []):
-            r = fitz.Rect(block.get("bbox", (0, 0, 0, 0)))
-            if any(r.intersects(tb) for tb in table_bboxes):
-                continue
-            for line in block.get("lines", []):
-                spans = line.get("spans", [])
-                text = "".join(s.get("text", "") for s in spans).strip()
-                if not text or NOISE_RE.match(text):
+    def flush():
+        nonlocal pending
+        buf, pending = pending, []
+        if section == "_skip" or not buf:
+            return
+        if section in ("solved", "known", "known-new"):
+            for group in _row_groups(buf):
+                text = "\n".join(t for _, _, t in group).strip()
+                if not text or HEADER_JUNK_RE.match(re.sub(r"\s+", " ", text)):
                     continue
-                bold = any("bold" in s.get("font", "").lower() for s in spans)
-                new_sec = classify_heading(text) if (bold or len(text) < 60) else None
+                m = TRS_RE.search(text)
+                items.append({"section": section,
+                              "trs": f"TRS-{m.group(1)}" if m else None,
+                              "title": re.sub(r"\s+", " ", text)[:160],
+                              "body": text})
+        else:
+            text = "\n".join(t for _, _, t in buf).strip()
+            if text:
+                items.append({"section": section, "trs": None,
+                              "title": f"{section} notes", "body": text})
+
+    for pno in range(len(per_page)):
+        for text, size, bold, y, x, rect in sorted(
+                per_page[pno], key=lambda l: (l[3], l[4])):
+            if text.casefold() in boiler or NOISE_RE.match(text):
+                continue
+            if SKIP_RE.search(text):
+                flush()
+                section = "_skip"
+                continue
+            if (bold or size >= 13) and len(text) < 60:
+                new_sec = classify_heading(text)
                 if new_sec and new_sec != section:
-                    flush(section)
+                    flush()
                     section = new_sec
                     continue
-                pending_text.setdefault(section, []).append(text)
-    flush(section)
-    for sec in list(pending_text):
-        flush(sec)
+            if section != "_skip":
+                pending.append((pno, y, text))
+    flush()
     doc.close()
-
-    # prose in solved/known sections that escaped table detection: split per TRS
-    refined: list[dict] = []
-    for it in items:
-        if it["trs"] is None and it["section"] in ("solved", "known", "known-new"):
-            parts = _split_by_trs(it["body"])
-            if len(parts) > 1:
-                refined.extend({"section": it["section"], "trs": trs,
-                                "title": re.sub(r"\s+", " ", body)[:160],
-                                "body": body} for trs, body in parts)
-                continue
-        refined.append(it)
-    return meta, refined
-
-
-def _split_by_trs(text: str) -> list[tuple[str | None, str]]:
-    marks = [(m.start(), f"TRS-{m.group(1)}") for m in TRS_RE.finditer(text)]
-    if len(marks) < 2:
-        return [(marks[0][1] if marks else None, text)]
-    out = []
-    for i, (pos, trs) in enumerate(marks):
-        end = marks[i + 1][0] if i + 1 < len(marks) else len(text)
-        out.append((trs, text[pos:end].strip()))
-    return out
+    return meta, items
 
 
 def write_outputs(meta: dict, items: list[dict], source_pdf: Path) -> Path:
@@ -267,7 +264,9 @@ def main() -> int:
             return 1
     meta["family"] = opts.family
     meta["doc_rev"] = opts.doc_rev
-    meta["released"] = opts.released
+    if opts.released:
+        meta["released"] = opts.released
+    meta.setdefault("released", None)
 
     out = write_outputs(meta, items, pdf)
     by_sec: dict[str, int] = {}
