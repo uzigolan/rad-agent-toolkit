@@ -70,18 +70,47 @@ Claude Code users keep `/rad-*`. Reimplement those commands as thin wrappers
 that invoke the corresponding MCP prompt, so there is one definition rather
 than two that drift.
 
+> **[CORRECTED — implementation, 2026-08-08]** The single-definition goal is
+> met in the **opposite direction**: a Claude Code slash command is plain
+> markdown and has no mechanism to invoke an MCP prompt, so the wrapper
+> direction the plan describes is not implementable. Instead the MCP prompts
+> (`server/rad_mcp/prompts.py`) load their bodies from the canonical
+> `commands/<name>.md` files at invocation time (frontmatter stripped,
+> `$ARGUMENTS` filled) — one definition, zero drift, and the slash commands
+> keep working untouched. Also: the decomposition into rad-knowledge /
+> rad-device / rad-inventory / rad-forge servers (plans 04/08/09) has not
+> happened yet, so all six prompts register on today's single server, tagged
+> with their future home (`tags={"rad-device"}` etc.) so plan 09 moves them
+> mechanically. Landed on `chore/baseline-and-evals` (not `main`) per the
+> stream's working branch, server 0.11.0.
+
 ---
 
 ## Acceptance criteria
 
-- [ ] `prompts/list` returns all six with argument schemas
-- [ ] Each returns a usable message set from `prompts/get`
-- [ ] Verified working on at least one non-Claude-Code client
-- [ ] `/rad-health`, `/rad-backup`, `/rad-harvest` behave as before and share
-      the prompt definitions
-- [ ] No prompt body exceeds ~1,500 tokens
-- [ ] `rad_harvest` requires an explicit device and restates cleanup checks
-- [ ] `docs/architecture.md` stack diagram no longer marks workflows "Code only"
+- [x] `prompts/list` returns all six with argument schemas — verified
+      in-process via `fastmcp.Client`: 6 prompts, required args enforced
+      (`rad_harvest.device`, `rad_snmp_survey.device`,
+      `rad_family_compare.family_a/b/topic`, `rad_onboard_device.host/family`)
+- [x] Each returns a usable message set from `prompts/get` — all six render
+      one non-empty user message with sample args; `$ARGUMENTS` substitution
+      and frontmatter stripping verified
+- [ ] Verified working on at least one non-Claude-Code client — **pending
+      user check**: reload the rad-mcp server in VS Code Copilot and invoke
+      `/mcp.rad-mcp.rad_health` (in-process MCP client verification done;
+      a user surface has not confirmed yet)
+- [x] `/rad-health`, `/rad-backup`, `/rad-harvest` behave as before and share
+      the prompt definitions — commands/*.md untouched and remain canonical;
+      prompts read them at invocation time (direction corrected, see above)
+- [x] No prompt body exceeds ~1,500 tokens — largest is `rad_harvest`
+      (~1,145 tokens incl. the inherited safety notes); others 56–268
+- [x] `rad_harvest` requires an explicit device and restates cleanup checks —
+      schema marks `device` required, a blank value raises before rendering,
+      and the body (from `commands/rad-harvest.md`) carries the temp-object
+      rollback review + `zzz-hrvst` device-cleanliness check verbatim
+- [x] `docs/architecture.md` stack diagram no longer marks workflows "Code
+      only" — slash commands now noted as thin Claude Code entry points and a
+      `prompts:` line lists all six
 
 ## Rollback
 

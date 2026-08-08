@@ -18,7 +18,9 @@ into the MCP ecosystem.
         │
  knowledge layer          skills (rad-core, rad-cli-operations)
         │                 + references/ (harvested command trees)
-        │                 + slash commands (/rad-health, /rad-backup — Code only)
+        │                 + slash commands (/rad-health, /rad-backup — thin
+        │                   Claude Code entry points; definitions shared with
+        │                   the server's MCP prompts below)
         │
  MCP server               rad_mcp.server  (Python, FastMCP, stdio)
         │                 tools grouped by capability (rad_mcp/tools/*):
@@ -43,6 +45,11 @@ into the MCP ecosystem.
         │                 rad://backups[/name] · rad://command-tree/{family} ·
         │                 rad://cli-reference/{family}[/{context}] ·
         │                 rad://manual/{family}[/{chapter}] · rad://datasheet[/{product}]
+        │                 prompts (portable workflows, every MCP client):
+        │                   rad_health · rad_backup · rad_harvest ·
+        │                   rad_snmp_survey · rad_family_compare ·
+        │                   rad_onboard_device — the first three load the
+        │                   commands/*.md bodies (one definition, no drift)
         │
  backends (transport)     ssh / telnet (Netmiko, device_type rad_etx[_telnet])   [now]
         │                 snmp.py (pysnmp, UDP/161 — read-only GET/GETNEXT) [now]

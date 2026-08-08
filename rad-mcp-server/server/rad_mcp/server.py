@@ -54,6 +54,7 @@ from . import __version__
 from .audit import audit
 from .drivers import _DRIVERS
 from .profile import resolve_profile
+from .prompts import register_prompts
 from .runtime import (_HTTP, BACKUP_DIR, REPO_ROOT, WRITE_TOOLS_ENABLED,
                       _build_auth, _read_skill_version)
 from .tools import (register_debug_tools, register_dev_tools,
@@ -105,6 +106,13 @@ if TOOL_PROFILE.dev and WRITE_TOOLS_ENABLED:
     register_dev_tools(mcp)
 if TOOL_PROFILE.introspection:
     register_introspection_tools(mcp)
+
+# MCP prompts (plan 06) — curated workflows as the portable primitive; the
+# Claude Code slash commands in commands/*.md share the same definitions
+# (rad_mcp/prompts.py loads the command bodies). Registered on every profile:
+# a prompt is instructions, not capability — if it names a tool the profile
+# lacks, the body itself directs the model to rad://status.
+register_prompts(mcp)
 
 logger.info("tool profile '%s': groups %s (writes %s)",
             TOOL_PROFILE.name,
