@@ -1,6 +1,6 @@
 [project]
 name = "rad-mcp"
-version = "0.8.0"
+version = "0.9.0"
 description = "MCP server for RAD Data Communications devices (ETX-2 family and beyond)"
 requires-python = ">=3.10"
 dependencies = [
@@ -20,6 +20,7 @@ tooling = [
 
 [project.scripts]
 rad-mcp = "rad_mcp.server:main"
+rad-mcp-set-credentials = "rad_mcp.credentials_cli:main"
 
 [build-system]
 requires = ["hatchling"]

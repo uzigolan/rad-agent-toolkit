@@ -64,6 +64,12 @@ Introduce `RAD_MCP_TOOL_PROFILE`, values `legacy` (default) and `lean`.
 `legacy` registers a byte-identical surface to today, which is what makes this
 safe to merge immediately.
 
+> **[CORRECTED during implementation]** “byte-identical” conflicted with the
+> `set_device_credentials` removal below (mandated in **both** profiles — the
+> security requirement wins). Actual `legacy` = **42** tools: the pre-grouping
+> 43 minus `set_device_credentials`, verified by diffing `tools/list` — that
+> one name is the only difference.
+
 | Group | Flag | Default in `lean` | Future home |
 |---|---|---|---|
 | **knowledge** | — | on | `rad-knowledge` |
@@ -85,8 +91,11 @@ behaviour, preserve exactly]**. Flags compose; readonly always wins.
 **snmp (4)** — read-only by construction, central to the product story, so on
 by default.
 
-**debug (9)** — the 8 debug tools plus `debug_access_preflight`. Off by
-default. This flag is the single highest-value line in the plan.
+**debug (8) [CORRECTED — the earlier “9” double-counted]** —
+`debug_access_preflight` `debug_logon_request` `debug_logon_submit`
+`debug_menu` `debug_shell_command` `debug_tree_history` `enter_debug_shell`
+`exit_debug_shell` (`debug_access_preflight` is one OF the 8, not an extra).
+Off by default. This flag is the single highest-value line in the plan.
 
 **inventory (3)** — `add_device` `update_device` `remove_device`. Off by
 default: a shared HTTP deployment must not let any connected client rewrite
@@ -111,13 +120,15 @@ functions; drop the `@tool` registration.
 
 ### Counts
 
+[CORRECTED — verified against the live surface at implementation time]
+
 | Profile | Tools |
 |---|---|
-| `legacy` | 43 |
+| `legacy` | **42** (43 minus `set_device_credentials`) |
 | `lean`, defaults | **25** |
 | `lean` + plan 03 merged | **17** |
 | `lean` + readonly + plan 03 | 13 |
-| `lean` + debug | 26 |
+| `lean` + debug | **33** (25 + 8; the earlier “26” was an arithmetic error) |
 
 After plan 09 the number that matters is per-server: ~2 knowledge, ~15 device,
 ~9 debug, ~3 inventory.
@@ -127,9 +138,17 @@ After plan 09 the number that matters is per-server: ~2 knowledge, ~15 device,
 ## Implementation
 
 Registration lives in the FastMCP server module — `rad_mcp/server.py`
-**[ASSUMED path; module name VERIFIED from the architecture doc]**. Find how
+**[VERIFIED — path was correct]**. Find how
 `RAD_MCP_READONLY` currently skips write tools and extend that mechanism
 rather than building a parallel one.
+
+> **[DONE — resulting structure]** shared state/helpers extracted to
+> `rad_mcp/runtime.py`, profile resolution in `rad_mcp/profile.py`, one module
+> per group under `rad_mcp/tools/` (knowledge, device, snmp, debug, inventory,
+> dev, introspection), CLI replacement `rad_mcp/credentials_cli.py` installed
+> as **`rad-mcp-set-credentials`**. Server version bumped to 0.9.0. One CLI
+> behaviour delta vs the old tool: rotating a key the running server already
+> loaded needs a server restart (the CLI is a separate process).
 
 - Gate at **registration time**, not inside tool bodies. An unavailable tool
   must not exist in the session — the guarantee readonly already gives.
@@ -154,17 +173,23 @@ rather than building a parallel one.
 
 ## Acceptance criteria
 
-- [ ] `legacy` tool list identical to `v0.1.0` — diff two `tools/list`
-      responses and prove it
-- [ ] `lean` registers exactly 25 by default
-- [ ] Debug tools absent unless `RAD_MCP_DEBUG_TOOLS=true`
-- [ ] Inventory writes absent unless explicitly enabled
-- [ ] `set_device_credentials` unreachable over MCP in **both** profiles; CLI
-      replacement documented and working
-- [ ] Each group has its own registration function in its own module
-- [ ] `rad://status` returns version, profile, flags, corpus build id
-- [ ] Eval suite green under both profiles
-- [ ] No test asserts a hardcoded count of 43
+- [x] `legacy` tool list identical to `v0.1.0` — diff two `tools/list`
+      responses and prove it *(done — diff is exactly
+      `['set_device_credentials']`, the mandated removal; see the corrected
+      note above)*
+- [x] `lean` registers exactly 25 by default *(verified live)*
+- [x] Debug tools absent unless `RAD_MCP_DEBUG_TOOLS=true` *(lean+debug = 33)*
+- [x] Inventory writes absent unless explicitly enabled *(lean+inventory = 28)*
+- [x] `set_device_credentials` unreachable over MCP in **both** profiles; CLI
+      replacement documented and working *(`rad-mcp-set-credentials`)*
+- [x] Each group has its own registration function in its own module
+      *(`rad_mcp/tools/{knowledge,device,snmp,debug,inventory,dev,introspection}.py`)*
+- [x] `rad://status` returns version, profile, flags, corpus build id
+- [x] Eval suite green under both profiles *(registration cases in
+      `tests/evals/cases/profiles.yaml`; runner grew `--profile` and a
+      per-case `profiles:` filter — the one debug-positive safety case is
+      tagged `profiles: [legacy]`)*
+- [x] No test asserts a hardcoded count of 43 *(grep-verified)*
 
 ## Rollback
 

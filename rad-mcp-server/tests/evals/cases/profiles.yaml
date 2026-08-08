@@ -1,0 +1,77 @@
+# Profile / capability-grouping registration cases (plan 01).
+# These run the real server in a subprocess with the given env and assert on
+# the registered tool surface — no model, no hardware, no hardcoded totals.
+
+- id: profile-legacy-full-surface
+  kind: registration
+  env: {}   # RAD_MCP_TOOL_PROFILE defaults to legacy
+  expect:
+    tools_present: [run_show, stage_config, snmp_get, mib_search, debug_menu,
+                    debug_tree_history, add_device, run_demo_device,
+                    list_versions, tool_versions, check_skill_version,
+                    knowledge_status]
+    tools_absent: [set_device_credentials]
+    reason: "legacy keeps the full pre-grouping surface; only set_device_credentials is gone (CLI replacement: rad-mcp-set-credentials)"
+
+- id: profile-lean-default-surface
+  kind: registration
+  env: { RAD_MCP_TOOL_PROFILE: "lean" }
+  expect:
+    tools_present: [run_show, run_show_in_context, cli_help, get_config,
+                    health_check, backup_config, stage_config, commit_config,
+                    save_startup, list_devices, test_connectivity,
+                    snmp_probe, snmp_get, snmp_walk, snmp_build_poll_plan,
+                    mib_search, manual_search, cli_search]
+    tools_absent: [debug_menu, debug_tree_history, enter_debug_shell,
+                   debug_logon_request, debug_access_preflight,
+                   add_device, update_device, remove_device,
+                   run_demo_device, stop_demo_device,
+                   set_device_credentials,
+                   list_versions, tool_versions, check_skill_version,
+                   knowledge_status]
+    reason: "lean = knowledge + device + snmp; debug/inventory/dev off, introspection folded into rad://status"
+
+- id: profile-lean-debug-flag
+  kind: registration
+  env: { RAD_MCP_TOOL_PROFILE: "lean", RAD_MCP_DEBUG_TOOLS: "true" }
+  expect:
+    tools_present: [debug_menu, debug_tree_history, debug_logon_request,
+                    debug_access_preflight, enter_debug_shell]
+    tools_absent: [add_device, run_demo_device]
+    reason: "RAD_MCP_DEBUG_TOOLS=true adds only the debug group"
+
+- id: profile-lean-inventory-flag
+  kind: registration
+  env: { RAD_MCP_TOOL_PROFILE: "lean", RAD_MCP_INVENTORY_WRITE: "true" }
+  expect:
+    tools_present: [add_device, update_device, remove_device]
+    tools_absent: [debug_menu, set_device_credentials]
+    reason: "RAD_MCP_INVENTORY_WRITE=true adds fleet writes only — never credentials"
+
+- id: profile-lean-no-snmp-flag
+  kind: registration
+  env: { RAD_MCP_TOOL_PROFILE: "lean", RAD_MCP_SNMP: "false" }
+  expect:
+    tools_absent: [snmp_probe, snmp_get, snmp_walk, snmp_build_poll_plan]
+    tools_present: [run_show, mib_search]
+    reason: "SNMP is on by default in lean but can be dropped"
+
+- id: profile-readonly-wins-over-flags
+  kind: registration
+  env: { RAD_MCP_TOOL_PROFILE: "lean", RAD_MCP_DEBUG_TOOLS: "true",
+         RAD_MCP_INVENTORY_WRITE: "true", RAD_MCP_READONLY: "true" }
+  expect:
+    tools_absent: [stage_config, commit_config, save_startup, debug_menu,
+                   add_device, remove_device]
+    tools_present: [run_show, get_config, debug_tree_history]
+    reason: "RAD_MCP_READONLY always wins: write tools never register, in either profile, whatever the flags say (debug_tree_history is read-only and stays)"
+
+- id: profile-legacy-readonly-preserved
+  kind: registration
+  env: { RAD_MCP_READONLY: "true" }
+  expect:
+    tools_absent: [stage_config, commit_config, save_startup, debug_menu,
+                   add_device, set_device_credentials]
+    tools_present: [run_show, get_config, health_check, debug_tree_history,
+                    list_versions]
+    reason: "existing readonly behaviour preserved exactly under legacy"

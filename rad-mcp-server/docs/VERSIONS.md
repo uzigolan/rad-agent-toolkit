@@ -17,7 +17,7 @@ rules — the parts that rarely move.
 stale. Where they live + the bump policy are below.
 
 **MCP server changelog** (current version is authoritative via `list_versions`):
-`0.8.0` server-managed secrets — set_device_credentials write tool for CLI login AND SNMP communities (v2c/v1/v1-CSV/v3 user; server writes its own .env; effective immediately incl. rotation; remote clients never touch server files) · `0.7.0` datasheet layer — 39 product datasheets in the catalog (datasheet_sections + FTS5, family/product/kind classification via datasheet-map.yaml), datasheet_search tool, rad://datasheet resources, /rad-load-datasheet command · `0.6.0` check_skill_version — session drift alert for skill/server version + bundled/served mode · `0.5.1` list_versions reports the knowledge-catalog build · `0.5.0` Phase 5 — CLI refs + manuals + reference docs in the catalog, cli_search/manual_search · `0.4.0` snmp_build_poll_plan + catalog-decoded live values + capability-observation log · `0.3.0` offline knowledge-catalog tools (knowledge_status/mib_search/mib_describe/mib_table/mib_notifications) over rad-knowledge.sqlite · `0.2.0` read-only SNMP tools + pysnmp
+`0.9.0` capability grouping (plan 01) — tools split into per-group registration modules (`rad_mcp/tools/*`: knowledge/device/snmp/debug/inventory/dev/introspection); `RAD_MCP_TOOL_PROFILE=legacy|lean` selects the surface (legacy = everything, default; lean = knowledge+device+snmp with `RAD_MCP_DEBUG_TOOLS`/`RAD_MCP_INVENTORY_WRITE`/`RAD_MCP_DEV_TOOLS`/`RAD_MCP_SNMP` flags); `set_device_credentials` REMOVED from the tool surface — replaced by the `rad-mcp-set-credentials` operator CLI (secrets never transit a conversation; rotation of an already-loaded key now needs a server restart); new `rad://status` resource (version, profile, flags, corpus build id) · `0.8.0` server-managed secrets — set_device_credentials write tool for CLI login AND SNMP communities (v2c/v1/v1-CSV/v3 user; server writes its own .env; effective immediately incl. rotation; remote clients never touch server files) · `0.7.0` datasheet layer — 39 product datasheets in the catalog (datasheet_sections + FTS5, family/product/kind classification via datasheet-map.yaml), datasheet_search tool, rad://datasheet resources, /rad-load-datasheet command · `0.6.0` check_skill_version — session drift alert for skill/server version + bundled/served mode · `0.5.1` list_versions reports the knowledge-catalog build · `0.5.0` Phase 5 — CLI refs + manuals + reference docs in the catalog, cli_search/manual_search · `0.4.0` snmp_build_poll_plan + catalog-decoded live values + capability-observation log · `0.3.0` offline knowledge-catalog tools (knowledge_status/mib_search/mib_describe/mib_table/mib_notifications) over rad-knowledge.sqlite · `0.2.0` read-only SNMP tools + pysnmp
 
 **Knowledge catalog:** `rad-knowledge.sqlite` carries `catalog_meta.schema_version` (currently `1`) + a build timestamp + corpus hash; the live view is the `knowledge_catalog` block of `list_versions`. The SQLite catalog and local build report are install/build artifacts and should remain untracked. If a local `build/mib-catalog-report.json` exists, `knowledge_status` may surface its last-build summary opportunistically.
 
@@ -33,9 +33,10 @@ stale. Where they live + the bump policy are below.
 
 ## MCP tools
 
-All 38 tools shipped with server 0.8.0. The `tool_versions` MCP tool returns
-this table live. Version = the server release that introduced or last changed
-the tool's behaviour/signature.
+The `tool_versions` MCP tool returns this table live (legacy profile). As of
+server 0.9.0 the surface is profile-dependent (`RAD_MCP_TOOL_PROFILE`); see
+`docs/architecture.md` for the group table. Version = the server release that
+introduced or last changed the tool's behaviour/signature.
 
 | Tool | Version | Notes |
 |---|---|---|
@@ -68,7 +69,6 @@ the tool's behaviour/signature.
 | `run_show` | 0.1.0 | Whitelisted read-only commands only |
 | `run_show_in_context` | 0.1.0 | |
 | `save_startup` | 0.1.1 | `confirm=true` mandatory |
-| `set_device_credentials` | 0.8.0 | Writes server/.env; CLI + SNMP |
 | `snmp_build_poll_plan` | 0.4.1 | |
 | `snmp_get` | 0.2.0 | |
 | `snmp_probe` | 0.2.0 | |

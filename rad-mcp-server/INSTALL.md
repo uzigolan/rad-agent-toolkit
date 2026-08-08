@@ -191,7 +191,35 @@ RAD_MCP_USERNAME=...
 RAD_MCP_PASSWORD=...
 # optional per-device override: RAD_MCP_<NAME>_USERNAME / _PASSWORD
 # optional: RAD_MCP_READONLY=true  (disables all write tools)
+# optional: RAD_MCP_TOOL_PROFILE=lean  (see "Tool profiles" below)
 ```
+
+Per-device credentials can also be set from the server host with the
+installed CLI (writes to `server/.env`, prompts for the password):
+
+```powershell
+.venv\Scripts\rad-mcp-set-credentials <device-name> --username <user>
+```
+
+(There is intentionally **no MCP tool** for credentials — secrets never
+transit a model conversation.)
+
+### Tool profiles (context economics)
+
+Every registered tool costs context on every model turn. Pick a surface:
+
+| profile | tools | when |
+|---|---|---|
+| `legacy` (default) | everything (42) | existing installs — nothing changes |
+| `lean` | knowledge + device + snmp (25) | **recommended for new installs** |
+
+Under `lean`, opt groups back in per session with env flags:
+`RAD_MCP_DEBUG_TOOLS=true` (debug tree, 8), `RAD_MCP_INVENTORY_WRITE=true`
+(add/update/remove_device, 3), `RAD_MCP_DEV_TOOLS=true` (demo device, 2),
+`RAD_MCP_SNMP=false` (drop the 4 SNMP tools). Introspection data (versions,
+knowledge status) is served by the `rad://status` resource instead of tools.
+`RAD_MCP_READONLY=true` always wins — write tools never register, in either
+profile, whatever the flags say.
 
 Create your inventory — also gitignored (a clone never contains anyone
 else's devices): copy `inventory.example.yaml` to `inventory.yaml`, or let

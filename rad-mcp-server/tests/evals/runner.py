@@ -91,6 +91,14 @@ EVAL_INVENTORY = [
 
 WRITE_TOOLS = {"stage_config", "commit_config", "save_startup"}
 
+# Registration-affecting env vars (plan 01): stripped from the ambient env
+# before enumerating/exporting the tool surface so runs are deterministic.
+# Cases and --profile set them explicitly.
+PROFILE_ENV_VARS = (
+    "RAD_MCP_READONLY", "RAD_MCP_TOOL_PROFILE", "RAD_MCP_SNMP",
+    "RAD_MCP_DEBUG_TOOLS", "RAD_MCP_INVENTORY_WRITE", "RAD_MCP_DEV_TOOLS",
+)
+
 
 # --------------------------------------------------------------------------
 # case loading / validation
@@ -167,7 +175,8 @@ def get_server_tools(env: dict | None = None) -> list[str] | None:
         "print(json.dumps(sorted(t.name for t in asyncio.run(mcp.list_tools()))))"
     )
     full_env = dict(os.environ)
-    full_env.pop("RAD_MCP_READONLY", None)
+    for var in PROFILE_ENV_VARS:
+        full_env.pop(var, None)
     full_env.setdefault("RAD_MCP_TRANSPORT", "stdio")
     if env:
         full_env.update(env)
@@ -276,9 +285,9 @@ def execute_tool(name: str, args: dict, fixtures: dict) -> str:
 # model driver (raw Anthropic Messages API; no SDK dependency)
 # --------------------------------------------------------------------------
 
-def build_api_tools() -> list[dict] | None:
+def build_api_tools(env: dict | None = None) -> list[dict] | None:
     """Fetch real tool schemas from the server so the model sees exactly the
-    production tool surface."""
+    production tool surface (optionally under a specific profile env)."""
     code = (
         "import asyncio, json, sys;"
         f"sys.path.insert(0, {json.dumps(str(SERVER_PKG_DIR))});"
@@ -288,11 +297,14 @@ def build_api_tools() -> list[dict] | None:
         " 'input_schema': getattr(t, 'parameters', None) or t.model_dump().get('inputSchema')"
         " or {'type': 'object'}} for t in sorted(ts, key=lambda t: t.name)]))"
     )
-    env = dict(os.environ)
-    env.pop("RAD_MCP_READONLY", None)
-    env.setdefault("RAD_MCP_TRANSPORT", "stdio")
+    full_env = dict(os.environ)
+    for var in PROFILE_ENV_VARS:
+        full_env.pop(var, None)
+    full_env.setdefault("RAD_MCP_TRANSPORT", "stdio")
+    if env:
+        full_env.update(env)
     out = subprocess.run([sys.executable, "-c", code], capture_output=True,
-                         text=True, timeout=120, env=env, cwd=str(RAD_MCP_SERVER_DIR))
+                         text=True, timeout=120, env=full_env, cwd=str(RAD_MCP_SERVER_DIR))
     if out.returncode != 0:
         print(f"  !! tool schema export failed:\n{out.stderr.strip()[-2000:]}")
         return None
@@ -528,6 +540,9 @@ def main() -> int:
     ap.add_argument("--model", default=None,
                     help="model name (default: RAD_EVAL_MODEL env or the "
                          "provider's default)")
+    ap.add_argument("--profile", choices=["legacy", "lean"], default=None,
+                    help="run the model phase against this RAD_MCP_TOOL_PROFILE "
+                         "surface (default: legacy)")
     ap.add_argument("--no-skill", action="store_true",
                     help="omit rad-core SKILL.md from the system prompt")
     ap.add_argument("--verbose", "-v", action="store_true")
@@ -552,6 +567,7 @@ def main() -> int:
               "with `pip install -e .`). Tool-existence and registration checks skipped.")
     else:
         known = set(all_tools) | {"knowledge_search", "mib_lookup"}  # plan 03 names allowed early
+        known |= {"set_device_credentials"}  # removed in plan 01; cases assert its absence
         for case in cases:
             missing = referenced_tools(case) - known
             if missing:
@@ -572,6 +588,16 @@ def main() -> int:
 
     # model phase
     model_cases = [c for c in cases if c.get("kind") != "registration"]
+    # `profiles:` on a case limits it to those tool profiles (default: all).
+    # e.g. the debug-positive case can only succeed where debug tools exist.
+    active_profile = opts.profile or "legacy"
+    skipped_profile = [c for c in model_cases
+                       if c.get("profiles") and active_profile not in c["profiles"]]
+    model_cases = [c for c in model_cases if c not in skipped_profile]
+    if skipped_profile:
+        print(f"profile={active_profile}: skipping "
+              f"{len(skipped_profile)} case(s) tagged for other profiles: "
+              + ", ".join(c["id"] for c in skipped_profile))
     if opts.provider:
         provider = opts.provider
     elif os.environ.get("ANTHROPIC_API_KEY"):
@@ -597,11 +623,13 @@ def main() -> int:
                 fh.write("## rad-mcp evals\n\n**SKIPPED** — no model API key "
                          f"configured; {len(model_cases)} cases not executed.\n")
     else:
-        tools = build_api_tools()
+        profile_env = {"RAD_MCP_TOOL_PROFILE": opts.profile} if opts.profile else None
+        tools = build_api_tools(profile_env)
         if not tools:
             print("cannot export tool schemas; aborting model phase")
             return 1
-        print(f"model phase: {len(model_cases)} cases against {model} ({provider})")
+        print(f"model phase: {len(model_cases)} cases against {model} ({provider})"
+              f" [profile={opts.profile or 'legacy'}, {len(tools)} tools]")
         for case in model_cases:
             suite = per_suite.setdefault(case["_file"], [0, 0])
             text = ""

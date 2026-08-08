@@ -21,15 +21,28 @@ into the MCP ecosystem.
         │                 + slash commands (/rad-health, /rad-backup — Code only)
         │
  MCP server               rad_mcp.server  (Python, FastMCP, stdio)
-        │                 tools: list_devices · test_connectivity · run_show ·
-        │                 run_show_in_context · cli_help · get_config ·
-        │                 health_check · backup_config · stage_config ·
-        │                 commit_config · save_startup · debug_logon_request ·
-        │                 debug_logon_submit · debug_menu · debug_tree_history ·
-        │                 enter_debug_shell · debug_shell_command ·
-        │                 exit_debug_shell
-        │                 resources: rad://inventory · rad://backups[/name] ·
-        │                 rad://command-tree/{family}
+        │                 tools grouped by capability (rad_mcp/tools/*):
+        │                   knowledge (10)  mib_* · cli_search · manual_search ·
+        │                                   datasheet_search · mea_* · altera_search
+        │                   device (11)     list_devices · test_connectivity ·
+        │                                   run_show[_in_context] · cli_help ·
+        │                                   get_config · health_check · backup_config ·
+        │                                   stage_config · commit_config · save_startup
+        │                   snmp (4)        snmp_probe · snmp_get · snmp_walk ·
+        │                                   snmp_build_poll_plan
+        │                   debug (8)       debug_* · enter/exit_debug_shell
+        │                   inventory (3)   add/update/remove_device
+        │                   dev (2)         run/stop_demo_device
+        │                   introspection (4) check_skill_version · list_versions ·
+        │                                   tool_versions · knowledge_status
+        │                 profile selects groups: RAD_MCP_TOOL_PROFILE=legacy
+        │                 (default, everything) | lean (knowledge+device+snmp;
+        │                 flags RAD_MCP_DEBUG_TOOLS / RAD_MCP_INVENTORY_WRITE /
+        │                 RAD_MCP_DEV_TOOLS / RAD_MCP_SNMP opt groups in/out)
+        │                 resources: rad://status · rad://inventory ·
+        │                 rad://backups[/name] · rad://command-tree/{family} ·
+        │                 rad://cli-reference/{family}[/{context}] ·
+        │                 rad://manual/{family}[/{chapter}] · rad://datasheet[/{product}]
         │
  backends (transport)     ssh / telnet (Netmiko, device_type rad_etx[_telnet])   [now]
         │                 snmp.py (pysnmp, UDP/161 — read-only GET/GETNEXT) [now]
@@ -52,6 +65,20 @@ RAD portfolio. SSH now and RADview later must both drive a SecFlow; one SSH
 session must be able to drive both a SecFlow and (different dialect) a legacy
 ETX-1. Tools stay product-agnostic verbs; the device's `family` field picks
 the driver, config picks the backend.
+
+**Context economics.** Every registered tool's schema is injected into the
+model's context window on every turn, whether or not it is used. The lean
+profile exists so an operator session pays only for what it can actually do
+(25 tools: knowledge + device + snmp) instead of the full 42; debug,
+inventory-write, and dev groups are opt-in flags, and introspection data is
+served by the `rad://status` resource instead of four tools. Credentials were
+removed from the tool surface entirely — `rad-mcp-set-credentials` is an
+operator CLI on the server host, so secrets never transit a model
+conversation. `RAD_MCP_READONLY=true` still strips every write tool in either
+profile, regardless of flags. See
+[docs/plan/DECOMPOSITION.md](plan/DECOMPOSITION.md) and
+[docs/plan/01-capability-grouping.md](plan/01-capability-grouping.md) for the
+full rationale.
 
 ## Safety model (the core design constraint)
 
