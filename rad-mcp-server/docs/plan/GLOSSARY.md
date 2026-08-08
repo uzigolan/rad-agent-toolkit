@@ -313,10 +313,24 @@ no labelled "known-good" state to compare a regression against.
 
 **Eval / eval harness** — Automated tests for AI behaviour: given this prompt,
 did the agent pick the right tool with the right arguments, and correctly
-*not* call the wrong ones.
+*not* call the wrong ones. The **harness** is the program that runs them: it
+calls the model's raw API directly, hands it the real tool schemas, records
+every tool call, feeds back canned fixture output, and asserts on the
+transcript — a controlled loop no chat UI can provide.
 ***In this project:*** plan 00, and the highest-value item in the entire set —
 it is what lets an unfamiliar contributor's PR be judged without you reading
-every line.
+every line. `tests/evals/runner.py`; see its README for why it uses a raw
+model API even though production runs through chat clients.
+
+**Client scaffolding** — Everything a chat client (Claude Desktop, Claude
+Code, Copilot, …) wraps around the model: its own system prompt, safety
+layer, and tool-routing heuristics — all invisible and changed silently in
+updates.
+***In this project:*** the reason evals bypass chat clients. Inside a client
+you can't tell whether a failure is your skill or their scaffolding; the raw
+harness makes a failure mean one thing. And since clients only ever *add*
+scaffolding, passing in the bare harness is the floor — the strongest
+guarantee available.
 
 **Golden set** — A curated set of known-correct cases used as a regression
 baseline.

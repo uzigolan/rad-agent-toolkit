@@ -68,6 +68,12 @@ instead.
 
 This is the substantive part of the plan. Create `rad-mcp-server/tests/evals/`.
 
+> **Why a raw model API rather than a chat client** (Claude Desktop, Copilot,
+> … — the things production actually uses): the eval isolates the artifact
+> this repo ships (skill + tool surface), keeps client scaffolding out of the
+> blame path, and stays reproducible enough to gate CI. Full rationale in
+> `tests/evals/README.md`.
+
 ### Structure
 
 ```

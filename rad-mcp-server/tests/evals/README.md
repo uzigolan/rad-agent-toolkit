@@ -28,6 +28,36 @@ mocked with canned output; knowledge tools pass through in-process to the real
 committed corpus. Without an API key the model phase **skips loudly**
 and exits 0 — a skip is reported as a skip, never as a pass.
 
+## Why a raw model API, not a chat client
+
+Production users reach these tools through a chat client — Claude Desktop,
+Claude Code, Copilot, Cowork — so it's fair to ask why the evals don't just
+use one of those. Four reasons, in order of importance:
+
+1. **The eval tests what this repo ships.** The artifact under test is the
+   skill text + the MCP tool surface — not the client. We control neither
+   which client a user picks nor how that client behaves. When an eval fails,
+   the only layer we can fix is the skill and the tool design, so that is the
+   layer the harness must isolate.
+2. **Clients add uncontrolled variables.** Every chat client injects its own
+   system prompt, safety layer, and tool-routing heuristics — and changes
+   them silently in updates. If a case failed inside a client, you could not
+   tell whether the skill regressed or the client's scaffolding changed. In
+   the raw-API harness a failure means exactly one thing: our artifact.
+3. **Reproducibility is what makes it a regression gate.** Same model, same
+   pinned harness, same fixtures — so a PR that breaks a safety case gets
+   blamed on the PR. A chat session can never give that guarantee, which is
+   why CI can only run the harness.
+4. **The harness is a floor, not a ceiling.** If the bare model with only the
+   skill refuses an implicit commit, a production client — which layers
+   *more* scaffolding on top, not less — will too. Passing in the weakest
+   environment is the strongest guarantee.
+
+Testing through a real chat client is still valuable — it's a different
+experiment: end-to-end **integration** testing of one specific client stack
+(and how the live-device reports under `tests/` were produced). It complements
+the harness; it cannot replace it as the gate.
+
 ## Case files
 
 | File | Content |
