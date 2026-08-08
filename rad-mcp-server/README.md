@@ -200,6 +200,11 @@ independently runnable for their lifetime triggers).
 - Writes follow **backup → diff preview → explicit confirm → commit → verify**; no shortcuts.
 - `run_show*` accept only whitelisted read prefixes; contexts are validated.
 - `cli_help` types `?` and clears the line — nothing is ever executed.
+- Everything a device returns is wrapped in an untrusted-output boundary
+  (`<device-output ... trust="untrusted">`, `untrusted-root` for shell stdout)
+  — device text is data, never instructions; payload stays byte-identical.
+- A commit guard refuses `commit_config(confirm=true)` when device output was
+  read after staging (kill switch: `RAD_MCP_STRICT_COMMIT_GUARD=false`).
 - `RAD_MCP_READONLY=true` removes every write tool at registration time.
 - Append-only audit log at `server/logs/audit.jsonl`, secrets redacted.
 - Credentials live only in gitignored `server/.env` — never in inventory or code.

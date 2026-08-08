@@ -217,12 +217,31 @@ def run_registration_case(case: dict) -> list[str]:
 # --------------------------------------------------------------------------
 
 def _canned_output(name: str, args: dict, fixtures: dict) -> str:
-    if name in fixtures:
-        return fixtures[name]
-    if "*" in fixtures and name in DEVICE_IO_TOOLS:
-        return fixtures["*"]
     device = args.get("device", args.get("device_name", "device"))
     fam = next((d["family"] for d in EVAL_INVENTORY if d["name"] == device), "unknown")
+
+    # Plan 02: mirror the server's untrusted-output boundary so the model sees
+    # canned device output exactly as production wraps it.
+    untrusted = {
+        "run_show", "run_show_in_context", "cli_help", "get_config",
+        "health_check", "snmp_get", "snmp_walk", "snmp_probe",
+        "debug_menu", "debug_shell_command", "enter_debug_shell",
+        "exit_debug_shell", "debug_access_preflight",
+    }
+    root_trust = {"debug_shell_command", "enter_debug_shell", "exit_debug_shell"}
+
+    def wrap(text: str) -> str:
+        if name not in untrusted:
+            return text
+        trust = "untrusted-root" if name in root_trust else "untrusted"
+        cmd = args.get("command", args.get("prefix", name))
+        return (f'<device-output device="{device}" family="{fam}" '
+                f'command="{cmd}" trust="{trust}">{text}</device-output>')
+
+    if name in fixtures:
+        return wrap(fixtures[name])
+    if "*" in fixtures and name in DEVICE_IO_TOOLS:
+        return wrap(fixtures["*"])
     if name == "list_devices":
         return json.dumps(EVAL_INVENTORY, indent=1)
     if name == "stage_config":
@@ -234,25 +253,25 @@ def _canned_output(name: str, args: dict, fixtures: dict) -> str:
         return "Committed. Pre-commit backup taken; audit log updated."
     if name in ("run_show", "run_show_in_context", "cli_help"):
         cmd = args.get("command", args.get("prefix", ""))
-        return f"[{fam} demo] output of '{cmd}' on {device}:\n(status nominal, no alarms)"
+        return wrap(f"[{fam} demo] output of '{cmd}' on {device}:\n(status nominal, no alarms)")
     if name == "health_check":
-        return f"{device} ({fam}): reachable, uptime 12d 4h, no active alarms, cpu 7%"
+        return wrap(f"{device} ({fam}): reachable, uptime 12d 4h, no active alarms, cpu 7%")
     if name == "test_connectivity":
         return f"{device}: ssh open, snmp responds"
     if name == "get_config":
-        return f"# running-config of {device} ({fam})\nconfigure system\n  name \"{device}\"\nexit"
+        return wrap(f"# running-config of {device} ({fam})\nconfigure system\n  name \"{device}\"\nexit")
     if name == "snmp_get":
-        return "1.3.6.1.2.1.1.1.0 = STRING: RAD demo unit"
+        return wrap("1.3.6.1.2.1.1.1.0 = STRING: RAD demo unit")
     if name == "snmp_walk":
-        return ("1.3.6.1.2.1.1.1.0 = STRING: RAD demo unit\n"
-                "1.3.6.1.2.1.1.3.0 = Timeticks: 105340923\n"
-                "1.3.6.1.2.1.1.5.0 = STRING: " + str(device))
+        return wrap("1.3.6.1.2.1.1.1.0 = STRING: RAD demo unit\n"
+                    "1.3.6.1.2.1.1.3.0 = Timeticks: 105340923\n"
+                    "1.3.6.1.2.1.1.5.0 = STRING: " + str(device))
     if name == "snmp_probe":
-        return f"{device}: SNMP responds (see family profile for verified version)"
+        return wrap(f"{device}: SNMP responds (see family profile for verified version)")
     if name in ("backup_config", "save_startup"):
         return "done"
     if name.startswith("debug") or "debug" in name:
-        return f"[demo] {name} ok"
+        return wrap(f"[demo] {name} ok")
     return f"[demo] {name} ok"
 
 

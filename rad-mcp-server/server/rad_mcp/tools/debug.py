@@ -14,6 +14,7 @@ from fastmcp.exceptions import ToolError
 from .. import debug_tree_log
 from ..audit import audit, redact
 from ..backends import get_backend
+from ..boundary import wrap_device_output
 from ..drivers import get_driver
 from ..inventory import get_device
 from ..runtime import _DEMO_DEVICES, _demo_confirm_bypass, _demo_state
@@ -177,6 +178,10 @@ def register_debug_tools(mcp, *, write_enabled: bool) -> None:
                 action = "debug_menu"
 
             out = redact(output)
+            wrapped = wrap_device_output(
+                out, device=dev.name, family=dev.family,
+                command=f"preflight {action}",
+                trust="untrusted-root" if mode == "shell" else "untrusted")
             audit("debug_access_preflight", device,
                   detail=f"target={mode} action={action} reused unlock", ok=True)
             if mode == "shell":
@@ -189,7 +194,7 @@ def register_debug_tools(mcp, *, write_enabled: bool) -> None:
                 "used_existing_unlock": True,
                 "action": action,
                 "probe_commands": [] if mode == "shell" else probe_commands,
-                "output": out,
+                "output": wrapped,
                 "next_step": next_step,
             }
         except Exception as exc:
@@ -249,12 +254,14 @@ def register_debug_tools(mcp, *, write_enabled: bool) -> None:
             out = "DEMO DEBUG OK\n" + "\n".join(f"{cmd}\nOK" for cmd in commands)
             audit("debug_menu", device, detail=f"demo reset={reset} " + "\\n".join(commands))
             debug_tree_log.record(dev.family, device, commands, out, reset)
-            return out
+            return wrap_device_output(out, device=dev.name, family=dev.family,
+                                      command="; ".join(commands))
         out = get_backend().debug_menu(dev, commands, reset=reset)
         audit("debug_menu", device, detail=f"reset={reset} " + "\n".join(commands))
         out = redact(out)
         debug_tree_log.record(dev.family, device, commands, out, reset)
-        return out
+        return wrap_device_output(out, device=dev.name, family=dev.family,
+                                  command="; ".join(commands))
 
     @mcp.tool()
     def enter_debug_shell(device: str, confirm: bool = False) -> str:
@@ -286,7 +293,10 @@ def register_debug_tools(mcp, *, write_enabled: bool) -> None:
         out = redact(out)
         enter_cmd = get_driver(dev.family).debug_shell_enter_cmd
         debug_tree_log.record(dev.family, device, [enter_cmd], out, reset=False, kind="shell")
-        return out or f"Entered debug shell on {device}."
+        if not out:
+            return f"Entered debug shell on {device}."
+        return wrap_device_output(out, device=dev.name, family=dev.family,
+                                  command=enter_cmd, trust="untrusted-root")
 
     @mcp.tool()
     def debug_shell_command(device: str, command: str, confirm: bool = False) -> str:
@@ -305,12 +315,14 @@ def register_debug_tools(mcp, *, write_enabled: bool) -> None:
             out = f"DEMO SHELL OK\n$ {command}\nOK"
             audit("debug_shell_command", device, detail=f"demo::{command}")
             debug_tree_log.record(dev.family, device, [command], out, reset=False, kind="shell")
-            return out
+            return wrap_device_output(out, device=dev.name, family=dev.family,
+                                      command=command, trust="untrusted-root")
         out = get_backend().raw_shell_command(dev, command)
         audit("debug_shell_command", device, detail=command)
         out = redact(out)
         debug_tree_log.record(dev.family, device, [command], out, reset=False, kind="shell")
-        return out
+        return wrap_device_output(out, device=dev.name, family=dev.family,
+                                  command=command, trust="untrusted-root")
 
     @mcp.tool()
     def exit_debug_shell(device: str) -> str:
@@ -320,4 +332,8 @@ def register_debug_tools(mcp, *, write_enabled: bool) -> None:
         dev = get_device(device)
         out = get_backend().exit_debug_shell(dev)
         audit("exit_debug_shell", device)
-        return redact(out) or f"Exited debug shell on {device}."
+        out = redact(out)
+        if not out:
+            return f"Exited debug shell on {device}."
+        return wrap_device_output(out, device=dev.name, family=dev.family,
+                                  command="exit debug shell", trust="untrusted-root")

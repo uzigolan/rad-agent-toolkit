@@ -192,6 +192,9 @@ RAD_MCP_PASSWORD=...
 # optional per-device override: RAD_MCP_<NAME>_USERNAME / _PASSWORD
 # optional: RAD_MCP_READONLY=true  (disables all write tools)
 # optional: RAD_MCP_TOOL_PROFILE=lean  (see "Tool profiles" below)
+# optional: RAD_MCP_STRICT_COMMIT_GUARD=false  (disables the commit guard:
+#   by default commit_config refuses confirm=true when device output was
+#   read after the change was staged — re-stage and re-approve instead)
 ```
 
 Per-device credentials can also be set from the server host with the

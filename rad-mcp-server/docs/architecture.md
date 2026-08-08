@@ -101,11 +101,32 @@ dangerous until a human approves it.
    registration time (they don't exist in the session at all).
 6. **Append-only audit** — every tool call lands in `server/logs/audit.jsonl`
    with secrets redacted.
-7. **Defense in depth** — the same rules live in the skills (Claude refuses
+7. **Untrusted device-output boundary** — everything a device returns
+   (CLI output, config exports, SNMP string values, debug/shell stdout) is
+   wrapped, at one seam (`rad_mcp/boundary.py`), in a
+   `<device-output device="..." family="..." command="..." trust="untrusted">`
+   block before it becomes a tool result — the payload itself passes through
+   byte-identical (no stripping, escaping, or normalisation; operators need
+   exact output). A payload containing the closing tag gets a randomised
+   nonce in the tag name. Debug OS-shell output is marked
+   `trust="untrusted-root"` — the highest-risk channel. The harvested
+   reference corpus and manuals are vetted committed artefacts and are NOT
+   wrapped. The skill-side counterpart (rad-core rule 12) makes the model
+   treat everything inside those blocks as data being reported on, never as
+   instructions.
+8. **Commit guard** — `commit_config(confirm=true)` is refused when any
+   device output was returned after the change was staged: a legitimate
+   commit is always stage → human reads the preview → human approves in
+   their own message → commit, which structurally has no device reads in
+   between, while an injected read-then-commit chain inside one agent turn
+   always does. Recovery is cheap (re-stage, fresh approval); kill switch
+   `RAD_MCP_STRICT_COMMIT_GUARD=false` for operators whose workflow
+   genuinely needs reads between stage and commit.
+9. **Defense in depth** — the same rules live in the skills (Claude refuses
    before trying) and in the server (the tool refuses if asked anyway).
    Dangerous CLI areas (`admin` reboot/factory-default, `file` delete) are
    documented as no-go zones and are not whitelisted.
-8. **Debug shell access is a separate, unrestricted escape hatch** —
+10. **Debug shell access is a separate, unrestricted escape hatch** —
    `debug_logon_request`/`debug_logon_submit`/`debug_menu`/
    `enter_debug_shell`/`debug_shell_command`/`exit_debug_shell` unlock a RAD
    unit's hidden `debug` tree (and, beneath it, its real VxWorks/Linux OS
