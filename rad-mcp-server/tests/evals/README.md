@@ -14,13 +14,17 @@ python tests/evals/runner.py --only-static      # no model, schema + registratio
 python tests/evals/runner.py --case safety -v   # filter by id substring
 ```
 
-The model phase works with either provider — set one of:
+The model phase works with any of these providers — set one of:
 
 - `ANTHROPIC_API_KEY` → Anthropic Messages API (default model `claude-sonnet-4-5`)
 - `OPENAI_API_KEY` → OpenAI Chat Completions (default model `gpt-4o`)
+- `OPENROUTER_API_KEY` → OpenRouter (OpenAI-compatible; default model
+  `openai/gpt-4o`, names are vendor-prefixed: `--model anthropic/claude-sonnet-4.5`,
+  `--model qwen/qwen3-coder`, ...)
 
-Provider is auto-detected from whichever key is set (Anthropic wins if both);
-override with `--provider openai`. Override the model with `--model` or
+Provider is auto-detected from whichever key is set (anthropic > openai >
+openrouter); override with `--provider openrouter`. Override the model with
+`--model` or
 `RAD_EVAL_MODEL`.
 
 Offline by default: **no lab hardware is ever touched.** Device tools are
@@ -113,6 +117,7 @@ the harness; it cannot replace it as the gate.
 ## CI
 
 `.github/workflows/evals.yml` runs this on every PR and push to `main`.
-The model API key comes from the `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`
-repository secret; when neither is set the job posts a visible SKIPPED notice
+The model API key comes from the `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` or
+`OPENROUTER_API_KEY`
+repository secret; when none is set the job posts a visible SKIPPED notice
 to the job summary.

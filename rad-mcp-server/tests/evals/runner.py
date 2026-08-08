@@ -6,10 +6,10 @@ Offline by default — no lab hardware, ever:
     the real server registration (import, no I/O)
   * `kind: registration` cases (e.g. readonly-lacks-write-tools) run in a
     subprocess with the case's env and assert on the registered tool set
-  * model-driven cases run ONLY when ANTHROPIC_API_KEY or OPENAI_API_KEY is
-    set; device tools are mocked with canned output, knowledge tools pass
-    through in-process to the real corpus. Without a key the model phase
-    SKIPS LOUDLY and exits 0.
+  * model-driven cases run ONLY when ANTHROPIC_API_KEY, OPENAI_API_KEY or
+    OPENROUTER_API_KEY is set; device tools are mocked with canned output,
+    knowledge tools pass through in-process to the real corpus. Without a key
+    the model phase SKIPS LOUDLY and exits 0.
 
 Assertions are on tool selection and arguments, never on prose wording
 (answer checks are substring-only). Exit codes: 0 pass/skip, 1 failures,
@@ -46,11 +46,21 @@ PROVIDERS = {
         "url": "https://api.anthropic.com/v1/messages",
         "key_env": "ANTHROPIC_API_KEY",
         "default_model": "claude-sonnet-4-5",
+        "wire": "anthropic",
     },
     "openai": {
         "url": "https://api.openai.com/v1/chat/completions",
         "key_env": "OPENAI_API_KEY",
         "default_model": "gpt-4o",
+        "wire": "openai",
+    },
+    # OpenAI-compatible aggregator; model names are vendor-prefixed
+    # ("openai/gpt-4o", "anthropic/claude-sonnet-4.5", "qwen/qwen3-coder", ...)
+    "openrouter": {
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "key_env": "OPENROUTER_API_KEY",
+        "default_model": "openai/gpt-4o",
+        "wire": "openai",
     },
 }
 ANTHROPIC_API_VERSION = "2023-06-01"
@@ -335,7 +345,7 @@ class FatalAPIError(RuntimeError):
 
 
 def api_request(payload: dict, api_key: str, provider: str) -> dict:
-    if provider == "openai":
+    if PROVIDERS[provider]["wire"] == "openai":
         headers = {"content-type": "application/json",
                    "authorization": f"Bearer {api_key}"}
     else:
@@ -377,8 +387,9 @@ def run_model_case(case: dict, tools: list[dict], api_key: str, model: str,
                    use_skill: bool, verbose: bool,
                    provider: str = "anthropic") -> tuple[list[dict], str]:
     """Drive the model until end_turn; return (tool_calls, final_text)."""
-    if provider == "openai":
-        return _run_model_case_openai(case, tools, api_key, model, use_skill, verbose)
+    if PROVIDERS[provider]["wire"] == "openai":
+        return _run_model_case_openai(case, tools, api_key, model, use_skill,
+                                      verbose, provider)
     fixtures = case.get("fixtures", {}) or {}
     messages: list[dict] = []
     for turn in case.get("history", []) or []:
@@ -423,8 +434,8 @@ def _to_openai_tools(tools: list[dict]) -> list[dict]:
 
 
 def _run_model_case_openai(case: dict, tools: list[dict], api_key: str,
-                           model: str, use_skill: bool,
-                           verbose: bool) -> tuple[list[dict], str]:
+                           model: str, use_skill: bool, verbose: bool,
+                           provider: str = "openai") -> tuple[list[dict], str]:
     fixtures = case.get("fixtures", {}) or {}
     messages: list[dict] = [{"role": "system", "content": system_prompt(use_skill)}]
     for turn in case.get("history", []) or []:
@@ -432,8 +443,9 @@ def _run_model_case_openai(case: dict, tools: list[dict], api_key: str,
     messages.append({"role": "user", "content": case["prompt"]})
 
     oa_tools = _to_openai_tools(tools)
-    # reasoning models reject temperature and max_tokens
-    reasoning = model.startswith(("o1", "o3", "o4", "gpt-5"))
+    # reasoning models reject temperature and max_tokens (strip any
+    # openrouter vendor prefix like "openai/" before checking)
+    reasoning = model.split("/")[-1].startswith(("o1", "o3", "o4", "gpt-5"))
     calls: list[dict] = []
     final_text = ""
     for _ in range(MAX_TURNS):
@@ -443,7 +455,7 @@ def _run_model_case_openai(case: dict, tools: list[dict], api_key: str,
         else:
             payload["max_tokens"] = 1500
             payload["temperature"] = 0
-        resp = api_request(payload, api_key, "openai")
+        resp = api_request(payload, api_key, provider)
         msg = resp["choices"][0]["message"]
         messages.append(msg)
         # safety refusals arrive in `refusal` with content null
@@ -553,9 +565,10 @@ def main() -> int:
     ap.add_argument("--only-static", action="store_true",
                     help="run schema + registration checks only, never the model")
     ap.add_argument("--case", default="", help="filter: case id substring")
-    ap.add_argument("--provider", choices=["anthropic", "openai"], default=None,
+    ap.add_argument("--provider", choices=["anthropic", "openai", "openrouter"],
+                    default=None,
                     help="model API provider (default: auto-detect from which "
-                         "key env var is set; anthropic wins if both)")
+                         "key env var is set; anthropic > openai > openrouter)")
     ap.add_argument("--model", default=None,
                     help="model name (default: RAD_EVAL_MODEL env or the "
                          "provider's default)")
@@ -623,6 +636,8 @@ def main() -> int:
         provider = "anthropic"
     elif os.environ.get("OPENAI_API_KEY"):
         provider = "openai"
+    elif os.environ.get("OPENROUTER_API_KEY"):
+        provider = "openrouter"
     else:
         provider = "anthropic"
     api_key = os.environ.get(PROVIDERS[provider]["key_env"], "")
@@ -632,7 +647,8 @@ def main() -> int:
         banner = ("=" * 70 + "\n"
                   "  MODEL-DRIVEN EVALS SKIPPED — "
                   + ("--only-static given" if opts.only_static
-                     else "no ANTHROPIC_API_KEY or OPENAI_API_KEY configured")
+                     else "no ANTHROPIC_API_KEY / OPENAI_API_KEY / "
+                          "OPENROUTER_API_KEY configured")
                   + f"\n  {len(model_cases)} cases NOT executed. This is a skip, not a pass.\n"
                   + "=" * 70)
         print(banner)
